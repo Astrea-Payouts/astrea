@@ -2,6 +2,9 @@
 	"name": "astrea",
 	"version": "0.1.0",
 	"private": true,
+	"engines": {
+		"node": ">=20"
+	},
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
@@ -9,6 +12,8 @@
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"format": "biome format --write .",
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit",
 		"prepare": "husky"
 	},
 	"dependencies": {
@@ -34,7 +39,8 @@
 		"husky": "^9.1.7",
 		"lint-staged": "^17.2.0",
 		"tailwindcss": "^4",
-		"typescript": "^5"
+		"typescript": "^5",
+		"vitest": "^4.1.10"
 	},
 	"lint-staged": {
 		"*.{js,jsx,ts,tsx,json,css,md}": [
