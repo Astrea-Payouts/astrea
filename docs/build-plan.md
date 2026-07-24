@@ -1,0 +1,71 @@
+# Astrea — Build Plan
+
+Phased plan with coded tasks. Each task becomes one GitHub issue with its code in the title (e.g., `[S03] Prisma schema and Supabase setup`). Sizes: S (≤half day), M (1–2 days), L (3+ days, should be split before assignment). `GFI` = good first issue candidate.
+
+## Phase 0 — Spike (de-risk before anything else)
+
+| Code | Task | Size | Notes |
+| --- | --- | --- | --- |
+| K01 | ✅ **Done (2026-07-24)** — Trustless Work testnet spike: deploy, fund, approve, and release a multi-release escrow end-to-end with a script — confirmed the judge (approver + releaseSigner) can release as sole signer and the funder cannot withdraw funded amounts; findings in [spikes/k01-trustless-work](../spikes/k01-trustless-work/README.md) | M | **Gated the whole plan.** Confirmed the role model behind ADR-003; also surfaced that the public docs site was stale (use live `/docs-json` spec) and a 0.3% protocol fee (ADR-005) |
+| K02 | ✅ **Done** — ADR-003 corrected and ADR-005 added from spike findings | S | See docs/architecture.md |
+| K03 | ✅ **Done** — confirmed the ADR-005 fee rate (fixed 0.3%, hardcoded in the Soroban contract, charged per milestone release, on top of `platformFee`) against the official Trustless Work whitepaper (§7, Fees & Economics) — no Discord ask needed, their worked example matched our spike result exactly | S | See ADR-005 |
+
+## Phase 1 — Foundations
+
+| Code | Task | Size | Notes |
+| --- | --- | --- | --- |
+| S01 | Repo scaffold: Next.js + TypeScript strict + Tailwind + shadcn/ui, Biome, Husky + commitlint (Conventional Commits) | M | Mirrors GrantFox-family conventions |
+| S02 | CI: GitHub Actions — build, lint, test on PR | S | GFI |
+| S03 | Prisma schema + Supabase setup (`Event`, `Prize`, `Judge`, `Submission`, `Wallet`, `Payout`, `OpLog`) + RLS | M | |
+| S04 | Environment config module: network, USDC issuer, TW base URL/key (server-only), boot-time validation | S | |
+| S05 | Wallet connect with Stellar Wallets Kit (Freighter, Albedo, xBull, LOBSTR) + session association | M | |
+| S06 | `.env.example`, CONTRIBUTING.md, issue/PR templates, labels | S | GFI |
+
+## Phase 2 — Escrow core (vertical slice)
+
+| Code | Task | Size | Notes |
+| --- | --- | --- | --- |
+| E01 | `EscrowProvider` port + `TrustlessWorkAdapter` (deploy, fund, approve, release, reads) | L → split | Domain never imports TW types directly |
+| E02 | Build-sign-submit pipeline: server builds XDR → client signs → server submits; idempotency keys in `OpLog` | M | |
+| E03 | Event + prize state machines with server-side transition validation | M | |
+| E04 | Reconciliation job: TW indexed events vs mirror tables; heal + alert | M | **In this phase on purpose** — money ops and reconciliation ship together |
+| E05 | Trustline verification service (check at registration + winner assignment) | S | |
+| E06 | Vertical slice demo: script or minimal UI — create event → fund → assign → approve → release on testnet | M | Milestone: **the product guarantee works** |
+
+## Phase 3 — Product UI
+
+| Code | Task | Size | Notes |
+| --- | --- | --- | --- |
+| U01 | Event creation wizard (details → prizes → judges → review & sign) | L → split | |
+| U02 | Organizer dashboard: funding flow, escrow status, judge management | M | |
+| U03 | Public event page: prizes, "verified on-chain" badge, contract link, payout history | M | SSR |
+| U04 | Participant flow: register (trustline check), submit entry | M | |
+| U05 | Judge panel: submissions review, winner assignment, approval signing | M | |
+| U06 | Release flow UI + confirmation states ("pending on-chain" UX) | S | |
+| U07 | Explorer links (stellar.expert) + tx hash display components | S | GFI |
+
+## Phase 4 — Trust & edge cases
+
+| Code | Task | Size | Notes |
+| --- | --- | --- | --- |
+| T01 | Dispute flow: open, evidence, resolver signing, resolution record | L → split | |
+| T02 | Event cancellation + refund flow | M | |
+| T03 | Notifications (email or in-app) on state changes | M | GFI-able parts |
+| T04 | E2E tests on testnet for the money paths (deploy→fund→release; dispute) | M | |
+
+## Phase 5 — Launch readiness
+
+| Code | Task | Size | Notes |
+| --- | --- | --- | --- |
+| L01 | Deploy to Vercel (testnet demo) + seed demo event | S | |
+| L02 | Demo video of the full flow | S | |
+| L03 | Security pass: RLS review, secrets audit, XDR matching | M | |
+| L04 | Observability: structured logs with tx hashes, reconciliation drift alerts | S | |
+| L05 | GrantFox maintainer application: sync repo, complete project form | S | The point of it all |
+
+## Sequencing rules
+
+1. K01 before everything — if the spike falsifies an assumption, ADRs change while changing docs is still cheap.
+2. E04 (reconciliation) ships in the same phase as the first money operation, never later.
+3. Phases 3–5 tasks are the contributor surface: keep them small, labeled, and well-described — they are what GrantFox displays.
+4. Mainnet is out of scope for every task above; it gets its own phase after real testnet usage.
