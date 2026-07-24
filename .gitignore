@@ -30,8 +30,11 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — everything ignored EXCEPT the .env.example templates, which
+# must be tracked so contributors know which variables to set.
 .env*
+!.env.example
+!spikes/**/.env.example
 
 # vercel
 .vercel
@@ -54,3 +57,12 @@ spikes/**/node_modules
 *.bak
 
 /src/generated/prisma
+
+# vendor AI-skill reference docs — `npx prisma init` regenerates these; we
+# deliberately don't commit them (219 files of reference material, not
+# project content). Only ignores the skill bundles, not other legitimate
+# per-tool project config that might live under these same directories.
+.claude/skills
+.agents/skills
+.windsurf/skills
+skills-lock.json
