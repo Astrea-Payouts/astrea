@@ -52,3 +52,5 @@ spikes/**/node_modules
 
 # scratch
 *.bak
+
+/src/generated/prisma

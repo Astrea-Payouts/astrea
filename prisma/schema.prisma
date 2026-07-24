@@ -1,0 +1,194 @@
+// Astrea data model — mirrors on-chain escrow state for UX/querying.
+// The chain is the source of truth (see docs/architecture.md, Principle 2);
+// this schema is a mirror kept honest by a reconciliation job (E04).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum StellarNetwork {
+  TESTNET
+  MAINNET
+}
+
+/// Event lifecycle — see docs/product-flows.md "Event state machine".
+enum EventStatus {
+  DRAFT
+  CREATED
+  FUNDED
+  LIVE
+  JUDGING
+  COMPLETED
+  CANCELLED
+}
+
+/// Prize (milestone) lifecycle — see docs/product-flows.md "Prize (milestone) states".
+enum PrizeStatus {
+  PENDING
+  ASSIGNED
+  APPROVED
+  RELEASED
+  DISPUTED
+}
+
+enum JudgeStatus {
+  ACTIVE
+  REMOVED
+}
+
+/// Idempotency + outbox for every escrow-mutating operation (docs/architecture.md, Principle 4).
+enum OpStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+/// A person on the platform. Not yet tied to a specific auth mechanism —
+/// wallet-based auth is designed in S05; kept minimal and independent until then.
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  wallets         Wallet[]
+  organizedEvents Event[] @relation("EventOrganizer")
+
+  @@map("users")
+}
+
+/// A Stellar address associated with a user. Judges are stored as raw addresses
+/// on Judge.walletAddress instead (they may be a multisig the platform has no
+/// Wallet row for — see docs/architecture.md ADR-003, multi-judge note).
+model Wallet {
+  id                      String    @id @default(uuid())
+  userId                  String
+  address                 String    @unique
+  usdcTrustlineVerifiedAt DateTime?
+  createdAt               DateTime  @default(now())
+
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizedEvents Event[]      @relation("EventOrganizerWallet")
+  wonPrizes       Prize[]      @relation("PrizeWinner")
+  submissions     Submission[]
+
+  @@index([userId])
+  @@map("wallets")
+}
+
+model Event {
+  id                String         @id @default(uuid())
+  organizerId       String
+  organizerWalletId String
+  name              String
+  description       String?
+  startsAt          DateTime?
+  endsAt            DateTime?
+  status            EventStatus    @default(DRAFT)
+  network           StellarNetwork @default(TESTNET)
+  escrowContractId  String?        @unique
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  organizer       User         @relation("EventOrganizer", fields: [organizerId], references: [id])
+  organizerWallet Wallet       @relation("EventOrganizerWallet", fields: [organizerWalletId], references: [id])
+  prizes          Prize[]
+  judges          Judge[]
+  submissions     Submission[]
+
+  @@index([organizerId])
+  @@index([organizerWalletId])
+  @@index([status])
+  @@map("events")
+}
+
+model Prize {
+  id             String      @id @default(uuid())
+  eventId        String
+  rank           Int
+  amountUsdc     Decimal     @db.Decimal(18, 7)
+  milestoneIndex Int
+  status         PrizeStatus @default(PENDING)
+  winnerWalletId String?
+  releaseTxHash  String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  winnerWallet Wallet?  @relation("PrizeWinner", fields: [winnerWalletId], references: [id])
+  payouts      Payout[]
+
+  @@unique([eventId, milestoneIndex])
+  @@index([eventId])
+  @@index([winnerWalletId])
+  @@index([status])
+  @@map("prizes")
+}
+
+/// Judges hold the on-chain `approver` + `releaseSigner` role (ADR-003).
+/// walletAddress is a raw Stellar address, not a Wallet FK — it may be a
+/// multisig account the platform has no user/Wallet row for.
+model Judge {
+  id            String      @id @default(uuid())
+  eventId       String
+  walletAddress String
+  displayName   String
+  status        JudgeStatus @default(ACTIVE)
+  createdAt     DateTime    @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, walletAddress])
+  @@index([eventId])
+  @@map("judges")
+}
+
+model Submission {
+  id                  String   @id @default(uuid())
+  eventId             String
+  participantWalletId String
+  url                 String
+  submittedAt         DateTime @default(now())
+
+  event             Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  participantWallet Wallet @relation(fields: [participantWalletId], references: [id])
+
+  @@index([eventId])
+  @@index([participantWalletId])
+  @@map("submissions")
+}
+
+/// Append-only audit log. amountUsdc here is the NET amount actually
+/// transferred (post protocol + platform fee — see ADR-005), distinct from
+/// Prize.amountUsdc which is the gross configured amount.
+model Payout {
+  id          String   @id @default(uuid())
+  prizeId     String
+  txHash      String   @unique
+  amountUsdc  Decimal  @db.Decimal(18, 7)
+  confirmedAt DateTime @default(now())
+
+  prize Prize @relation(fields: [prizeId], references: [id], onDelete: Cascade)
+
+  @@index([prizeId])
+  @@map("payouts")
+}
+
+/// Idempotency key + outbox record for every escrow-mutating call to
+/// Trustless Work. Read by the reconciliation job (E04) to heal drift
+/// between confirmed on-chain transactions and mirror table state.
+model OpLog {
+  id             String   @id @default(uuid())
+  idempotencyKey String   @unique
+  operation      String
+  payload        Json
+  status         OpStatus @default(PENDING)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([status])
+  @@map("op_log")
+}
