@@ -36,13 +36,14 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| U01 | Event creation wizard (details → prizes → judges → review & sign) | L → split | |
+| U01 | Event creation wizard (details → prizes → judges → review & sign) — uses React Bits **Stepper** | L → split | See docs/ui-motion.md |
 | U02 | Organizer dashboard: funding flow, escrow status, judge management | M | |
-| U03 | Public event page: prizes, "verified on-chain" badge, contract link, payout history | M | SSR |
+| U03 | Public event page: prizes, "verified on-chain" badge, contract link, payout history — prize cards wrapped in React Bits **Border Glow**; mobile bottom nav uses **Staggered Menu** + **Dock** (shape only, see ui-motion.md caveat) | M | SSR |
 | U04 | Participant flow: register (trustline check), submit entry | M | |
 | U05 | Judge panel: submissions review, winner assignment, approval signing | M | |
 | U06 | Release flow UI + confirmation states ("pending on-chain" UX) | S | |
 | U07 | Explorer links (stellar.expert) + tx hash display components | S | GFI |
+| U08 | Marketing homepage: hero (React Bits **Prism** background, unmounted when scrolled past), "see it in action" (**Card Swap**), "how it works" (**Scroll Stack**), primary CTA (**Specular Button**, 1–2 max) | M | See docs/ui-motion.md for full rationale and the corrections to Dock/Tilted Card assumptions |
 
 ## Phase 4 — Trust & edge cases
 
