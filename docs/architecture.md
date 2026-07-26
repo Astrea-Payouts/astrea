@@ -109,7 +109,9 @@ Periodic job (and on-demand after each submit): pulls escrow state + indexed eve
 
 **Why it matters:** Astrea's core promise is "the prize money is locked and will pay out." If prize amounts are advertised as gross figures, winners receive slightly less than advertised — a small but real gap between the claim and the outcome, in the same spirit as the "guaranteed" language already removed from the README.
 
-**Decision:** display prize amounts as configured (gross) on the event page, with a plain, permanent disclosure that released amounts are net of Trustless Work's fixed 0.3% protocol fee (plus Astrea's own `platformFee`, currently 0%). Do **not** gross-up funding amounts to compensate — the winner-facing number should always match what actually lands in their wallet, computable client-side as `amount × (1 - 0.003 - platformFee)`.
+**Decision:** display prize amounts as configured (gross) on the event page, with a plain, permanent disclosure that released amounts are net of Trustless Work's fixed 0.3% protocol fee (plus Astrea's own `platformFee`, currently 0%). Astrea itself never gross-ups a funding amount automatically — the displayed net figure always matches what actually lands in the winner's wallet, computable client-side as `amount × (1 - 0.003 - platformFee)`.
+
+**Organizer-covered fee (opt-in, U02):** the funding flow (`product-flows.md`, Flow 2) offers the organizer a calculated, opt-in option to fund `prize ÷ (1 - 0.003 - platformFee)` instead of the raw prize amount, so the winner's net receipt equals the advertised prize exactly. This is not a violation of "no automatic gross-up" — it's the organizer knowingly choosing to pay the fee themselves, with the UI doing the arithmetic. The event page must reflect whichever is true per prize: fee disclosed separately, or fee covered and the full amount guaranteed — never show the covered-fee number unless funding actually happened at the grossed-up amount.
 
 ### ADR-006 — Wallet connection sets a UX session, not an authorization boundary
 

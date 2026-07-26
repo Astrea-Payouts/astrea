@@ -50,7 +50,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
 | U01 | Event creation wizard (details → prizes → judges → review & sign) — uses React Bits **Stepper** | L → split | See docs/ui-motion.md |
-| U02 | Organizer dashboard: funding flow, escrow status, judge management | M | |
+| U02 | Organizer dashboard: funding flow, escrow status, judge management | M | Funding flow includes the ADR-005 opt-in "cover the fee" toggle (see product-flows.md Flow 2) |
 | U03 | Public event page: prizes, "verified on-chain" badge, contract link, payout history — prize cards wrapped in React Bits **Border Glow**; mobile bottom nav uses **Staggered Menu** + **Dock** (shape only, see ui-motion.md caveat) | M | SSR |
 | U04 | Participant flow: register (trustline check), submit entry | M | |
 | U05 | Judge panel: submissions review, winner assignment, approval signing | M | |

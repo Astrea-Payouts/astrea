@@ -30,11 +30,12 @@ Escrow role mapping (Trustless Work multi-release):
 ## Flow 2 — Organizer funds the prize pool
 
 1. From the event dashboard, organizer starts the funding flow.
-2. Server builds fund XDR for the total prize amount (USDC).
-3. Organizer signs; transaction submitted; state moves to `FUNDED` once confirmed on-chain.
-4. The public event page now shows a **"Prizes verified on-chain"** badge with the contract link. The event can be published (`LIVE`).
+2. For each prize, the UI shows the fee math up front: configured amount, the exact net amount the winner will receive after Trustless Work's 0.3% fee (plus Astrea's own `platformFee`, 0% today), and an optional **"cover the fee so the winner gets the full amount"** toggle. If the organizer opts in, the funded amount is grossed up (`prize ÷ (1 - 0.003 - platformFee)`) so the *net* received equals the advertised prize exactly — this is the organizer's own informed choice, not Astrea inflating a number automatically (see ADR-005).
+3. Server builds fund XDR for the total amount (sum of prizes, or the fee-covered totals for any prize where the organizer opted in).
+4. Organizer signs; transaction submitted; state moves to `FUNDED` once confirmed on-chain.
+5. The public event page now shows a **"Prizes verified on-chain"** badge with the contract link. The event can be published (`LIVE`).
 
-An event cannot go `LIVE` unless the escrow balance equals the sum of prizes. This is the core product guarantee — with one honest caveat: Trustless Work deducts a fixed **0.3% protocol fee** at release (confirmed in their whitepaper and in the K01 spike; see ADR-005), on top of Astrea's own platform fee (0% for now). The event page discloses both plainly: the configured prize (what's locked) and the exact amount the winner will receive.
+An event cannot go `LIVE` unless the escrow balance equals the sum of prizes (fee-covered or not, per prize). This is the core product guarantee — with one honest caveat where the organizer didn't cover the fee: Trustless Work deducts a fixed **0.3% protocol fee** at release (confirmed in their whitepaper and in the K01 spike; see ADR-005). The event page discloses this plainly per prize: the configured amount, whether the fee is covered, and the exact amount the winner will receive — that number is always what actually lands in the winner's wallet, never a rounder number that doesn't match reality.
 
 ## Flow 3 — Participants join and submit
 
