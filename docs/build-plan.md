@@ -26,7 +26,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
 | E01 | ✅ **Done (2026-07-26)** — `EscrowProvider` port + `TrustlessWorkAdapter` (deploy, fund, approve, release, dispute, resolve-dispute, reads) + `buildForwardPaymentXdr` (plain Stellar payment, judge → winner) + `fees.ts` (ADR-005 fee math, incl. the opt-in cover-the-fee calculator) | L → split | See `src/lib/escrow/`. Domain never imports TW types directly. `submitSignedTransaction` computes the tx hash locally from the signed XDR rather than trusting the API response (Principle 2). Added `vitest.setup.ts` — first real consumer of `env.ts`'s boot validation, tests need dummy TW_API_KEY/USDC_ISSUER |
-| E02 | Build-sign-submit pipeline: server builds XDR → client signs → server submits; idempotency keys in `OpLog` | M | |
+| E02 | ✅ **Done (2026-07-26)** — Build-sign-submit pipeline: `prepareOperation`/`submitOperation` in `src/lib/escrow/pipeline.ts`, backed by `OpLog` | M | Idempotency rules (`idempotency.ts`) are pure and unit-tested: only `SUCCEEDED` is terminal, `PENDING`/`FAILED` are always retryable. Resubmitting the identical signed XDR twice is safe at the Stellar/Horizon layer (idempotent per tx hash) — `OpLog` avoids redundant calls and keeps the audit trail, it isn't what prevents double-payment |
 | E03 | Event + prize state machines with server-side transition validation | M | |
 | E04 | Reconciliation job: TW indexed events vs mirror tables; heal + alert | M | **In this phase on purpose** — money ops and reconciliation ship together |
 | E05 | Trustline verification service (check at registration + winner assignment) | S | |
