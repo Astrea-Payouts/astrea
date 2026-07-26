@@ -14,8 +14,8 @@ This document defines the roles, core user journeys, and the escrow lifecycle. I
 Escrow role mapping (Trustless Work multi-release):
 
 - Organizer → funder / platform (NOT in the payout path — see ADR-003)
-- Judges → `approver` and `releaseSigner`. A Trustless Work escrow has exactly **one** address per role — for a panel of multiple judges, that address is a Stellar multisig account they co-sign (see ADR-003); approval and release are two separate judge-signed transactions, not one combined step
-- Winner wallet → receiver (per milestone)
+- Judges → `approver`, `releaseSigner`, **and milestone `receiver`**. A Trustless Work escrow has exactly **one** address per role — for a panel of multiple judges, that address is a Stellar multisig account they co-sign (see ADR-003); approval and release are two separate judge-signed transactions, not one combined step. The judge is the milestone receiver because the winner isn't known at deploy time and Trustless Work does not allow changing a receiver afterward — the judge forwards the released funds to the winner in a second, ordinary Stellar payment (see ADR-007)
+- Winner wallet → receives a direct Stellar payment from the judge immediately after release, not the milestone `receiver` itself
 - Dispute resolver → dispute resolver (published on the event page before the event starts)
 
 ## Flow 1 — Organizer creates an event
@@ -47,9 +47,10 @@ An event cannot go `LIVE` unless the escrow balance equals the sum of prizes. Th
 
 1. Judges review submissions and select winners per prize.
 2. Winner assignment re-validates the winner wallet + trustline.
-3. Judge signs two separate transactions per decided prize — **approve**, then **release** (no combined step exists on the real API). The organizer is not in this path (ADR-003).
-4. USDC lands in the winner's wallet in seconds.
-5. Event page updates: winner, amount, transaction hash, explorer link. When all prizes are released the event is `COMPLETED`.
+3. Judge signs three separate transactions per decided prize — **approve**, then **release** (no combined step exists on the real API), then **forward**. The organizer is not in this path (ADR-003).
+4. **Approve + release**: USDC lands in the judge's own wallet (net of Trustless Work's 0.3% fee) — the judge is the milestone's on-chain receiver because the winner wasn't known when the escrow was deployed and that can't be changed afterward (ADR-007).
+5. **Forward**: the same signing flow immediately prompts the judge to send the exact received amount (computed, not typed) to the winner via a plain Stellar payment. USDC lands in the winner's wallet seconds later.
+6. Event page updates: winner, amount, both transaction hashes (release + forward), explorer links. When all prizes are released and forwarded the event is `COMPLETED`.
 
 ## Flow 5 — Dispute
 
@@ -69,7 +70,7 @@ JUDGING ──dispute opened──▶ (milestone-level DISPUTED, event stays JUD
 Any funded state ──cancel + refund flow──▶ CANCELLED
 ```
 
-Prize (milestone) states: `PENDING → ASSIGNED → APPROVED → RELEASED` with `DISPUTED` as a side-state blocking release. All transitions are validated server-side; money-moving transitions require an on-chain confirmation before the mirror state advances.
+Prize (milestone) states: `PENDING → ASSIGNED → APPROVED → RELEASED → PAID_OUT` with `DISPUTED` as a side-state blocking release. `RELEASED` means funds landed in the judge's wallet; `PAID_OUT` means the judge's forward payment to the winner is confirmed on-chain (ADR-007) — these are distinct, both reconciler-tracked states, not one step. All transitions are validated server-side; money-moving transitions require an on-chain confirmation before the mirror state advances.
 
 ## Non-goals for the MVP
 

@@ -19,7 +19,7 @@
 
 ```
 Event      — id, organizerId, name, dates, status, escrowContractId, network
-Prize      — id, eventId, rank, amountUsdc, milestoneIndex, status, winnerWalletId, releaseTxHash
+Prize      — id, eventId, rank, amountUsdc, milestoneIndex, status, winnerWalletId, releaseTxHash, forwardTxHash
 Judge      — id, eventId, walletAddress, displayName, status
 Submission — id, eventId, participantWalletId, url, submittedAt
 Wallet     — id, userId, address, usdcTrustlineVerifiedAt
@@ -41,17 +41,20 @@ UI: organizer signs → server → TW POST /helper/send-transaction: submit
 reconciler: confirms escrow balance == Σ prizes → Event.FUNDED
 ```
 
-### Release (judge approves → winner paid)
+### Release (judge approves → judge receives → judge forwards to winner)
 
-Two separate transactions, both signed by the judge — **there is no combined approve-and-release endpoint** (confirmed against the live API in K01; the public docs site implied one, it does not exist):
+Three separate transactions, all signed by the judge — **there is no combined approve-and-release endpoint** (confirmed against the live API in K01; the public docs site implied one, it does not exist), and the milestone `receiver` is the judge, not the winner (ADR-007 — the winner is unknown at deploy time and TW does not allow changing a milestone's receiver afterward):
 
 ```
 judge assigns winner → server validates winner trustline
 server → TW POST /escrow/multi-release/approve-milestone: build unsigned tx
 judge signs → server → TW POST /helper/send-transaction: submit (approval)
 server → TW POST /escrow/multi-release/release-milestone-funds: build unsigned tx
-judge signs → server → TW POST /helper/send-transaction: submit (release)
-reconciler: confirms release event → Prize.RELEASED + Payout row (txHash, net of protocol fee — see ADR-005)
+judge signs → server → TW POST /helper/send-transaction: submit (release to JUDGE's own wallet)
+reconciler: confirms release event → Prize.RELEASED + Payout row (releaseTxHash, net of protocol fee — see ADR-005)
+server: computes exact net amount received → builds unsigned Stellar payment tx, judge → winner
+judge signs → server submits directly to Horizon (not a TW call — plain Stellar payment)
+reconciler: confirms forward tx → Prize.PAID_OUT + Payout row updated (forwardTxHash)
 ```
 
 ### Reconciliation loop
@@ -117,6 +120,29 @@ Periodic job (and on-demand after each submit): pulls escrow state + indexed eve
 
 **Verified (2026-07-26):** wallet kit initializes client-side only (guarded against SSR execution); connect modal renders all four target wallets (Freighter, Albedo, xBull, LOBSTR) against a running dev server with no console errors from Astrea's own code.
 
+### ADR-007 — The judge receives the prize and forwards it to the winner (two-hop payout)
+
+**Status:** confirmed empirically (2026-07-26, testnet).
+
+**The constraint:** Astrea's core promise is funds locked *before* the winner is known. But a Trustless Work milestone's `receiver` address is fixed at deploy time, and there is no supported way to change it afterward:
+
+- `PUT /escrow/multi-release/update-escrow`, signed by the organizer (the only role allowed to call it — a judge-signed attempt is rejected outright with `"Only the platform address should be able to execute this function"`), accepts changes to `description` and other fields but rejects any change to `milestones[].receiver` with `"The provided escrow properties do not match the stored escrow."` — tested with the exact stored payload shape (including a JSON key-order sensitivity quirk), receiver-only change still rejected. See `spikes/k01-trustless-work/src/03-verify-update-escrow.js`.
+- `POST /escrow/multi-release/withdraw-remaining-funds` (disputeResolver-only) cannot be used to redirect pool funds mid-flow either: it is rejected outright while any milestone is still pending — `"All milestones must be released or dispute-resolved before withdrawing remaining funds"`. It's an end-of-lifecycle cleanup operation, not a runtime reallocation tool. See `spikes/k01-trustless-work/src/04-verify-withdraw-destination.js`.
+
+**Options considered:**
+- **B — Pool escrow + per-prize escrow deployed at judging time.** Rejected: not just riskier but not buildable as imagined — `withdraw-remaining-funds` refuses to release pooled funds until every milestone is already released or formally disputed, so there is no clean way to pull money out of a pool and re-deploy it once winners are known without abusing the dispute mechanism (forcing every prize through a fake "dispute" just to move money — which would also make the public event page show every prize as disputed, the opposite of the transparency Astrea promises).
+- **A — The judge is the milestone receiver; forwards to the winner.** Accepted.
+
+**Decision:** at deploy time, every milestone's `receiver` is set to the judge's address (the `approver`/`releaseSigner`, per ADR-003 — winner is not yet known). When the judge releases a milestone, funds land in the judge's own wallet; the judge immediately sends a second, ordinary Stellar payment forwarding the funds to the real winner. This is disclosed plainly on the product (no "trust model" section, per established README guidance — the mechanism is stated as fact, not hedged).
+
+**Verified end-to-end (2026-07-26, testnet, contract `CBGDI4WNYCQAACR2RJQTIHUGSVZJQQZHHE4HEYQKN3DU5XJADQIDROEW`):** deploy with judge as receiver → fund (1 USDC) → approve (judge) → release (judge) → judge's balance `0 → 0.997 USDC` (net of ADR-005's 0.3% fee) → judge forwards `0.997 USDC` via a plain Stellar `payment` operation → winner's balance increases by exactly `0.997 USDC`. See `spikes/k01-trustless-work/src/05-verify-option-a-forward.js`.
+
+**New requirement found in the same spike:** the judge's Stellar account needs its own USDC trustline to hold the funds even momentarily — `01-setup-accounts.js` only opened one for organizer and winner. Every judge onboarding flow must verify/create this trustline, the same as ADR-004 does for participants.
+
+**Forward amount, not gross amount:** the judge must forward exactly what they received (`amount × (1 - 0.003 - platformFee)`, per ADR-005), never the configured gross prize — forwarding the gross amount would leave the judge short. This must be a computed, non-editable value in the release/forward UI (`U06`), not something a judge types by hand.
+
+**Residual trust window:** between release and forward, funds sit in the judge's personal wallet for the time it takes to submit one more signed transaction — typically seconds, and the same judge already trusted with approval and release under ADR-003. `E04`'s reconciliation job must track both hops (release tx *and* forward tx) per prize and alert if a release is not followed by a matching forward within a short window, so a stalled forward is caught immediately rather than discovered by a complaining winner.
+
 ## Security notes
 
 - Trustless Work API key: server-side env only. (A `NEXT_PUBLIC_` key would ship to every browser — explicitly forbidden in this codebase.)
@@ -137,3 +163,6 @@ Periodic job (and on-demand after each submit): pulls escrow state + indexed eve
 | Testnet/mainnet mix-up | Network is part of Event records; config validated at boot; mainnet behind explicit gate |
 | Released amount < configured prize (0.3% protocol fee, ADR-005) | Disclosed on event page as a fixed, known deduction; reconciler compares against actual on-chain delta, not the configured amount |
 | Public docs site (docs.trustlesswork.com) disagrees with the live API | Treat the live OpenAPI spec (`GET /docs-json` on the API host) as ground truth; re-verify against it, not the prose docs, whenever an endpoint call fails unexpectedly |
+| Judge releases a milestone but never forwards to the winner (ADR-007) | Reconciler alerts if `Prize.RELEASED` has no matching `forwardTxHash` within a short window; funds are visibly sitting in a published, known judge wallet, not lost — dispute path available if the judge is unresponsive |
+| Judge forwards the gross prize amount instead of the fee-net amount (ADR-007) | UI computes and locks the forward amount server-side (`amount × (1 - 0.003 - platformFee)`); never a judge-editable field |
+| Judge account has no USDC trustline to receive the release (ADR-007) | Verified/created during judge onboarding, same pattern as ADR-004 for participants |

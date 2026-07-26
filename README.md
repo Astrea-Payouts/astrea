@@ -35,7 +35,7 @@ Astrea flips the trust model:
 
 👀 **Verifiable by anyone** — the public event page links the escrow contract; participants audit the pool before investing their time
 
-⚡ **Instant payouts** — one judge signature approves *and* releases; USDC settles to the winner's wallet in seconds
+⚡ **Fast payouts** — the judge approves, releases, and forwards the prize in a few seconds of signing; USDC settles to the winner's wallet right after
 
 🔑 **Non-custodial** — nobody (including Astrea) holds the funds; every transaction is signed client-side by the role that owns it
 
@@ -48,7 +48,7 @@ Astrea flips the trust model:
 1. **🛠️ Organizer creates an event** — prizes, amounts (USDC), judges, deadlines
 2. **💰 Organizer funds the escrow** — one multi-release escrow per event, one milestone per prize; the event goes live only when fully funded
 3. **👩‍💻 Participants register and submit** — wallet + USDC trustline verified at registration, not at payout time
-4. **⚖️ Judges approve-and-release** — a single signature per prize; the winner is paid instantly
+4. **⚖️ Judges approve, release, and forward** — the winner isn't known when the prize pool is locked, so the judge receives each released prize and immediately forwards it to the winner in the same signing flow
 5. **🏁 Everything on the record** — winners, amounts, and transaction hashes on the public event page
 
 ---

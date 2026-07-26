@@ -25,7 +25,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| E01 | `EscrowProvider` port + `TrustlessWorkAdapter` (deploy, fund, approve, release, reads) | L → split | Domain never imports TW types directly |
+| E01 | `EscrowProvider` port + `TrustlessWorkAdapter` (deploy, fund, approve, release, reads) + a `forwardToWinner` operation (plain Stellar payment, judge → winner) | L → split | Domain never imports TW types directly. See ADR-007: milestone receiver is the judge, not the winner — release lands in the judge's wallet, forward is a separate non-TW step |
 | E02 | Build-sign-submit pipeline: server builds XDR → client signs → server submits; idempotency keys in `OpLog` | M | |
 | E03 | Event + prize state machines with server-side transition validation | M | |
 | E04 | Reconciliation job: TW indexed events vs mirror tables; heal + alert | M | **In this phase on purpose** — money ops and reconciliation ship together |
