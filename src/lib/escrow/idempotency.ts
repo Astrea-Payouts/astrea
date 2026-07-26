@@ -7,22 +7,28 @@
 export interface OpRecord {
 	status: "PENDING" | "SUCCEEDED" | "FAILED";
 	txHash?: string;
+	// Only meaningful for a deploy operation's result — see types.ts SubmittedTx.
+	contractId?: string;
 }
 
 export type PrepareDecision =
 	| { action: "build" }
-	| { action: "already-succeeded"; txHash: string };
+	| { action: "already-succeeded"; txHash: string; contractId?: string };
 
 export function decidePrepare(existing: OpRecord | null): PrepareDecision {
 	if (existing?.status === "SUCCEEDED" && existing.txHash) {
-		return { action: "already-succeeded", txHash: existing.txHash };
+		return {
+			action: "already-succeeded",
+			txHash: existing.txHash,
+			contractId: existing.contractId,
+		};
 	}
 	return { action: "build" };
 }
 
 export type SubmitDecision =
 	| { action: "submit" }
-	| { action: "already-succeeded"; txHash: string };
+	| { action: "already-succeeded"; txHash: string; contractId?: string };
 
 export function decideSubmit(existing: OpRecord | null): SubmitDecision {
 	if (!existing) {
@@ -31,7 +37,11 @@ export function decideSubmit(existing: OpRecord | null): SubmitDecision {
 		);
 	}
 	if (existing.status === "SUCCEEDED" && existing.txHash) {
-		return { action: "already-succeeded", txHash: existing.txHash };
+		return {
+			action: "already-succeeded",
+			txHash: existing.txHash,
+			contractId: existing.contractId,
+		};
 	}
 	return { action: "submit" };
 }

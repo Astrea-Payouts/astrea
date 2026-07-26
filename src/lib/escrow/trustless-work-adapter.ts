@@ -4,7 +4,6 @@ import { STELLAR_NETWORK_PASSPHRASE } from "@/lib/stellar-network";
 import type {
 	ApproveMilestoneParams,
 	DeployEscrowParams,
-	DeployEscrowResult,
 	DisputeMilestoneParams,
 	EscrowProvider,
 	EscrowState,
@@ -49,7 +48,7 @@ function toUnsignedTx(data: { unsignedTransaction: string }): UnsignedTx {
 }
 
 export const trustlessWorkAdapter: EscrowProvider = {
-	async deployEscrow(params: DeployEscrowParams): Promise<DeployEscrowResult> {
+	async deployEscrow(params: DeployEscrowParams): Promise<UnsignedTx> {
 		const data = await twRequest("/deployer/multi-release", "POST", {
 			signer: params.signerPublicKey,
 			engagementId: params.engagementId,
@@ -60,7 +59,7 @@ export const trustlessWorkAdapter: EscrowProvider = {
 			milestones: params.milestones,
 			trustline: params.trustline,
 		});
-		return { ...toUnsignedTx(data), contractId: data.contractId };
+		return toUnsignedTx(data);
 	},
 
 	async fundEscrow(params: FundEscrowParams): Promise<UnsignedTx> {
@@ -128,18 +127,26 @@ export const trustlessWorkAdapter: EscrowProvider = {
 	},
 
 	async submitSignedTransaction(signedXdr: string): Promise<SubmittedTx> {
-		await twRequest("/helper/send-transaction", "POST", { signedXdr });
-		// Computed locally, not trusted from the TW response — the hash is
+		const data = await twRequest("/helper/send-transaction", "POST", {
+			signedXdr,
+		});
+		// txHash computed locally, not trusted from the TW response — it's
 		// deterministic from the signed envelope + network passphrase, and
 		// Principle 2 (docs/architecture.md) treats the chain, not a
 		// third-party API response, as the source of truth. E04 confirms
-		// this hash actually landed via Horizon.
+		// this hash actually landed via Horizon. contractId, in contrast,
+		// isn't something we can compute — it's assigned by TW/Soroban and
+		// only reported here, on a deploy transaction's submission.
 		const passphrase =
 			env.NEXT_PUBLIC_STELLAR_NETWORK === "mainnet"
 				? Networks.PUBLIC
 				: STELLAR_NETWORK_PASSPHRASE;
 		const tx = new Transaction(signedXdr, passphrase);
-		return { txHash: tx.hash().toString("hex") };
+		const result: SubmittedTx = { txHash: tx.hash().toString("hex") };
+		if (typeof data.contractId === "string") {
+			result.contractId = data.contractId;
+		}
+		return result;
 	},
 
 	async getEscrow(contractId: string): Promise<EscrowState> {

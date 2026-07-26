@@ -4,9 +4,15 @@ import { PrismaClientKnownRequestError } from "@/generated/prisma/internal/prism
 import { db } from "@/lib/db";
 import { decidePrepare, decideSubmit } from "./idempotency";
 
+interface StoredResult {
+	txHash: string;
+	// Only present for a deploy operation's result — see types.ts SubmittedTx.
+	contractId?: string;
+}
+
 interface StoredPayload {
 	request: unknown;
-	result?: { txHash: string } | { error: string };
+	result?: StoredResult | { error: string };
 }
 
 function readPayload(payload: Prisma.JsonValue): StoredPayload {
@@ -18,11 +24,13 @@ function toOpRecord(
 ) {
 	if (!row) return null;
 	const payload = readPayload(row.payload);
-	const txHash =
-		payload.result && "txHash" in payload.result
-			? payload.result.txHash
-			: undefined;
-	return { status: row.status, txHash };
+	const result =
+		payload.result && "txHash" in payload.result ? payload.result : undefined;
+	return {
+		status: row.status,
+		txHash: result?.txHash,
+		contractId: result?.contractId,
+	};
 }
 
 export interface PrepareOperationParams {
@@ -33,7 +41,7 @@ export interface PrepareOperationParams {
 }
 
 export type PrepareOperationResult =
-	| { alreadySucceeded: true; txHash: string }
+	| { alreadySucceeded: true; txHash: string; contractId?: string }
 	| { alreadySucceeded: false; unsignedXdr: string };
 
 // Building an unsigned transaction has no on-chain side effect (Stellar
@@ -49,7 +57,11 @@ export async function prepareOperation(
 	});
 	const decision = decidePrepare(toOpRecord(existing));
 	if (decision.action === "already-succeeded") {
-		return { alreadySucceeded: true, txHash: decision.txHash };
+		return {
+			alreadySucceeded: true,
+			txHash: decision.txHash,
+			contractId: decision.contractId,
+		};
 	}
 
 	const payload: StoredPayload = { request: params.requestPayload };
@@ -89,11 +101,12 @@ export async function prepareOperation(
 export interface SubmitOperationParams {
 	idempotencyKey: string;
 	signedXdr: string;
-	submit: (signedXdr: string) => Promise<{ txHash: string }>;
+	submit: (signedXdr: string) => Promise<StoredResult>;
 }
 
 export interface SubmitOperationResult {
 	txHash: string;
+	contractId?: string;
 	alreadySucceeded: boolean;
 }
 
@@ -109,18 +122,19 @@ export async function submitOperation(
 	});
 	const decision = decideSubmit(toOpRecord(existing));
 	if (decision.action === "already-succeeded") {
-		return { txHash: decision.txHash, alreadySucceeded: true };
+		return {
+			txHash: decision.txHash,
+			contractId: decision.contractId,
+			alreadySucceeded: true,
+		};
 	}
 
 	const priorRequest = existing
 		? readPayload(existing.payload).request
 		: undefined;
 	try {
-		const { txHash } = await params.submit(params.signedXdr);
-		const payload: StoredPayload = {
-			request: priorRequest,
-			result: { txHash },
-		};
+		const result = await params.submit(params.signedXdr);
+		const payload: StoredPayload = { request: priorRequest, result };
 		await db.opLog.update({
 			where: { idempotencyKey: params.idempotencyKey },
 			data: {
@@ -128,7 +142,11 @@ export async function submitOperation(
 				payload: payload as unknown as Prisma.InputJsonValue,
 			},
 		});
-		return { txHash, alreadySucceeded: false };
+		return {
+			txHash: result.txHash,
+			contractId: result.contractId,
+			alreadySucceeded: false,
+		};
 	} catch (err) {
 		const payload: StoredPayload = {
 			request: priorRequest,

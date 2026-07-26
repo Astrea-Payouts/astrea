@@ -14,6 +14,10 @@ DIRECT_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/p
 - `DATABASE_URL` (pooled, port 6543) — used by the app at runtime via a Prisma driver adapter (`src/lib/db.ts`).
 - `DIRECT_URL` (direct, port 5432) — used by the Prisma CLI for migrations (`prisma.config.ts`). Supabase does not support running migrations over the pooled connection.
 
+**Copy the full URI with the copy button in Supabase's dashboard — don't retype the password by hand.** Supabase-generated passwords often contain characters like `%` that need percent-encoding inside a connection-string URL; pasting the raw password into the `<password>` placeholder yourself can silently corrupt it (Postgres then rejects it with `28P01 password authentication failed`, even though the password "looks right"). The dashboard's copy button already encodes it correctly.
+
+**Also watch for tooling that overwrites `.env` wholesale** (a `prisma init`-style wizard, a Vercel/Supabase env-pull step, etc.) — it can quietly replace your working `DATABASE_URL`/`TW_API_KEY`/etc. with fresh boilerplate. If a script that was working suddenly can't authenticate, check whether `.env` still has all the keys from `.env.example` before re-deriving credentials from scratch.
+
 ## ⚠️ Migration baseline (read before running `prisma migrate dev`)
 
 The schema in this database was **not** created by running `prisma migrate dev` locally — it was applied directly against the live Supabase project (via the Supabase MCP `apply_migration` tool) during initial setup, because the database password wasn't available in that environment. The SQL in `prisma/migrations/` is a faithful record of what was applied, and `prisma/schema.prisma` matches it exactly — but Prisma's own tracking table (`_prisma_migrations`) does not exist in the live database yet.

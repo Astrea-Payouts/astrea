@@ -27,6 +27,11 @@ export interface UnsignedTx {
 
 export interface SubmittedTx {
 	txHash: string;
+	// Only present when the submitted transaction was a deploy — the build
+	// step (`/deployer/multi-release`) returns only unsignedTransaction; the
+	// contract address is assigned and reported by `/helper/send-transaction`
+	// after submission, never before (verified against the live OpenAPI spec).
+	contractId?: string;
 }
 
 export interface DeployEscrowParams {
@@ -40,10 +45,6 @@ export interface DeployEscrowParams {
 	platformFee: number;
 	milestones: EscrowMilestoneInput[];
 	trustline: EscrowTrustline;
-}
-
-export interface DeployEscrowResult extends UnsignedTx {
-	contractId: string;
 }
 
 export interface FundEscrowParams {
@@ -116,7 +117,7 @@ export class EscrowProviderError extends Error {
 }
 
 export interface EscrowProvider {
-	deployEscrow(params: DeployEscrowParams): Promise<DeployEscrowResult>;
+	deployEscrow(params: DeployEscrowParams): Promise<UnsignedTx>;
 	fundEscrow(params: FundEscrowParams): Promise<UnsignedTx>;
 	approveMilestone(params: ApproveMilestoneParams): Promise<UnsignedTx>;
 	releaseMilestone(params: ReleaseMilestoneParams): Promise<UnsignedTx>;

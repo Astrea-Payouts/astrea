@@ -29,9 +29,9 @@ describe("trustlessWorkAdapter", () => {
 		vi.unstubAllGlobals();
 	});
 
-	it("deployEscrow sends the verified payload shape and returns unsignedXdr + contractId", async () => {
+	it("deployEscrow sends the verified payload shape and returns only unsignedXdr (no contractId until submission)", async () => {
 		vi.mocked(fetch).mockResolvedValueOnce(
-			jsonResponse({ unsignedTransaction: "AAAA...", contractId: "CCONTRACT" }),
+			jsonResponse({ status: "SUCCESS", unsignedTransaction: "AAAA..." }),
 		);
 
 		const result = await trustlessWorkAdapter.deployEscrow({
@@ -50,7 +50,7 @@ describe("trustlessWorkAdapter", () => {
 			},
 		});
 
-		expect(result).toEqual({ unsignedXdr: "AAAA...", contractId: "CCONTRACT" });
+		expect(result).toEqual({ unsignedXdr: "AAAA..." });
 		const [url, init] = vi.mocked(fetch).mock.calls[0];
 		expect(url).toContain("/deployer/multi-release");
 		expect(JSON.parse(init?.body as string)).toMatchObject({
@@ -135,6 +135,32 @@ describe("trustlessWorkAdapter", () => {
 		const result =
 			await trustlessWorkAdapter.submitSignedTransaction(signedXdr);
 		expect(result.txHash).toBe(expectedHash);
+		expect(result.contractId).toBeUndefined();
+	});
+
+	it("submitSignedTransaction reports contractId when the API returns one (deploy submission)", async () => {
+		const keypair = Keypair.random();
+		const account = new Account(keypair.publicKey(), "1");
+		const tx = new TransactionBuilder(account, {
+			fee: "100",
+			networkPassphrase: STELLAR_NETWORK_PASSPHRASE,
+		})
+			.setTimeout(30)
+			.build();
+		tx.sign(keypair);
+		const signedXdr = tx.toXDR();
+
+		vi.mocked(fetch).mockResolvedValueOnce(
+			jsonResponse({
+				status: "SUCCESS",
+				message: "sent",
+				contractId: "CDEPLOYED",
+			}),
+		);
+
+		const result =
+			await trustlessWorkAdapter.submitSignedTransaction(signedXdr);
+		expect(result.contractId).toBe("CDEPLOYED");
 	});
 
 	it("getEscrow unwraps the array response from get-escrow-by-contract-ids", async () => {

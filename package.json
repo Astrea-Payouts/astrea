@@ -15,7 +15,8 @@
 		"test": "vitest run",
 		"typecheck": "tsc --noEmit",
 		"prepare": "husky",
-		"postinstall": "prisma generate"
+		"postinstall": "prisma generate",
+		"demo:e06": "tsx scripts/e06-vertical-slice.ts"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.6.0",
@@ -48,6 +49,7 @@
 		"husky": "^9.1.7",
 		"lint-staged": "^17.2.0",
 		"tailwindcss": "^4",
+		"tsx": "^4.23.1",
 		"typescript": "^5",
 		"vitest": "^4.1.10"
 	},

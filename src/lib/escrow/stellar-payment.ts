@@ -7,7 +7,7 @@ import {
 } from "@stellar/stellar-sdk";
 import { env } from "@/lib/env";
 import { HORIZON_URL, STELLAR_NETWORK_PASSPHRASE } from "@/lib/stellar-network";
-import type { UnsignedTx } from "./types";
+import type { SubmittedTx, UnsignedTx } from "./types";
 
 // ADR-007: the judge forwards a released prize to the winner via a plain
 // Stellar payment — deliberately NOT a Trustless Work call, so it lives
@@ -41,4 +41,17 @@ export async function buildForwardPaymentXdr(
 		.build();
 
 	return { unsignedXdr: tx.toXDR() };
+}
+
+// Submits directly to Horizon — not a Trustless Work call, so it doesn't go
+// through TrustlessWorkAdapter.submitSignedTransaction. Returns the txHash
+// Horizon itself reports, which for a plain payment (unlike the TW helper
+// endpoint) is available directly in the submission response.
+export async function submitForwardPayment(
+	signedXdr: string,
+): Promise<SubmittedTx> {
+	const server = new Horizon.Server(HORIZON_URL);
+	const tx = TransactionBuilder.fromXDR(signedXdr, STELLAR_NETWORK_PASSPHRASE);
+	const response = await server.submitTransaction(tx);
+	return { txHash: response.hash };
 }
