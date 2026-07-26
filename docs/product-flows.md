@@ -56,10 +56,12 @@ An event cannot go `LIVE` unless the escrow balance equals the sum of prizes. Th
 
 Triggers: a judge is unresponsive past a deadline, a result is contested, or the organizer attempts to abandon the event after funding.
 
-1. Any involved party opens a dispute on a milestone.
-2. Milestone enters `DISPUTED`; release is blocked.
-3. The dispute resolver reviews evidence and signs a resolution (release to winner, or refund distribution).
+1. Any involved party — organizer, judge, **or the winner themselves** — opens a dispute on the affected milestone (verified: all three can do this independently; the dispute resolver cannot open a dispute on their own escrow).
+2. Milestone enters `DISPUTED`; the normal approve/release/forward path (Flow 4) is bypassed for that prize.
+3. The dispute resolver reviews the situation and resolves it directly to the correct recipient (typically the winner) via `resolve-milestone-dispute` — this pays straight from the escrow to that address in one transaction, with **no forwarding step and no funds ever touching the judge's wallet**. This is the real recourse when a judge goes silent: the winner doesn't need the judge to do anything.
 4. Resolution is recorded with its transaction hash.
+
+The dispute resolver must be a genuinely different person from the judge for this to work as a safety net — merging the two roles is technically possible but was deliberately rejected (see ADR-007): a judge who is also their own resolver has no one left to override them if they go silent or act in bad faith.
 
 ## Event state machine
 
