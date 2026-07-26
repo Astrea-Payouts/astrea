@@ -15,9 +15,14 @@ function GithubIcon() {
 	);
 }
 
+// Absolute + transparent so it floats over the homepage hero's dark
+// LightPillar background instead of sitting on its own solid bar. This only
+// works because the only page today IS that hero — once Phase 3 adds pages
+// without one (dashboard, event pages), this needs a non-transparent variant
+// for those, or the logo/button here will be invisible against a light page.
 export function SiteHeader() {
 	return (
-		<header className="border-b">
+		<header className="absolute inset-x-0 top-0 z-20">
 			<div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
 				<Link href="/" className="flex items-center">
 					<Image
@@ -25,19 +30,19 @@ export function SiteHeader() {
 						alt="Astrea"
 						width={216}
 						height={144}
-						className="h-12 w-auto"
+						className="h-12 w-auto invert"
 						priority
 					/>
 				</Link>
 				<nav className="flex items-center gap-3">
 					<Link
 						href="https://github.com/Astrea-Payouts/astrea"
-						className="text-muted-foreground hover:text-foreground"
+						className="text-white/70 hover:text-white"
 						aria-label="Astrea on GitHub"
 					>
 						<GithubIcon />
 					</Link>
-					<WalletConnectButton />
+					<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
 				</nav>
 			</div>
 		</header>
