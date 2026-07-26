@@ -32,7 +32,19 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | E05 | Trustline verification service (check at registration + winner assignment) | S | |
 | E06 | Vertical slice demo: script or minimal UI — create event → fund → assign → approve → release on testnet | M | Milestone: **the product guarantee works** |
 
+## Milestone — Apply to GrantFox as maintainer
+
+**This is where solo work ends and the contributor phase begins.** Everything above (Phases 0–2) is built alone — it has to be, it's the part that proves the product's core promise actually works. Everything below (Phases 3–4, and the rest of Phase 5) is deliberately left as the open backlog GrantFox displays to contributors. Don't build ahead of this milestone; the whole point of applying here is that the UI, the edge cases, and the hardening get built *with* contributors, not *before* them.
+
+| Code | Task | Size | Notes |
+| --- | --- | --- | --- |
+| L01 | Deploy to Vercel (testnet demo) + seed demo event | S | |
+| L02 | Demo video of the full flow | S | |
+| L05 | GrantFox maintainer application: sync repo, complete project form | S | The point of it all |
+
 ## Phase 3 — Product UI
+
+**Contributor backlog opens here.** These are meant to become GitHub issues a stranger can pick up — the [`build_plan_task` issue template](../.github/ISSUE_TEMPLATE/build_plan_task.yml) exists for exactly this.
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
@@ -47,6 +59,8 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 
 ## Phase 4 — Trust & edge cases
 
+**Contributor backlog continues.**
+
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
 | T01 | Dispute flow: open, evidence, resolver signing, resolution record | L → split | |
@@ -54,19 +68,18 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | T03 | Notifications (email or in-app) on state changes | M | GFI-able parts |
 | T04 | E2E tests on testnet for the money paths (deploy→fund→release; dispute) | M | |
 
-## Phase 5 — Launch readiness
+## Phase 5 — Hardening
+
+**Contributor backlog, final stretch — before this ships, mainnet planning starts as its own phase.**
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| L01 | Deploy to Vercel (testnet demo) + seed demo event | S | |
-| L02 | Demo video of the full flow | S | |
 | L03 | Security pass: RLS review, secrets audit, XDR matching | M | |
 | L04 | Observability: structured logs with tx hashes, reconciliation drift alerts | S | |
-| L05 | GrantFox maintainer application: sync repo, complete project form | S | The point of it all |
 
 ## Sequencing rules
 
 1. K01 before everything — if the spike falsifies an assumption, ADRs change while changing docs is still cheap.
 2. E04 (reconciliation) ships in the same phase as the first money operation, never later.
-3. Phases 3–5 tasks are the contributor surface: keep them small, labeled, and well-described — they are what GrantFox displays.
+3. The GrantFox application (L01, L02, L05) happens **right after Phase 2**, not after Phases 3–4 — those phases are the contributor-facing backlog the application is *for*, not a prerequisite to it. Keep Phase 3–5 tasks small, labeled, and well-described; they are what GrantFox displays.
 4. Mainnet is out of scope for every task above; it gets its own phase after real testnet usage.
