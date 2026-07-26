@@ -1,0 +1,4 @@
+ALTER TABLE "prizes"
+  ADD COLUMN "releasedAt" TIMESTAMPTZ,
+  ADD COLUMN "forwardTxHash" TEXT,
+  ADD COLUMN "paidOutAt" TIMESTAMPTZ;

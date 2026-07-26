@@ -3,7 +3,7 @@
 ## Principles
 
 1. **Non-custodial, always.** The server never touches private keys. Every money-moving operation follows: server builds unsigned XDR → the owning role signs in their wallet → server submits.
-2. **The chain is the source of truth.** The database mirrors escrow state for UX and querying; a reconciliation job corrects drift using Trustless Work indexed events and transaction hashes. No money-related state is marked final without an on-chain confirmation.
+2. **The chain is the source of truth.** The database mirrors escrow state for UX and querying; a reconciliation job corrects drift by checking transaction hashes directly against Horizon (see "Reconciliation loop" for why this is Horizon, not a Trustless Work event log). No money-related state is marked final without an on-chain confirmation.
 3. **Escrow behind a port.** Domain code depends on an `EscrowProvider` interface, not on Trustless Work directly. `TrustlessWorkAdapter` is the only implementation today; a native Soroban adapter is possible later without touching domain logic.
 4. **Idempotent money operations.** Every escrow operation carries an idempotency key; retries are safe; partial failures (tx confirmed, DB write failed) are healed by reconciliation, never by manual fixes.
 5. **Testnet by default.** Network, asset issuer, and Trustless Work base URL are environment configuration. Mainnet is a deliberate, gated change.
@@ -59,7 +59,9 @@ reconciler: confirms forward tx → Prize.PAID_OUT + Payout row updated (forward
 
 ### Reconciliation loop
 
-Periodic job (and on-demand after each submit): pulls escrow state + indexed events from Trustless Work (`GET /escrows/:contractId`, events endpoint), compares against mirror tables, and repairs drift. Alerts on any divergence it cannot auto-heal.
+**Correction (2026-07-26, E04):** the live OpenAPI spec has no "list of indexed events for a contract" endpoint — that was an assumption from before K01, never verified. What actually exists: `GET /helper/get-escrow-by-contract-ids?validateOnChain=true` (current escrow snapshot, already used by `getEscrow`), `PUT /indexer/update-from-txhash` (tells TW's indexer to re-process a specific transaction and returns the refreshed snapshot), and `GET /helper/get-escrows-by-signer` (bulk filter/list, not a per-contract event log). There is no substitute for asking Horizon directly whether a given transaction hash actually landed — which is exactly Principle 2 ("the chain is the source of truth"), not a gap.
+
+Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row, confirms its `txHash` against Horizon directly rather than trusting Trustless Work's own indexed state; for prizes in `RELEASED`, checks `releasedAt` against `forwardTxHash` and alerts if a forward hasn't landed within a short window (ADR-007). Comparing Trustless Work's own milestone-status snapshot against the mirror tables is deferred until real data is flowing through the app (post-E06) — building that comparison against an empty database now would be speculative.
 
 ## Architecture Decision Records
 
@@ -168,7 +170,7 @@ Periodic job (and on-demand after each submit): pulls escrow state + indexed eve
 
 | Failure | Handling |
 | --- | --- |
-| Tx confirmed on-chain, DB write lost | Reconciler heals from TW indexed events; `Payout` is append-only |
+| Tx confirmed on-chain, DB write lost | Reconciler confirms the `OpLog` txHash directly against Horizon; `Payout` is append-only |
 | TW API down | Operations queue in `OpLog`, retry with backoff; UI shows degraded state |
 | Judge unresponsive | Dispute flow with resolver; deadline surfaced in UI |
 | Winner without trustline | Prevented at assignment (ADR-004) |
