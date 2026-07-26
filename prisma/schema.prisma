@@ -28,11 +28,14 @@ enum EventStatus {
 }
 
 /// Prize (milestone) lifecycle — see docs/product-flows.md "Prize (milestone) states".
+/// RELEASED means funds landed in the judge's wallet; PAID_OUT means the
+/// judge's forward payment to the winner is confirmed on-chain (ADR-007).
 enum PrizeStatus {
   PENDING
   ASSIGNED
   APPROVED
   RELEASED
+  PAID_OUT
   DISPUTED
 }
 

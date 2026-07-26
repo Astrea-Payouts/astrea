@@ -1,0 +1,1 @@
+ALTER TYPE "PrizeStatus" ADD VALUE 'PAID_OUT';
