@@ -20,6 +20,8 @@ Decision log for where [React Bits](https://reactbits.dev) components get used i
 
 **Decision: Prism**, rendered only inside the homepage `<Hero>` section, wrapped so it unmounts (not just visually hides) once the user scrolls past — the point of `suspendWhenOffscreen` is wasted if the component stays mounted document-wide.
 
+**Implemented (L00, 2026-07-26):** `src/components/prism-background.tsx`, ported from the verified live source at reactbits.dev/backgrounds/prism (JS → typed TSX, no logic changes) since React Bits ships as copy-paste source, not an installed package — only its `ogl` dependency is a real npm install. Used with `suspendWhenOffscreen` on the homepage hero. Full unmount-on-scroll (not just the built-in render-pause) is deferred until U08 gives the homepage more than one section to scroll past — pausing is the perf-critical property and already works; unmounting the DOM node too is a marginal gain until there's real page length to scroll through.
+
 ## Component placement
 
 | Component | Dependency | Where it goes | Why |
@@ -44,7 +46,8 @@ Decision log for where [React Bits](https://reactbits.dev) components get used i
 
 ## Build-plan cross-references
 
+- `L00` (minimal shell) — ✅ Prism hero, done
 - `U01` (event wizard) — Stepper
 - `U03` (public event page) — Border Glow
-- New `U08` (marketing homepage) — Prism hero, Card Swap, Scroll Stack, Specular Button
+- New `U08` (marketing homepage) — Card Swap, Scroll Stack, Specular Button (Prism hero already exists from L00 — U08 adds sections around it, doesn't redo it)
 - Mobile PWA shell (part of `S05`/`U03` navigation work) — Staggered Menu, Dock (shape only)

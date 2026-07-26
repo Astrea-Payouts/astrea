@@ -38,7 +38,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| L00 | ✅ **Done (2026-07-26)** — Minimal shell: `SiteHeader` (logo, GitHub link, wallet connect), `SiteFooter` (repo/docs/license links), existing hero tagline | S | **Not U08.** No Card Swap, Scroll Stack, or "how it works" section — those stay in the contributor backlog. Skipped the Prism hero background entirely — `ui-motion.md`'s own cross-reference already scopes it to U08, not here; adding it in both places would just duplicate the decision |
+| L00 | ✅ **Done (2026-07-26)** — Minimal shell: `SiteHeader` (logo, GitHub link, wallet connect), `SiteFooter` (repo/docs/license links), hero tagline **+ React Bits Prism background** (`src/components/prism-background.tsx`, `suspendWhenOffscreen`) | S | **Not U08.** No Card Swap, Scroll Stack, or "how it works" section — those stay in the contributor backlog. Prism moved here from U08 in `ui-motion.md`'s cross-reference — it's the hero's background, not a homepage-body section, so it belongs with the hero regardless of which task builds the hero |
 | L01 | Deploy to Vercel (testnet demo) + seed demo event | S | |
 | L02 | Demo video of the full flow | S | |
 | L05 | GrantFox maintainer application: sync repo, complete project form | S | The point of it all |
@@ -56,7 +56,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | U05 | Judge panel: submissions review, winner assignment, approval signing | M | |
 | U06 | Release flow UI + confirmation states ("pending on-chain" UX) | S | |
 | U07 | Explorer links (stellar.expert) + tx hash display components | S | GFI |
-| U08 | Marketing homepage: hero (React Bits **Prism** background, unmounted when scrolled past), "see it in action" (**Card Swap**), "how it works" (**Scroll Stack**), primary CTA (**Specular Button**, 1–2 max) | M | See docs/ui-motion.md for full rationale and the corrections to Dock/Tilted Card assumptions |
+| U08 | Marketing homepage: expand L00's hero (wire full unmount-on-scroll for the existing **Prism** background now that there's page length to scroll past), "see it in action" (**Card Swap**), "how it works" (**Scroll Stack**), primary CTA (**Specular Button**, 1–2 max) | M | See docs/ui-motion.md for full rationale and the corrections to Dock/Tilted Card assumptions |
 
 ## Phase 4 — Trust & edge cases
 

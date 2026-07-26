@@ -19,16 +19,15 @@ export function SiteHeader() {
 	return (
 		<header className="border-b">
 			<div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
-				<Link href="/" className="flex items-center gap-2">
+				<Link href="/" className="flex items-center">
 					<Image
-						src="/astrea-logo-light.png"
+						src="/astrea-sided-logo-light.png"
 						alt="Astrea"
-						width={28}
-						height={28}
-						className="rounded-full"
+						width={144}
+						height={96}
+						className="h-8 w-auto"
 						priority
 					/>
-					<span className="font-semibold tracking-tight">Astrea</span>
 				</Link>
 				<nav className="flex items-center gap-3">
 					<Link
