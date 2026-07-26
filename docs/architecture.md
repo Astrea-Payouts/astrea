@@ -123,6 +123,7 @@ Periodic job (and on-demand after each submit): pulls escrow state + indexed eve
 - XDR review: the server records the operations it built per idempotency key; submitted transactions are matched against what was built.
 - RLS on all user-scoped tables; public event pages read through views exposing only public fields.
 - No secrets in the repo; `.env.example` documents every variable.
+- **Dependency audit (S05):** `@creit.tech/stellar-wallets-kit` bundles support for wallets Astrea doesn't use (Trezor, Ledger, WalletConnect, NEAR/"Hot Wallet", Coinbase CDP, Solana) — installing the package pulls in their full dependency trees regardless of which module subpaths we actually import (`kit.ts` only imports Freighter/Albedo/xBull/LOBSTR). `npm audit` flagged 43 vulnerabilities, nearly all inside those unused wallet integrations, including 1 critical (`protobufjs`, via the Trezor module chain). `package.json` `overrides` pins `protobufjs`, `axios`, `elliptic`, and `uuid` to their latest patched versions without downgrading the kit itself — reduced to 0 critical, 6 high. The 6 remaining high findings are `next`'s bundled `sharp`/`postcss` and `prisma`'s bundled `@prisma/dev`/`find-my-way` — both build/dev-tooling-only (never in the deployed runtime bundle), and `npm audit fix --force`'s suggested "fix" for both is an actual downgrade (Next→9.3.3, Prisma→7.8.0, older than what we run) — rejected as worse than the finding. Re-run `npm audit --omit=dev` after any dependency bump to check if upstream has patched these.
 
 ## Failure modes considered
 

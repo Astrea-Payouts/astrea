@@ -55,5 +55,11 @@
 		"*.{js,jsx,ts,tsx,json,css,md}": [
 			"biome check --write --no-errors-on-unmatched"
 		]
+	},
+	"overrides": {
+		"protobufjs": "^8.7.1",
+		"axios": "^1.18.1",
+		"elliptic": "^6.6.1",
+		"uuid": "^14.0.1"
 	}
 }
