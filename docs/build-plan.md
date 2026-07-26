@@ -38,7 +38,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| L00 | Minimal shell — header (logo + wallet connect + GitHub link), footer (links), hero (existing tagline, optionally the React Bits **Prism** background from ui-motion.md) | S | **Not U08.** No Card Swap, Scroll Stack, or "how it works" section — those stay in the contributor backlog. This exists only so L01's deployed demo doesn't look like a bare scaffold |
+| L00 | ✅ **Done (2026-07-26)** — Minimal shell: `SiteHeader` (logo, GitHub link, wallet connect), `SiteFooter` (repo/docs/license links), existing hero tagline | S | **Not U08.** No Card Swap, Scroll Stack, or "how it works" section — those stay in the contributor backlog. Skipped the Prism hero background entirely — `ui-motion.md`'s own cross-reference already scopes it to U08, not here; adding it in both places would just duplicate the decision |
 | L01 | Deploy to Vercel (testnet demo) + seed demo event | S | |
 | L02 | Demo video of the full flow | S | |
 | L05 | GrantFox maintainer application: sync repo, complete project form | S | The point of it all |

@@ -2,9 +2,9 @@ import { WalletConnectButton } from "@/components/wallet-connect-button";
 
 export default function Home() {
 	return (
-		<div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-			<h1 className="text-3xl font-semibold tracking-tight">Astrea</h1>
-			<p className="max-w-md text-muted-foreground">
+		<main className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-24 text-center">
+			<h1 className="text-4xl font-semibold tracking-tight">Astrea</h1>
+			<p className="max-w-md text-lg text-muted-foreground">
 				Escrow-backed prize payouts for hackathons, bounties, and community
 				challenges — funds locked on-chain before the event starts.
 			</p>
@@ -12,13 +12,13 @@ export default function Home() {
 			<p className="text-sm text-muted-foreground">
 				MVP in active development. See the{" "}
 				<a
-					className="underline underline-offset-4"
-					href="https://github.com/Astrea-Payouts"
+					className="underline underline-offset-4 hover:text-foreground"
+					href="https://github.com/Astrea-Payouts/astrea/blob/main/docs/build-plan.md"
 				>
 					build plan
 				</a>{" "}
 				for what&apos;s next.
 			</p>
-		</div>
+		</main>
 	);
 }
