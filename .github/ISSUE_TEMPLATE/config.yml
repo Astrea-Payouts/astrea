@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & discussion
+    url: https://github.com/Astrea-Payouts/astrea/discussions
+    about: Ask about the project, propose an idea, or get unstuck.
+  - name: Stellar / Soroban general questions
+    url: https://discord.gg/stellardev
+    about: For questions about Stellar itself, not specific to Astrea.

@@ -1,0 +1,58 @@
+name: Build plan task
+description: Pick up (or propose) a task from docs/build-plan.md
+title: "[CODE] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every task in [docs/build-plan.md](../../docs/build-plan.md) has a code like `E02` or `U01` — put it in the issue title (e.g. `[E02] Build-sign-submit pipeline`). If you're proposing something not yet in the build plan, that's fine too — just say so below.
+
+  - type: input
+    id: code
+    attributes:
+      label: Task code
+      description: The code from docs/build-plan.md (e.g. K01, S05, E02, U01, T03, L02). Leave blank if this isn't on the build plan yet.
+      placeholder: E02
+    validations:
+      required: false
+
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      options:
+        - "Phase 0 — Spike"
+        - "Phase 1 — Foundations"
+        - "Phase 2 — Escrow core"
+        - "Phase 3 — Product UI"
+        - "Phase 4 — Trust & edge cases"
+        - "Phase 5 — Launch readiness"
+        - "Not on the build plan yet"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What needs to happen
+      description: Copy the task description from build-plan.md, or describe the new task.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: How to know it's done
+      description: What should be true when this is finished? (e.g. "npm run test passes with a new test for X", "verified on testnet with a real transaction")
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: money-path
+    attributes:
+      label: Does this touch money movement?
+      description: Escrow calls, signing, the reconciliation job, or anything else in the E0* range.
+      options:
+        - label: Yes — this needs the `security` label and extra review
+          required: false

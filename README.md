@@ -174,9 +174,9 @@ To use Astrea you need one of the following wallets installed (Chrome, Brave, or
 
 ## 🤝 Contributing
 
-Astrea is built in the open and welcomes contributors of all levels. Issues are parceled into small, well-scoped tasks with labels (including `good first issue`) — see the [build plan](docs/build-plan.md) for the task map.
+Astrea is built in the open and welcomes contributors of all levels. Issues are parceled into small, well-scoped tasks with labels (including `good first issue`) — see the [build plan](docs/build-plan.md) for the task map. Start with [CONTRIBUTING.md](CONTRIBUTING.md) for local setup, code quality expectations, and how to open a PR.
 
-_This project will use **Biome** for linting/formatting and **Husky** + **commitlint** to enforce [Conventional Commits](https://www.conventionalcommits.org/) (e.g., `feat: add event wizard`, `fix: trustline check`). PRs that fail these checks are rejected by CI._
+_This project uses **Biome** for linting/formatting and **Husky** + **commitlint** to enforce [Conventional Commits](https://www.conventionalcommits.org/) (e.g., `feat: add event wizard`, `fix: trustline check`) — both locally via pre-commit hooks and again in CI. PRs that fail these checks are rejected._
 
 ## 🧑‍🚀 Maintainers
 

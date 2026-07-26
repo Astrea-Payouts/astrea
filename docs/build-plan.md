@@ -19,7 +19,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | S03 | ✅ **Done** — Prisma schema + Supabase setup (`Event`, `Prize`, `Judge`, `Submission`, `Wallet`, `Payout`, `OpLog`) + RLS | M | |
 | S04 | ✅ **Done** — Environment config module: network, USDC issuer, TW base URL/key (server-only), boot-time validation | S | See src/lib/env.ts |
 | S05 | ✅ **Done (2026-07-26)** — Wallet connect with Stellar Wallets Kit (Freighter, Albedo, xBull, LOBSTR) + session association | M | See ADR-006. API turned out to be a static-class v2.5.0 rewrite, not the instance-based API in every tutorial/doc found — verified against the installed package's own `.d.ts` files |
-| S06 | `.env.example`, CONTRIBUTING.md, issue/PR templates, labels | S | GFI |
+| S06 | ✅ **Done** — `.env.example`, CONTRIBUTING.md, issue/PR templates, labels | S | Also filled two gaps found along the way: missing `LICENSE` file, and README's Contributing section still said "will use Biome" in future tense |
 
 ## Phase 2 — Escrow core (vertical slice)
 
