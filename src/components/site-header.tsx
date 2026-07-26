@@ -23,9 +23,9 @@ export function SiteHeader() {
 					<Image
 						src="/astrea-sided-logo-light.png"
 						alt="Astrea"
-						width={144}
-						height={96}
-						className="h-8 w-auto"
+						width={216}
+						height={144}
+						className="h-12 w-auto"
 						priority
 					/>
 				</Link>
