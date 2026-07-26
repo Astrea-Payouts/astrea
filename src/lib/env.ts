@@ -1,12 +1,17 @@
-import { Networks } from "@stellar/stellar-sdk";
 import { z } from "zod";
+import {
+	HORIZON_URL,
+	STELLAR_ACCOUNT_ID,
+	STELLAR_NETWORK_PASSPHRASE,
+} from "./stellar-network";
 
 // Single source of truth for which Stellar network the app targets.
 // Deliberately NEXT_PUBLIC_ (not a secret) so server and client can never
 // disagree about network — a duplicated STELLAR_NETWORK + a separate
 // NEXT_PUBLIC_STELLAR_NETWORK would let them drift, which is exactly the
 // testnet/mainnet mix-up failure mode documented in docs/architecture.md.
-const STELLAR_ACCOUNT_ID = /^G[A-Z2-7]{55}$/;
+// The network → passphrase/Horizon mapping itself lives in stellar-network.ts
+// (client-safe) so it isn't duplicated between the server and client configs.
 
 const serverSchema = z.object({
 	NEXT_PUBLIC_STELLAR_NETWORK: z
@@ -34,17 +39,6 @@ const serverSchema = z.object({
 	USDC_SYMBOL: z.string().min(1).default("USDC"),
 });
 
-const NETWORK_CONFIG = {
-	testnet: {
-		passphrase: Networks.TESTNET,
-		horizonUrl: "https://horizon-testnet.stellar.org",
-	},
-	mainnet: {
-		passphrase: Networks.PUBLIC,
-		horizonUrl: "https://horizon.stellar.org",
-	},
-} as const;
-
 function parseEnv() {
 	const parsed = serverSchema.safeParse(process.env);
 	if (!parsed.success) {
@@ -64,12 +58,10 @@ function parseEnv() {
 		);
 	}
 
-	const network = NETWORK_CONFIG[data.NEXT_PUBLIC_STELLAR_NETWORK];
-
 	return {
 		...data,
-		networkPassphrase: network.passphrase,
-		horizonUrl: network.horizonUrl,
+		networkPassphrase: STELLAR_NETWORK_PASSPHRASE,
+		horizonUrl: HORIZON_URL,
 	};
 }
 

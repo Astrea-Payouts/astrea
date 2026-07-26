@@ -19,6 +19,7 @@
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.6.0",
+		"@creit.tech/stellar-wallets-kit": "^2.5.0",
 		"@prisma/adapter-pg": "^7.9.0",
 		"@prisma/client": "^7.9.0",
 		"@stellar/stellar-sdk": "^16.1.0",

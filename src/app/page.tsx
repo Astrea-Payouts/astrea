@@ -1,3 +1,5 @@
+import { WalletConnectButton } from "@/components/wallet-connect-button";
+
 export default function Home() {
 	return (
 		<div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
@@ -6,6 +8,7 @@ export default function Home() {
 				Escrow-backed prize payouts for hackathons, bounties, and community
 				challenges — funds locked on-chain before the event starts.
 			</p>
+			<WalletConnectButton />
 			<p className="text-sm text-muted-foreground">
 				MVP in active development. See the{" "}
 				<a

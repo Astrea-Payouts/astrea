@@ -108,6 +108,15 @@ Periodic job (and on-demand after each submit): pulls escrow state + indexed eve
 
 **Decision:** display prize amounts as configured (gross) on the event page, with a plain, permanent disclosure that released amounts are net of Trustless Work's fixed 0.3% protocol fee (plus Astrea's own `platformFee`, currently 0%). Do **not** gross-up funding amounts to compensate — the winner-facing number should always match what actually lands in their wallet, computable client-side as `amount × (1 - 0.003 - platformFee)`.
 
+### ADR-006 — Wallet connection sets a UX session, not an authorization boundary
+
+**Decision (S05):** connecting a wallet via Stellar Wallets Kit (`@creit.tech/stellar-wallets-kit`) triggers a server action (`associateWallet`) that finds-or-creates a `User`/`Wallet` row and sets an httpOnly cookie pointing at the `Wallet.id`. This cookie is read to know "who's browsing as which wallet" for UX purposes (pre-filling forms, showing "your events").
+**Why not more (yet):** the cookie is set from a client-asserted address with no cryptographic challenge (no "sign this nonce to prove you hold the key" step). That's a deliberate scope cut, not an oversight — because **no money-moving action ever trusts this cookie**. Every escrow operation (approve, release, withdraw) is independently authorized by an actual on-chain signature, verified by Trustless Work/the Soroban contract itself (proven in K01's negative tests). The session is a convenience for reads, never a check for writes that matter.
+**Failure mode this avoids:** if the DB/session write fails (e.g. no DB connection available), the client-side wallet connection still succeeds — `associateWallet` failures are caught and logged, never allowed to undo a real wallet connection the user just approved in their extension.
+**Revisit when:** if a future feature needs to trust "this browser really controls address X" for something other than display (e.g. gating a private organizer dashboard read), upgrade to a signed challenge-response ("Sign-In With Stellar," SEP-0043's `signMessage`) rather than trusting the cookie alone.
+
+**Verified (2026-07-26):** wallet kit initializes client-side only (guarded against SSR execution); connect modal renders all four target wallets (Freighter, Albedo, xBull, LOBSTR) against a running dev server with no console errors from Astrea's own code.
+
 ## Security notes
 
 - Trustless Work API key: server-side env only. (A `NEXT_PUBLIC_` key would ship to every browser — explicitly forbidden in this codebase.)
