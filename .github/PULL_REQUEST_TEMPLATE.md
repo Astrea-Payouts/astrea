@@ -1,20 +1,27 @@
 ## What this does
 
-<!-- One or two sentences. Link the issue: Closes #123 -->
+<!-- One or two sentences. If this maps to a build-plan task, include its code (e.g. [E02]). Link the issue: Closes #123 -->
 
 ## How I verified it
 
 <!-- Be specific — "it builds" isn't verification. What did you actually run/click/check? -->
 
 - [ ] `npm run lint` / `npm run typecheck` / `npm run test` / `npm run build` all pass locally
-- [ ] If this touches money movement (escrow calls, signing, reconciliation): tested end-to-end on **testnet** with a real transaction — link the tx hash or contract ID below
+- [ ] Commit messages follow Conventional Commits (checked by a separate CI job — see CONTRIBUTING.md if a hook rejects yours)
 
 ## Money-path change?
 
-- [ ] Yes — this needs the `security` label
+<!-- Escrow calls, signing, reconciliation — anything under E0*. -->
+
+- [ ] Yes
+  - [ ] Tested end-to-end on **testnet** with a real transaction — tx hash / contract ID below
+  - [ ] Added the `security` label to this PR
 - [ ] No
 
 ## Docs
 
 - [ ] Updated an ADR or other doc if this changes a documented decision (a stale doc is worse than no doc)
 - [ ] N/A
+
+---
+*First PR here? [CONTRIBUTING.md](../CONTRIBUTING.md) covers setup, verification, and scope in a few minutes.*
