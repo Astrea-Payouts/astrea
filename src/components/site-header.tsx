@@ -29,7 +29,7 @@ function GithubIcon() {
 export function SiteHeader() {
 	return (
 		<header className="absolute inset-x-0 top-0 z-20">
-			<div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4 md:px-12">
+			<div className="flex items-center justify-between gap-4 px-6 py-4 md:px-12">
 				<Link href="/" className="flex items-center">
 					<Image
 						src="/astrea-sided-logo-light-trimmed.png"
