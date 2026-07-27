@@ -1,1 +1,12 @@
-npx --no -- commitlint --edit "$1"
+if ! npx --no -- commitlint --edit "$1"; then
+	echo ""
+	echo "Commit message must follow Conventional Commits:"
+	echo "  <type>(<scope>): <subject>"
+	echo ""
+	echo "  e.g. fix(ui): tune Prism defaults for more visual texture"
+	echo ""
+	echo "Allowed types: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test"
+	echo "The first line is the type/subject — everything else (bullet points, details) goes in the body below a blank line."
+	echo "See CONTRIBUTING.md > Commit messages."
+	exit 1
+fi
