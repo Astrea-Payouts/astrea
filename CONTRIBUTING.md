@@ -10,11 +10,22 @@ Thanks for considering contributing — this project is built in the open specif
 
 ## Local setup
 
+**Fork the repo first** (top-right on GitHub) — you won't have push access to `Astrea-Payouts/astrea` directly, and a PR has to come from a branch GitHub can see, which means your fork. Then clone *your* fork, not the upstream one:
+
 ```bash
-git clone https://github.com/Astrea-Payouts/astrea.git
+git clone https://github.com/<your-username>/astrea.git
 cd astrea
+git remote add upstream https://github.com/Astrea-Payouts/astrea.git
 npm install
 cp .env.example .env
+```
+
+The `upstream` remote is so you can pull in new work before starting a task:
+
+```bash
+git fetch upstream
+git checkout main
+git merge upstream/main
 ```
 
 Fill in `.env` following the comments in `.env.example` and [prisma/README.md](prisma/README.md):
@@ -47,10 +58,11 @@ If a check fails and you're not sure why, the error output is usually specific e
 
 ## Opening a PR
 
-1. **Reference the issue** you're working on in the PR description (`Closes #123`).
-2. **Keep it scoped** to the linked task — if you find something else worth fixing along the way, open a separate issue rather than bundling it in.
-3. **If your change touches money movement** (anything under `E0*`, escrow calls, signing, the reconciliation job) — say so explicitly in the PR description and how you verified it on testnet. These get extra review; see the `security` label.
-4. **Update docs alongside code** — if you change a decision recorded in an ADR, update the ADR rather than leaving it stale. A wrong doc is worse than no doc.
+1. **Branch off your fork's `main`**, push it to your fork, then open the PR from there against `Astrea-Payouts/astrea:main` — GitHub does this automatically when you push a branch to your fork and click "Compare & pull request."
+2. **Reference the issue** you're working on in the PR description (`Closes #123`).
+3. **Keep it scoped** to the linked task — if you find something else worth fixing along the way, open a separate issue rather than bundling it in.
+4. **If your change touches money movement** (anything under `E0*`, escrow calls, signing, the reconciliation job) — say so explicitly in the PR description and how you verified it on testnet. These get extra review; see the `security` label.
+5. **Update docs alongside code** — if you change a decision recorded in an ADR, update the ADR rather than leaving it stale. A wrong doc is worse than no doc.
 
 ## Where to ask questions
 
