@@ -4,11 +4,15 @@ import { WalletConnectButton } from "@/components/wallet-connect-button";
 export default function Home() {
 	return (
 		<main className="relative isolate flex min-h-screen flex-1 flex-col overflow-hidden bg-black">
-			{/* Prism confined to the right side, not full-bleed, so it never
-			passes behind the text column on the left — default props (default
-			scale/glow/noise) so it reads exactly like the React Bits demo. */}
-			<div className="pointer-events-none absolute inset-y-0 right-0 z-0 w-full md:w-3/5">
-				<PrismBackground suspendWhenOffscreen className="h-full w-full" />
+			{/* Canvas spans the full hero (no flat black slab on the left) —
+			the shape itself is pushed right via `offset` so it still reads
+			as concentrated on the right side. */}
+			<div className="pointer-events-none absolute inset-0 z-0">
+				<PrismBackground
+					suspendWhenOffscreen
+					offset={{ x: 260 }}
+					className="h-full w-full"
+				/>
 			</div>
 			{/* Fully transparent by ~60% width, i.e. exactly where the Prism
 			lane starts — the glow must stay undimmed to read like the docs
