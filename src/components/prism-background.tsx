@@ -28,11 +28,11 @@ export interface PrismBackgroundProps {
 
 export function PrismBackground({
 	height = 3,
-	baseWidth = 2.6,
-	animationType = "rotate",
+	baseWidth = 2.5,
+	animationType = "3drotate",
 	glow = 1,
 	offset = { x: 0, y: 0 },
-	noise = 0,
+	noise = 0.1,
 	transparent = true,
 	scale = 3.6,
 	hueShift = 0,
@@ -41,7 +41,7 @@ export function PrismBackground({
 	inertia = 0.05,
 	bloom = 1,
 	suspendWhenOffscreen = false,
-	timeScale = 0.5,
+	timeScale = 0.3,
 	className,
 }: PrismBackgroundProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
