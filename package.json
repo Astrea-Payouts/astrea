@@ -16,7 +16,8 @@
 		"typecheck": "tsc --noEmit",
 		"prepare": "husky",
 		"postinstall": "prisma generate",
-		"demo:e06": "tsx scripts/e06-vertical-slice.ts"
+		"demo:e06": "tsx scripts/e06-vertical-slice.ts",
+		"demo:seed": "tsx scripts/seed-demo-event.ts"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.6.0",
