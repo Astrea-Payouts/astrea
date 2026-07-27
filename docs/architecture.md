@@ -10,7 +10,7 @@
 
 ## System overview
 
-- **Frontend** — Next.js App Router, TypeScript strict, Tailwind + shadcn/ui. Wallet connectivity through Stellar Wallets Kit. Signs XDR client-side. Renders public event pages (SSR for shareability/SEO).
+- **Frontend** — Next.js App Router, TypeScript strict, Tailwind + shadcn/ui. Wallet connectivity through Stellar Wallets Kit. Signs XDR client-side. Renders public event pages (SSR for shareability/SEO — see build-plan.md U09/U10 for the concrete tasks: sitemap/robots/OG basics, then per-event dynamic metadata and social cards).
 - **Backend** — Next.js server actions / route handlers. Holds the Trustless Work API key (server-side only — never `NEXT_PUBLIC_`). Owns the state machines, validation, idempotency, and reconciliation.
 - **Database** — Supabase Postgres via Prisma. Row Level Security for user-scoped data. Mirror tables for escrow state.
 - **Escrow layer** — Trustless Work REST API (`/deployer/multi-release`, `/escrow/multi-release/*`, `/helper/send-transaction`), multi-release escrows. One escrow per event; one milestone per prize. Identity is the Soroban `contractId`, returned only after the signed deploy transaction is submitted. **Each escrow has exactly one `approver` address and one `releaseSigner` address** (not arrays) — see the multi-judge note under ADR-003.

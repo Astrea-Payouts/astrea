@@ -57,6 +57,8 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | U06 | Release flow UI + confirmation states ("pending on-chain" UX) | S | |
 | U07 | Explorer links (stellar.expert) + tx hash display components | S | GFI |
 | U08 | Marketing homepage: expand L00's hero, "see it in action" (**Card Swap**), "how it works" (**Scroll Stack**), primary CTA (**Specular Button**, 1–2 max); design `SiteHeader`'s solid (non-transparent) variant for the new non-hero pages landing around this time | M | See docs/ui-motion.md for full rationale and the corrections to Dock/Tilted Card assumptions |
+| U09 | Site-wide technical SEO + social cards: `robots.ts`, `sitemap.ts`, root Open Graph/Twitter Card metadata + a default OG image | S | `GFI`. Self-contained — works against L00's homepage today, doesn't need any later page to land first. All file-based Next.js conventions (`src/app/robots.ts`, `src/app/sitemap.ts`, `metadata` in `layout.tsx`), easy to verify (view source, or a social-card debugger like opengraph.xyz). Not a money-path change |
+| U10 | Per-event SEO: dynamic `generateMetadata` (title/description/canonical per event), a dynamic OG image (`opengraph-image.tsx`, e.g. "$5,000 USDC prize pool — Event Name"), and `schema.org/Event` JSON-LD | M | Depends on **U03** landing first (no event page to attach metadata to yet). Not pure GFI because of that dependency, but a good second task once U03 merges — same file-based Next.js conventions as U09, still not money-path |
 
 ## Phase 4 — Trust & edge cases
 
