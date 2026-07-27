@@ -16,21 +16,27 @@ function GithubIcon() {
 }
 
 // Absolute + transparent so it floats over the homepage hero's dark
-// LightPillar background instead of sitting on its own solid bar. This only
-// works because the only page today IS that hero — once Phase 3 adds pages
+// background instead of sitting on its own solid bar. This only works
+// because the only page today IS that hero — once Phase 3 adds pages
 // without one (dashboard, event pages), this needs a non-transparent variant
 // for those, or the logo/button here will be invisible against a light page.
+//
+// The source PNG (astrea-sided-logo-light.png) has ~32% vertical fill — a
+// lot of baked-in transparent padding around the mark — so scaling its
+// container height barely grew the visible glyph. astrea-sided-logo-light
+// -trimmed.png is the same mark cropped to its bounding box (+small margin,
+// ~88% fill), so `h-*` here actually controls the visible logo size.
 export function SiteHeader() {
 	return (
 		<header className="absolute inset-x-0 top-0 z-20">
-			<div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-5 md:px-12">
+			<div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4 md:px-12">
 				<Link href="/" className="flex items-center">
 					<Image
-						src="/astrea-sided-logo-light.png"
+						src="/astrea-sided-logo-light-trimmed.png"
 						alt="Astrea"
-						width={216}
-						height={144}
-						className="h-16 w-auto invert"
+						width={1053}
+						height={381}
+						className="h-14 w-auto invert md:h-20"
 						priority
 					/>
 				</Link>
