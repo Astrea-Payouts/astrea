@@ -23,18 +23,18 @@ function GithubIcon() {
 export function SiteHeader() {
 	return (
 		<header className="absolute inset-x-0 top-0 z-20">
-			<div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
+			<div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-5 md:px-12">
 				<Link href="/" className="flex items-center">
 					<Image
 						src="/astrea-sided-logo-light.png"
 						alt="Astrea"
 						width={216}
 						height={144}
-						className="h-12 w-auto invert"
+						className="h-16 w-auto invert"
 						priority
 					/>
 				</Link>
-				<nav className="flex items-center gap-3">
+				<nav className="flex items-center gap-4">
 					<Link
 						href="https://github.com/Astrea-Payouts/astrea"
 						className="text-white/70 hover:text-white"

@@ -13,23 +13,26 @@ Decision log for where [React Bits](https://reactbits.dev) components get used i
 
 | Option | Engine | Built-in perf safety | Verdict |
 | --- | --- | --- | --- |
-| Prism | `ogl` | `suspendWhenOffscreen` — pauses rendering once scrolled out of view | Originally chosen for its perf safety (see below) and rotating faceted light. **Superseded** — see revision. |
-| **Light Pillar** | `three` | `quality` prop auto-downgrades low/medium/high on mobile | **Chosen (revised, 2026-07-26).** No offscreen-pause, and `three` is heavier than `ogl` — a real trade-off, accepted for the look: a vertical column of light reads better against a dark hero than Prism's faceted glow did in practice, once actually built and viewed (see below). |
+| **Prism** | `ogl` | `suspendWhenOffscreen` — pauses rendering once scrolled out of view | **Chosen (re-revised, 2026-07-26).** Back after a detour through Light Pillar — see revision history below. |
+| Light Pillar | `three` | `quality` prop auto-downgrades low/medium/high on mobile | Tried in between (2026-07-26). Reverted the same day — see below. |
 | Dark Veil | `ogl` | `resolutionScale` (manual, not automatic) | Visual tone ("flame of ambition") reads more aggressive/fintech-hype than fits Astrea's trust/justice narrative. |
 | Light Rays | `ogl` | none exposed | Lightest visual, but no offscreen-pause or mobile auto-downgrade found in its props — would need to wire `IntersectionObserver` manually to get the same safety Prism gives for free. |
 
 **Original decision: Prism.** Implemented in L00 (`src/components/prism-background.tsx`, ported from reactbits.dev/backgrounds/prism, JS → typed TSX, no logic changes), rendered only inside the homepage hero.
 
-**Revision (L00, 2026-07-26): swapped to Light Pillar.** Two things drove the change, both only visible once Prism was actually running against real content, not just read about in a props table:
+**Revision 1 (L00, 2026-07-26): swapped to Light Pillar.** Two things drove the change, both only visible once Prism was actually running against real content, not just read about in a props table:
 
-1. Prism is additive-glow-on-transparent — it's designed to sit against a dark backdrop, and initially it was placed on Astrea's default white page background, which turned the effect into a washed-out, grainy haze rather than a visible glow. Fixing that required giving the hero its own dark background in the first place (`bg-black`) — at which point Light Pillar's aesthetic (a column of light emerging from black) fit even better than Prism's rotating facet did.
+1. Prism is additive-glow-on-transparent — it's designed to sit against a dark backdrop, and initially it was placed on Astrea's default white page background, which turned the effect into a washed-out, grainy haze rather than a visible glow. Fixing that required giving the hero its own dark background in the first place (`bg-black`) — at which point Light Pillar's aesthetic (a column of light emerging from black) fit even better than Prism's rotating facet did, or so it seemed at the time.
 2. Doing this surfaced a real CSS bug worth remembering: a negative-`z-index` child of a `position: relative` ancestor with no `z-index` of its own (i.e., not a real stacking context) escapes *behind that ancestor's own background* — so `bg-black` on the hero was painting over the whole WebGL canvas. Fixed with `isolate` on the hero plus explicit `z-0`/`z-10` layering instead of a negative z-index. This applies to any future WebGL/canvas layering in the app, not just this component.
 
-**Implemented:** `src/components/light-pillar-background.tsx`, ported from the verified live source at reactbits.dev/backgrounds/light-pillar (JS → typed TSX, no logic changes) since React Bits ships as copy-paste source, not an installed package — only its `three` dependency (+ `@types/three`) is a real npm install. `prism-background.tsx` and the `ogl` dependency were removed since nothing else used them (the "one hero background, nowhere else" principle means only one is active at a time).
+**Revision 2 (L00, 2026-07-26): reverted to Prism, laid out per an approved visual reference.** The hero was redesigned around a supplied mockup (dark full-bleed hero, "Built on Stellar" eyebrow, serif "Astrea" wordmark, left-aligned copy) which puts Prism back on the right side of the hero instead of full-bleed. Two fixes were needed to make it match the live reactbits.dev demo instead of looking "blurry"/washed out again:
 
-**Known gap carried over from the original decision:** Light Pillar has no `suspendWhenOffscreen` equivalent — it renders continuously regardless of scroll position. Not worth hand-rolling an `IntersectionObserver` wrapper for a single-section homepage; revisit if/when U08 gives the page enough length that the hero can actually scroll out of view for a meaningful amount of time.
+1. **Confine, don't scale down.** Prism now renders inside a container sized to the right ~60% of the hero (`w-full md:w-3/5`) rather than spanning full-bleed — all shader props are left at their documented defaults (`suspendWhenOffscreen` only), so it reads exactly like the reactbits.dev demo, just cropped to a smaller lane instead of re-tuned.
+2. **Don't dim the lane it's in.** The first attempt kept a full-width dark gradient overlay (for text contrast) on top of the whole hero, including the Prism lane — that overlay was the actual cause of the "washed out" look, confirmed by comparing a screenshot of our render against the live reactbits.dev/backgrounds/prism demo (same muted colors, minus the overlay). Fixed by switching the overlay to a diagonal gradient (`115deg`, matching the supplied mockup's own formula) that resolves to fully transparent by ~60% width — it never touches the Prism lane, only the text column.
 
-**Also revised the header to float over the hero:** `SiteHeader` is `position: absolute` with a transparent background so it sits on top of the dark Light Pillar instead of its own solid bar — the header's logo uses a CSS `invert` filter on the black `astrea-sided-logo-light.png` lockup (no separate white asset needed) and its GitHub icon/wallet button switch to light-on-dark colors. **This only works because the homepage hero is the only page today.** Once Phase 3 (U02+) adds pages without a hero (dashboard, event pages), `SiteHeader` needs a non-transparent variant for those — a floating transparent header over a plain light page would be unreadable.
+**Implemented:** `src/components/prism-background.tsx`, restored from the verified live source at reactbits.dev/backgrounds/prism (JS → typed TSX, no logic changes) — React Bits ships as copy-paste source, not an installed package, so only its `ogl` dependency is a real npm install. `light-pillar-background.tsx` and the `three`/`@types/three` dependencies were removed since nothing else used them (the "one hero background, nowhere else" principle means only one is active at a time).
+
+**Also revised the header to float over the hero:** `SiteHeader` is `position: absolute` with a transparent background so it sits on top of the dark hero instead of its own solid bar — the header's logo uses a CSS `invert` filter on the black `astrea-sided-logo-light.png` lockup (no separate white asset needed, sized up to `h-16` per explicit feedback that it read too small), and its GitHub icon/wallet button switch to light-on-dark colors. **This only works because the homepage hero is the only page today.** Once Phase 3 (U02+) adds pages without a hero (dashboard, event pages), `SiteHeader` needs a non-transparent variant for those — a floating transparent header over a plain light page would be unreadable.
 
 ## Component placement
 
@@ -55,7 +58,7 @@ Decision log for where [React Bits](https://reactbits.dev) components get used i
 
 ## Build-plan cross-references
 
-- `L00` (minimal shell) — ✅ Light Pillar hero (revised from Prism), done
+- `L00` (minimal shell) — ✅ Prism hero, confined to the right lane per the approved mockup (revised back from a Light Pillar detour), done
 - `U01` (event wizard) — Stepper
 - `U03` (public event page) — Border Glow
 - New `U08` (marketing homepage) — Card Swap, Scroll Stack, Specular Button (hero background already exists from L00 — U08 adds sections around it, doesn't redo it; also where `SiteHeader`'s non-hero-page variant needs to be designed)
