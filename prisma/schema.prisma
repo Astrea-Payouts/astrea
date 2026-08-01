@@ -58,7 +58,7 @@ model User {
   createdAt DateTime @default(now())
 
   wallets         Wallet[]
-  organizedEvents Event[] @relation("EventOrganizer")
+  organizedEvents Event[]  @relation("EventOrganizer")
 
   @@map("users")
 }
