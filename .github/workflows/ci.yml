@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-lint-test:
-    name: Lint, typecheck, test, build
+    name: Lint, typecheck, test, build (web)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,19 +17,25 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: apps/web/package-lock.json
 
-      - run: npm ci --legacy-peer-deps
+      - working-directory: apps/web
+        run: npm ci --legacy-peer-deps
 
       - name: Lint (Biome)
+        working-directory: apps/web
         run: npm run lint
 
       - name: Typecheck
+        working-directory: apps/web
         run: npm run typecheck
 
       - name: Test (Vitest)
+        working-directory: apps/web
         run: npm run test
 
       - name: Build
+        working-directory: apps/web
         run: npm run build
 
   commitlint:
@@ -45,7 +51,9 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: apps/web/package-lock.json
 
-      - run: npm ci --legacy-peer-deps
+      - working-directory: apps/web
+        run: npm ci --legacy-peer-deps
 
       - uses: wagoid/commitlint-github-action@v6
