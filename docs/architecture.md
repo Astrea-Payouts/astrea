@@ -124,6 +124,25 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 **Verified (2026-07-26):** wallet kit initializes client-side only (guarded against SSR execution); connect modal renders all four target wallets (Freighter, Albedo, xBull, LOBSTR) against a running dev server with no console errors from Astrea's own code.
 
+### ADR-008 — Own the escrow contract; add a Go backend and real-time tracking (supersedes ADR-001)
+
+**Decision (2026-08-01):** move off Trustless Work to a custom Soroban escrow contract (Rust, `contracts/soroban`), owned and audited by Astrea rather than delegated to a third party. Alongside it, add a new Go backend service (`services/core-go`) as the sole writer of transactional state and the only caller of the escrow contract, and a real-time participant/progress tracking feature. Full plan in [docs/server-build-plan.md](server-build-plan.md).
+
+**This reverses ADR-001**, which chose Trustless Work explicitly because "writing and auditing a custom escrow contract is months of work orthogonal to Astrea's product value." That cost is now being accepted deliberately, not discovered by accident — see below for why.
+
+**Why:**
+1. **The two-hop payout (ADR-007) is a workaround, not a design choice.** Trustless Work's fixed approver/releaseSigner roles are set when the escrow is funded, before a winner is known — so the judge has to receive the release and forward it, adding a transaction hop and its cost. A custom contract can accept a late-bound winner address at release time and remove the hop entirely, not just paper over it.
+2. **Trustless Work's fixed 0.3% protocol fee stacks with Astrea's own `platformFee`** on every release, reducing what winners actually receive. Owning the contract removes the third-party fee layer (Astrea's own fee logic is unaffected).
+3. **Trustless Work is a generic escrow API — it was never going to support real-time participant/score tracking**, a new feature the team wants to add. That gap is the direct motivation for owning the backend (Go), not something Trustless Work could ever have provided regardless of contract ownership.
+4. **Vendor/continuity risk on the money-critical path** — pricing, uptime, or API changes at a third party the team doesn't control.
+
+**Trade-offs accepted knowingly (from a Council review before this decision):**
+- A homegrown contract handling real funds with no third-party liability backstop is a materially larger attack surface than delegating to a provider whose whole job is getting that right — this is **not optional to skip**: the contract needs the same rigor Trustless Work already had (a K01-style spike is necessary but not sufficient without an actual security review before real funds touch it, see L02 in server-build-plan.md).
+- Reasons 1, 2, and 4 are escrow-provider problems and are addressed by the Soroban contract alone. Reason 3 (real-time tracking) is a *product feature* decision that happens to require owning the backend — it was evaluated and accepted as part of the same call, not snuck in unexamined.
+- This pauses/supersedes a working, deployed, tested MVP (K01-L01 in `build-plan.md`, live at astrea-payouts.vercel.app with a real funded testnet event) rather than shipping it forward. `build-plan.md` is kept as the historical record, not deleted.
+- **Process note:** this direction originated from a second collaborator (Dereck) committing `server-build-plan.md` straight to `main` with no PR. The decision itself is sound on its merits (see above), but as the team grows past one person, architecture-level changes this size should go through review before merging, not after — this ADR is partly that review, written after the fact. Future changes of this size: open a PR, don't commit directly to `main`.
+- **Revisit when:** if K01 (the new contract spike) fails to cleanly validate the role model on testnet, this ADR gets corrected the same way ADR-003 did after the original K01 — cheaply, in docs, before more code is built on top of a wrong assumption.
+
 ### ADR-007 — The judge receives the prize and forwards it to the winner (two-hop payout)
 
 **Status:** confirmed empirically (2026-07-26, testnet).

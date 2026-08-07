@@ -1,4 +1,6 @@
-# Astrea — Server Build Plan
+# Astrea — Server Build Plan (v2, current direction)
+
+> **Adopted (2026-08-01, ADR-008)** — supersedes [docs/build-plan.md](build-plan.md)'s Trustless Work approach. Custom Soroban escrow contract, a new Go backend service, and real-time participant/score tracking. **K01 here gates the whole plan**, same discipline the original plan used: don't build Phase 1+ until the contract spike validates the role model on real testnet (see ADR-008 for the four concrete problems this is meant to solve, and the trade-offs accepted knowingly to solve them).
 
 Phased plan with coded tasks. Each task becomes one GitHub issue with its code in the title (e.g., `[S03] Postgres schema and repo scaffold`). Sizes: S (≤half day), M (1–2 days), L (3+ days, should be split before assignment). `GFI` = good first issue candidate.
 

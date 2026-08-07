@@ -1,4 +1,6 @@
-# Astrea — Build Plan
+# Astrea — Build Plan (v1, Trustless Work — superseded direction)
+
+> ⚠️ **Superseded (2026-08-01, ADR-008).** The team decided to move off Trustless Work to a custom Soroban escrow contract plus a new Go backend — see [docs/server-build-plan.md](server-build-plan.md) and ADR-008 in `architecture.md`. This file stays as-is: it's the accurate record of the MVP as actually built and deployed (K01 through L01 done, live at astrea-payouts.vercel.app with a real funded testnet event). It is **not** retired yet — the new plan's own K01 is a gating spike, same discipline this plan used, so nothing here should be torn out or have its cross-references (README, CONTRIBUTING.md, issue templates) repointed until that spike validates the new role model.
 
 Phased plan with coded tasks. Each task becomes one GitHub issue with its code in the title (e.g., `[S03] Prisma schema and Supabase setup`). Sizes: S (≤half day), M (1–2 days), L (3+ days, should be split before assignment). `GFI` = good first issue candidate.
 
