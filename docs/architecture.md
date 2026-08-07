@@ -143,6 +143,8 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 - **Process note:** this direction originated from a second collaborator (Dereck) committing `server-build-plan.md` straight to `main` with no PR. The decision itself is sound on its merits (see above), but as the team grows past one person, architecture-level changes this size should go through review before merging, not after — this ADR is partly that review, written after the fact. Future changes of this size: open a PR, don't commit directly to `main`.
 - **Revisit when:** if K01 (the new contract spike) fails to cleanly validate the role model on testnet, this ADR gets corrected the same way ADR-003 did after the original K01 — cheaply, in docs, before more code is built on top of a wrong assumption.
 
+**Verified (2026-08-06, testnet):** K01 passed — see [spikes/k01-soroban-escrow](../spikes/k01-soroban-escrow/README.md). Judge as both `approver` and `release_signer` works; the organizer has no function that moves escrowed funds anywhere (confirmed by a rejected direct-release attempt); the winner address is bound at `release` time rather than `initialize` time, which is the concrete fix for ADR-007's two-hop payout — no forward-payment transaction needed once the escrow contract itself accepts a late-bound winner. Result contract: `CBFPD4YFURBDQ3MQ7EMT3HPP2K34W5H6QCVWGCEP43MPHFO5XG5ONCUG`.
+
 ### ADR-007 — The judge receives the prize and forwards it to the winner (two-hop payout)
 
 **Status:** confirmed empirically (2026-07-26, testnet).
