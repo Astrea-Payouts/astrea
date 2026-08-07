@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>K03 — Wallet compatibility check</title>
+		<style>
+			body {
+				font-family: system-ui, sans-serif;
+				max-width: 640px;
+				margin: 3rem auto;
+				padding: 0 1.5rem;
+				line-height: 1.5;
+			}
+			button {
+				font-size: 1rem;
+				padding: 0.6rem 1.2rem;
+				margin: 0.5rem 0.5rem 0.5rem 0;
+				cursor: pointer;
+			}
+			#log {
+				white-space: pre-wrap;
+				background: #111;
+				color: #ddd;
+				padding: 1rem;
+				border-radius: 6px;
+				min-height: 200px;
+				font-family: ui-monospace, monospace;
+				font-size: 0.85rem;
+			}
+			.pass {
+				color: #6f6;
+			}
+			.fail {
+				color: #f66;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>K03 — Wallet compatibility check</h1>
+		<p>
+			Contract <code>CDIWLY6ARVUGEJPUMWK5CZBEN4ENVAMY5NV2EGDF2EPKRGSVQTUAOIH3</code>
+			has one function, <code>ping(caller)</code>, which just calls
+			<code>caller.require_auth()</code>. This tests one thing only: can this
+			wallet sign a Soroban <code>InvokeHostFunction</code> transaction that
+			the ledger accepts — not any escrow logic (K01 already proved that
+			separately).
+		</p>
+		<p>
+			Click "Connect &amp; test" once per wallet you have installed
+			(<b>set each one to Testnet first</b>). Each run reconnects fresh so
+			you can test several in a row.
+		</p>
+		<button id="run" type="button">Connect &amp; test</button>
+		<button id="reset" type="button">Reset log</button>
+		<div id="log">Ready.</div>
+		<script type="module" src="./main.ts"></script>
+	</body>
+</html>

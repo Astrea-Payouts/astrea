@@ -1,0 +1,17 @@
+{
+	"name": "k03-wallet-compat",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite"
+	},
+	"dependencies": {
+		"@creit.tech/stellar-wallets-kit": "^2.5.0",
+		"@stellar/stellar-sdk": "^16.1.0"
+	},
+	"devDependencies": {
+		"typescript": "^5",
+		"vite": "^7.0.0"
+	}
+}
