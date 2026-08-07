@@ -145,6 +145,8 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 **Verified (2026-08-06, testnet):** K01 passed — see [spikes/k01-soroban-escrow](../spikes/k01-soroban-escrow/README.md). Judge as both `approver` and `release_signer` works; the organizer has no function that moves escrowed funds anywhere (confirmed by a rejected direct-release attempt); the winner address is bound at `release` time rather than `initialize` time, which is the concrete fix for ADR-007's two-hop payout — no forward-payment transaction needed once the escrow contract itself accepts a late-bound winner. Result contract: `CBFPD4YFURBDQ3MQ7EMT3HPP2K34W5H6QCVWGCEP43MPHFO5XG5ONCUG`.
 
+**Verified (2026-08-06, testnet):** K02 also passed — see [spikes/k02-go-soroban](../spikes/k02-go-soroban/README.md). A Go program, not `soroban-cli`, built, simulated, signed, and submitted every transaction (upload wasm, create a fresh contract instance, initialize, fund, approve, release) against a new instance of the same K01 wasm, using `github.com/stellar/go` directly. NEG-1 (organizer attempting release) was rejected **on-chain** this time rather than short-circuited client-side, which is a strictly stronger confirmation of the same guarantee. This is the concrete proof that `services/core-go` (E02) is buildable, not just planned.
+
 ### ADR-007 — The judge receives the prize and forwards it to the winner (two-hop payout)
 
 **Status:** confirmed empirically (2026-07-26, testnet).
