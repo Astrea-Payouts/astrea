@@ -56,7 +56,7 @@ spikes/**/node_modules
 # scratch
 *.bak
 
-/src/generated/prisma
+/apps/web/src/generated/prisma
 
 # vendor AI-skill reference docs — `npx prisma init` regenerates these; we
 # deliberately don't commit them (219 files of reference material, not
