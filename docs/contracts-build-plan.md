@@ -1,0 +1,32 @@
+# Astrea — Contracts Build Plan
+
+The escrow contract, on its own: a custom Soroban smart contract (Rust), the on-chain guarantee the rest of the product is built on top of. See [docs/architecture.md](architecture.md) for the ADRs behind the role model, and [docs/build-plan.md](build-plan.md) for the frontend/backend that calls this contract.
+
+Phased plan with coded tasks. Each task becomes one GitHub issue with its code in the title (e.g., `[E01] Multi-milestone escrow contract`). Sizes: S (≤half day), M (1–2 days), L (3+ days, should be split before assignment). `GFI` = good first issue candidate.
+
+## Phase 0 — Spike (de-risk before anything else)
+
+| Code | Task | Size | Notes |
+| --- | --- | --- | --- |
+| K01 | ✅ **Done (2026-08-06)** — Escrow contract spike: initialize → fund → approve → release → dispute → resolve, end-to-end on testnet. Validated the role model: judge acts as both `approver` and `release_signer`; the funder cannot withdraw funded amounts once escrowed; the winner's address is supplied at release time | L → split | **Gates the whole plan.** Findings in [spikes/k01-soroban-escrow](../spikes/k01-soroban-escrow/README.md) — contract `CBFPD4YFURBDQ3MQ7EMT3HPP2K34W5H6QCVWGCEP43MPHFO5XG5ONCUG`. 8 unit tests + a real testnet run, both negative paths (unauthorized release, double release) rejected as expected |
+
+## Phase 1 — Production contract
+
+| Code | Task | Size | Notes |
+| --- | --- | --- | --- |
+| E01 | Multi-milestone escrow contract: extend K01's single-milestone design to support one contract instance per event with N independently approvable/releasable prize milestones (ADR-002), plus dispute/resolve-dispute per milestone | L → split | Lives in `contracts/soroban`. K01 proved the role model on a single milestone — this is the production shape |
+| E02 | Contract unit + integration test suite: role-model checks (organizer cannot move funds, judge as approver+release_signer), every negative path (unauthorized release, double release, release-before-approve, dispute blocks release), multi-milestone independence (one prize's dispute doesn't block another's release) | M | `soroban-sdk` testutils, in-process — fast, no network. Expand K01's 8 tests to cover multi-milestone paths |
+| E03 | Testnet vertical-slice demo for the contract alone: deploy → fund N milestones → approve/release/dispute a mix across them → confirm independence | S | Mirrors K01's driver script, scoped to the multi-milestone contract |
+
+## Phase 2 — Hardening (before mainnet)
+
+| Code | Task | Size | Notes |
+| --- | --- | --- | --- |
+| L01 | Security pass: contract review (ideally an external audit, or at minimum a careful internal review against known Soroban contract pitfalls — reentrancy, integer overflow, auth bypass), treasury/signer key custody review | M | **Not optional to skip** — a homegrown contract handling real funds has no third-party liability backstop the way a third-party escrow provider would. This gates any mainnet deployment |
+| L02 | Formal verification or fuzz testing of the release/dispute paths, if the team has the resources for it | M | Stretch goal — proportionate to how much value the contract will hold at mainnet |
+
+## Sequencing rules
+
+1. K01 before everything — if the spike falsifies the role-model assumption, this doc changes while changing docs is still cheap.
+2. E01 (multi-milestone) is a real rewrite of K01's contract shape, not an incremental patch — budget for it as such.
+3. L01 (security pass) is mandatory before any mainnet deployment, regardless of how much testnet usage has accumulated by then.

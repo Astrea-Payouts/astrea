@@ -169,6 +169,7 @@ To use Astrea you need one of the following wallets installed (Chrome, Brave, or
 | [docs/product-flows.md](docs/product-flows.md) | Roles, user journeys, and the escrow lifecycle |
 | [docs/architecture.md](docs/architecture.md) | System design, patterns, ADRs, and failure modes |
 | [docs/build-plan.md](docs/build-plan.md) | Phased build plan with coded tasks (source of GitHub issues) |
+| [docs/contracts-build-plan.md](docs/contracts-build-plan.md) | The escrow contract's own build plan |
 
 ---
 

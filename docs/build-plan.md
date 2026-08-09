@@ -1,64 +1,71 @@
-# Astrea — Build Plan (v1, Trustless Work — superseded direction)
+# Astrea — Build Plan
 
-> ⚠️ **Superseded (2026-08-01, ADR-008).** The team decided to move off Trustless Work to a custom Soroban escrow contract plus a new Go backend — see [docs/server-build-plan.md](server-build-plan.md) and ADR-008 in `architecture.md`. This file stays as-is: it's the accurate record of the MVP as actually built and deployed (K01 through L01 done, live at astrea-payouts.vercel.app with a real funded testnet event). It is **not** retired yet — the new plan's own K01 is a gating spike, same discipline this plan used, so nothing here should be torn out or have its cross-references (README, CONTRIBUTING.md, issue templates) repointed until that spike validates the new role model.
+Phased plan with coded tasks. Each task becomes one GitHub issue with its code in the title (e.g., `[S03] Postgres schema and repo scaffold`). Sizes: S (≤half day), M (1–2 days), L (3+ days, should be split before assignment). `GFI` = good first issue candidate. The escrow contract itself has its own plan — see [docs/contracts-build-plan.md](contracts-build-plan.md).
 
-Phased plan with coded tasks. Each task becomes one GitHub issue with its code in the title (e.g., `[S03] Prisma schema and Supabase setup`). Sizes: S (≤half day), M (1–2 days), L (3+ days, should be split before assignment). `GFI` = good first issue candidate.
+## Architecture summary
+
+- **`apps/web`** — Next.js + TypeScript frontend/BFF: event creation, organizer dashboard, public event pages, participant registration, judge panel, real-time tracking UI.
+- **`services/core-go`** — Go backend: owns the event/prize state machine, participant registration, real-time score/progress tracking, the build-sign-submit transaction pipeline, and reconciliation. The only service allowed to write transactional state or call the escrow contract.
+- **`contracts/soroban`** — the escrow contract (Rust/Soroban) — see [docs/contracts-build-plan.md](contracts-build-plan.md).
+- **Postgres** — shared database (mirror tables for events, prizes, participants, wallets, payouts, an append-only op log for idempotency/auditability).
+- Everything lives in a single repository (monorepo), separated by folder/service, not by repo — see S01.
 
 ## Phase 0 — Spike (de-risk before anything else)
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| K01 | ✅ **Done (2026-07-24)** — Trustless Work testnet spike: deploy, fund, approve, and release a multi-release escrow end-to-end with a script — confirmed the judge (approver + releaseSigner) can release as sole signer and the funder cannot withdraw funded amounts; findings in [spikes/k01-trustless-work](../spikes/k01-trustless-work/README.md) | M | **Gated the whole plan.** Confirmed the role model behind ADR-003; also surfaced that the public docs site was stale (use live `/docs-json` spec) and a 0.3% protocol fee (ADR-005) |
-| K02 | ✅ **Done** — ADR-003 corrected and ADR-005 added from spike findings | S | See docs/architecture.md |
-| K03 | ✅ **Done** — confirmed the ADR-005 fee rate (fixed 0.3%, hardcoded in the Soroban contract, charged per milestone release, on top of `platformFee`) against the official Trustless Work whitepaper (§7, Fees & Economics) — no Discord ask needed, their worked example matched our spike result exactly | S | See ADR-005 |
+| K02 | ✅ **Done (2026-08-06)** — Go ↔ escrow contract integration spike: confirmed a Go service can build, sign, and submit Stellar transactions against the contract end-to-end (deploy/fund/approve/release) using the Stellar Go SDK | M | Findings in [spikes/k02-go-soroban](../spikes/k02-go-soroban/README.md) — no high-level "invoke" helper in the Go SDK, simulate→sign→submit→poll had to be hand-rolled |
+| K03 | 🔜 **In progress (2026-08-06)** — wallet compatibility check: confirm the contract works across the wallets the team plans to support (Freighter, Albedo, xBull, LOBSTR via Stellar Wallets Kit) | S | See [spikes/k03-wallet-compat](../spikes/k03-wallet-compat/README.md). Freighter ✅ and Albedo ✅ confirmed signing a real contract call end-to-end; xBull and LOBSTR pending |
+| K04 | Fold K03's complete results into ADR-005 once all four wallets are tested | S | |
 
 ## Phase 1 — Foundations
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| S01 | ✅ **Done** — Repo scaffold: Next.js + TypeScript strict + Tailwind + shadcn/ui, Biome, Husky + commitlint (Conventional Commits) | M | Mirrors GrantFox-family conventions |
-| S02 | ✅ **Done** — CI: GitHub Actions — build, lint, test on PR | S | GFI |
-| S03 | ✅ **Done** — Prisma schema + Supabase setup (`Event`, `Prize`, `Judge`, `Submission`, `Wallet`, `Payout`, `OpLog`) + RLS | M | |
-| S04 | ✅ **Done** — Environment config module: network, USDC issuer, TW base URL/key (server-only), boot-time validation | S | See src/lib/env.ts |
-| S05 | ✅ **Done (2026-07-26)** — Wallet connect with Stellar Wallets Kit (Freighter, Albedo, xBull, LOBSTR) + session association | M | See ADR-006. API turned out to be a static-class v2.5.0 rewrite, not the instance-based API in every tutorial/doc found — verified against the installed package's own `.d.ts` files |
-| S06 | ✅ **Done** — `.env.example`, CONTRIBUTING.md, issue/PR templates, labels | S | Also filled two gaps found along the way: missing `LICENSE` file, and README's Contributing section still said "will use Biome" in future tense. **Revisited (2026-07-27)** ahead of the GrantFox contributor era: PR template reworked (Conventional Commits checkbox, build-plan task-code hint, split money-path checkboxes so the `security` label ask can't get buried, first-PR pointer to CONTRIBUTING.md); CONTRIBUTING.md's local setup now covers forking (contributors don't have push access to `Astrea-Payouts/astrea`); the commit-msg Husky hook now prints the expected Conventional Commits shape instead of bare commitlint rule codes when it rejects a message |
+| S01 | Monorepo scaffold: `apps/web` (Next.js + TypeScript strict + Tailwind, already scaffolded), `services/core-go` (Go module, not yet added), `docker-compose.yml` for local Postgres (+ Redis if E04's real-time tracking ends up needing pub/sub) | M | One repo, not one per service/language — folder-level separation, shared CI. The Next.js app itself already exists at repo root; this task is folding it under `apps/web` and adding the Go service alongside it |
+| S02 | CI: GitHub Actions — build/lint/test for `apps/web` (already running) and `services/core-go` (`go build`/`go vet`/`go test`, not yet added) | M | One pipeline, jobs scoped by changed path |
+| S03 | Postgres schema: `Event`, `Prize`, `Judge`, `Participant`, `Wallet`, `Payout`, `OpLog`, plus row-level access control | M | A schema close to this already exists (Prisma + Supabase) — needs the `conditionsMetAt` field and the `Submission`→`Participant` rename to match the manual-start event lifecycle (E03) |
+| S04 | Environment config: network (testnet/mainnet), contract ID, treasury signer handling (never in plaintext env vars), Postgres connection, boot-time validation in both `apps/web` and `services/core-go` | S | An env-config module already exists for the frontend; needs updating for the contract ID and the new Go service's own config |
+| S05 | ✅ **Done** — Wallet connect (frontend): Stellar Wallets Kit integration (Freighter, Albedo, xBull, LOBSTR), session association | M | See ADR-005. API is a static-class rewrite, not the instance-based API in most tutorials/docs — verified against the installed package's own `.d.ts` files |
+| S06 | ✅ **Done** — `.env.example`, `CONTRIBUTING.md` (including fork instructions for external contributors), issue/PR templates (Conventional Commits checkbox, build-plan task-code hint, split money-path checkboxes), labels, `LICENSE`, a Husky commit-msg hook that explains *why* a commit was rejected instead of printing bare rule codes | S | Set up with the GrantFox contributor phase in mind |
 
-## Phase 2 — Escrow core (vertical slice)
+## Phase 2 — Core system (event lifecycle, backend, real-time tracking)
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| E01 | ✅ **Done (2026-07-26)** — `EscrowProvider` port + `TrustlessWorkAdapter` (deploy, fund, approve, release, dispute, resolve-dispute, reads) + `buildForwardPaymentXdr` (plain Stellar payment, judge → winner) + `fees.ts` (ADR-005 fee math, incl. the opt-in cover-the-fee calculator) | L → split | See `src/lib/escrow/`. Domain never imports TW types directly. `submitSignedTransaction` computes the tx hash locally from the signed XDR rather than trusting the API response (Principle 2). Added `vitest.setup.ts` — first real consumer of `env.ts`'s boot validation, tests need dummy TW_API_KEY/USDC_ISSUER |
-| E02 | ✅ **Done (2026-07-26)** — Build-sign-submit pipeline: `prepareOperation`/`submitOperation` in `src/lib/escrow/pipeline.ts`, backed by `OpLog` | M | Idempotency rules (`idempotency.ts`) are pure and unit-tested: only `SUCCEEDED` is terminal, `PENDING`/`FAILED` are always retryable. Resubmitting the identical signed XDR twice is safe at the Stellar/Horizon layer (idempotent per tx hash) — `OpLog` avoids redundant calls and keeps the audit trail, it isn't what prevents double-payment |
-| E03 | ✅ **Done (2026-07-26)** — Event + prize state machines with server-side transition validation | M | See `src/lib/state-machines/`. Transition graphs are pure + unit-tested; `apply.ts` guards the DB write with `updateMany({ where: { id, status: from } })` so a race loses cleanly (count 0) instead of silently overwriting. Added `PrizeStatus.PAID_OUT` to the schema — migration `20260726064951_add_paid_out_prize_status`, applied directly to Supabase (no local DB password, same pattern as the initial schema) |
-| E04 | ✅ **Done (2026-07-26)** — Reconciliation primitives: stalled-forward detection (ADR-007) + Horizon tx confirmation | M | **In this phase on purpose** — money ops and reconciliation ship together. See `src/lib/reconciliation/`. Corrected architecture.md: Trustless Work has no per-contract "indexed events" endpoint (verified against the live spec) — confirmation goes straight to Horizon per Principle 2. Comparing TW's own escrow-state snapshot against the mirror tables is deferred until E06/U-phase wires real data through the app — nothing to reconcile against yet |
-| E05 | ✅ **Done (2026-07-26)** — Trustline verification service (check at registration + winner assignment) | S | See `src/lib/trustline/`. A missing account on the ledger (no XLM yet) is treated as "no trustline," not an error — same pattern as E04's tx confirmation check |
-| E06 | ✅ **Done (2026-07-26)** — Vertical slice demo: `npm run demo:e06` — create event → deploy → fund → assign → approve → release → forward → reconcile, on real testnet against the real Supabase DB | M | Milestone: **the product guarantee works**, verified — see `scripts/e06-vertical-slice.ts`. Found and fixed a real E01 bug in the process: `deployEscrow` was reading `contractId` from the build response (`/deployer/multi-release`), which never has it — it's only returned by `/helper/send-transaction` after submission. Fixed in `types.ts`/`trustless-work-adapter.ts`/`pipeline.ts` before it ever reached a real transaction |
+| E01 | Go `EscrowClient`: wraps the escrow contract via the Stellar Go SDK, exposes an internal API `apps/web` calls for anything escrow-related — the frontend never talks to the contract directly | L → split | Lives in `services/core-go`. K02 already validated the underlying simulate→sign→submit→poll mechanics this wraps |
+| E02 | Go build-sign-submit pipeline backed by `OpLog`: idempotency rules — only a terminal `SUCCEEDED` status is final, `PENDING`/`FAILED` are always retryable; resubmitting an identical signed transaction is safe at the Stellar/Horizon layer, `OpLog` exists for audit trail and to avoid redundant calls, not to prevent double-payment on its own | M | |
+| E03 | Event + prize state machine, with the manual-start rule built in from the start: `draft → standby → active → finished`. Track `conditionsMetAt` (derived: prize wallet funded **and** minimum participants registered) as distinct from `status = active` — the event **never** auto-activates on conditions being met; activation only happens via an explicit admin action (`POST /events/:id/start`). Guard every transition against races (conditional update keyed on expected `from` status) | M | Building this in from day one is simpler than retrofitting it later |
+| E04 | Real-time tracking: as participants/judges update progress or scores, push updates to the frontend (Postgres `LISTEN`/`NOTIFY`, or Redis pub/sub if that's cleaner from S01, streamed to `apps/web` via WebSocket/SSE) | M | Decide the transport mechanism here — don't default to WebSockets without checking whether SSE is simpler given Next.js hosting |
+| E05 | Reconciliation: stalled-transaction detection + Horizon transaction confirmation, comparing the Postgres mirror tables against on-chain state | M | Ships in the same phase as the first real money operation — never defer this once payouts are live |
+| E06 | Trustline verification: check at participant registration and again at winner assignment that the payout wallet can actually receive the prize asset | S | A missing account on the ledger (no XLM yet) should be treated as "no trustline," not an error |
+| E07 | Vertical slice demo: create event → fund → register participants → admin starts event → track in real time → assign winner → approve → release payout → reconcile, on real testnet | M | Milestone: **the product's core guarantee works**, verified end-to-end before building UI polish on top |
 
 ## Milestone — Apply to GrantFox as maintainer
 
-**This is where solo work ends and the contributor phase begins.** Everything above (Phases 0–2) is built alone — it has to be, it's the part that proves the product's core promise actually works. Everything below (Phases 3–4, and the rest of Phase 5) is deliberately left as the open backlog GrantFox displays to contributors. Don't build ahead of this milestone; the whole point of applying here is that the UI, the edge cases, and the hardening get built *with* contributors, not *before* them.
+Once Phases 0–2 are done, the core promise (registration, real-time tracking, and an on-chain payout that actually reaches the winner's wallet) is proven end-to-end. That's the point to apply — everything after this is UI, edge cases, and hardening, meant to be built with contributors rather than before them.
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| L00 | ✅ **Done (2026-07-26)** — Minimal shell: `SiteHeader` (transparent, full-width, floats over the hero — bigger logo, GitHub link, wallet connect), `SiteFooter` (repo/docs/license links), left-aligned hero copy (eyebrow + serif wordmark) laid out per an approved mockup **+ React Bits Prism background**, full-bleed with the shape pushed right via its `offset` prop (`src/components/prism-background.tsx`, reverted back to Prism after a same-day Light Pillar detour — see ui-motion.md) | S | **Not U08.** No Card Swap, Scroll Stack, or "how it works" section — those stay in the contributor backlog. Hero background moved here from U08 in `ui-motion.md`'s cross-reference — it's the hero's background, not a homepage-body section, so it belongs with the hero regardless of which task builds the hero. `SiteHeader`'s transparent style only works while the hero page is the only page — needs a solid variant before U02+ pages exist. Header lost its `max-w-5xl` cap so the logo and nav actually spread across wide viewports instead of crowding toward the center. **Favicon fixed (2026-07-27):** same root cause as the header logo needing three size bumps — the source PNG only had ~42% visible-pixel fill inside its canvas, so scaling the container barely grew what you could see. Cropped both to their real bounding box (`sharp`, alpha-channel scan) instead of just bumping CSS height, then inverted the favicon to white to match the header |
-| L01 | ✅ **Done (2026-07-26)** — Deployed to Vercel, git-linked to `main` (auto-deploys on push/PR) at [astrea-payouts.vercel.app](https://astrea-payouts.vercel.app); seeded a standing demo event via `npm run demo:seed` | S | See `scripts/seed-demo-event.ts`. Event is funded and **LIVE, awaiting judging on purpose** (not run to completion like E06) — contract `CBE67YFSQIBXJFMCRJXQ7VPJJCYBDCG4JMDR35FA2YMQODBFYD4LPXBD` |
+| L00 | ✅ **Done** — Minimal shell: `SiteHeader` (transparent, full-width, floats over the hero — logo, GitHub link, wallet connect), `SiteFooter` (repo/docs/license links), left-aligned hero copy (eyebrow + serif wordmark), React Bits Prism background full-bleed with the shape pushed right via its `offset` prop | S | `SiteHeader`'s transparent style only works while the hero page is the only page — needs a solid variant before pages without a hero exist (see U08) |
+| L01 | Deploy `apps/web` (Vercel or similar) and `services/core-go` (Docker + Railway/Fly.io/Render or a VPS); seed a standing demo event | S | The escrow contract deploys to Stellar testnet directly, not to the same host |
 
 ## Phase 3 — Product UI
 
-**Contributor backlog opens here.** These are meant to become GitHub issues a stranger can pick up — the [`build_plan_task` issue template](../.github/ISSUE_TEMPLATE/build_plan_task.yml) exists for exactly this.
+**Contributor backlog opens here** once the milestone above is reached.
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| U01 | Event creation wizard (details → prizes → judges → review & sign) — uses React Bits **Stepper** | L → split | See docs/ui-motion.md |
-| U02 | Organizer dashboard: funding flow, escrow status, judge management | M | Funding flow includes the ADR-005 opt-in "cover the fee" toggle (see product-flows.md Flow 2) |
-| U03 | Public event page: prizes, "verified on-chain" badge, contract link, payout history — prize cards wrapped in React Bits **Border Glow**; mobile bottom nav uses **Staggered Menu** + **Dock** (shape only, see ui-motion.md caveat) | M | SSR |
-| U04 | Participant flow: register (trustline check), submit entry | M | |
-| U05 | Judge panel: submissions review, winner assignment, approval signing | M | |
-| U06 | Release flow UI + confirmation states ("pending on-chain" UX) | S | |
+| U01 | Event creation wizard (details → prize → review & sign) | L → split | |
+| U02 | Organizer dashboard: funding flow, event status, participant management. Shows a "Ready to start" state once `conditionsMetAt` is set, with an explicit "Start event" action calling the Go service — the event never activates on its own | M | Depends on E03 |
+| U03 | Public event page: prize info, "verified on-chain" badge, contract link, payout history | M | SSR |
+| U04 | Participant flow: register (trustline check), real-time progress view | M | |
+| U05 | Judge panel: scoring/progress review, winner assignment, approval signing | M | |
+| U06 | Payout flow UI + confirmation states ("pending on-chain" UX) | S | |
 | U07 | Explorer links (stellar.expert) + tx hash display components | S | GFI |
-| U08 | Marketing homepage: expand L00's hero, "see it in action" (**Card Swap**), "how it works" (**Scroll Stack**), primary CTA (**Specular Button**, 1–2 max); design `SiteHeader`'s solid (non-transparent) variant for the new non-hero pages landing around this time | M | See docs/ui-motion.md for full rationale and the corrections to Dock/Tilted Card assumptions |
-| U09 | Site-wide technical SEO + social cards: `robots.ts`, `sitemap.ts`, root Open Graph/Twitter Card metadata + a default OG image | S | `GFI`. Self-contained — works against L00's homepage today, doesn't need any later page to land first. All file-based Next.js conventions (`src/app/robots.ts`, `src/app/sitemap.ts`, `metadata` in `layout.tsx`), easy to verify (view source, or a social-card debugger like opengraph.xyz). Not a money-path change |
-| U10 | Per-event SEO: dynamic `generateMetadata` (title/description/canonical per event), a dynamic OG image (`opengraph-image.tsx`, e.g. "$5,000 USDC prize pool — Event Name"), and `schema.org/Event` JSON-LD | M | Depends on **U03** landing first (no event page to attach metadata to yet). Not pure GFI because of that dependency, but a good second task once U03 merges — same file-based Next.js conventions as U09, still not money-path |
+| U08 | Marketing homepage: expand L00's hero, "see it in action," "how it works," primary CTA; design `SiteHeader`'s solid (non-transparent) variant for the new non-hero pages landing around this time | M | |
+| U09 | Site-wide technical SEO + social cards: `robots.ts`, `sitemap.ts`, root Open Graph/Twitter Card metadata + a default OG image | S | GFI. Self-contained — works against L00's homepage today, doesn't need any later page to land first |
+| U10 | Per-event SEO: dynamic metadata, OG image, `schema.org/Event` JSON-LD | M | Depends on U03 |
 
 ## Phase 4 — Trust & edge cases
 
@@ -66,10 +73,10 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| T01 | Dispute flow: open, evidence, resolver signing, resolution record | L → split | |
+| T01 | Dispute flow: open, evidence, resolver signing, resolution record | L → split | Built against the contract's `dispute`/`resolve-dispute` functions |
 | T02 | Event cancellation + refund flow | M | |
-| T03 | Notifications (email or in-app) on state changes | M | GFI-able parts |
-| T04 | E2E tests on testnet for the money paths (deploy→fund→release; dispute) | M | |
+| T03 | Notifications on state changes (registration confirmed, event started, winner announced, payout sent) — email or in-app, triggered from the Go service | M | GFI-able parts. Should include a notification when `conditionsMetAt` is set, so the admin knows the event is ready to start |
+| T04 | E2E tests on testnet for the money paths (fund→release; dispute) | M | |
 
 ## Phase 5 — Hardening
 
@@ -77,12 +84,13 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| L02 | Security pass: RLS review, secrets audit, XDR matching | M | |
-| L03 | Observability: structured logs with tx hashes, reconciliation drift alerts | S | |
+| L02 | Security pass: Go service secrets/config audit, transaction-matching checks, row-level access control review | M | Contract-specific security review is a separate, mandatory task — see [docs/contracts-build-plan.md](contracts-build-plan.md) |
+| L03 | Observability: structured logs with tx hashes (Go service), reconciliation drift alerts | S | |
 
 ## Sequencing rules
 
-1. K01 before everything — if the spike falsifies an assumption, ADRs change while changing docs is still cheap.
-2. E04 (reconciliation) ships in the same phase as the first money operation, never later.
-3. The GrantFox application (L01, L02, L05) happens **right after Phase 2**, not after Phases 3–4 — those phases are the contributor-facing backlog the application is *for*, not a prerequisite to it. Keep Phase 3–5 tasks small, labeled, and well-described; they are what GrantFox displays.
-4. Mainnet is out of scope for every task above; it gets its own phase after real testnet usage.
+1. K02/K03 before Phase 1 — confirming the app/backend can actually talk to the contract and that target wallets can sign for it is cheaper to learn now than after S01 is built on top of an assumption.
+2. E05 (reconciliation) ships in the same phase as the first real money operation, never later.
+3. The GrantFox application happens right after Phase 2, not after Phases 3–4 — those phases are the contributor-facing backlog the application is *for*, not a prerequisite to it.
+4. E03's manual-start rule is part of the state machine from the start — U02 has nothing to call without it, so E03 must be complete before U02 is picked up.
+5. Mainnet is out of scope for every task above; it gets its own phase after real testnet usage, gated by [docs/contracts-build-plan.md](contracts-build-plan.md)'s security pass.
