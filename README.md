@@ -48,7 +48,7 @@ Astrea flips the trust model:
 1. **🛠️ Organizer creates an event** — prizes, amounts (USDC), judges, deadlines
 2. **💰 Organizer funds the escrow** — one multi-release escrow per event, one milestone per prize; the event goes live only when fully funded
 3. **👩‍💻 Participants register and submit** — wallet + USDC trustline verified at registration, not at payout time
-4. **⚖️ Judges approve, release, and forward** — the winner isn't known when the prize pool is locked, so the judge receives each released prize and immediately forwards it to the winner in the same signing flow
+4. **⚖️ Judges approve and release** — the winner isn't known when the prize pool is locked, so the winner's address is supplied at release time; the judge approves and releases each prize directly to the winner's wallet, no forwarding step
 5. **🏁 Everything on the record** — winners, amounts, and transaction hashes on the public event page
 
 ---
@@ -62,21 +62,20 @@ Astrea flips the trust model:
 │  Client-side XDR signing — private keys never leave       │
 │  the user's wallet                                        │
 └───────────────┬───────────────────────────────────────────┘
-                │ Server Actions / API routes
+                │ HTTP API
 ┌───────────────▼───────────────────────────────────────────┐
-│  Backend (Next.js server)                                 │
-│  EscrowService (domain) → EscrowProvider (port)           │
-│                            └─ TrustlessWorkAdapter        │
-│  Event/prize state machine · Idempotent operations        │
-│  API keys server-side only                                │
+│  Backend (Go service — services/core-go)                  │
+│  EscrowClient interface → Soroban contract calls          │
+│  Event/prize state machine · Real-time tracking ·         │
+│  Build-sign-submit tx pipeline · Idempotent operations    │
 └───────┬──────────────────────────────┬────────────────────┘
         │                              │
 ┌───────▼────────────┐   ┌─────────────▼─────────────────────┐
-│ Supabase (Postgres │   │ Stellar network (testnet)         │
-│ + Prisma)          │   │ Trustless Work multi-release      │
-│ Events, Prizes,    │◄──┤ escrows (Soroban) · USDC          │
-│ Judges, Payouts —  │   │ Reconciliation via TW indexed     │
-│ mirror state       │   │ events + Horizon                  │
+│ Postgres            │   │ Stellar network (testnet)         │
+│ (Supabase + Prisma) │   │ Custom Soroban escrow contract    │
+│ Events, Prizes,     │◄──┤ (contracts/soroban) · USDC        │
+│ Judges, Payouts —   │   │ Reconciliation against Horizon    │
+│ mirror state        │   │                                  │
 └────────────────────┘   └───────────────────────────────────┘
 ```
 
@@ -88,11 +87,11 @@ The chain is the source of truth; the database is a mirror kept honest by a reco
 
 | Layer | Technology |
 | --- | --- |
-| Framework | Next.js (App Router) |
-| Language | TypeScript (strict) |
+| Frontend | Next.js (App Router), TypeScript (strict) |
+| Backend | Go (`services/core-go`) |
 | UI | Tailwind CSS + shadcn/ui |
 | Wallets | Stellar Wallets Kit (Freighter, Albedo, xBull, LOBSTR) |
-| Escrows | `@trustless-work/escrow` — multi-release, Core API v2 |
+| Escrows | Custom Soroban smart contract (`contracts/soroban`, Rust) |
 | ORM | Prisma + PostgreSQL |
 | Database hosting | Supabase |
 | Blockchain | Stellar testnet · USDC |
@@ -107,8 +106,8 @@ The chain is the source of truth; the database is a mirror kept honest by a reco
 ### Prerequisites
 
 - **Node.js 20+** and npm
+- **Go 1.22+** (for `services/core-go`)
 - A **Supabase** project with PostgreSQL (`DATABASE_URL` and `DIRECT_URL`)
-- A **Trustless Work** API key (from the [BackOffice dApp](https://dapp.trustlesswork.com)) — testnet
 - One of the supported wallets installed (see below)
 
 ### Setup
@@ -119,7 +118,7 @@ npm install
 
 # Configure environment
 cp .env.example .env
-# Edit .env with your Supabase credentials and Trustless Work API key
+# Edit .env with your Supabase credentials and Stellar network config
 
 # Generate Prisma client and apply migrations
 npm run prisma:generate
@@ -140,12 +139,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 DATABASE_URL=
 DIRECT_URL=
 
-# TRUSTLESS WORK — server-side only, NEVER expose with NEXT_PUBLIC_
-TRUSTLESS_WORK_API_URL=https://dev.api.trustlesswork.com
-TRUSTLESS_WORK_API_KEY=
-
 # STELLAR
 STELLAR_NETWORK=testnet
+STELLAR_RPC_URL=https://soroban-testnet.stellar.org
+STELLAR_ESCROW_CONTRACT_ID=
 STELLAR_USDC_ISSUER=
 ```
 
