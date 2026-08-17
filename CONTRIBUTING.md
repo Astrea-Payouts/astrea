@@ -5,7 +5,7 @@ Thanks for considering contributing — this project is built in the open specif
 ## Before you start
 
 - Read [README.md](README.md) for what Astrea is and why it exists.
-- Read [docs/architecture.md](docs/architecture.md) for how the pieces fit together, and the ADRs behind key decisions — several of them (ADR-003, ADR-005, ADR-006) exist because a real assumption turned out to be wrong when tested, which is exactly the kind of thing worth reading before you build on top of it.
+- Read [docs/architecture.md](docs/architecture.md) for how the pieces fit together, and the ADRs behind key decisions — several of them (ADR-001, ADR-003) are backed by real testnet spikes in [spikes/](spikes), not just a plan on paper, which is worth knowing before you build on top of them.
 - Check [docs/build-plan.md](docs/build-plan.md) for the current phase and task list. Every GitHub issue traces back to a coded task there (e.g. `[E02]`, `[U01]`) — the code in an issue title tells you which phase it belongs to and what depends on it.
 
 ## Local setup
@@ -31,7 +31,7 @@ git merge upstream/main
 Fill in `.env` following the comments in `.env.example` and [prisma/README.md](prisma/README.md):
 
 - **Database**: a free Supabase project gets you `DATABASE_URL`/`DIRECT_URL` — see `prisma/README.md` for the exact steps and the migration-baseline gotcha before running `prisma migrate dev` for the first time.
-- **Trustless Work**: request a **testnet** API key at [dapp.trustlesswork.com](https://dapp.trustlesswork.com) (BackOffice → API keys). Never a mainnet key for local dev.
+- **Escrow contract**: fill in `STELLAR_ESCROW_CONTRACT_ID` with a **testnet** deployment — see [contracts/soroban](contracts/soroban) to deploy your own, or ask a maintainer for a shared testnet contract ID. Never a mainnet contract for local dev.
 - **Stellar network**: leave `NEXT_PUBLIC_STELLAR_NETWORK=testnet` and `ALLOW_MAINNET=false`. See [ADR in architecture.md](docs/architecture.md) for why mainnet is gated behind an explicit flag.
 
 ```bash
