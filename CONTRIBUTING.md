@@ -16,6 +16,7 @@ Thanks for considering contributing — this project is built in the open specif
 git clone https://github.com/<your-username>/astrea.git
 cd astrea
 git remote add upstream https://github.com/Astrea-Payouts/astrea.git
+cd apps/web
 npm install
 cp .env.example .env
 ```
@@ -28,11 +29,11 @@ git checkout main
 git merge upstream/main
 ```
 
-Fill in `.env` following the comments in `.env.example` and [prisma/README.md](prisma/README.md):
+Fill in `.env` following the comments in `.env.example` and [apps/web/prisma/README.md](apps/web/prisma/README.md):
 
-- **Database**: a free Supabase project gets you `DATABASE_URL`/`DIRECT_URL` — see `prisma/README.md` for the exact steps and the migration-baseline gotcha before running `prisma migrate dev` for the first time.
-- **Escrow contract**: fill in `STELLAR_ESCROW_CONTRACT_ID` with a **testnet** deployment — see [contracts/soroban](contracts/soroban) to deploy your own, or ask a maintainer for a shared testnet contract ID. Never a mainnet contract for local dev.
-- **Stellar network**: leave `NEXT_PUBLIC_STELLAR_NETWORK=testnet` and `ALLOW_MAINNET=false`. See [ADR in architecture.md](docs/architecture.md) for why mainnet is gated behind an explicit flag.
+- **Database**: a free Supabase project gets you `DATABASE_URL`/`DIRECT_URL` — see `apps/web/prisma/README.md` for the exact steps and the migration-baseline gotcha before running `prisma migrate dev` for the first time.
+- **Trustless Work**: request a **testnet** API key at [dapp.trustlesswork.com](https://dapp.trustlesswork.com) (BackOffice → API keys) for `TW_API_KEY`. Never a mainnet key for local dev. This is what the running app calls today — see the note in [README.md](README.md#-environment-variables) about where the custom Soroban contract fits in.
+- **Stellar network**: leave `NEXT_PUBLIC_STELLAR_NETWORK=testnet` and `ALLOW_MAINNET=false`. See [docs/architecture.md](docs/architecture.md) for why mainnet is gated behind an explicit flag.
 
 ```bash
 npm run dev          # start the dev server
@@ -67,6 +68,8 @@ The repo has a [graphify](https://github.com/safishamsi/graphify) knowledge grap
 ```
 
 from a Claude Code session at the repo root (or any agent host that can run the graphify skill). If for whatever reason the hook doesn't fire, or you're not sure it ran, running `/graphify --update` manually is always safe — it only re-extracts what actually changed.
+
+**CI enforces this for code.** The `graphify-out/` files in your PR must match a fresh `graphify update .` run against your code changes — if they don't, the `Knowledge graph in sync (code)` job fails and tells you what to run. It only checks code, not docs, since it has no LLM available; a stale doc-driven graph won't fail CI, so don't rely on green CI as proof the graph reflects your doc changes.
 
 ## Opening a PR
 

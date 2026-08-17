@@ -38,6 +38,56 @@ jobs:
         working-directory: apps/web
         run: npm run build
 
+  graphify-drift-check:
+    name: Knowledge graph in sync (code)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      # postinstall runs `prisma generate`, producing apps/web/src/generated/prisma.
+      # graphify indexes that output, so it must exist before the rebuild below -
+      # without it this job would flag drift that's just the generated client missing.
+      - working-directory: apps/web
+        run: npm ci --legacy-peer-deps
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install graphify
+        run: pip install graphifyy
+
+      # Code-only rebuild - no LLM, no API key. Doc/paper/image changes aren't
+      # covered here; see CONTRIBUTING.md ("Keeping the knowledge graph updated").
+      - name: Rebuild code graph
+        env:
+          PYTHONHASHSEED: "0"
+        run: graphify update .
+
+      - name: Fail if graphify-out/ is stale
+        run: |
+          if ! git diff --quiet -- graphify-out/; then
+            echo "::error::graphify-out/ is out of sync with the code in this PR."
+            echo "Run 'graphify update .' locally, review the diff, and commit graphify-out/."
+            echo "Or download the 'graphify-out-rebuilt' artifact from this run and commit that instead."
+            git diff --stat -- graphify-out/
+            exit 1
+          fi
+
+      - name: Upload rebuilt graph (only runs if the check above failed)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: graphify-out-rebuilt
+          path: graphify-out/
+          retention-days: 7
+
   commitlint:
     name: Commit messages (Conventional Commits)
     runs-on: ubuntu-latest
