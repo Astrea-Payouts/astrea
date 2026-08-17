@@ -46,12 +46,19 @@ next-env.d.ts
 # biome
 .biomecache
 
+# graphify's dated safety backups of graphify-out/, written before each
+# automated rebuild (git history is the real backup - these are local-only)
+graphify-out/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+
 # spike secrets and run artifacts (testnet-only, but never commit anyway)
 spikes/**/.env
 spikes/**/.accounts.json
 spikes/**/.findings.json
 spikes/**/.tw-openapi.json
 spikes/**/node_modules
+
+# superseded by spikes/k01-soroban-escrow — kept locally, not in the public repo
+spikes/k01-trustless-work/
 
 # scratch
 *.bak

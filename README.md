@@ -113,16 +113,16 @@ The chain is the source of truth; the database is a mirror kept honest by a reco
 ### Setup
 
 ```bash
-# Install dependencies
+# Install dependencies (Prisma client generates automatically via postinstall)
+cd apps/web
 npm install
 
 # Configure environment
 cp .env.example .env
 # Edit .env with your Supabase credentials and Stellar network config
 
-# Generate Prisma client and apply migrations
-npm run prisma:generate
-npm run prisma:migrate
+# Apply migrations
+npx prisma migrate dev
 
 # Start the development server
 npm run dev
@@ -130,21 +130,27 @@ npm run dev
 
 ### Environment Variables
 
-```
-# SUPABASE
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
+See `apps/web/.env.example` for the authoritative list with setup notes. Summary:
 
-# PRISMA
-DATABASE_URL=
-DIRECT_URL=
-
-# STELLAR
-STELLAR_NETWORK=testnet
-STELLAR_RPC_URL=https://soroban-testnet.stellar.org
-STELLAR_ESCROW_CONTRACT_ID=
-STELLAR_USDC_ISSUER=
 ```
+# SUPABASE / DATABASE
+DATABASE_URL=       # pooled connection, used by the app at runtime
+DIRECT_URL=         # direct connection, used only by the Prisma CLI for migrations
+
+# STELLAR NETWORK
+NEXT_PUBLIC_STELLAR_NETWORK=testnet
+ALLOW_MAINNET=false # explicit gate; testnet is refused into mainnet without this
+
+# TRUSTLESS WORK — server-side only, NEVER expose with NEXT_PUBLIC_
+TW_API_URL=https://dev.api.trustlesswork.com
+TW_API_KEY=
+
+# TESTNET USDC
+USDC_SYMBOL=USDC
+USDC_ISSUER=
+```
+
+> The Trustless Work vars above are what the running app reads today (`apps/web`). The custom Soroban escrow contract described in [Architecture](#-architecture) is the direction the backend is moving toward — see `E01` in [docs/build-plan.md](docs/build-plan.md) for that migration's status.
 
 ## 👛 Wallet Requirements
 

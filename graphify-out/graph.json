@@ -19,35 +19,6 @@
         "source_file": "README.md"
       },
       {
-        "id": "code_quality_enforcement_pipeline",
-        "label": "Code quality enforcement pipeline",
-        "nodes": [
-          "contributing_biome",
-          "contributing_husky",
-          "contributing_commitlint",
-          "contributing_conventional_commits",
-          "contributing_ci_pipeline"
-        ],
-        "relation": "participate_in",
-        "confidence": "EXTRACTED",
-        "confidence_score": 0.9,
-        "source_file": "CONTRIBUTING.md"
-      },
-      {
-        "id": "money_movement_safety_controls",
-        "label": "Money-movement safety controls",
-        "nodes": [
-          "contributing_money_movement_review",
-          "contracts_soroban_task_e01_e03",
-          "services_core_go_task_e01_e06",
-          "readme_non_custodial"
-        ],
-        "relation": "participate_in",
-        "confidence": "INFERRED",
-        "confidence_score": 0.75,
-        "source_file": "CONTRIBUTING.md"
-      },
-      {
         "id": "wallet_compat_verification_flow",
         "label": "Wallet Compatibility Verification Flow",
         "nodes": [
@@ -92,6 +63,116 @@
     ]
   },
   "nodes": [
+    {
+      "label": "CONTRIBUTING.md",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "contributing",
+      "community": 37,
+      "norm_label": "contributing.md"
+    },
+    {
+      "label": "Contributing to Astrea",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "contributing_contributing_to_astrea",
+      "community": 37,
+      "norm_label": "contributing to astrea"
+    },
+    {
+      "label": "Before you start",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "contributing_before_you_start",
+      "community": 37,
+      "norm_label": "before you start"
+    },
+    {
+      "label": "Local setup",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "contributing_local_setup",
+      "community": 37,
+      "norm_label": "local setup"
+    },
+    {
+      "label": "Wallet testing",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "contributing_wallet_testing",
+      "community": 37,
+      "norm_label": "wallet testing"
+    },
+    {
+      "label": "Code quality \u2014 enforced, not optional",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "contributing_code_quality_enforced_not_optional",
+      "community": 37,
+      "norm_label": "code quality \u2014 enforced, not optional"
+    },
+    {
+      "label": "Keeping the knowledge graph updated",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "contributing_keeping_the_knowledge_graph_updated",
+      "community": 37,
+      "norm_label": "keeping the knowledge graph updated"
+    },
+    {
+      "label": "Opening a PR",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "contributing_opening_a_pr",
+      "community": 37,
+      "norm_label": "opening a pr"
+    },
+    {
+      "label": "Where to ask questions",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "contributing_where_to_ask_questions",
+      "community": 37,
+      "norm_label": "where to ask questions"
+    },
+    {
+      "label": "Reporting a security issue",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "contributing_reporting_a_security_issue",
+      "community": 37,
+      "norm_label": "reporting a security issue"
+    },
+    {
+      "label": "License",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L91",
+      "_origin": "ast",
+      "id": "contributing_license",
+      "community": 37,
+      "norm_label": "license"
+    },
     {
       "label": "applypatch-msg",
       "file_type": "code",
@@ -1790,7 +1871,7 @@
       "source_file": "apps/web/scripts/seed-demo-event.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 17,
+      "community": 26,
       "norm_label": "seed-demo-event.ts",
       "id": "apps_web_scripts_seed_demo_event"
     },
@@ -1800,7 +1881,7 @@
       "source_file": "apps/web/scripts/seed-demo-event.ts",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 17,
+      "community": 26,
       "norm_label": "keys",
       "id": "apps_web_scripts_seed_demo_event_keys"
     },
@@ -1810,7 +1891,7 @@
       "source_file": "apps/web/scripts/seed-demo-event.ts",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 17,
+      "community": 26,
       "norm_label": "accounts",
       "id": "apps_web_scripts_seed_demo_event_accounts"
     },
@@ -1820,7 +1901,7 @@
       "source_file": "apps/web/scripts/seed-demo-event.ts",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 17,
+      "community": 26,
       "norm_label": "signxdr()",
       "id": "apps_web_scripts_seed_demo_event_signxdr"
     },
@@ -1830,7 +1911,7 @@
       "source_file": "apps/web/scripts/seed-demo-event.ts",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 17,
+      "community": 26,
       "norm_label": "step()",
       "id": "apps_web_scripts_seed_demo_event_step"
     },
@@ -1840,7 +1921,7 @@
       "source_file": "apps/web/scripts/seed-demo-event.ts",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 17,
+      "community": 26,
       "norm_label": "findorcreatewallet()",
       "id": "apps_web_scripts_seed_demo_event_findorcreatewallet"
     },
@@ -1850,7 +1931,7 @@
       "source_file": "apps/web/scripts/seed-demo-event.ts",
       "source_location": "L52",
       "_origin": "ast",
-      "community": 17,
+      "community": 26,
       "norm_label": "main()",
       "id": "apps_web_scripts_seed_demo_event_main"
     },
@@ -2110,7 +2191,7 @@
       "source_file": "apps/web/src/lib/env.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 17,
+      "community": 14,
       "norm_label": "env.test.ts",
       "id": "apps_web_src_lib_env_test"
     },
@@ -2120,7 +2201,7 @@
       "source_file": "apps/web/src/lib/env.test.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 17,
+      "community": 14,
       "norm_label": "baseenv",
       "id": "apps_web_src_lib_env_test_baseenv"
     },
@@ -2130,7 +2211,7 @@
       "source_file": "apps/web/src/lib/env.test.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 17,
+      "community": 14,
       "norm_label": "loadenvwith()",
       "id": "apps_web_src_lib_env_test_loadenvwith"
     },
@@ -2140,7 +2221,7 @@
       "source_file": "apps/web/src/lib/env.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 17,
+      "community": 14,
       "norm_label": "env.ts",
       "id": "apps_web_src_lib_env"
     },
@@ -2150,7 +2231,7 @@
       "source_file": "apps/web/src/lib/env.ts",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 17,
+      "community": 14,
       "norm_label": "serverschema",
       "id": "apps_web_src_lib_env_serverschema"
     },
@@ -2160,7 +2241,7 @@
       "source_file": "apps/web/src/lib/env.ts",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 17,
+      "community": 14,
       "norm_label": "parseenv()",
       "id": "apps_web_src_lib_env_parseenv"
     },
@@ -2170,7 +2251,7 @@
       "source_file": "apps/web/src/lib/env.ts",
       "source_location": "L72",
       "_origin": "ast",
-      "community": 17,
+      "community": 14,
       "norm_label": "env",
       "id": "apps_web_src_lib_env_env"
     },
@@ -2410,7 +2491,7 @@
       "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "stellar-payment.test.ts",
       "id": "apps_web_src_lib_escrow_stellar_payment_test"
     },
@@ -2420,7 +2501,7 @@
       "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "from",
       "id": "apps_web_src_lib_escrow_stellar_payment_test_from"
     },
@@ -2430,7 +2511,7 @@
       "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "to",
       "id": "apps_web_src_lib_escrow_stellar_payment_test_to"
     },
@@ -2440,7 +2521,7 @@
       "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 16,
+      "community": 14,
       "norm_label": "stellar-payment.ts",
       "id": "apps_web_src_lib_escrow_stellar_payment"
     },
@@ -2450,7 +2531,7 @@
       "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 16,
+      "community": 14,
       "norm_label": "forwardpaymentparams",
       "id": "apps_web_src_lib_escrow_stellar_payment_forwardpaymentparams"
     },
@@ -2480,7 +2561,7 @@
       "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 16,
+      "community": 14,
       "norm_label": "adr-0007",
       "id": "apps_web_src_lib_escrow_stellar_payment_ts_docref_adr_0007"
     },
@@ -2930,7 +3011,7 @@
       "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "transaction-confirmation.test.ts",
       "id": "apps_web_src_lib_reconciliation_transaction_confirmation_test"
     },
@@ -2940,7 +3021,7 @@
       "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.test.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "mocktransactioncall()",
       "id": "apps_web_src_lib_reconciliation_transaction_confirmation_test_mocktransactioncall"
     },
@@ -2950,7 +3031,7 @@
       "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "transaction-confirmation.ts",
       "id": "apps_web_src_lib_reconciliation_transaction_confirmation"
     },
@@ -2960,7 +3041,7 @@
       "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "istransactionconfirmed()",
       "id": "apps_web_src_lib_reconciliation_transaction_confirmation_istransactionconfirmed"
     },
@@ -2970,7 +3051,7 @@
       "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "isnotfounderror()",
       "id": "apps_web_src_lib_reconciliation_transaction_confirmation_isnotfounderror"
     },
@@ -2990,7 +3071,7 @@
       "source_file": "apps/web/src/lib/state-machines/apply.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 17,
+      "community": 26,
       "norm_label": "transitionevent()",
       "id": "apps_web_src_lib_state_machines_apply_transitionevent"
     },
@@ -3010,7 +3091,7 @@
       "source_file": "apps/web/src/lib/state-machines/apply.ts",
       "source_location": "L38",
       "_origin": "ast",
-      "community": 27,
+      "community": 16,
       "norm_label": "transitionprize()",
       "id": "apps_web_src_lib_state_machines_apply_transitionprize"
     },
@@ -3170,7 +3251,7 @@
       "source_file": "apps/web/src/lib/stellar-network.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 14,
+      "community": 17,
       "norm_label": "stellar-network.ts",
       "id": "apps_web_src_lib_stellar_network"
     },
@@ -3180,7 +3261,7 @@
       "source_file": "apps/web/src/lib/stellar-network.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 14,
+      "community": 17,
       "norm_label": "stellarnetworkname",
       "id": "apps_web_src_lib_stellar_network_stellarnetworkname"
     },
@@ -3190,7 +3271,7 @@
       "source_file": "apps/web/src/lib/stellar-network.ts",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 14,
+      "community": 17,
       "norm_label": "network_config",
       "id": "apps_web_src_lib_stellar_network_network_config"
     },
@@ -3200,7 +3281,7 @@
       "source_file": "apps/web/src/lib/trustline/verify-and-record.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 17,
+      "community": 16,
       "norm_label": "verify-and-record.ts",
       "id": "apps_web_src_lib_trustline_verify_and_record"
     },
@@ -3210,7 +3291,7 @@
       "source_file": "apps/web/src/lib/trustline/verify-and-record.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 17,
+      "community": 16,
       "norm_label": "verifyandrecordtrustline()",
       "id": "apps_web_src_lib_trustline_verify_and_record_verifyandrecordtrustline"
     },
@@ -3220,7 +3301,7 @@
       "source_file": "apps/web/src/lib/trustline/verify-and-record.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 17,
+      "community": 16,
       "norm_label": "adr-0004",
       "id": "apps_web_src_lib_trustline_verify_and_record_ts_docref_adr_0004"
     },
@@ -3230,7 +3311,7 @@
       "source_file": "apps/web/src/lib/trustline/verify-trustline.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 17,
+      "community": 16,
       "norm_label": "verify-trustline.test.ts",
       "id": "apps_web_src_lib_trustline_verify_trustline_test"
     },
@@ -3240,7 +3321,7 @@
       "source_file": "apps/web/src/lib/trustline/verify-trustline.test.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 17,
+      "community": 16,
       "norm_label": "mockloadaccount()",
       "id": "apps_web_src_lib_trustline_verify_trustline_test_mockloadaccount"
     },
@@ -3250,7 +3331,7 @@
       "source_file": "apps/web/src/lib/trustline/verify-trustline.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 17,
+      "community": 16,
       "norm_label": "verify-trustline.ts",
       "id": "apps_web_src_lib_trustline_verify_trustline"
     },
@@ -3260,7 +3341,7 @@
       "source_file": "apps/web/src/lib/trustline/verify-trustline.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 17,
+      "community": 16,
       "norm_label": "hasusdctrustline()",
       "id": "apps_web_src_lib_trustline_verify_trustline_hasusdctrustline"
     },
@@ -3270,7 +3351,7 @@
       "source_file": "apps/web/src/lib/trustline/verify-trustline.ts",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 17,
+      "community": 16,
       "norm_label": "isnotfounderror()",
       "id": "apps_web_src_lib_trustline_verify_trustline_isnotfounderror"
     },
@@ -3280,7 +3361,7 @@
       "source_file": "apps/web/src/lib/trustline/verify-trustline.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 17,
+      "community": 16,
       "norm_label": "adr-0004",
       "id": "apps_web_src_lib_trustline_verify_trustline_ts_docref_adr_0004"
     },
@@ -3320,7 +3401,7 @@
       "source_file": "apps/web/src/lib/wallet/kit.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 11,
+      "community": 40,
       "norm_label": "kit.ts",
       "id": "apps_web_src_lib_wallet_kit"
     },
@@ -3330,7 +3411,7 @@
       "source_file": "apps/web/src/lib/wallet/kit.ts",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 11,
+      "community": 40,
       "norm_label": "initwalletkit()",
       "id": "apps_web_src_lib_wallet_kit_initwalletkit"
     },
@@ -3340,7 +3421,7 @@
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 11,
+      "community": 40,
       "norm_label": "provider.tsx",
       "id": "apps_web_src_lib_wallet_provider"
     },
@@ -3350,7 +3431,7 @@
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 11,
+      "community": 40,
       "norm_label": "walletcontextvalue",
       "id": "apps_web_src_lib_wallet_provider_walletcontextvalue"
     },
@@ -3360,7 +3441,7 @@
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 11,
+      "community": 40,
       "norm_label": "walletcontext",
       "id": "apps_web_src_lib_wallet_provider_walletcontext"
     },
@@ -3370,7 +3451,7 @@
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 11,
+      "community": 40,
       "norm_label": "walletprovider()",
       "id": "apps_web_src_lib_wallet_provider_walletprovider"
     },
@@ -3390,7 +3471,7 @@
       "source_file": "apps/web/src/lib/wallet/session.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 11,
+      "community": 40,
       "norm_label": "session.ts",
       "id": "apps_web_src_lib_wallet_session"
     },
@@ -3400,7 +3481,7 @@
       "source_file": "apps/web/src/lib/wallet/session.ts",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 11,
+      "community": 40,
       "norm_label": "associatewallet()",
       "id": "apps_web_src_lib_wallet_session_associatewallet"
     },
@@ -3410,7 +3491,7 @@
       "source_file": "apps/web/src/lib/wallet/session.ts",
       "source_location": "L44",
       "_origin": "ast",
-      "community": 11,
+      "community": 40,
       "norm_label": "clearwalletsession()",
       "id": "apps_web_src_lib_wallet_session_clearwalletsession"
     },
@@ -3420,7 +3501,7 @@
       "source_file": "apps/web/src/lib/wallet/session.ts",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 11,
+      "community": 40,
       "norm_label": "getsessionwallet()",
       "id": "apps_web_src_lib_wallet_session_getsessionwallet"
     },
@@ -4311,936 +4392,6 @@
       "community": 38,
       "norm_label": "double_fund_fails()",
       "id": "spikes_k01_soroban_escrow_src_test_double_fund_fails"
-    },
-    {
-      "label": "package.json",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "package.json",
-      "id": "spikes_k01_trustless_work_package"
-    },
-    {
-      "label": "name",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L2",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "name",
-      "id": "spikes_k01_trustless_work_package_name"
-    },
-    {
-      "label": "version",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L3",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "version",
-      "id": "spikes_k01_trustless_work_package_version"
-    },
-    {
-      "label": "private",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L4",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "private",
-      "id": "spikes_k01_trustless_work_package_private"
-    },
-    {
-      "label": "type",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "type",
-      "id": "spikes_k01_trustless_work_package_type"
-    },
-    {
-      "label": "description",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L6",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "description",
-      "id": "spikes_k01_trustless_work_package_description"
-    },
-    {
-      "label": "engines",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L7",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "engines",
-      "id": "spikes_k01_trustless_work_package_engines"
-    },
-    {
-      "label": "node",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L8",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "node",
-      "id": "spikes_k01_trustless_work_package_engines_node"
-    },
-    {
-      "label": "scripts",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L10",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "scripts",
-      "id": "spikes_k01_trustless_work_package_scripts"
-    },
-    {
-      "label": "setup",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L11",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "setup",
-      "id": "spikes_k01_trustless_work_package_scripts_setup"
-    },
-    {
-      "label": "spike",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "spike",
-      "id": "spikes_k01_trustless_work_package_scripts_spike"
-    },
-    {
-      "label": "dependencies",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L14",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "dependencies",
-      "id": "spikes_k01_trustless_work_package_dependencies"
-    },
-    {
-      "label": "@stellar/stellar-sdk",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L15",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "@stellar/stellar-sdk",
-      "id": "spikes_k01_trustless_work_package_dependencies_stellar_stellar_sdk"
-    },
-    {
-      "label": "dotenv",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L16",
-      "_origin": "ast",
-      "community": 40,
-      "norm_label": "dotenv",
-      "id": "spikes_k01_trustless_work_package_dependencies_dotenv"
-    },
-    {
-      "label": "01-setup-accounts.js",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 55,
-      "norm_label": "01-setup-accounts.js",
-      "id": "spikes_k01_trustless_work_src_01_setup_accounts"
-    },
-    {
-      "label": "USDC",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L18",
-      "_origin": "ast",
-      "community": 55,
-      "norm_label": "usdc",
-      "id": "spikes_k01_trustless_work_src_01_setup_accounts_usdc"
-    },
-    {
-      "label": "server",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L24",
-      "_origin": "ast",
-      "community": 55,
-      "norm_label": "server",
-      "id": "spikes_k01_trustless_work_src_01_setup_accounts_server"
-    },
-    {
-      "label": "friendbot()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L26",
-      "_origin": "ast",
-      "community": 55,
-      "norm_label": "friendbot()",
-      "id": "spikes_k01_trustless_work_src_01_setup_accounts_friendbot"
-    },
-    {
-      "label": "addUsdcTrustline()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L36",
-      "_origin": "ast",
-      "community": 55,
-      "norm_label": "addusdctrustline()",
-      "id": "spikes_k01_trustless_work_src_01_setup_accounts_addusdctrustline"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L49",
-      "_origin": "ast",
-      "community": 55,
-      "norm_label": "main()",
-      "id": "spikes_k01_trustless_work_src_01_setup_accounts_main"
-    },
-    {
-      "label": "ADR-0003",
-      "file_type": "concept",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L50",
-      "_origin": "ast",
-      "community": 55,
-      "norm_label": "adr-0003",
-      "id": "spikes_k01_trustless_work_src_01_setup_accounts_js_docref_adr_0003"
-    },
-    {
-      "label": "02-run-spike.js",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "02-run-spike.js",
-      "id": "spikes_k01_trustless_work_src_02_run_spike"
-    },
-    {
-      "label": "accounts",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L45",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "accounts",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_accounts"
-    },
-    {
-      "label": "server",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L48",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "server",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_server"
-    },
-    {
-      "label": "findings",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L49",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "findings",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_findings"
-    },
-    {
-      "label": "record()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L55",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "record()",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_record"
-    },
-    {
-      "label": "tw()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L63",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "tw()",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_tw"
-    },
-    {
-      "label": "signXdr()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L78",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "signxdr()",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_signxdr"
-    },
-    {
-      "label": "signAndSend()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L85",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "signandsend()",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_signandsend"
-    },
-    {
-      "label": "usdcBalance()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L92",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "usdcbalance()",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_usdcbalance"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L100",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "main()",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_main"
-    },
-    {
-      "label": "ADR-0003",
-      "file_type": "concept",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L2",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "adr-0003",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_js_docref_adr_0003"
-    },
-    {
-      "label": "NOTE: endpoint paths and payload shapes here were reverse-engineered from the",
-      "file_type": "rationale",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L4",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "note: endpoint paths and payload shapes here were reverse-engineered from the",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_rationale_4"
-    },
-    {
-      "label": "ADR-0001",
-      "file_type": "concept",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L18",
-      "_origin": "ast",
-      "community": 43,
-      "norm_label": "adr-0001",
-      "id": "spikes_k01_trustless_work_src_02_run_spike_js_docref_adr_0001"
-    },
-    {
-      "label": "03-verify-update-escrow.js",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 56,
-      "norm_label": "03-verify-update-escrow.js",
-      "id": "spikes_k01_trustless_work_src_03_verify_update_escrow"
-    },
-    {
-      "label": "accounts",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L26",
-      "_origin": "ast",
-      "community": 56,
-      "norm_label": "accounts",
-      "id": "spikes_k01_trustless_work_src_03_verify_update_escrow_accounts"
-    },
-    {
-      "label": "tw()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L34",
-      "_origin": "ast",
-      "community": 56,
-      "norm_label": "tw()",
-      "id": "spikes_k01_trustless_work_src_03_verify_update_escrow_tw"
-    },
-    {
-      "label": "signXdr()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L49",
-      "_origin": "ast",
-      "community": 56,
-      "norm_label": "signxdr()",
-      "id": "spikes_k01_trustless_work_src_03_verify_update_escrow_signxdr"
-    },
-    {
-      "label": "signAndSend()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L55",
-      "_origin": "ast",
-      "community": 56,
-      "norm_label": "signandsend()",
-      "id": "spikes_k01_trustless_work_src_03_verify_update_escrow_signandsend"
-    },
-    {
-      "label": "readEscrow()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L62",
-      "_origin": "ast",
-      "community": 56,
-      "norm_label": "readescrow()",
-      "id": "spikes_k01_trustless_work_src_03_verify_update_escrow_readescrow"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L70",
-      "_origin": "ast",
-      "community": 56,
-      "norm_label": "main()",
-      "id": "spikes_k01_trustless_work_src_03_verify_update_escrow_main"
-    },
-    {
-      "label": "04-verify-withdraw-destination.js",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 50,
-      "norm_label": "04-verify-withdraw-destination.js",
-      "id": "spikes_k01_trustless_work_src_04_verify_withdraw_destination"
-    },
-    {
-      "label": "accounts",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L34",
-      "_origin": "ast",
-      "community": 50,
-      "norm_label": "accounts",
-      "id": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_accounts"
-    },
-    {
-      "label": "server",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L37",
-      "_origin": "ast",
-      "community": 50,
-      "norm_label": "server",
-      "id": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_server"
-    },
-    {
-      "label": "tw()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L42",
-      "_origin": "ast",
-      "community": 50,
-      "norm_label": "tw()",
-      "id": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_tw"
-    },
-    {
-      "label": "signXdr()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L57",
-      "_origin": "ast",
-      "community": 50,
-      "norm_label": "signxdr()",
-      "id": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_signxdr"
-    },
-    {
-      "label": "signAndSend()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L63",
-      "_origin": "ast",
-      "community": 50,
-      "norm_label": "signandsend()",
-      "id": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_signandsend"
-    },
-    {
-      "label": "readEscrow()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L70",
-      "_origin": "ast",
-      "community": 50,
-      "norm_label": "readescrow()",
-      "id": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_readescrow"
-    },
-    {
-      "label": "usdcBalance()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L78",
-      "_origin": "ast",
-      "community": 50,
-      "norm_label": "usdcbalance()",
-      "id": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_usdcbalance"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L86",
-      "_origin": "ast",
-      "community": 50,
-      "norm_label": "main()",
-      "id": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_main"
-    },
-    {
-      "label": "05-verify-option-a-forward.js",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "05-verify-option-a-forward.js",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward"
-    },
-    {
-      "label": "USDC",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L35",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "usdc",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_usdc"
-    },
-    {
-      "label": "accounts",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L37",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "accounts",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_accounts"
-    },
-    {
-      "label": "server",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L40",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "server",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_server"
-    },
-    {
-      "label": "tw()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L42",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "tw()",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_tw"
-    },
-    {
-      "label": "signXdr()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L57",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "signxdr()",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_signxdr"
-    },
-    {
-      "label": "signAndSend()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L63",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "signandsend()",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_signandsend"
-    },
-    {
-      "label": "usdcBalance()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L70",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "usdcbalance()",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_usdcbalance"
-    },
-    {
-      "label": "ensureTrustline()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L78",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "ensuretrustline()",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_ensuretrustline"
-    },
-    {
-      "label": "forwardPayment()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L99",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "forwardpayment()",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_forwardpayment"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L119",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "main()",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_main"
-    },
-    {
-      "label": "ADR-0005",
-      "file_type": "concept",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L190",
-      "_origin": "ast",
-      "community": 46,
-      "norm_label": "adr-0005",
-      "id": "spikes_k01_trustless_work_src_05_verify_option_a_forward_js_docref_adr_0005"
-    },
-    {
-      "label": "06-verify-dispute-redirect.js",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 47,
-      "norm_label": "06-verify-dispute-redirect.js",
-      "id": "spikes_k01_trustless_work_src_06_verify_dispute_redirect"
-    },
-    {
-      "label": "accounts",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L36",
-      "_origin": "ast",
-      "community": 47,
-      "norm_label": "accounts",
-      "id": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_accounts"
-    },
-    {
-      "label": "server",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L39",
-      "_origin": "ast",
-      "community": 47,
-      "norm_label": "server",
-      "id": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_server"
-    },
-    {
-      "label": "tw()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L41",
-      "_origin": "ast",
-      "community": 47,
-      "norm_label": "tw()",
-      "id": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_tw"
-    },
-    {
-      "label": "signXdr()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L56",
-      "_origin": "ast",
-      "community": 47,
-      "norm_label": "signxdr()",
-      "id": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_signxdr"
-    },
-    {
-      "label": "signAndSend()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L62",
-      "_origin": "ast",
-      "community": 47,
-      "norm_label": "signandsend()",
-      "id": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_signandsend"
-    },
-    {
-      "label": "usdcBalance()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L69",
-      "_origin": "ast",
-      "community": 47,
-      "norm_label": "usdcbalance()",
-      "id": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_usdcbalance"
-    },
-    {
-      "label": "tryDispute()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L77",
-      "_origin": "ast",
-      "community": 47,
-      "norm_label": "trydispute()",
-      "id": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_trydispute"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L105",
-      "_origin": "ast",
-      "community": 47,
-      "norm_label": "main()",
-      "id": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_main"
-    },
-    {
-      "label": "ADR-0007",
-      "file_type": "concept",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L10",
-      "_origin": "ast",
-      "community": 47,
-      "norm_label": "adr-0007",
-      "id": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_js_docref_adr_0007"
-    },
-    {
-      "label": "07-verify-dispute-who-can-raise.js",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 57,
-      "norm_label": "07-verify-dispute-who-can-raise.js",
-      "id": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise"
-    },
-    {
-      "label": "accounts",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L20",
-      "_origin": "ast",
-      "community": 57,
-      "norm_label": "accounts",
-      "id": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_accounts"
-    },
-    {
-      "label": "tw()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L24",
-      "_origin": "ast",
-      "community": 57,
-      "norm_label": "tw()",
-      "id": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_tw"
-    },
-    {
-      "label": "signXdr()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L39",
-      "_origin": "ast",
-      "community": 57,
-      "norm_label": "signxdr()",
-      "id": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_signxdr"
-    },
-    {
-      "label": "signAndSend()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L45",
-      "_origin": "ast",
-      "community": 57,
-      "norm_label": "signandsend()",
-      "id": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_signandsend"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L52",
-      "_origin": "ast",
-      "community": 57,
-      "norm_label": "main()",
-      "id": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_main"
-    },
-    {
-      "label": "ADR-0003",
-      "file_type": "concept",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L4",
-      "_origin": "ast",
-      "community": 57,
-      "norm_label": "adr-0003",
-      "id": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_js_docref_adr_0003"
-    },
-    {
-      "label": "08-verify-dispute-winner.js",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "08-verify-dispute-winner.js",
-      "id": "spikes_k01_trustless_work_src_08_verify_dispute_winner"
-    },
-    {
-      "label": "accounts",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L15",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "accounts",
-      "id": "spikes_k01_trustless_work_src_08_verify_dispute_winner_accounts"
-    },
-    {
-      "label": "tw()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L19",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "tw()",
-      "id": "spikes_k01_trustless_work_src_08_verify_dispute_winner_tw"
-    },
-    {
-      "label": "signXdr()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L34",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "signxdr()",
-      "id": "spikes_k01_trustless_work_src_08_verify_dispute_winner_signxdr"
-    },
-    {
-      "label": "signAndSend()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L40",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "signandsend()",
-      "id": "spikes_k01_trustless_work_src_08_verify_dispute_winner_signandsend"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L47",
-      "_origin": "ast",
-      "community": 59,
-      "norm_label": "main()",
-      "id": "spikes_k01_trustless_work_src_08_verify_dispute_winner_main"
-    },
-    {
-      "label": "09-verify-merged-judge-resolver.js",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 53,
-      "norm_label": "09-verify-merged-judge-resolver.js",
-      "id": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver"
-    },
-    {
-      "label": "accounts",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L31",
-      "_origin": "ast",
-      "community": 53,
-      "norm_label": "accounts",
-      "id": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_accounts"
-    },
-    {
-      "label": "server",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L34",
-      "_origin": "ast",
-      "community": 53,
-      "norm_label": "server",
-      "id": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_server"
-    },
-    {
-      "label": "tw()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L36",
-      "_origin": "ast",
-      "community": 53,
-      "norm_label": "tw()",
-      "id": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_tw"
-    },
-    {
-      "label": "signXdr()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L51",
-      "_origin": "ast",
-      "community": 53,
-      "norm_label": "signxdr()",
-      "id": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_signxdr"
-    },
-    {
-      "label": "signAndSend()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L57",
-      "_origin": "ast",
-      "community": 53,
-      "norm_label": "signandsend()",
-      "id": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_signandsend"
-    },
-    {
-      "label": "usdcBalance()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L64",
-      "_origin": "ast",
-      "community": 53,
-      "norm_label": "usdcbalance()",
-      "id": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_usdcbalance"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L72",
-      "_origin": "ast",
-      "community": 53,
-      "norm_label": "main()",
-      "id": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_main"
     },
     {
       "label": "astrea/k02-go-soroban",
@@ -17757,19 +16908,6 @@
       "id": "github_pull_request_template"
     },
     {
-      "label": "CI Workflow",
-      "file_type": "document",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 37,
-      "norm_label": "ci workflow",
-      "id": "github_workflows_ci"
-    },
-    {
       "label": "AGENTS.md",
       "file_type": "document",
       "source_file": "AGENTS.md",
@@ -17843,7 +16981,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 24,
+      "community": 43,
       "norm_label": "astrea contracts build plan",
       "id": "docs_contracts_build_plan"
     },
@@ -17885,19 +17023,6 @@
       "community": 18,
       "norm_label": "k01 soroban escrow spike readme",
       "id": "spikes_k01_soroban_escrow_readme"
-    },
-    {
-      "label": "K01 Trustless Work Spike README",
-      "file_type": "document",
-      "source_file": "spikes/k01-trustless-work/README.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 28,
-      "norm_label": "k01 trustless work spike readme",
-      "id": "spikes_k01_trustless_work_readme"
     },
     {
       "label": "K02 Go-Soroban Integration Spike README",
@@ -18090,7 +17215,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 45,
       "norm_label": "escrowclient interface",
       "id": "docs_architecture_escrowclient"
     },
@@ -18181,7 +17306,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 45,
       "norm_label": "task k02: go-soroban integration spike",
       "id": "docs_build_plan_task_k02"
     },
@@ -18259,7 +17384,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 45,
       "norm_label": "task e01: go escrowclient",
       "id": "docs_build_plan_task_e01"
     },
@@ -18392,19 +17517,6 @@
       "community": 18,
       "norm_label": "adr-008 (referenced in k01 spike, corresponds to current adr-001)",
       "id": "spikes_k01_soroban_escrow_readme_adr008"
-    },
-    {
-      "label": "K01 Trustless Work Contract (CACTMEF4...)",
-      "file_type": "concept",
-      "source_file": "spikes/k01-trustless-work/README.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 28,
-      "norm_label": "k01 trustless work contract (cactmef4...)",
-      "id": "spikes_k01_trustless_work_readme_contract"
     },
     {
       "label": "K02 Go-Soroban Contract (CC76XEKP...)",
@@ -18615,19 +17727,6 @@
       "id": "apps_web_src_app_icon_favicon"
     },
     {
-      "label": "CONTRIBUTING.md",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing",
-      "community": 37,
-      "norm_label": "contributing.md"
-    },
-    {
       "label": "Astrea README",
       "file_type": "document",
       "source_file": "README.md",
@@ -18636,9 +17735,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme",
       "community": 21,
-      "norm_label": "astrea readme"
+      "norm_label": "astrea readme",
+      "id": "readme"
     },
     {
       "label": "contracts/soroban README",
@@ -18649,9 +17748,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "contracts_soroban_readme",
-      "community": 24,
-      "norm_label": "contracts/soroban readme"
+      "community": 43,
+      "norm_label": "contracts/soroban readme",
+      "id": "contracts_soroban_readme"
     },
     {
       "label": "services/core-go README",
@@ -18662,178 +17761,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "services_core_go_readme",
       "community": 45,
-      "norm_label": "services/core-go readme"
-    },
-    {
-      "label": "prisma/README.md",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "prisma_readme",
-      "community": 37,
-      "norm_label": "prisma/readme.md"
-    },
-    {
-      "label": "Testnet spikes (spikes/)",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_spikes",
-      "community": 37,
-      "norm_label": "testnet spikes (spikes/)"
-    },
-    {
-      "label": "ADR-001",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_adr_001",
-      "community": 37,
-      "norm_label": "adr-001"
-    },
-    {
-      "label": "ADR-003",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_adr_003",
-      "community": 37,
-      "norm_label": "adr-003"
-    },
-    {
-      "label": "Wallet testing process",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_wallet_testing",
-      "community": 18,
-      "norm_label": "wallet testing process"
-    },
-    {
-      "label": "Biome",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_biome",
-      "community": 37,
-      "norm_label": "biome"
-    },
-    {
-      "label": "Husky pre-commit hooks",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_husky",
-      "community": 37,
-      "norm_label": "husky pre-commit hooks"
-    },
-    {
-      "label": "commitlint",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_commitlint",
-      "community": 37,
-      "norm_label": "commitlint"
-    },
-    {
-      "label": "Conventional Commits",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_conventional_commits",
-      "community": 37,
-      "norm_label": "conventional commits"
-    },
-    {
-      "label": "CI pipeline (lint/typecheck/test/build gate)",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_ci_pipeline",
-      "community": 37,
-      "norm_label": "ci pipeline (lint/typecheck/test/build gate)"
-    },
-    {
-      "label": "PR opening process",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_pr_process",
-      "community": 45,
-      "norm_label": "pr opening process"
-    },
-    {
-      "label": "Money-movement extra review policy",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_money_movement_review",
-      "community": 45,
-      "norm_label": "money-movement extra review policy"
-    },
-    {
-      "label": "Security issue reporting process",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "contributing_security_reporting",
-      "community": 37,
-      "norm_label": "security issue reporting process"
+      "norm_label": "services/core-go readme",
+      "id": "services_core_go_readme"
     },
     {
       "label": "MIT License",
@@ -18844,9 +17774,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_mit_license",
-      "community": 37,
-      "norm_label": "mit license"
+      "community": 21,
+      "norm_label": "mit license",
+      "id": "readme_mit_license"
     },
     {
       "label": "Freighter wallet",
@@ -18857,9 +17787,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_freighter",
       "community": 18,
-      "norm_label": "freighter wallet"
+      "norm_label": "freighter wallet",
+      "id": "readme_freighter"
     },
     {
       "label": "Albedo wallet",
@@ -18870,9 +17800,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_albedo",
       "community": 18,
-      "norm_label": "albedo wallet"
+      "norm_label": "albedo wallet",
+      "id": "readme_albedo"
     },
     {
       "label": "xBull wallet",
@@ -18883,9 +17813,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_xbull",
       "community": 18,
-      "norm_label": "xbull wallet"
+      "norm_label": "xbull wallet",
+      "id": "readme_xbull"
     },
     {
       "label": "LOBSTR wallet",
@@ -18896,9 +17826,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_lobstr",
       "community": 18,
-      "norm_label": "lobstr wallet"
+      "norm_label": "lobstr wallet",
+      "id": "readme_lobstr"
     },
     {
       "label": "Locked before launch (principle)",
@@ -18909,9 +17839,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_locked_before_launch",
       "community": 21,
-      "norm_label": "locked before launch (principle)"
+      "norm_label": "locked before launch (principle)",
+      "id": "readme_locked_before_launch"
     },
     {
       "label": "Verifiable by anyone (principle)",
@@ -18922,9 +17852,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_verifiable_by_anyone",
       "community": 21,
-      "norm_label": "verifiable by anyone (principle)"
+      "norm_label": "verifiable by anyone (principle)",
+      "id": "readme_verifiable_by_anyone"
     },
     {
       "label": "Fast payouts (principle)",
@@ -18935,9 +17865,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_fast_payouts",
       "community": 21,
-      "norm_label": "fast payouts (principle)"
+      "norm_label": "fast payouts (principle)",
+      "id": "readme_fast_payouts"
     },
     {
       "label": "Non-custodial (principle)",
@@ -18948,9 +17878,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_non_custodial",
       "community": 21,
-      "norm_label": "non-custodial (principle)"
+      "norm_label": "non-custodial (principle)",
+      "id": "readme_non_custodial"
     },
     {
       "label": "Fully auditable (principle)",
@@ -18961,9 +17891,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_fully_auditable",
       "community": 21,
-      "norm_label": "fully auditable (principle)"
+      "norm_label": "fully auditable (principle)",
+      "id": "readme_fully_auditable"
     },
     {
       "label": "Frontend layer (Next.js App Router)",
@@ -18974,9 +17904,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_architecture_frontend",
       "community": 21,
-      "norm_label": "frontend layer (next.js app router)"
+      "norm_label": "frontend layer (next.js app router)",
+      "id": "readme_architecture_frontend"
     },
     {
       "label": "Backend layer (Go service)",
@@ -18987,9 +17917,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_architecture_backend",
       "community": 45,
-      "norm_label": "backend layer (go service)"
+      "norm_label": "backend layer (go service)",
+      "id": "readme_architecture_backend"
     },
     {
       "label": "Database layer (Postgres/Supabase/Prisma mirror)",
@@ -19000,9 +17930,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_architecture_database",
       "community": 21,
-      "norm_label": "database layer (postgres/supabase/prisma mirror)"
+      "norm_label": "database layer (postgres/supabase/prisma mirror)",
+      "id": "readme_architecture_database"
     },
     {
       "label": "Blockchain layer (Stellar/Soroban)",
@@ -19013,9 +17943,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_architecture_blockchain",
       "community": 21,
-      "norm_label": "blockchain layer (stellar/soroban)"
+      "norm_label": "blockchain layer (stellar/soroban)",
+      "id": "readme_architecture_blockchain"
     },
     {
       "label": "Reconciliation job (chain as source of truth)",
@@ -19026,9 +17956,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_reconciliation_job",
       "community": 45,
-      "norm_label": "reconciliation job (chain as source of truth)"
+      "norm_label": "reconciliation job (chain as source of truth)",
+      "id": "readme_reconciliation_job"
     },
     {
       "label": "Next.js (App Router)",
@@ -19039,9 +17969,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_nextjs",
       "community": 21,
-      "norm_label": "next.js (app router)"
+      "norm_label": "next.js (app router)",
+      "id": "readme_nextjs"
     },
     {
       "label": "TypeScript (strict)",
@@ -19052,9 +17982,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_typescript",
       "community": 21,
-      "norm_label": "typescript (strict)"
+      "norm_label": "typescript (strict)",
+      "id": "readme_typescript"
     },
     {
       "label": "Go language",
@@ -19065,9 +17995,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_go_lang",
       "community": 21,
-      "norm_label": "go language"
+      "norm_label": "go language",
+      "id": "readme_go_lang"
     },
     {
       "label": "Tailwind CSS",
@@ -19078,9 +18008,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_tailwindcss",
       "community": 21,
-      "norm_label": "tailwind css"
+      "norm_label": "tailwind css",
+      "id": "readme_tailwindcss"
     },
     {
       "label": "shadcn/ui",
@@ -19091,9 +18021,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_shadcn_ui",
       "community": 21,
-      "norm_label": "shadcn/ui"
+      "norm_label": "shadcn/ui",
+      "id": "readme_shadcn_ui"
     },
     {
       "label": "Stellar Wallets Kit",
@@ -19104,9 +18034,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_stellar_wallets_kit",
       "community": 18,
-      "norm_label": "stellar wallets kit"
+      "norm_label": "stellar wallets kit",
+      "id": "readme_stellar_wallets_kit"
     },
     {
       "label": "Prisma ORM",
@@ -19117,9 +18047,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_prisma_orm",
       "community": 21,
-      "norm_label": "prisma orm"
+      "norm_label": "prisma orm",
+      "id": "readme_prisma_orm"
     },
     {
       "label": "PostgreSQL",
@@ -19130,9 +18060,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_postgresql",
       "community": 21,
-      "norm_label": "postgresql"
+      "norm_label": "postgresql",
+      "id": "readme_postgresql"
     },
     {
       "label": "Supabase",
@@ -19143,9 +18073,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_supabase",
       "community": 21,
-      "norm_label": "supabase"
+      "norm_label": "supabase",
+      "id": "readme_supabase"
     },
     {
       "label": "Stellar testnet",
@@ -19156,9 +18086,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_stellar_testnet",
       "community": 21,
-      "norm_label": "stellar testnet"
+      "norm_label": "stellar testnet",
+      "id": "readme_stellar_testnet"
     },
     {
       "label": "USDC",
@@ -19169,9 +18099,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_usdc",
       "community": 21,
-      "norm_label": "usdc"
+      "norm_label": "usdc",
+      "id": "readme_usdc"
     },
     {
       "label": "GitHub Actions",
@@ -19182,9 +18112,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_github_actions",
       "community": 21,
-      "norm_label": "github actions"
+      "norm_label": "github actions",
+      "id": "readme_github_actions"
     },
     {
       "label": "Vercel",
@@ -19195,9 +18125,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_vercel",
       "community": 21,
-      "norm_label": "vercel"
+      "norm_label": "vercel",
+      "id": "readme_vercel"
     },
     {
       "label": "Christopher Lamberti (Maintainer)",
@@ -19208,9 +18138,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "readme_christopher_lamberti",
       "community": 21,
-      "norm_label": "christopher lamberti (maintainer)"
+      "norm_label": "christopher lamberti (maintainer)",
+      "id": "readme_christopher_lamberti"
     },
     {
       "label": "Custom Soroban escrow contract",
@@ -19221,9 +18151,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "contracts_soroban_escrow_contract",
-      "community": 45,
-      "norm_label": "custom soroban escrow contract"
+      "community": 21,
+      "norm_label": "custom soroban escrow contract",
+      "id": "contracts_soroban_escrow_contract"
     },
     {
       "label": "Task K01 (done)",
@@ -19234,9 +18164,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "contracts_soroban_task_k01",
-      "community": 24,
-      "norm_label": "task k01 (done)"
+      "community": 43,
+      "norm_label": "task k01 (done)",
+      "id": "contracts_soroban_task_k01"
     },
     {
       "label": "Tasks E01-E03",
@@ -19247,9 +18177,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "contracts_soroban_task_e01_e03",
-      "community": 24,
-      "norm_label": "tasks e01-e03"
+      "community": 43,
+      "norm_label": "tasks e01-e03",
+      "id": "contracts_soroban_task_e01_e03"
     },
     {
       "label": "Event/prize state machine",
@@ -19260,9 +18190,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "services_core_go_state_machine",
       "community": 45,
-      "norm_label": "event/prize state machine"
+      "norm_label": "event/prize state machine",
+      "id": "services_core_go_state_machine"
     },
     {
       "label": "Participant registration",
@@ -19273,9 +18203,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "services_core_go_participant_registration",
       "community": 45,
-      "norm_label": "participant registration"
+      "norm_label": "participant registration",
+      "id": "services_core_go_participant_registration"
     },
     {
       "label": "Real-time tracking",
@@ -19286,9 +18216,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "services_core_go_realtime_tracking",
       "community": 45,
-      "norm_label": "real-time tracking"
+      "norm_label": "real-time tracking",
+      "id": "services_core_go_realtime_tracking"
     },
     {
       "label": "Transaction pipeline",
@@ -19299,9 +18229,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "services_core_go_transaction_pipeline",
       "community": 45,
-      "norm_label": "transaction pipeline"
+      "norm_label": "transaction pipeline",
+      "id": "services_core_go_transaction_pipeline"
     },
     {
       "label": "Reconciliation (core-go)",
@@ -19312,9 +18242,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "services_core_go_reconciliation",
       "community": 45,
-      "norm_label": "reconciliation (core-go)"
+      "norm_label": "reconciliation (core-go)",
+      "id": "services_core_go_reconciliation"
     },
     {
       "label": "Task S01",
@@ -19325,9 +18255,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "services_core_go_task_s01",
       "community": 45,
-      "norm_label": "task s01"
+      "norm_label": "task s01",
+      "id": "services_core_go_task_s01"
     },
     {
       "label": "Tasks E01-E06",
@@ -19338,12 +18268,132 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "services_core_go_task_e01_e06",
-      "community": 24,
-      "norm_label": "tasks e01-e06"
+      "community": 43,
+      "norm_label": "tasks e01-e06",
+      "id": "services_core_go_task_e01_e06"
     }
   ],
   "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "contributing",
+      "target": "contributing_contributing_to_astrea",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/build-plan.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_build_plan_task_s06",
+      "target": "contributing"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "github_pull_request_template",
+      "target": "contributing"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "contributing_contributing_to_astrea",
+      "target": "contributing_before_you_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "contributing_contributing_to_astrea",
+      "target": "contributing_code_quality_enforced_not_optional",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "contributing_contributing_to_astrea",
+      "target": "contributing_keeping_the_knowledge_graph_updated",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "contributing_contributing_to_astrea",
+      "target": "contributing_license",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "contributing_contributing_to_astrea",
+      "target": "contributing_local_setup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "contributing_contributing_to_astrea",
+      "target": "contributing_opening_a_pr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "contributing_contributing_to_astrea",
+      "target": "contributing_reporting_a_security_issue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "contributing_contributing_to_astrea",
+      "target": "contributing_where_to_ask_questions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "contributing_local_setup",
+      "target": "contributing_wallet_testing",
+      "confidence_score": 1.0
+    },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
@@ -25385,1254 +24435,6 @@
       "confidence_score": 1.0,
       "source": "spikes_k01_soroban_escrow_src_test_setup",
       "target": "tokenclient"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L14",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package",
-      "target": "spikes_k01_trustless_work_package_dependencies"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package",
-      "target": "spikes_k01_trustless_work_package_description"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package",
-      "target": "spikes_k01_trustless_work_package_engines"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package",
-      "target": "spikes_k01_trustless_work_package_name"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package",
-      "target": "spikes_k01_trustless_work_package_private"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package",
-      "target": "spikes_k01_trustless_work_package_scripts"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package",
-      "target": "spikes_k01_trustless_work_package_type"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package",
-      "target": "spikes_k01_trustless_work_package_version"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package_engines",
-      "target": "spikes_k01_trustless_work_package_engines_node"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package_scripts",
-      "target": "spikes_k01_trustless_work_package_scripts_setup"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package_scripts",
-      "target": "spikes_k01_trustless_work_package_scripts_spike"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package_dependencies",
-      "target": "spikes_k01_trustless_work_package_dependencies_dotenv"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/package.json",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_package_dependencies",
-      "target": "spikes_k01_trustless_work_package_dependencies_stellar_stellar_sdk"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L36",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_01_setup_accounts",
-      "target": "spikes_k01_trustless_work_src_01_setup_accounts_addusdctrustline"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_01_setup_accounts",
-      "target": "spikes_k01_trustless_work_src_01_setup_accounts_friendbot"
-    },
-    {
-      "relation": "cites",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L50",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_01_setup_accounts",
-      "target": "spikes_k01_trustless_work_src_01_setup_accounts_js_docref_adr_0003"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L49",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_01_setup_accounts",
-      "target": "spikes_k01_trustless_work_src_01_setup_accounts_main"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_01_setup_accounts",
-      "target": "spikes_k01_trustless_work_src_01_setup_accounts_server"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L18",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_01_setup_accounts",
-      "target": "spikes_k01_trustless_work_src_01_setup_accounts_usdc"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L58",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_01_setup_accounts_main",
-      "target": "spikes_k01_trustless_work_src_01_setup_accounts_friendbot"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/01-setup-accounts.js",
-      "source_location": "L66",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_01_setup_accounts_main",
-      "target": "spikes_k01_trustless_work_src_01_setup_accounts_addusdctrustline"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L45",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_accounts"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L49",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_findings"
-    },
-    {
-      "relation": "cites",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L18",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_js_docref_adr_0001"
-    },
-    {
-      "relation": "cites",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_js_docref_adr_0003"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L100",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_main"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L55",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_record"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L48",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_server"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L85",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_signandsend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L78",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_signxdr"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L63",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_tw"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L92",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_usdcbalance"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike_rationale_4",
-      "target": "spikes_k01_trustless_work_src_02_run_spike"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L136",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike_main",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_record"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L86",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike_signandsend",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L88",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike_signandsend",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_signxdr"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L130",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike_main",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_signandsend"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/02-run-spike.js",
-      "source_location": "L218",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_02_run_spike_main",
-      "target": "spikes_k01_trustless_work_src_02_run_spike_usdcbalance"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_03_verify_update_escrow",
-      "target": "spikes_k01_trustless_work_src_03_verify_update_escrow_accounts"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L70",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_03_verify_update_escrow",
-      "target": "spikes_k01_trustless_work_src_03_verify_update_escrow_main"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L62",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_03_verify_update_escrow",
-      "target": "spikes_k01_trustless_work_src_03_verify_update_escrow_readescrow"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L55",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_03_verify_update_escrow",
-      "target": "spikes_k01_trustless_work_src_03_verify_update_escrow_signandsend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L49",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_03_verify_update_escrow",
-      "target": "spikes_k01_trustless_work_src_03_verify_update_escrow_signxdr"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_03_verify_update_escrow",
-      "target": "spikes_k01_trustless_work_src_03_verify_update_escrow_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L56",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_03_verify_update_escrow_signandsend",
-      "target": "spikes_k01_trustless_work_src_03_verify_update_escrow_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L58",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_03_verify_update_escrow_signandsend",
-      "target": "spikes_k01_trustless_work_src_03_verify_update_escrow_signxdr"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L95",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_03_verify_update_escrow_main",
-      "target": "spikes_k01_trustless_work_src_03_verify_update_escrow_signandsend"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/03-verify-update-escrow.js",
-      "source_location": "L73",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_03_verify_update_escrow_main",
-      "target": "spikes_k01_trustless_work_src_03_verify_update_escrow_readescrow"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_accounts"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L86",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_main"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L70",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_readescrow"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L37",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_server"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L63",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_signandsend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L57",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_signxdr"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L42",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_tw"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L78",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_usdcbalance"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L64",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_signandsend",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L66",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_signandsend",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_signxdr"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L101",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_main",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_signandsend"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L89",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_main",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_readescrow"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/04-verify-withdraw-destination.js",
-      "source_location": "L93",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_main",
-      "target": "spikes_k01_trustless_work_src_04_verify_withdraw_destination_usdcbalance"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L37",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_accounts"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L78",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_ensuretrustline"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L99",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_forwardpayment"
-    },
-    {
-      "relation": "cites",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L190",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_js_docref_adr_0005"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L119",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_main"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L40",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_server"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L63",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_signandsend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L57",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_signxdr"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L42",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_tw"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L35",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_usdc"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L70",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_usdcbalance"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L64",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward_signandsend",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L66",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward_signandsend",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_signxdr"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L151",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward_main",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_signandsend"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L178",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward_main",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_usdcbalance"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L124",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward_main",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_ensuretrustline"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/05-verify-option-a-forward.js",
-      "source_location": "L203",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_05_verify_option_a_forward_main",
-      "target": "spikes_k01_trustless_work_src_05_verify_option_a_forward_forwardpayment"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L36",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_accounts"
-    },
-    {
-      "relation": "cites",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_js_docref_adr_0007"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L105",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_main"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L39",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_server"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L62",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_signandsend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L56",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_signxdr"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L77",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_trydispute"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L41",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_tw"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L69",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_usdcbalance"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L63",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_signandsend",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L65",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_signandsend",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_signxdr"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L136",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_main",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_signandsend"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L85",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_trydispute",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_signandsend"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L189",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_main",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_usdcbalance"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/06-verify-dispute-redirect.js",
-      "source_location": "L154",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_main",
-      "target": "spikes_k01_trustless_work_src_06_verify_dispute_redirect_trydispute"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise",
-      "target": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_accounts"
-    },
-    {
-      "relation": "cites",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise",
-      "target": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_js_docref_adr_0003"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L52",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise",
-      "target": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_main"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L45",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise",
-      "target": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_signandsend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L39",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise",
-      "target": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_signxdr"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise",
-      "target": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L46",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_signandsend",
-      "target": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L48",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_signandsend",
-      "target": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_signxdr"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/07-verify-dispute-who-can-raise.js",
-      "source_location": "L79",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_main",
-      "target": "spikes_k01_trustless_work_src_07_verify_dispute_who_can_raise_signandsend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_08_verify_dispute_winner",
-      "target": "spikes_k01_trustless_work_src_08_verify_dispute_winner_accounts"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L47",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_08_verify_dispute_winner",
-      "target": "spikes_k01_trustless_work_src_08_verify_dispute_winner_main"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L40",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_08_verify_dispute_winner",
-      "target": "spikes_k01_trustless_work_src_08_verify_dispute_winner_signandsend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_08_verify_dispute_winner",
-      "target": "spikes_k01_trustless_work_src_08_verify_dispute_winner_signxdr"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_08_verify_dispute_winner",
-      "target": "spikes_k01_trustless_work_src_08_verify_dispute_winner_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L41",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_08_verify_dispute_winner_signandsend",
-      "target": "spikes_k01_trustless_work_src_08_verify_dispute_winner_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L43",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_08_verify_dispute_winner_signandsend",
-      "target": "spikes_k01_trustless_work_src_08_verify_dispute_winner_signxdr"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/08-verify-dispute-winner.js",
-      "source_location": "L75",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_08_verify_dispute_winner_main",
-      "target": "spikes_k01_trustless_work_src_08_verify_dispute_winner_signandsend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L31",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_accounts"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L72",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_main"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_server"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L57",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_signandsend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L51",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_signxdr"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L36",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_tw"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L64",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_usdcbalance"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L58",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_signandsend",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_tw"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L60",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_signandsend",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_signxdr"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L103",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_main",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_signandsend"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "spikes/k01-trustless-work/src/09-verify-merged-judge-resolver.js",
-      "source_location": "L148",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_main",
-      "target": "spikes_k01_trustless_work_src_09_verify_merged_judge_resolver_usdcbalance"
     },
     {
       "relation": "contains",
@@ -39605,47 +37407,7 @@
       "source_location": null,
       "weight": 1.0,
       "source": "github_pull_request_template",
-      "target": "contributing"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "github_pull_request_template",
-      "target": "contributing_conventional_commits"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "github_pull_request_template",
       "target": "github_issue_template_build_plan_task_moneypath"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "github_workflows_ci",
-      "target": "contributing_biome"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "github_workflows_ci",
-      "target": "contributing_conventional_commits"
     },
     {
       "relation": "references",
@@ -39686,16 +37448,6 @@
       "weight": 1.0,
       "source": "apps_web_prisma_readme",
       "target": "docs_architecture_principle_non_custodial"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "docs_architecture"
     },
     {
       "relation": "references",
@@ -39836,26 +37588,6 @@
       "weight": 1.0,
       "source": "readme",
       "target": "docs_architecture"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "spikes/k01-trustless-work/README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "spikes_k01_trustless_work_readme",
-      "target": "docs_architecture"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "docs_build_plan"
     },
     {
       "relation": "references",
@@ -40081,16 +37813,6 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "spikes/k01-trustless-work/README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "spikes_k01_trustless_work_readme",
-      "target": "docs_product_flows"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "docs/ui-motion.md",
       "source_location": null,
       "weight": 1.0,
@@ -40171,16 +37893,6 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "spikes_k01_soroban_escrow_readme",
-      "target": "spikes_k01_trustless_work_readme"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "spikes/k02-go-soroban/README.md",
       "source_location": null,
       "weight": 1.0,
@@ -40206,26 +37918,6 @@
       "weight": 1.0,
       "source": "spikes_k03_wallet_compat_web_index",
       "target": "spikes_k01_soroban_escrow_readme"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "spikes/k01-trustless-work/README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "spikes_k01_trustless_work_readme",
-      "target": "docs_architecture_adr_003"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "spikes/k01-trustless-work/README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "spikes_k01_trustless_work_readme",
-      "target": "spikes_k01_trustless_work_readme_contract"
     },
     {
       "relation": "cites",
@@ -40634,16 +38326,6 @@
       "source_file": "docs/build-plan.md",
       "source_location": null,
       "weight": 1.0,
-      "source": "docs_build_plan_task_s06",
-      "target": "contributing"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/build-plan.md",
-      "source_location": null,
-      "weight": 1.0,
       "source": "docs_build_plan_task_e01",
       "target": "services_core_go_readme"
     },
@@ -40691,181 +38373,11 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "contracts_soroban_readme"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "contributing_adr_001"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "contributing_adr_003"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "contributing_biome"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "contributing_ci_pipeline"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "contributing_commitlint"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "contributing_husky"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "contributing_pr_process"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "contributing_security_reporting"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "contributing_wallet_testing"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "prisma_readme"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "readme"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing",
-      "target": "readme_mit_license"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "README.md",
       "source_location": null,
       "weight": 1.0,
       "source": "readme",
       "target": "contracts_soroban_readme"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme",
-      "target": "contributing_biome"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme",
-      "target": "contributing_commitlint"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme",
-      "target": "contributing_conventional_commits"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme",
-      "target": "contributing_husky"
     },
     {
       "relation": "references",
@@ -41281,126 +38793,6 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_adr_001",
-      "target": "contributing_spikes"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_adr_003",
-      "target": "contributing_spikes"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_wallet_testing",
-      "target": "readme_albedo"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_wallet_testing",
-      "target": "readme_freighter"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_wallet_testing",
-      "target": "readme_lobstr"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_wallet_testing",
-      "target": "readme_xbull"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_husky",
-      "target": "contributing_conventional_commits"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_commitlint",
-      "target": "contributing_conventional_commits"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_pr_process",
-      "target": "contributing_money_movement_review"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_money_movement_review",
-      "target": "contracts_soroban_escrow_contract"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_money_movement_review",
-      "target": "services_core_go_reconciliation"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "CONTRIBUTING.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "contributing_money_movement_review",
-      "target": "services_core_go_transaction_pipeline"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "README.md",
       "source_location": null,
       "weight": 1.0,
@@ -41555,35 +38947,6 @@
       "source_file": "README.md"
     },
     {
-      "id": "code_quality_enforcement_pipeline",
-      "label": "Code quality enforcement pipeline",
-      "nodes": [
-        "contributing_biome",
-        "contributing_husky",
-        "contributing_commitlint",
-        "contributing_conventional_commits",
-        "contributing_ci_pipeline"
-      ],
-      "relation": "participate_in",
-      "confidence": "EXTRACTED",
-      "confidence_score": 0.9,
-      "source_file": "CONTRIBUTING.md"
-    },
-    {
-      "id": "money_movement_safety_controls",
-      "label": "Money-movement safety controls",
-      "nodes": [
-        "contributing_money_movement_review",
-        "contracts_soroban_task_e01_e03",
-        "services_core_go_task_e01_e06",
-        "readme_non_custodial"
-      ],
-      "relation": "participate_in",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "CONTRIBUTING.md"
-    },
-    {
       "id": "wallet_compat_verification_flow",
       "label": "Wallet Compatibility Verification Flow",
       "nodes": [
@@ -41626,5 +38989,5 @@
       "source_file": "docs/architecture.md"
     }
   ],
-  "built_at_commit": "624abb6cf72764c6535b666506da35cf92cca0e2"
+  "built_at_commit": "4f4fd757867381666d79bb1bb1c233fbb9772b99"
 }

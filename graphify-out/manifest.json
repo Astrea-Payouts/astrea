@@ -610,9 +610,9 @@
     "semantic_hash": "50203085951bc1d77f90eaa9849b79fd"
   },
   ".github/workflows/ci.yml": {
-    "mtime": 1786310368.4897122,
-    "ast_hash": "34cdc48b33d23f7026ef847bcff2dd31",
-    "semantic_hash": "34cdc48b33d23f7026ef847bcff2dd31"
+    "mtime": 1786948248.0812795,
+    "ast_hash": "a1e0c49d45c0c85c8eecefb6cb559b12",
+    "semantic_hash": ""
   },
   "AGENTS.md": {
     "mtime": 1784863807.2147143,
@@ -625,14 +625,14 @@
     "semantic_hash": "5c27369b226fcf2be8a6cfe52224e767"
   },
   "CONTRIBUTING.md": {
-    "mtime": 1786942809.9221587,
-    "ast_hash": "94bd95ac1d166ea4a1a304efd2355295",
-    "semantic_hash": "94bd95ac1d166ea4a1a304efd2355295"
+    "mtime": 1786948849.7284398,
+    "ast_hash": "428e23eba2fbeeee23efa418a46b1242",
+    "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1786919385.5164065,
-    "ast_hash": "22400cbdb7e8a62399e4cddce67eb800",
-    "semantic_hash": "22400cbdb7e8a62399e4cddce67eb800"
+    "mtime": 1786948833.1560433,
+    "ast_hash": "c14705cf9d1e36200588474ca6dcb3cc",
+    "semantic_hash": ""
   },
   "apps/web/prisma/README.md": {
     "mtime": 1786310368.597864,
@@ -738,5 +738,15 @@
     "mtime": 1786310368.856134,
     "ast_hash": "b92bba6db7fc8a1d0f6baa94fae5a695",
     "semantic_hash": "b92bba6db7fc8a1d0f6baa94fae5a695"
+  },
+  ".husky/post-checkout": {
+    "mtime": 1786947325.1643217,
+    "ast_hash": "b62ff06087dba6007566ef237f2b64b9",
+    "semantic_hash": ""
+  },
+  ".husky/post-commit": {
+    "mtime": 1786947325.1612957,
+    "ast_hash": "e62322ff5431aee9142f7295bd4a30a9",
+    "semantic_hash": ""
   }
 }
