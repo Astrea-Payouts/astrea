@@ -65,9 +65,17 @@ jobs:
 
       # Code-only rebuild - no LLM, no API key. Doc/paper/image changes aren't
       # covered here; see CONTRIBUTING.md ("Keeping the knowledge graph updated").
+      #
+      # Both env vars are required for a reproducible rebuild - confirmed by
+      # testing locally: PYTHONHASHSEED alone still produced a different graph
+      # on every run (parallel AST workers finish in a random order, which
+      # feeds Louvain clustering non-deterministically); pinning workers to 1
+      # made back-to-back reruns byte-identical. Without both, this job would
+      # flag unrelated PRs as "stale" at random.
       - name: Rebuild code graph
         env:
           PYTHONHASHSEED: "0"
+          GRAPHIFY_MAX_WORKERS: "1"
         run: graphify update .
 
       - name: Fail if graphify-out/ is stale
