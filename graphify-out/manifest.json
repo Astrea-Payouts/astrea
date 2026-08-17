@@ -625,14 +625,14 @@
     "semantic_hash": "5c27369b226fcf2be8a6cfe52224e767"
   },
   "CONTRIBUTING.md": {
-    "mtime": 1785118420.2173376,
-    "ast_hash": "411738f162d36f074e3322495e0b191d",
-    "semantic_hash": "411738f162d36f074e3322495e0b191d"
+    "mtime": 1786942809.9221587,
+    "ast_hash": "94bd95ac1d166ea4a1a304efd2355295",
+    "semantic_hash": "94bd95ac1d166ea4a1a304efd2355295"
   },
   "README.md": {
-    "mtime": 1786237454.3855083,
-    "ast_hash": "771a585a78cf9fa07a03473d378ac52b",
-    "semantic_hash": "771a585a78cf9fa07a03473d378ac52b"
+    "mtime": 1786919385.5164065,
+    "ast_hash": "22400cbdb7e8a62399e4cddce67eb800",
+    "semantic_hash": "22400cbdb7e8a62399e4cddce67eb800"
   },
   "apps/web/prisma/README.md": {
     "mtime": 1786310368.597864,
@@ -640,9 +640,9 @@
     "semantic_hash": "4c7c5981e6e3fefc535143b0358b7333"
   },
   "contracts/soroban/README.md": {
-    "mtime": 1786310369.30026,
-    "ast_hash": "aaadb1d0072a1567b01ec4c86727f219",
-    "semantic_hash": "aaadb1d0072a1567b01ec4c86727f219"
+    "mtime": 1786942801.4860249,
+    "ast_hash": "1f0c40188f77a3d98ddc2fc7c91dafa4",
+    "semantic_hash": "1f0c40188f77a3d98ddc2fc7c91dafa4"
   },
   "docs/architecture.md": {
     "mtime": 1786237299.6037655,
@@ -670,9 +670,9 @@
     "semantic_hash": "0b52d6c7c2bca22691378a477c1cb8f8"
   },
   "services/core-go/README.md": {
-    "mtime": 1786310369.3102996,
-    "ast_hash": "101d1da933d1a90a1f65fc2f2d6939db",
-    "semantic_hash": "101d1da933d1a90a1f65fc2f2d6939db"
+    "mtime": 1786942798.6696818,
+    "ast_hash": "baecafd82a74b7c98861760b73faaa5f",
+    "semantic_hash": "baecafd82a74b7c98861760b73faaa5f"
   },
   "spikes/k01-soroban-escrow/README.md": {
     "mtime": 1786073506.8615038,
