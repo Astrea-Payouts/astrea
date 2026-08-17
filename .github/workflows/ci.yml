@@ -82,13 +82,19 @@ jobs:
           GRAPHIFY_MAX_WORKERS: "1"
         run: graphify update .
 
+      # Scoped to the actual graph output + the content-hash-keyed AST cache.
+      # graphify-out/manifest.json and cache/stat-index.json store wall-clock
+      # mtimes for the local incremental-update cache - those never match
+      # between any two checkouts (confirmed: they were the only diff left
+      # after fixing the real content drift), so comparing them here would
+      # fail every run regardless of whether the graph itself is stale.
       - name: Fail if graphify-out/ is stale
         run: |
-          if ! git diff --quiet -- graphify-out/; then
+          if ! git diff --quiet -- graphify-out/graph.json graphify-out/graph.html graphify-out/GRAPH_REPORT.md graphify-out/cache/ast/; then
             echo "::error::graphify-out/ is out of sync with the code in this PR."
             echo "Run 'graphify update .' locally, review the diff, and commit graphify-out/."
             echo "Or download the 'graphify-out-rebuilt' artifact from this run and commit that instead."
-            git diff --stat -- graphify-out/
+            git diff --stat -- graphify-out/graph.json graphify-out/graph.html graphify-out/GRAPH_REPORT.md graphify-out/cache/ast/
             exit 1
           fi
 
