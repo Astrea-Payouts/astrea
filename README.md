@@ -167,6 +167,7 @@ To use Astrea you need one of the following wallets installed (Chrome, Brave, or
 | [docs/architecture.md](docs/architecture.md) | System design, patterns, ADRs, and failure modes |
 | [docs/build-plan.md](docs/build-plan.md) | Phased build plan with coded tasks (source of GitHub issues) |
 | [docs/contracts-build-plan.md](docs/contracts-build-plan.md) | The escrow contract's own build plan |
+| [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md) | Auto-generated knowledge graph of the codebase — see [Contributing](#-contributing) for how it stays current |
 
 ---
 

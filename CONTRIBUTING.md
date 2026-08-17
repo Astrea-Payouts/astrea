@@ -56,6 +56,18 @@ This repo uses [Biome](https://biomejs.dev) for linting/formatting and [Husky](h
 
 If a check fails and you're not sure why, the error output is usually specific enough to act on directly — Biome and `tsc` both point at exact lines.
 
+## Keeping the knowledge graph updated
+
+The repo has a [graphify](https://github.com/safishamsi/graphify) knowledge graph at [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md) (interactive view: `graphify-out/graph.html`). A `post-commit` Husky hook auto-rebuilds it after every commit — **but only for code file changes**, without needing an LLM.
+
+**Doc changes are not covered by the hook.** If your PR touches a `.md` file (README, `docs/`, any `CONTRIBUTING.md`-style guide), the hook won't pick it up — semantic extraction from docs needs an LLM pass. Run this yourself before opening the PR:
+
+```
+/graphify --update
+```
+
+from a Claude Code session at the repo root (or any agent host that can run the graphify skill). If for whatever reason the hook doesn't fire, or you're not sure it ran, running `/graphify --update` manually is always safe — it only re-extracts what actually changed.
+
 ## Opening a PR
 
 1. **Branch off your fork's `main`**, push it to your fork, then open the PR from there against `Astrea-Payouts/astrea:main` — GitHub does this automatically when you push a branch to your fork and click "Compare & pull request."
