@@ -1,123 +1,75 @@
 # Graph Report - astrea  (2026-08-17)
 
 ## Corpus Check
-- 126 files · ~329,354 words
+- 88 files · ~265,573 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1871 nodes · 1995 edges · 184 communities (56 shown, 128 thin omitted)
+- 705 nodes · 837 edges · 136 communities (39 shown, 97 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `fa8c0565`
+- Built from commit: `24b29953`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- Prisma Event Model Types
-- Prisma Client Internals
-- Prisma Prize Model Types
-- Prisma Wallet Model Types
-- Prisma Submission Model Types
-- Prisma User Model Types
-- Prisma Payout Model Types
-- Prisma Judge Model Types
-- Prisma Common Input Filters
-- Prisma OpLog Model Types
-- Prisma Client Entry Point
-- App Layout & Wallet Provider
-- Prisma Browser Client
-- Web App Biome Config
-- Trustless Work Adapter (Legacy)
-- Repo Root Biome Config
-- E06 Vertical Slice Demo Script
-- Demo Event Seed Script
-- Architecture & Build-Plan Docs
-- shadcn/ui Components Config
-- K01 Soroban Escrow Contract
-- README Overview & Principles
-- Web App TypeScript Config
-- K02 Go-Soroban Client
-- Architecture & Build-Plan Docs
-- Web App Dependencies
-- Escrow Pipeline & Idempotency
-- Event/Prize State Machines
-- Architecture & Build-Plan Docs
-- Prisma Event Delegate Methods
-- Prisma Judge Delegate Methods
-- Prisma OpLog Delegate Methods
-- Prisma Payout Delegate Methods
-- Prisma Prize Delegate Methods
-- Prisma Submission Delegate Methods
-- Prisma User Delegate Methods
-- Prisma Wallet Delegate Methods
-- CONTRIBUTING Guide & Code Quality
-- K01 Contract Test Suite
-- Web App Dev Dependencies
-- K01 Trustless-Work Spike Deps
-- Web App npm Scripts
-- Reconciliation & DB Client
-- TW Spike Runner Script
-- K03 Wallet-Compat Web Deps
-- Escrow-to-Backend Money Path
+- devDependencies
+- pipeline.ts
+- k01-soroban-escrow
+- k03-ping
+- provider.tsx
+- web/biome.json
+- trustless-work-adapter.ts
+- biome.json
+- e06-vertical-slice.ts
+- build-plan.md
+- components.json
+- EscrowContract
+- Custom Soroban escrow contract
+- compilerOptions
+- main.go
+- Database setup
+- dependencies
+- apply.ts
+- Astrea — UI motion & React Bits components
+- Contributing to Astrea
+- test.rs
+- scripts
+- Astrea — Architecture
+- soroban/README.md
+- k03-wallet-compat/web/package.json
+- core-go/README.md
 - 🌠 Astrea
 - Astrea — Build Plan
-- K03 Wallet-Compat TS Config
-- EscrowProvider Interface
+- compilerOptions
 - Astrea — Product Flows
-- Prisma Event Client Relations
-- Web App Package Metadata
 - K03 (server-build-plan.md) — wallet compatibility check
-- Prisma Wallet Client Relations
 - Astrea — Contracts Build Plan
 - PULL_REQUEST_TEMPLATE.md
 - post-commit
-- Prisma Prize Client Relations
 - K01 (server-build-plan.md) — custom Soroban escrow spike
-- Prisma Submission Client Relations
-- Prisma User Client Relations
-- Dependency Version Overrides
-- K03 Ping Test Contract
-- K03 Wallet Test Harness UI
-- Prisma Judge Client Relations
-- Prisma Payout Client Relations
-- Prisma OpLog Client Relations
-- Husky Shell Helper
-- Husky PATH Helper
-- Prisma Client Base Options
-- Next.js Config
-- PostCSS Config
-- Reconciliation Job (Doc)
-- Husky applypatch-msg Hook
-- Husky commit-msg Hook
-- Husky post-applypatch Hook
-- Husky post-checkout Hook
-- Husky post-commit Hook
-- Husky post-merge Hook
-- Husky post-rewrite Hook
-- Husky pre-applypatch Hook
-- Husky pre-auto-gc Hook
-- Husky pre-commit Hook
-- Husky pre-merge-commit Hook
-- Husky pre-push Hook
-- Husky pre-rebase Hook
-- Husky prepare-commit-msg Hook
-- K01 Testnet Spike Script
-- AGENTS.md
-- Astrea Logo (Dark)
-- Astrea Logo (Light)
-- Astrea Logo Mark (Light)
-- Astrea Logo Mark (White)
-- Astrea Sided Logo v2
-- Astrea Sided Logo (Light)
-- Astrea Sided Logo (Trimmed)
-- Astrea App Favicon
-- Bug Report Template
-- Issue Template Config
-- Go Module Definition
+- .ping
+- main.ts
+- next.config.ts
+- postcss.config.mjs
+- Reconciliation Job
+- K02 (server-build-plan.md) — Go ↔ Soroban integration spike
 - post-checkout
-- post-commit
+- run-testnet-spike.sh
+- AGENTS.md
+- Astrea Payouts Logo (Dark Variant) - four-pointed star in circle mark with wordmark
+- Astrea Payouts Logo (Light) - black lockup: four-pointed-star-in-circle mark + wordmark on white/transparent background
+- Astrea Logo Mark (Light, black four-pointed star/compass in circle on radial gray gradient)
+- Astrea Logo Mark (white four-point star/sparkle in glowing circle, on black)
+- Astrea Payouts Logo Lockup (Light, Black Mark + Wordmark)
+- Astrea Payouts Logo (side-by-side lockup, dark mark, light variant)
+- Astrea Logo Lockup (light, trimmed) - dark starburst mark + wordmark on gradient background
+- Astrea App Icon (circular mark, four-pointed star negative-space cutout, white/light monochrome)
+- Bug Report Issue Template
+- Issue Template Config
+- astrea/k02-go-soroban
 - Migration Baseline Gotcha
 - Tasks E01-E03
 - Task K01 (done)
@@ -196,181 +148,117 @@
 - K02 Go-Soroban Contract (CC76XEKP...)
 
 ## God Nodes (most connected - your core abstractions)
-1. `PrismaClient` - 18 edges
-2. `EventDelegate` - 18 edges
-3. `JudgeDelegate` - 18 edges
-4. `OpLogDelegate` - 18 edges
-5. `PayoutDelegate` - 18 edges
-6. `PrizeDelegate` - 18 edges
-7. `SubmissionDelegate` - 18 edges
-8. `UserDelegate` - 18 edges
-9. `WalletDelegate` - 18 edges
-10. `compilerOptions` - 16 edges
+1. `compilerOptions` - 16 edges
+2. `main()` - 15 edges
+3. `EscrowContract` - 15 edges
+4. `scripts` - 13 edges
+5. `main()` - 12 edges
+6. `🌠 Astrea` - 11 edges
+7. `EscrowProvider` - 10 edges
+8. `Astrea — Build Plan` - 10 edges
+9. `main()` - 9 edges
+10. `hasUsdcTrustline()` - 9 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `main()` --calls--> `prepareOperation()`  [EXTRACTED]
-  apps/web/scripts/e06-vertical-slice.ts → apps/web/src/lib/escrow/pipeline.ts
 - `main()` --calls--> `submitOperation()`  [EXTRACTED]
   apps/web/scripts/e06-vertical-slice.ts → apps/web/src/lib/escrow/pipeline.ts
 - `main()` --indirect_call--> `submitForwardPayment()`  [INFERRED]
   apps/web/scripts/e06-vertical-slice.ts → apps/web/src/lib/escrow/stellar-payment.ts
-- `main()` --calls--> `findStalledForwardsInDb()`  [EXTRACTED]
-  apps/web/scripts/e06-vertical-slice.ts → apps/web/src/lib/reconciliation/run.ts
-- `main()` --calls--> `transitionEvent()`  [EXTRACTED]
-  apps/web/scripts/e06-vertical-slice.ts → apps/web/src/lib/state-machines/apply.ts
+- `main()` --calls--> `submitOperation()`  [EXTRACTED]
+  apps/web/scripts/seed-demo-event.ts → apps/web/src/lib/escrow/pipeline.ts
+- `prepareOperation()` --calls--> `decidePrepare()`  [EXTRACTED]
+  apps/web/src/lib/escrow/pipeline.ts → apps/web/src/lib/escrow/idempotency.ts
+- `transitionEvent()` --calls--> `assertEventTransition()`  [EXTRACTED]
+  apps/web/src/lib/state-machines/apply.ts → apps/web/src/lib/state-machines/event.ts
 
 ## Import Cycles
-- 3-file cycle: `src/generated/prisma/internal/prismaNamespace.ts -> src/generated/prisma/models.ts -> src/generated/prisma/models/User.ts -> src/generated/prisma/internal/prismaNamespace.ts`
-- 3-file cycle: `src/generated/prisma/commonInputTypes.ts -> src/generated/prisma/internal/prismaNamespace.ts -> src/generated/prisma/models.ts -> src/generated/prisma/commonInputTypes.ts`
-- 3-file cycle: `src/generated/prisma/internal/prismaNamespace.ts -> src/generated/prisma/models.ts -> src/generated/prisma/models/Judge.ts -> src/generated/prisma/internal/prismaNamespace.ts`
-- 3-file cycle: `src/generated/prisma/internal/prismaNamespace.ts -> src/generated/prisma/models.ts -> src/generated/prisma/models/Prize.ts -> src/generated/prisma/internal/prismaNamespace.ts`
-- 3-file cycle: `src/generated/prisma/internal/prismaNamespace.ts -> src/generated/prisma/models.ts -> src/generated/prisma/models/Event.ts -> src/generated/prisma/internal/prismaNamespace.ts`
-- 3-file cycle: `src/generated/prisma/internal/prismaNamespace.ts -> src/generated/prisma/models.ts -> src/generated/prisma/models/OpLog.ts -> src/generated/prisma/internal/prismaNamespace.ts`
-- 3-file cycle: `src/generated/prisma/internal/prismaNamespace.ts -> src/generated/prisma/models.ts -> src/generated/prisma/models/Payout.ts -> src/generated/prisma/internal/prismaNamespace.ts`
-- 3-file cycle: `src/generated/prisma/internal/prismaNamespace.ts -> src/generated/prisma/models.ts -> src/generated/prisma/models/Submission.ts -> src/generated/prisma/internal/prismaNamespace.ts`
-- 3-file cycle: `src/generated/prisma/internal/prismaNamespace.ts -> src/generated/prisma/models.ts -> src/generated/prisma/models/Wallet.ts -> src/generated/prisma/internal/prismaNamespace.ts`
+- None detected.
 
-## Communities (184 total, 128 thin omitted)
+## Communities (136 total, 97 thin omitted)
 
-### Community 0 - "Prisma Event Model Types"
-Cohesion: 0.02
-Nodes (128): AggregateEvent, EnumEventStatusFieldUpdateOperationsInput, EnumStellarNetworkFieldUpdateOperationsInput, Event$judgesArgs, Event$prizesArgs, Event$submissionsArgs, EventAggregateArgs, EventCountAggregateInputType (+120 more)
+### Community 0 - "devDependencies"
+Cohesion: 0.07
+Nodes (29): devDependencies, @biomejs/biome, @commitlint/cli, @commitlint/config-conventional, husky, lint-staged, tailwindcss, @tailwindcss/postcss (+21 more)
 
-### Community 1 - "Prisma Client Internals"
-Cohesion: 0.02
-Nodes (123): Args, At, AtLeast, AtLoose, AtStrict, BatchPayload, Boolean, Bytes (+115 more)
+### Community 1 - "pipeline.ts"
+Cohesion: 0.18
+Nodes (14): decidePrepare(), decideSubmit(), OpRecord, PrepareDecision, SubmitDecision, PrepareOperationParams, PrepareOperationResult, readPayload() (+6 more)
 
-### Community 2 - "Prisma Prize Model Types"
-Cohesion: 0.02
-Nodes (115): AggregatePrize, DecimalFieldUpdateOperationsInput, EnumPrizeStatusFieldUpdateOperationsInput, GetPrizeAggregateType, GetPrizeGroupByPayload, IntFieldUpdateOperationsInput, Prize$payoutsArgs, Prize$winnerWalletArgs (+107 more)
-
-### Community 3 - "Prisma Wallet Model Types"
-Cohesion: 0.02
-Nodes (113): AggregateWallet, GetWalletAggregateType, GetWalletGroupByPayload, NullableDateTimeFieldUpdateOperationsInput, ADR-0003, Wallet$organizedEventsArgs, Wallet$submissionsArgs, Wallet$wonPrizesArgs (+105 more)
-
-### Community 4 - "Prisma Submission Model Types"
-Cohesion: 0.02
-Nodes (88): AggregateSubmission, GetSubmissionAggregateType, GetSubmissionGroupByPayload, SubmissionAggregateArgs, SubmissionCountAggregateInputType, SubmissionCountAggregateOutputType, SubmissionCountArgs, SubmissionCountOrderByAggregateInput (+80 more)
-
-### Community 5 - "Prisma User Model Types"
-Cohesion: 0.02
-Nodes (83): AggregateUser, DateTimeFieldUpdateOperationsInput, GetUserAggregateType, GetUserGroupByPayload, StringFieldUpdateOperationsInput, User$organizedEventsArgs, User$walletsArgs, UserAggregateArgs (+75 more)
-
-### Community 6 - "Prisma Payout Model Types"
-Cohesion: 0.02
-Nodes (80): AggregatePayout, GetPayoutAggregateType, GetPayoutGroupByPayload, PayoutAggregateArgs, PayoutAvgAggregateInputType, PayoutAvgAggregateOutputType, PayoutAvgOrderByAggregateInput, PayoutCountAggregateInputType (+72 more)
-
-### Community 7 - "Prisma Judge Model Types"
-Cohesion: 0.03
-Nodes (76): AggregateJudge, EnumJudgeStatusFieldUpdateOperationsInput, GetJudgeAggregateType, GetJudgeGroupByPayload, JudgeAggregateArgs, JudgeCountAggregateInputType, JudgeCountAggregateOutputType, JudgeCountArgs (+68 more)
-
-### Community 8 - "Prisma Common Input Filters"
-Cohesion: 0.04
-Nodes (53): DateTimeFilter, DateTimeNullableFilter, DateTimeNullableWithAggregatesFilter, DateTimeWithAggregatesFilter, DecimalFilter, DecimalWithAggregatesFilter, EnumEventStatusFilter, EnumEventStatusWithAggregatesFilter (+45 more)
-
-### Community 9 - "Prisma OpLog Model Types"
-Cohesion: 0.04
-Nodes (53): AggregateOpLog, EnumOpStatusFieldUpdateOperationsInput, GetOpLogAggregateType, GetOpLogGroupByPayload, OpLogAggregateArgs, OpLogCountAggregateInputType, OpLogCountAggregateOutputType, OpLogCountArgs (+45 more)
-
-### Community 10 - "Prisma Client Entry Point"
-Cohesion: 0.05
-Nodes (17): @prisma/client, $Enums, Event, Judge, OpLog, Payout, PrismaClient, Prize (+9 more)
-
-### Community 11 - "App Layout & Wallet Provider"
+### Community 11 - "provider.tsx"
 Cohesion: 0.09
 Nodes (20): geistMono, geistSans, metadata, PrismBackground(), PrismBackgroundProps, LINKS, SiteFooter(), SiteHeader() (+12 more)
 
-### Community 12 - "Prisma Browser Client"
-Cohesion: 0.06
-Nodes (32): $Enums, Event, Judge, OpLog, Payout, Prize, Submission, ADR-0003 (+24 more)
-
-### Community 13 - "Web App Biome Config"
+### Community 13 - "web/biome.json"
 Cohesion: 0.07
 Nodes (27): source, assist, actions, enabled, css, parser, files, ignoreUnknown (+19 more)
 
-### Community 14 - "Trustless Work Adapter (Legacy)"
-Cohesion: 0.11
-Nodes (20): ROLES, trustlessWorkAdapter, ApproveMilestoneParams, DeployEscrowParams, DisputeMilestoneParams, Distribution, EscrowMilestoneInput, EscrowMilestoneState (+12 more)
+### Community 14 - "trustless-work-adapter.ts"
+Cohesion: 0.09
+Nodes (17): ROLES, trustlessWorkAdapter, ApproveMilestoneParams, DeployEscrowParams, DisputeMilestoneParams, Distribution, EscrowMilestoneInput, EscrowMilestoneState (+9 more)
 
-### Community 15 - "Repo Root Biome Config"
+### Community 15 - "biome.json"
 Cohesion: 0.07
 Nodes (26): source, assist, actions, enabled, css, parser, files, ignoreUnknown (+18 more)
 
-### Community 16 - "E06 Vertical Slice Demo Script"
-Cohesion: 0.13
-Nodes (18): accounts, findOrCreateWallet(), Keys, main(), signXdr(), step(), ADR-0007, amountToFundForExactNet() (+10 more)
+### Community 16 - "e06-vertical-slice.ts"
+Cohesion: 0.05
+Nodes (54): accounts, findOrCreateWallet(), Keys, main(), signXdr(), step(), ADR-0007, accounts (+46 more)
 
-### Community 17 - "Demo Event Seed Script"
-Cohesion: 0.15
-Nodes (15): accounts, findOrCreateWallet(), Keys, main(), signXdr(), step(), env, serverSchema (+7 more)
-
-### Community 18 - "Architecture & Build-Plan Docs"
+### Community 18 - "build-plan.md"
 Cohesion: 0.31
 Nodes (4): Build Plan Task Issue Template, Money-Path Change Requires Security Label & Extra Review, K03 Ping Test Contract (CDIWLY6A...), K03 Wallet Compat Test Page
 
-### Community 19 - "shadcn/ui Components Config"
+### Community 19 - "components.json"
 Cohesion: 0.09
 Nodes (21): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent (+13 more)
 
-### Community 20 - "K01 Soroban Escrow Contract"
+### Community 20 - "EscrowContract"
 Cohesion: 0.32
-Nodes (7): Option, DataKey, Error, EscrowContract, Address, Env, Result
+Nodes (7): Option, Result, DataKey, Error, EscrowContract, Address, Env
 
-### Community 22 - "Web App TypeScript Config"
-Cohesion: 0.10
-Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
+### Community 22 - "compilerOptions"
+Cohesion: 0.07
+Nodes (28): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+20 more)
 
-### Community 23 - "K02 Go-Soroban Client"
-Cohesion: 0.22
-Nodes (19): Client, Context, Full, HostFunction, ScAddress, ScVal, addressArg(), contractScAddress() (+11 more)
+### Community 23 - "main.go"
+Cohesion: 0.20
+Nodes (20): context.Context, github.com/stellar/go/clients/horizonclient.Client, github.com/stellar/go/clients/rpcclient.Client, github.com/stellar/go/keypair.Full, github.com/stellar/go/xdr.HostFunction, github.com/stellar/go/xdr.ScAddress, github.com/stellar/go/xdr.ScVal, addressArg() (+12 more)
 
-### Community 24 - "Architecture & Build-Plan Docs"
+### Community 24 - "Database setup"
 Cohesion: 0.33
 Nodes (5): Database setup, Environment variables, Everyday commands, ⚠️ Migration baseline (read before running `prisma migrate dev`), RLS model
 
-### Community 25 - "Web App Dependencies"
-Cohesion: 0.11
-Nodes (18): dependencies, @base-ui/react, class-variance-authority, clsx, @creit.tech/stellar-wallets-kit, lucide-react, next, ogl (+10 more)
+### Community 25 - "dependencies"
+Cohesion: 0.05
+Nodes (37): dependencies, @base-ui/react, class-variance-authority, clsx, @creit.tech/stellar-wallets-kit, lucide-react, next, ogl (+29 more)
 
-### Community 26 - "Escrow Pipeline & Idempotency"
-Cohesion: 0.19
-Nodes (15): decidePrepare(), decideSubmit(), OpRecord, PrepareDecision, SubmitDecision, prepareOperation(), PrepareOperationParams, PrepareOperationResult (+7 more)
+### Community 27 - "apply.ts"
+Cohesion: 0.20
+Nodes (10): TransitionPrizeExtra, ADR-0007, InvalidTransitionError, assertEventTransition(), canTransitionEvent(), EVENT_TRANSITIONS, assertPrizeTransition(), canTransitionPrize() (+2 more)
 
-### Community 27 - "Event/Prize State Machines"
-Cohesion: 0.18
-Nodes (12): transitionEvent(), transitionPrize(), TransitionPrizeExtra, ADR-0007, InvalidTransitionError, assertEventTransition(), canTransitionEvent(), EVENT_TRANSITIONS (+4 more)
-
-### Community 28 - "Architecture & Build-Plan Docs"
+### Community 28 - "Astrea — UI motion & React Bits components"
 Cohesion: 0.25
 Nodes (6): Astrea — UI motion & React Bits components, Build-plan cross-references, Component placement, Corrections to the original placement assumptions, Hero background — decision, Principles
 
-### Community 37 - "CONTRIBUTING Guide & Code Quality"
+### Community 37 - "Contributing to Astrea"
 Cohesion: 0.20
 Nodes (10): Before you start, Code quality — enforced, not optional, Contributing to Astrea, Keeping the knowledge graph updated, License, Local setup, Opening a PR, Reporting a security issue (+2 more)
 
-### Community 38 - "K01 Contract Test Suite"
+### Community 38 - "test.rs"
 Cohesion: 0.13
 Nodes (6): EscrowContractClient, Address, Env, Setup, StellarAssetClient, TokenClient
 
-### Community 39 - "Web App Dev Dependencies"
-Cohesion: 0.14
-Nodes (14): devDependencies, @biomejs/biome, @commitlint/cli, @commitlint/config-conventional, lint-staged, tailwindcss, @tailwindcss/postcss, tsx (+6 more)
+### Community 39 - "scripts"
+Cohesion: 0.07
+Nodes (26): engines, node, lint-staged, *.{js,jsx,ts,tsx,json,css,md}, name, overrides, axios, elliptic (+18 more)
 
-### Community 40 - "K01 Trustless-Work Spike Deps"
+### Community 40 - "Astrea — Architecture"
 Cohesion: 0.12
 Nodes (16): ADR-001 — Custom Soroban escrow contract, no third-party provider, ADR-002 — Multi-release escrow, one milestone per prize, ADR-003 — Organizer is not in the payout path, ADR-004 — Trustline validation at registration, not payout, ADR-005 — Wallet connection sets a UX session, not an authorization boundary, Architecture Decision Records, Astrea — Architecture, Deploy + fund (organizer) (+8 more)
 
-### Community 41 - "Web App npm Scripts"
-Cohesion: 0.15
-Nodes (13): scripts, build, demo:e06, demo:seed, dev, format, lint, lint:fix (+5 more)
-
-### Community 42 - "Reconciliation & DB Client"
-Cohesion: 0.21
-Nodes (8): globalForPrisma, findStalledForwardsInDb(), ADR-0007, findStalledForwards(), ReleasedPrize, StalledForwardAlert, NOW, ADR-0007
-
-### Community 44 - "K03 Wallet-Compat Web Deps"
-Cohesion: 0.15
-Nodes (12): dependencies, @creit.tech/stellar-wallets-kit, @stellar/stellar-sdk, devDependencies, typescript, vite, name, private (+4 more)
+### Community 44 - "k03-wallet-compat/web/package.json"
+Cohesion: 0.12
+Nodes (16): dependencies, @creit.tech/stellar-wallets-kit, @stellar/stellar-sdk, devDependencies, typescript, vite, @creit.tech/stellar-wallets-kit, @stellar/stellar-sdk (+8 more)
 
 ### Community 46 - "🌠 Astrea"
 Cohesion: 0.12
@@ -380,17 +268,13 @@ Nodes (16): 🏗️ Architecture, 🌠 Astrea, 🤝 Contributing, 📖 Documenta
 Cohesion: 0.20
 Nodes (10): Architecture summary, Astrea — Build Plan, Milestone — Apply to GrantFox as maintainer, Phase 0 — Spike (de-risk before anything else), Phase 1 — Foundations, Phase 2 — Core system (event lifecycle, backend, real-time tracking), Phase 3 — Product UI, Phase 4 — Trust & edge cases (+2 more)
 
-### Community 48 - "K03 Wallet-Compat TS Config"
-Cohesion: 0.20
-Nodes (9): compilerOptions, lib, module, moduleResolution, noEmit, skipLibCheck, strict, target (+1 more)
+### Community 48 - "compilerOptions"
+Cohesion: 0.15
+Nodes (12): ES2022, main.ts, compilerOptions, lib, module, moduleResolution, noEmit, skipLibCheck (+4 more)
 
 ### Community 50 - "Astrea — Product Flows"
 Cohesion: 0.22
 Nodes (9): Astrea — Product Flows, Event state machine, Flow 1 — Organizer creates an event, Flow 2 — Organizer funds the prize pool, Flow 3 — Participants join and submit, Flow 4 — Judging and payout, Flow 5 — Dispute, Non-goals for the MVP (+1 more)
-
-### Community 52 - "Web App Package Metadata"
-Cohesion: 0.25
-Nodes (7): engines, node, lint-staged, *.{js,jsx,ts,tsx,json,css,md}, name, private, version
 
 ### Community 53 - "K03 (server-build-plan.md) — wallet compatibility check"
 Cohesion: 0.29
@@ -406,55 +290,47 @@ Nodes (4): Docs, How I verified it, Money-path change?, What this does
 
 ### Community 57 - "post-commit"
 Cohesion: 0.40
-Nodes (4): GRAPHIFY_CHANGED, GRAPHIFY_REBUILD_LOG, post-commit script, PYTHONHASHSEED
+Nodes (4): post-commit script, GRAPHIFY_CHANGED, GRAPHIFY_REBUILD_LOG, PYTHONHASHSEED
 
 ### Community 59 - "K01 (server-build-plan.md) — custom Soroban escrow spike"
 Cohesion: 0.40
 Nodes (5): Findings folded into ADR-008, How to run, K01 (server-build-plan.md) — custom Soroban escrow spike, Next step, What it verifies — results
 
-### Community 62 - "Dependency Version Overrides"
-Cohesion: 0.40
-Nodes (5): overrides, axios, elliptic, protobufjs, uuid
-
-### Community 63 - "K03 Ping Test Contract"
+### Community 63 - ".ping"
 Cohesion: 0.40
 Nodes (3): PingContract, Address, Env
 
-### Community 64 - "K03 Wallet Test Harness UI"
+### Community 64 - "main.ts"
 Cohesion: 0.50
 Nodes (3): log(), logEl, runCheck()
 
-### Community 70 - "Prisma Client Base Options"
-Cohesion: 0.67
-Nodes (3): PrismaClientBaseOptions, PrismaClientOptionsWithAccelerateUrl, PrismaClientOptionsWithAdapter
-
-### Community 77 - "Husky post-checkout Hook"
+### Community 77 - "K02 (server-build-plan.md) — Go ↔ Soroban integration spike"
 Cohesion: 0.40
 Nodes (5): Findings folded into ADR-008, How to run, K02 (server-build-plan.md) — Go ↔ Soroban integration spike, Next step, What it verifies — results
 
-### Community 78 - "Husky post-commit Hook"
+### Community 78 - "post-checkout"
 Cohesion: 0.50
-Nodes (3): GRAPHIFY_REBUILD_LOG, post-checkout script, PYTHONHASHSEED
+Nodes (3): post-checkout script, GRAPHIFY_REBUILD_LOG, PYTHONHASHSEED
 
 ## Knowledge Gaps
-- **1300 isolated node(s):** `husky.sh script`, `$schema`, `root`, `enabled`, `clientKind` (+1295 more)
+- **354 isolated node(s):** `$schema`, `root`, `enabled`, `clientKind`, `useIgnoreFile` (+349 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **128 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **97 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `@prisma/client` connect `Prisma Client Entry Point` to `Web App Dependencies`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `Web App Dependencies` to `Prisma Client Entry Point`, `Web App Package Metadata`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
-- **Why does `devDependencies` connect `Web App Dev Dependencies` to `Web App Package Metadata`, `Husky Shell Helper`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
-- **What connects `husky.sh script`, `$schema`, `root` to the rest of the system?**
-  _1320 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Prisma Event Model Types` be split into smaller, more focused modules?**
-  _Cohesion score 0.015503875968992248 - nodes in this community are weakly interconnected._
-- **Should `Prisma Client Internals` be split into smaller, more focused modules?**
-  _Cohesion score 0.016129032258064516 - nodes in this community are weakly interconnected._
-- **Should `Prisma Prize Model Types` be split into smaller, more focused modules?**
-  _Cohesion score 0.017241379310344827 - nodes in this community are weakly interconnected._
+- **Why does `dependencies` connect `dependencies` to `scripts`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+- **Why does `devDependencies` connect `devDependencies` to `scripts`?**
+  _High betweenness centrality (0.009) - this node is a cross-community bridge._
+- **Why does `🌠 Astrea` connect `🌠 Astrea` to `build-plan.md`?**
+  _High betweenness centrality (0.006) - this node is a cross-community bridge._
+- **What connects `$schema`, `root`, `enabled` to the rest of the system?**
+  _354 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `devDependencies` be split into smaller, more focused modules?**
+  _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
+- **Should `provider.tsx` be split into smaller, more focused modules?**
+  _Cohesion score 0.0907563025210084 - nodes in this community are weakly interconnected._
+- **Should `web/biome.json` be split into smaller, more focused modules?**
+  _Cohesion score 0.07142857142857142 - nodes in this community are weakly interconnected._
