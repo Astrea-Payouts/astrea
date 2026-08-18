@@ -2,4 +2,21 @@
 
 Go backend: event/prize state machine, participant registration, real-time tracking, transaction pipeline, reconciliation.
 
-Not scaffolded yet — see docs/build-plan.md, tasks S01, E01-E06.
+## Status
+
+`S01` (module scaffold) done — builds, runs, `GET /healthz` returns 200. Everything else is still ahead: `S02` (CI), `S03` (Postgres schema), `S04` (env config), `E01-E06` (business logic). See [docs/build-plan.md](../../docs/build-plan.md).
+
+## Run locally
+
+```bash
+go run .
+# optional: PORT=8091 go run .
+curl localhost:8080/healthz
+```
+
+## Build
+
+```bash
+go build .
+go vet ./...
+```

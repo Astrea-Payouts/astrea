@@ -52,6 +52,11 @@ next-env.d.ts
 # biome
 .biomecache
 
+# go (services/core-go)
+services/core-go/core-go
+services/core-go/*.exe
+services/core-go/*.test
+
 # graphify's dated safety backups of graphify-out/, written before each
 # automated rebuild (git history is the real backup - these are local-only)
 graphify-out/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
