@@ -1,7 +1,7 @@
 # Graph Report - astrea  (2026-08-21)
 
 ## Corpus Check
-- 100 files · ~268,684 words
+- 100 files · ~268,851 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `85bc5852`
+- Built from commit: `436e7285`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -141,11 +141,11 @@
   CONTRIBUTING.md → .github/workflows/ci.yml
 - `Chain is source of truth; database is a mirror` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
   README.md → .github/workflows/ci.yml
+- `docs/build-plan.md` --conceptually_related_to--> `docs/build-plan.md`  [INFERRED]
+  README.md → CONTRIBUTING.md
 - `Commit messages (Conventional Commits) job` --implements--> `Conventional Commits`  [INFERRED]
   .github/workflows/ci.yml → README.md
 - `docs/architecture.md` --conceptually_related_to--> `docs/architecture.md`  [INFERRED]
-  README.md → CONTRIBUTING.md
-- `docs/build-plan.md` --conceptually_related_to--> `docs/build-plan.md`  [INFERRED]
   README.md → CONTRIBUTING.md
 
 ## Import Cycles
@@ -327,7 +327,7 @@ Cohesion: 0.29
 Nodes (7): Organizer funds the escrow step, Organizer creates an event step, How It Works (5-step flow), Everything on the record step, Participants register and submit step, Multi-release smart escrow, USDC
 
 ## Knowledge Gaps
-- **358 isolated node(s):** `$schema`, `root`, `enabled`, `clientKind`, `useIgnoreFile` (+353 more)
+- **358 isolated node(s):** `CODE — Short task title`, `Keys`, `Distribution`, `EscrowMilestoneInput`, `EscrowMilestoneState` (+353 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **66 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -338,7 +338,7 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `devDependencies` to `README.md`?**
   _High betweenness centrality (0.065) - this node is a cross-community bridge._
-- **What connects `$schema`, `root`, `enabled` to the rest of the system?**
+- **What connects `CODE — Short task title`, `Keys`, `Distribution` to the rest of the system?**
   _358 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `trustless-work-adapter.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.08669354838709678 - nodes in this community are weakly interconnected._
