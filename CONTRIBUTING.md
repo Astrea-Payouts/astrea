@@ -87,7 +87,7 @@ from a Claude Code session at the repo root (or any agent host that can run the 
 
 ## Reporting a security issue
 
-If you find something that could put user funds or data at risk, **please don't open a public issue.** Email the maintainer directly (see the GitHub profile on the repo) with details, and allow time for a fix before any public disclosure. Everything else — non-security bugs, feature requests, questions — is fine as a normal public issue.
+If you find something that could put user funds or data at risk, **please don't open a public issue.** See [SECURITY.md](SECURITY.md) for how to report it privately, and allow time for a fix before any public disclosure. Everything else — non-security bugs, feature requests, questions — is fine as a normal public issue.
 
 ## License
 
