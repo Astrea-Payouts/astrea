@@ -54,6 +54,19 @@
     {
       "label": "Keys",
       "file_type": "code",
+      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
+      "source_location": "L25",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_scripts_e06_vertical_slice_keys",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "keys"
+    },
+    {
+      "label": "Keys",
+      "file_type": "code",
       "source_file": "apps/web/scripts/seed-demo-event.ts",
       "source_location": "L18",
       "_callable": true,
@@ -61,21 +74,151 @@
       "_origin": "ast",
       "id": "apps_web_scripts_seed_demo_event_keys",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "keys"
     },
     {
-      "label": "ForwardPaymentParams",
+      "label": "OpRecord",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
-      "source_location": "L16",
+      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
+      "source_location": "L7",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_forwardpaymentparams",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "forwardpaymentparams"
+      "id": "apps_web_src_lib_escrow_idempotency_oprecord",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "oprecord"
+    },
+    {
+      "label": "PrepareDecision",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
+      "source_location": "L14",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_idempotency_preparedecision",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "preparedecision"
+    },
+    {
+      "label": "SubmitDecision",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
+      "source_location": "L29",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_idempotency_submitdecision",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "submitdecision"
+    },
+    {
+      "label": "PrepareOperationParams",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L36",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline_prepareoperationparams",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "prepareoperationparams"
+    },
+    {
+      "label": "PrepareOperationResult",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L43",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline_prepareoperationresult",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "prepareoperationresult"
+    },
+    {
+      "label": "StoredPayload",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L13",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline_storedpayload",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "storedpayload"
+    },
+    {
+      "label": "StoredResult",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L7",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline_storedresult",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "storedresult"
+    },
+    {
+      "label": "SubmitOperationParams",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L101",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline_submitoperationparams",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "submitoperationparams"
+    },
+    {
+      "label": "SubmitOperationResult",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L107",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline_submitoperationresult",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "submitoperationresult"
+    },
+    {
+      "label": "ReleasedPrize",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.ts",
+      "source_location": "L5",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_stalled_forwards_releasedprize",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "releasedprize"
+    },
+    {
+      "label": "StalledForwardAlert",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.ts",
+      "source_location": "L11",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_stalled_forwards_stalledforwardalert",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "stalledforwardalert"
     },
     {
       "label": "ApproveMilestoneParams",
@@ -154,19 +297,6 @@
       "community": 1,
       "community_name": "trustless-work-adapter.ts",
       "norm_label": "escrowmilestonestate"
-    },
-    {
-      "label": "EscrowProvider",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L119",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "escrowprovider"
     },
     {
       "label": "EscrowProviderError",
@@ -260,6 +390,19 @@
       "norm_label": "resolvemilestonedisputeparams"
     },
     {
+      "label": "ForwardPaymentParams",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "source_location": "L16",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment_forwardpaymentparams",
+      "community": 103,
+      "community_name": "stellar-payment.ts",
+      "norm_label": "forwardpaymentparams"
+    },
+    {
       "label": "SubmittedTx",
       "file_type": "code",
       "source_file": "apps/web/src/lib/escrow/types.ts",
@@ -268,8 +411,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "apps_web_src_lib_escrow_types_submittedtx",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
+      "community": 103,
+      "community_name": "stellar-payment.ts",
       "norm_label": "submittedtx"
     },
     {
@@ -281,165 +424,22 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "apps_web_src_lib_escrow_types_unsignedtx",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
+      "community": 103,
+      "community_name": "stellar-payment.ts",
       "norm_label": "unsignedtx"
     },
     {
-      "label": "StellarNetworkName",
+      "label": "EscrowProvider",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L12",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L119",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network_stellarnetworkname",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellarnetworkname"
-    },
-    {
-      "label": "OpRecord",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
-      "source_location": "L7",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_idempotency_oprecord",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "oprecord"
-    },
-    {
-      "label": "PrepareDecision",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
-      "source_location": "L14",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_idempotency_preparedecision",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "preparedecision"
-    },
-    {
-      "label": "SubmitDecision",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
-      "source_location": "L29",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_idempotency_submitdecision",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "submitdecision"
-    },
-    {
-      "label": "PrepareOperationParams",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L36",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline_prepareoperationparams",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "prepareoperationparams"
-    },
-    {
-      "label": "PrepareOperationResult",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L43",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline_prepareoperationresult",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "prepareoperationresult"
-    },
-    {
-      "label": "StoredPayload",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L13",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline_storedpayload",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "storedpayload"
-    },
-    {
-      "label": "StoredResult",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L7",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline_storedresult",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "storedresult"
-    },
-    {
-      "label": "SubmitOperationParams",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L101",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline_submitoperationparams",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "submitoperationparams"
-    },
-    {
-      "label": "SubmitOperationResult",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L107",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline_submitoperationresult",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "submitoperationresult"
-    },
-    {
-      "label": "ReleasedPrize",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.ts",
-      "source_location": "L5",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_stalled_forwards_releasedprize",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "releasedprize"
-    },
-    {
-      "label": "StalledForwardAlert",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.ts",
-      "source_location": "L11",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_stalled_forwards_stalledforwardalert",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "stalledforwardalert"
+      "id": "apps_web_src_lib_escrow_types_escrowprovider",
+      "community": 106,
+      "community_name": "EscrowProvider",
+      "norm_label": "escrowprovider"
     },
     {
       "label": "TransitionPrizeExtra",
@@ -468,19 +468,6 @@
       "norm_label": "invalidtransitionerror"
     },
     {
-      "label": "Keys",
-      "file_type": "code",
-      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
-      "source_location": "L25",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_scripts_e06_vertical_slice_keys",
-      "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "keys"
-    },
-    {
       "label": "PrismBackgroundProps",
       "file_type": "code",
       "source_file": "apps/web/src/components/prism-background.tsx",
@@ -489,9 +476,22 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "apps_web_src_components_prism_background_prismbackgroundprops",
-      "community": 5,
-      "community_name": "layout.tsx",
+      "community": 23,
+      "community_name": "wallet-connect-button.tsx",
       "norm_label": "prismbackgroundprops"
+    },
+    {
+      "label": "StellarNetworkName",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L12",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_stellar_network_stellarnetworkname",
+      "community": 25,
+      "community_name": "stellar-network.ts",
+      "norm_label": "stellarnetworkname"
     },
     {
       "label": "WalletContextValue",
@@ -502,9 +502,57 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider_walletcontextvalue",
-      "community": 5,
-      "community_name": "layout.tsx",
+      "community": 25,
+      "community_name": "stellar-network.ts",
       "norm_label": "walletcontextvalue"
+    },
+    {
+      "label": "findOrCreateWallet()",
+      "file_type": "code",
+      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
+      "source_location": "L50",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_scripts_e06_vertical_slice_findorcreatewallet",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "findorcreatewallet()"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
+      "source_location": "L57",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_scripts_e06_vertical_slice_main",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "main()"
+    },
+    {
+      "label": "signXdr()",
+      "file_type": "code",
+      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
+      "source_location": "L37",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_scripts_e06_vertical_slice_signxdr",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "signxdr()"
+    },
+    {
+      "label": "step()",
+      "file_type": "code",
+      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
+      "source_location": "L46",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_scripts_e06_vertical_slice_step",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "step()"
     },
     {
       "label": "findOrCreateWallet()",
@@ -515,7 +563,7 @@
       "_origin": "ast",
       "id": "apps_web_scripts_seed_demo_event_findorcreatewallet",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "findorcreatewallet()"
     },
     {
@@ -527,7 +575,7 @@
       "_origin": "ast",
       "id": "apps_web_scripts_seed_demo_event_main",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "main()"
     },
     {
@@ -539,7 +587,7 @@
       "_origin": "ast",
       "id": "apps_web_scripts_seed_demo_event_signxdr",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "signxdr()"
     },
     {
@@ -551,8 +599,164 @@
       "_origin": "ast",
       "id": "apps_web_scripts_seed_demo_event_step",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "step()"
+    },
+    {
+      "label": "createClient()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/db.ts",
+      "source_location": "L9",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_db_createclient",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "createclient()"
+    },
+    {
+      "label": "amountToFundForExactNet()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/fees.ts",
+      "source_location": "L15",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_fees_amounttofundforexactnet",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "amounttofundforexactnet()"
+    },
+    {
+      "label": "netAmountAfterFee()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/fees.ts",
+      "source_location": "L5",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_fees_netamountafterfee",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "netamountafterfee()"
+    },
+    {
+      "label": "decidePrepare()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
+      "source_location": "L18",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_idempotency_decideprepare",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "decideprepare()"
+    },
+    {
+      "label": "decideSubmit()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
+      "source_location": "L33",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_idempotency_decidesubmit",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "decidesubmit()"
+    },
+    {
+      "label": "prepareOperation()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L52",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline_prepareoperation",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "prepareoperation()"
+    },
+    {
+      "label": "readPayload()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L18",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline_readpayload",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "readpayload()"
+    },
+    {
+      "label": "submitOperation()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L117",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline_submitoperation",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "submitoperation()"
+    },
+    {
+      "label": "toOpRecord()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L22",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline_tooprecord",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "tooprecord()"
+    },
+    {
+      "label": "buildForwardPaymentXdr()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "source_location": "L22",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment_buildforwardpaymentxdr",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "buildforwardpaymentxdr()"
+    },
+    {
+      "label": "submitForwardPayment()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "source_location": "L50",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment_submitforwardpayment",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "submitforwardpayment()"
+    },
+    {
+      "label": "findStalledForwardsInDb()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/run.ts",
+      "source_location": "L12",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_run_findstalledforwardsindb",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "findstalledforwardsindb()"
+    },
+    {
+      "label": "findStalledForwards()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.ts",
+      "source_location": "L17",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_stalled_forwards_findstalledforwards",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "findstalledforwards()"
     },
     {
       "label": "transitionEvent()",
@@ -563,7 +767,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_apply_transitionevent",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "transitionevent()"
     },
     {
@@ -575,7 +779,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_trustline_verify_and_record_verifyandrecordtrustline",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "verifyandrecordtrustline()"
     },
     {
@@ -587,7 +791,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_trustline_verify_trustline_hasusdctrustline",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "hasusdctrustline()"
     },
     {
@@ -599,7 +803,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_trustline_verify_trustline_isnotfounderror",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "isnotfounderror()"
     },
     {
@@ -611,7 +815,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_trustline_verify_trustline_test_mockloadaccount",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "mockloadaccount()"
     },
     {
@@ -651,102 +855,6 @@
       "norm_label": "twrequest()"
     },
     {
-      "label": ".approveMilestone()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L122",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_approvemilestone",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".approvemilestone()"
-    },
-    {
-      "label": ".deployEscrow()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L120",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_deployescrow",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".deployescrow()"
-    },
-    {
-      "label": ".disputeMilestone()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L124",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_disputemilestone",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".disputemilestone()"
-    },
-    {
-      "label": ".fundEscrow()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L121",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_fundescrow",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".fundescrow()"
-    },
-    {
-      "label": ".getEscrow()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L129",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_getescrow",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".getescrow()"
-    },
-    {
-      "label": ".releaseMilestone()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L123",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_releasemilestone",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".releasemilestone()"
-    },
-    {
-      "label": ".resolveMilestoneDispute()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L125",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_resolvemilestonedispute",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".resolvemilestonedispute()"
-    },
-    {
-      "label": ".submitSignedTransaction()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L128",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_submitsignedtransaction",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".submitsignedtransaction()"
-    },
-    {
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/escrow/types.ts",
@@ -757,78 +865,6 @@
       "community": 1,
       "community_name": "trustless-work-adapter.ts",
       "norm_label": ".constructor()"
-    },
-    {
-      "label": "decidePrepare()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
-      "source_location": "L18",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_idempotency_decideprepare",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "decideprepare()"
-    },
-    {
-      "label": "decideSubmit()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
-      "source_location": "L33",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_idempotency_decidesubmit",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "decidesubmit()"
-    },
-    {
-      "label": "prepareOperation()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L52",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline_prepareoperation",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "prepareoperation()"
-    },
-    {
-      "label": "readPayload()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L18",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline_readpayload",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "readpayload()"
-    },
-    {
-      "label": "submitOperation()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L117",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline_submitoperation",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "submitoperation()"
-    },
-    {
-      "label": "toOpRecord()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L22",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline_tooprecord",
-      "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "tooprecord()"
     },
     {
       "label": "parseEnv()",
@@ -855,40 +891,112 @@
       "norm_label": "loadenvwith()"
     },
     {
-      "label": "createClient()",
+      "label": ".approveMilestone()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/db.ts",
-      "source_location": "L9",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L122",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_db_createclient",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "createclient()"
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_approvemilestone",
+      "community": 106,
+      "community_name": "EscrowProvider",
+      "norm_label": ".approvemilestone()"
     },
     {
-      "label": "findStalledForwardsInDb()",
+      "label": ".deployEscrow()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/run.ts",
-      "source_location": "L12",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L120",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_run_findstalledforwardsindb",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "findstalledforwardsindb()"
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_deployescrow",
+      "community": 106,
+      "community_name": "EscrowProvider",
+      "norm_label": ".deployescrow()"
     },
     {
-      "label": "findStalledForwards()",
+      "label": ".disputeMilestone()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.ts",
-      "source_location": "L17",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L124",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_stalled_forwards_findstalledforwards",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "findstalledforwards()"
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_disputemilestone",
+      "community": 106,
+      "community_name": "EscrowProvider",
+      "norm_label": ".disputemilestone()"
+    },
+    {
+      "label": ".fundEscrow()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L121",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_fundescrow",
+      "community": 106,
+      "community_name": "EscrowProvider",
+      "norm_label": ".fundescrow()"
+    },
+    {
+      "label": ".getEscrow()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L129",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_getescrow",
+      "community": 106,
+      "community_name": "EscrowProvider",
+      "norm_label": ".getescrow()"
+    },
+    {
+      "label": ".releaseMilestone()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L123",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_releasemilestone",
+      "community": 106,
+      "community_name": "EscrowProvider",
+      "norm_label": ".releasemilestone()"
+    },
+    {
+      "label": ".resolveMilestoneDispute()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L125",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_resolvemilestonedispute",
+      "community": 106,
+      "community_name": "EscrowProvider",
+      "norm_label": ".resolvemilestonedispute()"
+    },
+    {
+      "label": ".submitSignedTransaction()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L128",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_submitsignedtransaction",
+      "community": 106,
+      "community_name": "EscrowProvider",
+      "norm_label": ".submitsignedtransaction()"
+    },
+    {
+      "label": "manifest()",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/manifest.ts",
+      "source_location": "L3",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_app_manifest_manifest",
+      "community": 109,
+      "community_name": "manifest.ts",
+      "norm_label": "manifest()"
     },
     {
       "label": "isNotFoundError()",
@@ -1011,100 +1119,160 @@
       "norm_label": "cantransitionprize()"
     },
     {
-      "label": "findOrCreateWallet()",
+      "label": "Home()",
       "file_type": "code",
-      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
-      "source_location": "L50",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_scripts_e06_vertical_slice_findorcreatewallet",
-      "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "findorcreatewallet()"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
-      "source_location": "L57",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_scripts_e06_vertical_slice_main",
-      "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "main()"
-    },
-    {
-      "label": "signXdr()",
-      "file_type": "code",
-      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
-      "source_location": "L37",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_scripts_e06_vertical_slice_signxdr",
-      "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "signxdr()"
-    },
-    {
-      "label": "step()",
-      "file_type": "code",
-      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
-      "source_location": "L46",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_scripts_e06_vertical_slice_step",
-      "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "step()"
-    },
-    {
-      "label": "amountToFundForExactNet()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/fees.ts",
-      "source_location": "L15",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_fees_amounttofundforexactnet",
-      "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "amounttofundforexactnet()"
-    },
-    {
-      "label": "netAmountAfterFee()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/fees.ts",
+      "source_file": "apps/web/src/app/[locale]/page.tsx",
       "source_location": "L5",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_fees_netamountafterfee",
+      "id": "apps_web_src_app_locale_page_home",
       "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "netamountafterfee()"
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "home()"
     },
     {
-      "label": "buildForwardPaymentXdr()",
+      "label": "OfflinePage()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
-      "source_location": "L22",
+      "source_file": "apps/web/src/app/offline/page.tsx",
+      "source_location": "L8",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_buildforwardpaymentxdr",
+      "id": "apps_web_src_app_offline_page_offlinepage",
       "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "buildforwardpaymentxdr()"
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "offlinepage()"
     },
     {
-      "label": "submitForwardPayment()",
+      "label": "PrismBackground()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
-      "source_location": "L50",
+      "source_file": "apps/web/src/components/prism-background.tsx",
+      "source_location": "L29",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_submitforwardpayment",
+      "id": "apps_web_src_components_prism_background_prismbackground",
       "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "submitforwardpayment()"
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "prismbackground()"
+    },
+    {
+      "label": "Button()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/button.tsx",
+      "source_location": "L43",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_ui_button_button",
+      "community": 23,
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "button()"
+    },
+    {
+      "label": "truncate()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/wallet-connect-button.tsx",
+      "source_location": "L7",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_wallet_connect_button_truncate",
+      "community": 23,
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "truncate()"
+    },
+    {
+      "label": "WalletConnectButton()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/wallet-connect-button.tsx",
+      "source_location": "L11",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_wallet_connect_button_walletconnectbutton",
+      "community": 23,
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "walletconnectbutton()"
+    },
+    {
+      "label": "cn()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/utils.ts",
+      "source_location": "L4",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_utils_cn",
+      "community": 23,
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "cn()"
+    },
+    {
+      "label": "useWallet()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/provider.tsx",
+      "source_location": "L76",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_wallet_provider_usewallet",
+      "community": 23,
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "usewallet()"
+    },
+    {
+      "label": "initWalletKit()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/kit.ts",
+      "source_location": "L23",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_wallet_kit_initwalletkit",
+      "community": 25,
+      "community_name": "stellar-network.ts",
+      "norm_label": "initwalletkit()"
+    },
+    {
+      "label": "WalletProvider()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/provider.tsx",
+      "source_location": "L23",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_wallet_provider_walletprovider",
+      "community": 25,
+      "community_name": "stellar-network.ts",
+      "norm_label": "walletprovider()"
+    },
+    {
+      "label": "associateWallet()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/session.ts",
+      "source_location": "L17",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_wallet_session_associatewallet",
+      "community": 25,
+      "community_name": "stellar-network.ts",
+      "norm_label": "associatewallet()"
+    },
+    {
+      "label": "clearWalletSession()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/session.ts",
+      "source_location": "L44",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_wallet_session_clearwalletsession",
+      "community": 25,
+      "community_name": "stellar-network.ts",
+      "norm_label": "clearwalletsession()"
+    },
+    {
+      "label": "getSessionWallet()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/session.ts",
+      "source_location": "L49",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_wallet_session_getsessionwallet",
+      "community": 25,
+      "community_name": "stellar-network.ts",
+      "norm_label": "getsessionwallet()"
     },
     {
       "label": "log()",
@@ -1146,7 +1314,7 @@
       "label": "generateMetadata()",
       "file_type": "code",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L28",
+      "source_location": "L29",
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_app_locale_layout_generatemetadata",
@@ -1158,7 +1326,7 @@
       "label": "generateStaticParams()",
       "file_type": "code",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_app_locale_layout_generatestaticparams",
@@ -1170,25 +1338,13 @@
       "label": "LocaleLayout()",
       "file_type": "code",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L97",
+      "source_location": "L115",
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_app_locale_layout_localelayout",
       "community": 5,
       "community_name": "layout.tsx",
       "norm_label": "localelayout()"
-    },
-    {
-      "label": "Home()",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/[locale]/page.tsx",
-      "source_location": "L5",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_app_locale_page_home",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "home()"
     },
     {
       "label": "sitemap()",
@@ -1215,16 +1371,16 @@
       "norm_label": "languageswitcher()"
     },
     {
-      "label": "PrismBackground()",
+      "label": "PwaRegister()",
       "file_type": "code",
-      "source_file": "apps/web/src/components/prism-background.tsx",
-      "source_location": "L29",
+      "source_file": "apps/web/src/components/pwa-register.tsx",
+      "source_location": "L5",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_components_prism_background_prismbackground",
+      "id": "apps_web_src_components_pwa_register_pwaregister",
       "community": 5,
       "community_name": "layout.tsx",
-      "norm_label": "prismbackground()"
+      "norm_label": "pwaregister()"
     },
     {
       "label": "SiteFooter()",
@@ -1263,124 +1419,26 @@
       "norm_label": "siteheader()"
     },
     {
-      "label": "Button()",
+      "label": "e06-vertical-slice.ts",
       "file_type": "code",
-      "source_file": "apps/web/src/components/ui/button.tsx",
-      "source_location": "L43",
-      "_callable": true,
+      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
+      "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_components_ui_button_button",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "button()"
+      "id": "apps_web_scripts_e06_vertical_slice",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "e06-vertical-slice.ts"
     },
     {
-      "label": "truncate()",
+      "label": "accounts",
       "file_type": "code",
-      "source_file": "apps/web/src/components/wallet-connect-button.tsx",
-      "source_location": "L7",
-      "_callable": true,
+      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
+      "source_location": "L29",
       "_origin": "ast",
-      "id": "apps_web_src_components_wallet_connect_button_truncate",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "truncate()"
-    },
-    {
-      "label": "WalletConnectButton()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/wallet-connect-button.tsx",
-      "source_location": "L11",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_components_wallet_connect_button_walletconnectbutton",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "walletconnectbutton()"
-    },
-    {
-      "label": "cn()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/utils.ts",
-      "source_location": "L4",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_utils_cn",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "cn()"
-    },
-    {
-      "label": "initWalletKit()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/kit.ts",
-      "source_location": "L23",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_kit_initwalletkit",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "initwalletkit()"
-    },
-    {
-      "label": "useWallet()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L76",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_provider_usewallet",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "usewallet()"
-    },
-    {
-      "label": "WalletProvider()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L23",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_provider_walletprovider",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "walletprovider()"
-    },
-    {
-      "label": "associateWallet()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L17",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_session_associatewallet",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "associatewallet()"
-    },
-    {
-      "label": "clearWalletSession()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L44",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_session_clearwalletsession",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "clearwalletsession()"
-    },
-    {
-      "label": "getSessionWallet()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L49",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_session_getsessionwallet",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "getsessionwallet()"
+      "id": "apps_web_scripts_e06_vertical_slice_accounts",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "accounts"
     },
     {
       "label": "seed-demo-event.ts",
@@ -1390,7 +1448,7 @@
       "_origin": "ast",
       "id": "apps_web_scripts_seed_demo_event",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "seed-demo-event.ts"
     },
     {
@@ -1401,8 +1459,41 @@
       "_origin": "ast",
       "id": "apps_web_scripts_seed_demo_event_accounts",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "accounts"
+    },
+    {
+      "label": "db.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/db.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_db",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "db.ts"
+    },
+    {
+      "label": "db",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/db.ts",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_db_db",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "db"
+    },
+    {
+      "label": "globalForPrisma",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/db.ts",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_db_globalforprisma",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "globalforprisma"
     },
     {
       "label": "env",
@@ -1412,8 +1503,118 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_env_env",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "env"
+    },
+    {
+      "label": "fees.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/fees.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_fees",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "fees.ts"
+    },
+    {
+      "label": "fees.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/fees.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_fees_test",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "fees.test.ts"
+    },
+    {
+      "label": "TRUSTLESS_WORK_FEE_RATE",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/fees.ts",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_fees_trustless_work_fee_rate",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "trustless_work_fee_rate"
+    },
+    {
+      "label": "idempotency.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_idempotency",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "idempotency.ts"
+    },
+    {
+      "label": "idempotency.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/idempotency.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_idempotency_test",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "idempotency.test.ts"
+    },
+    {
+      "label": "pipeline.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_pipeline",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "pipeline.ts"
+    },
+    {
+      "label": "run.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/run.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_run",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "run.ts"
+    },
+    {
+      "label": "stalled-forwards.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_stalled_forwards",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "stalled-forwards.ts"
+    },
+    {
+      "label": "stalled-forwards.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_stalled_forwards_test",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "stalled-forwards.test.ts"
+    },
+    {
+      "label": "NOW",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.test.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_stalled_forwards_test_now",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "now"
     },
     {
       "label": "verify-and-record.ts",
@@ -1423,7 +1624,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_trustline_verify_and_record",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "verify-and-record.ts"
     },
     {
@@ -1434,7 +1635,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_trustline_verify_trustline",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "verify-trustline.ts"
     },
     {
@@ -1445,8 +1646,41 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_trustline_verify_trustline_test",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "verify-trustline.test.ts"
+    },
+    {
+      "label": "ADR-0007",
+      "file_type": "concept",
+      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "apps_web_scripts_e06_vertical_slice_ts_docref_adr_0007",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "adr-0007"
+    },
+    {
+      "label": "ADR-0007",
+      "file_type": "concept",
+      "source_file": "apps/web/src/lib/reconciliation/run.ts",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_run_ts_docref_adr_0007",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "adr-0007"
+    },
+    {
+      "label": "ADR-0007",
+      "file_type": "concept",
+      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_stalled_forwards_ts_docref_adr_0007",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "adr-0007"
     },
     {
       "label": "ADR-0004",
@@ -1456,7 +1690,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_trustline_verify_and_record_ts_docref_adr_0004",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "adr-0004"
     },
     {
@@ -1467,52 +1701,19 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_trustline_verify_trustline_ts_docref_adr_0004",
       "community": 0,
-      "community_name": "seed-demo-event.ts",
+      "community_name": "e06-vertical-slice.ts",
       "norm_label": "adr-0004"
     },
     {
-      "label": "stellar-payment.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "label": "ADR-0005",
+      "file_type": "concept",
+      "source_file": "apps/web/src/lib/escrow/fees.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellar-payment.ts"
-    },
-    {
-      "label": "stellar-payment.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_test",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellar-payment.test.ts"
-    },
-    {
-      "label": "FROM",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
-      "source_location": "L11",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_test_from",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "from"
-    },
-    {
-      "label": "TO",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_test_to",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "to"
+      "id": "docref_adr_0005",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "adr-0005"
     },
     {
       "label": "trustless-work-adapter.ts",
@@ -1568,72 +1769,6 @@
       "community": 1,
       "community_name": "trustless-work-adapter.ts",
       "norm_label": "types.ts"
-    },
-    {
-      "label": "stellar-network.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellar-network.ts"
-    },
-    {
-      "label": "NETWORK_CONFIG",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L17",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network_network_config",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "network_config"
-    },
-    {
-      "label": "STELLAR_NETWORK",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L14",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network_stellar_network",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellar_network"
-    },
-    {
-      "label": "STELLAR_NETWORK_PASSPHRASE",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network_stellar_network_passphrase",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellar_network_passphrase"
-    },
-    {
-      "label": "kit.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/kit.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_kit",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "kit.ts"
-    },
-    {
-      "label": "ADR-0007",
-      "file_type": "concept",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_ts_docref_adr_0007",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "adr-0007"
     },
     {
       "label": "ADR-0001",
@@ -2131,37 +2266,70 @@
       "norm_label": "vite"
     },
     {
-      "label": "idempotency.ts",
+      "label": "stellar-payment.ts",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/idempotency.ts",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_idempotency",
+      "id": "apps_web_src_lib_escrow_stellar_payment",
       "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "idempotency.ts"
+      "community_name": "stellar-payment.ts",
+      "norm_label": "stellar-payment.ts"
     },
     {
-      "label": "idempotency.test.ts",
+      "label": "stellar-payment.test.ts",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/idempotency.test.ts",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_idempotency_test",
+      "id": "apps_web_src_lib_escrow_stellar_payment_test",
       "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "idempotency.test.ts"
+      "community_name": "stellar-payment.ts",
+      "norm_label": "stellar-payment.test.ts"
     },
     {
-      "label": "pipeline.ts",
+      "label": "FROM",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/pipeline.ts",
-      "source_location": "L1",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
+      "source_location": "L11",
       "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_pipeline",
+      "id": "apps_web_src_lib_escrow_stellar_payment_test_from",
       "community": 103,
-      "community_name": "pipeline.ts",
-      "norm_label": "pipeline.ts"
+      "community_name": "stellar-payment.ts",
+      "norm_label": "from"
+    },
+    {
+      "label": "TO",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment_test_to",
+      "community": 103,
+      "community_name": "stellar-payment.ts",
+      "norm_label": "to"
+    },
+    {
+      "label": "STELLAR_NETWORK_PASSPHRASE",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_stellar_network_stellar_network_passphrase",
+      "community": 103,
+      "community_name": "stellar-payment.ts",
+      "norm_label": "stellar_network_passphrase"
+    },
+    {
+      "label": "ADR-0007",
+      "file_type": "concept",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment_ts_docref_adr_0007",
+      "community": 103,
+      "community_name": "stellar-payment.ts",
+      "norm_label": "adr-0007"
     },
     {
       "label": "env.ts",
@@ -2208,15 +2376,15 @@
       "norm_label": "baseenv"
     },
     {
-      "label": "STELLAR_ACCOUNT_ID",
+      "label": "HORIZON_URL",
       "file_type": "code",
       "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L10",
+      "source_location": "L30",
       "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network_stellar_account_id",
+      "id": "apps_web_src_lib_stellar_network_horizon_url",
       "community": 104,
       "community_name": "env.ts",
-      "norm_label": "stellar_account_id"
+      "norm_label": "horizon_url"
     },
     {
       "label": "Before you start",
@@ -2318,235 +2486,26 @@
       "id": "contributing_where_to_ask_questions"
     },
     {
-      "label": "k03-wallet-compat/README.md",
-      "file_type": "document",
-      "source_file": "spikes/k03-wallet-compat/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 106,
-      "norm_label": "k03-wallet-compat/readme.md",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "id": "spikes_k03_wallet_compat_readme"
-    },
-    {
-      "label": "How to run",
-      "file_type": "document",
-      "source_file": "spikes/k03-wallet-compat/README.md",
-      "source_location": "L31",
-      "_origin": "ast",
-      "community": 106,
-      "norm_label": "how to run",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "id": "spikes_k03_wallet_compat_readme_how_to_run"
-    },
-    {
-      "label": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "file_type": "document",
-      "source_file": "spikes/k03-wallet-compat/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 106,
-      "norm_label": "k03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "id": "spikes_k03_wallet_compat_readme_k03_server_build_plan_md_wallet_compatibility_check"
-    },
-    {
-      "label": "Next step",
-      "file_type": "document",
-      "source_file": "spikes/k03-wallet-compat/README.md",
-      "source_location": "L51",
-      "_origin": "ast",
-      "community": 106,
-      "norm_label": "next step",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "id": "spikes_k03_wallet_compat_readme_next_step"
-    },
-    {
-      "label": "Research finding (before touching any code)",
-      "file_type": "document",
-      "source_file": "spikes/k03-wallet-compat/README.md",
-      "source_location": "L7",
-      "_origin": "ast",
-      "community": 106,
-      "norm_label": "research finding (before touching any code)",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "id": "spikes_k03_wallet_compat_readme_research_finding_before_touching_any_code"
-    },
-    {
-      "label": "The test contract",
-      "file_type": "document",
-      "source_file": "spikes/k03-wallet-compat/README.md",
-      "source_location": "L18",
-      "_origin": "ast",
-      "community": 106,
-      "norm_label": "the test contract",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "id": "spikes_k03_wallet_compat_readme_the_test_contract"
-    },
-    {
-      "label": "What happens with the results",
-      "file_type": "document",
-      "source_file": "spikes/k03-wallet-compat/README.md",
-      "source_location": "L46",
-      "_origin": "ast",
-      "community": 106,
-      "norm_label": "what happens with the results",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "id": "spikes_k03_wallet_compat_readme_what_happens_with_the_results"
-    },
-    {
-      "label": "db.ts",
+      "label": "manifest.ts",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/db.ts",
+      "source_file": "apps/web/src/app/manifest.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_lib_db",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "db.ts"
-    },
-    {
-      "label": "db",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/db.ts",
-      "source_location": "L19",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_db_db",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "db"
-    },
-    {
-      "label": "globalForPrisma",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/db.ts",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_db_globalforprisma",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "globalforprisma"
-    },
-    {
-      "label": "run.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/run.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_run",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "run.ts"
-    },
-    {
-      "label": "stalled-forwards.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_stalled_forwards",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "stalled-forwards.ts"
-    },
-    {
-      "label": "stalled-forwards.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_stalled_forwards_test",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "stalled-forwards.test.ts"
-    },
-    {
-      "label": "NOW",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.test.ts",
-      "source_location": "L4",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_stalled_forwards_test_now",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "now"
-    },
-    {
-      "label": "ADR-0007",
-      "file_type": "concept",
-      "source_file": "apps/web/src/lib/reconciliation/run.ts",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_run_ts_docref_adr_0007",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "adr-0007"
-    },
-    {
-      "label": "ADR-0007",
-      "file_type": "concept",
-      "source_file": "apps/web/src/lib/reconciliation/stalled-forwards.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_stalled_forwards_ts_docref_adr_0007",
-      "community": 107,
-      "community_name": "db.ts",
-      "norm_label": "adr-0007"
-    },
-    {
-      "label": "Astrea \u2014 Contracts Build Plan",
-      "file_type": "document",
-      "source_file": "docs/contracts-build-plan.md",
-      "source_location": "L1",
-      "_origin": "ast",
+      "id": "apps_web_src_app_manifest",
       "community": 109,
-      "norm_label": "astrea \u2014 contracts build plan",
-      "community_name": "Astrea \u2014 Contracts Build Plan",
-      "id": "docs_contracts_build_plan_astrea_contracts_build_plan"
+      "community_name": "manifest.ts",
+      "norm_label": "manifest.ts"
     },
     {
-      "label": "Phase 0 \u2014 Spike (de-risk before anything else)",
-      "file_type": "document",
-      "source_file": "docs/contracts-build-plan.md",
-      "source_location": "L7",
+      "label": "manifest.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/manifest.test.ts",
+      "source_location": "L1",
       "_origin": "ast",
+      "id": "apps_web_src_app_manifest_test",
       "community": 109,
-      "norm_label": "phase 0 \u2014 spike (de-risk before anything else)",
-      "community_name": "Astrea \u2014 Contracts Build Plan",
-      "id": "docs_contracts_build_plan_phase_0_spike_de_risk_before_anything_else"
-    },
-    {
-      "label": "Phase 1 \u2014 Production contract",
-      "file_type": "document",
-      "source_file": "docs/contracts-build-plan.md",
-      "source_location": "L13",
-      "_origin": "ast",
-      "community": 109,
-      "norm_label": "phase 1 \u2014 production contract",
-      "community_name": "Astrea \u2014 Contracts Build Plan",
-      "id": "docs_contracts_build_plan_phase_1_production_contract"
-    },
-    {
-      "label": "Phase 2 \u2014 Hardening (before mainnet)",
-      "file_type": "document",
-      "source_file": "docs/contracts-build-plan.md",
-      "source_location": "L21",
-      "_origin": "ast",
-      "community": 109,
-      "norm_label": "phase 2 \u2014 hardening (before mainnet)",
-      "community_name": "Astrea \u2014 Contracts Build Plan",
-      "id": "docs_contracts_build_plan_phase_2_hardening_before_mainnet"
-    },
-    {
-      "label": "Sequencing rules",
-      "file_type": "document",
-      "source_file": "docs/contracts-build-plan.md",
-      "source_location": "L28",
-      "_origin": "ast",
-      "community": 109,
-      "norm_label": "sequencing rules",
-      "community_name": "Astrea \u2014 Contracts Build Plan",
-      "id": "docs_contracts_build_plan_sequencing_rules"
+      "community_name": "manifest.ts",
+      "norm_label": "manifest.test.ts"
     },
     {
       "label": "components.json",
@@ -2791,114 +2750,26 @@
       "norm_label": "tsx"
     },
     {
-      "label": "Findings folded into ADR-008",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L20",
-      "_origin": "ast",
-      "community": 110,
-      "norm_label": "findings folded into adr-008",
-      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "id": "spikes_k01_soroban_escrow_readme_findings_folded_into_adr_008"
-    },
-    {
-      "label": "How to run",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L28",
-      "_origin": "ast",
-      "community": 110,
-      "norm_label": "how to run",
-      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "id": "spikes_k01_soroban_escrow_readme_how_to_run"
-    },
-    {
-      "label": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "label": "sw.js",
+      "file_type": "code",
+      "source_file": "apps/web/public/sw.js",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "apps_web_public_sw",
       "community": 110,
-      "norm_label": "k01 (server-build-plan.md) \u2014 custom soroban escrow spike",
-      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "id": "spikes_k01_soroban_escrow_readme_k01_server_build_plan_md_custom_soroban_escrow_spike"
+      "community_name": "sw.js",
+      "norm_label": "sw.js"
     },
     {
-      "label": "Next step",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L44",
+      "label": "PRECACHE_ASSETS",
+      "file_type": "code",
+      "source_file": "apps/web/public/sw.js",
+      "source_location": "L2",
       "_origin": "ast",
+      "id": "apps_web_public_sw_precache_assets",
       "community": 110,
-      "norm_label": "next step",
-      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "id": "spikes_k01_soroban_escrow_readme_next_step"
-    },
-    {
-      "label": "What it verifies \u2014 results",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L7",
-      "_origin": "ast",
-      "community": 110,
-      "norm_label": "what it verifies \u2014 results",
-      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "id": "spikes_k01_soroban_escrow_readme_what_it_verifies_results"
-    },
-    {
-      "label": "Findings folded into ADR-008",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L20",
-      "_origin": "ast",
-      "community": 111,
-      "norm_label": "findings folded into adr-008",
-      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "id": "spikes_k02_go_soroban_readme_findings_folded_into_adr_008"
-    },
-    {
-      "label": "How to run",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L27",
-      "_origin": "ast",
-      "community": 111,
-      "norm_label": "how to run",
-      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "id": "spikes_k02_go_soroban_readme_how_to_run"
-    },
-    {
-      "label": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 111,
-      "norm_label": "k02 (server-build-plan.md) \u2014 go \u2194 soroban integration spike",
-      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "id": "spikes_k02_go_soroban_readme_k02_server_build_plan_md_go_soroban_integration_spike"
-    },
-    {
-      "label": "Next step",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L39",
-      "_origin": "ast",
-      "community": 111,
-      "norm_label": "next step",
-      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "id": "spikes_k02_go_soroban_readme_next_step"
-    },
-    {
-      "label": "What it verifies \u2014 results",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L9",
-      "_origin": "ast",
-      "community": 111,
-      "norm_label": "what it verifies \u2014 results",
-      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "id": "spikes_k02_go_soroban_readme_what_it_verifies_results"
+      "community_name": "sw.js",
+      "norm_label": "precache_assets"
     },
     {
       "label": "CODE_OF_CONDUCT.md",
@@ -3064,17 +2935,6 @@
       "community": 113,
       "community_name": "transaction-confirmation.ts",
       "norm_label": "transaction-confirmation.test.ts"
-    },
-    {
-      "label": "HORIZON_URL",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L30",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network_horizon_url",
-      "community": 113,
-      "community_name": "transaction-confirmation.ts",
-      "norm_label": "horizon_url"
     },
     {
       "label": "robots.ts",
@@ -3251,61 +3111,6 @@
       "community_name": "CONTRIBUTING.md",
       "norm_label": "contributing.md",
       "id": "contributing"
-    },
-    {
-      "label": "SECURITY.md",
-      "file_type": "document",
-      "source_file": "SECURITY.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "security",
-      "community": 120,
-      "community_name": "Security Policy",
-      "norm_label": "security.md"
-    },
-    {
-      "label": "Reporting a Vulnerability",
-      "file_type": "document",
-      "source_file": "SECURITY.md",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "security_reporting_a_vulnerability",
-      "community": 120,
-      "community_name": "Security Policy",
-      "norm_label": "reporting a vulnerability"
-    },
-    {
-      "label": "Scope",
-      "file_type": "document",
-      "source_file": "SECURITY.md",
-      "source_location": "L30",
-      "_origin": "ast",
-      "id": "security_scope",
-      "community": 120,
-      "community_name": "Security Policy",
-      "norm_label": "scope"
-    },
-    {
-      "label": "Security Policy",
-      "file_type": "document",
-      "source_file": "SECURITY.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "security_security_policy",
-      "community": 120,
-      "community_name": "Security Policy",
-      "norm_label": "security policy"
-    },
-    {
-      "label": "Supported Versions",
-      "file_type": "document",
-      "source_file": "SECURITY.md",
-      "source_location": "L47",
-      "_origin": "ast",
-      "id": "security_supported_versions",
-      "community": 120,
-      "community_name": "Security Policy",
-      "norm_label": "supported versions"
     },
     {
       "label": "Option",
@@ -4276,6 +4081,28 @@
       "norm_label": "tokenclient"
     },
     {
+      "label": "architecture.md",
+      "file_type": "document",
+      "source_file": "docs/architecture.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "architecture.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_architecture"
+    },
+    {
+      "label": "build-plan.md",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "build-plan.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan"
+    },
+    {
       "label": "Architecture summary",
       "file_type": "document",
       "source_file": "docs/build-plan.md",
@@ -4384,6 +4211,358 @@
       "norm_label": "sequencing rules",
       "community_name": "Astrea \u2014 Build Plan",
       "id": "docs_build_plan_sequencing_rules"
+    },
+    {
+      "label": "contracts-build-plan.md",
+      "file_type": "document",
+      "source_file": "docs/contracts-build-plan.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "contracts-build-plan.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_contracts_build_plan"
+    },
+    {
+      "label": "Astrea \u2014 Contracts Build Plan",
+      "file_type": "document",
+      "source_file": "docs/contracts-build-plan.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "astrea \u2014 contracts build plan",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_contracts_build_plan_astrea_contracts_build_plan"
+    },
+    {
+      "label": "Phase 0 \u2014 Spike (de-risk before anything else)",
+      "file_type": "document",
+      "source_file": "docs/contracts-build-plan.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "phase 0 \u2014 spike (de-risk before anything else)",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_contracts_build_plan_phase_0_spike_de_risk_before_anything_else"
+    },
+    {
+      "label": "Phase 1 \u2014 Production contract",
+      "file_type": "document",
+      "source_file": "docs/contracts-build-plan.md",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "phase 1 \u2014 production contract",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_contracts_build_plan_phase_1_production_contract"
+    },
+    {
+      "label": "Phase 2 \u2014 Hardening (before mainnet)",
+      "file_type": "document",
+      "source_file": "docs/contracts-build-plan.md",
+      "source_location": "L21",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "phase 2 \u2014 hardening (before mainnet)",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_contracts_build_plan_phase_2_hardening_before_mainnet"
+    },
+    {
+      "label": "Sequencing rules",
+      "file_type": "document",
+      "source_file": "docs/contracts-build-plan.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "sequencing rules",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_contracts_build_plan_sequencing_rules"
+    },
+    {
+      "label": "build_plan_task.md",
+      "file_type": "document",
+      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "github_issue_template_build_plan_task",
+      "community": 2,
+      "community_name": "Astrea \u2014 Build Plan",
+      "norm_label": "build_plan_task.md"
+    },
+    {
+      "label": "CODE \u2014 Short task title",
+      "file_type": "document",
+      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "github_issue_template_build_plan_task_code_short_task_title",
+      "community": 2,
+      "community_name": "Astrea \u2014 Build Plan",
+      "norm_label": "code \u2014 short task title"
+    },
+    {
+      "label": "SECURITY.md",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "security",
+      "community": 2,
+      "community_name": "Astrea \u2014 Build Plan",
+      "norm_label": "security.md"
+    },
+    {
+      "label": "Reporting a Vulnerability",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "security_reporting_a_vulnerability",
+      "community": 2,
+      "community_name": "Astrea \u2014 Build Plan",
+      "norm_label": "reporting a vulnerability"
+    },
+    {
+      "label": "Scope",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "security_scope",
+      "community": 2,
+      "community_name": "Astrea \u2014 Build Plan",
+      "norm_label": "scope"
+    },
+    {
+      "label": "Security Policy",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "security_security_policy",
+      "community": 2,
+      "community_name": "Astrea \u2014 Build Plan",
+      "norm_label": "security policy"
+    },
+    {
+      "label": "Supported Versions",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "security_supported_versions",
+      "community": 2,
+      "community_name": "Astrea \u2014 Build Plan",
+      "norm_label": "supported versions"
+    },
+    {
+      "label": "k01-soroban-escrow/README.md",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "k01-soroban-escrow/readme.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme"
+    },
+    {
+      "label": "Findings folded into ADR-008",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "findings folded into adr-008",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme_findings_folded_into_adr_008"
+    },
+    {
+      "label": "How to run",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "how to run",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme_how_to_run"
+    },
+    {
+      "label": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "k01 (server-build-plan.md) \u2014 custom soroban escrow spike",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme_k01_server_build_plan_md_custom_soroban_escrow_spike"
+    },
+    {
+      "label": "Next step",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L44",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "next step",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme_next_step"
+    },
+    {
+      "label": "What it verifies \u2014 results",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "what it verifies \u2014 results",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme_what_it_verifies_results"
+    },
+    {
+      "label": "k02-go-soroban/README.md",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "k02-go-soroban/readme.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme"
+    },
+    {
+      "label": "Findings folded into ADR-008",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "findings folded into adr-008",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme_findings_folded_into_adr_008"
+    },
+    {
+      "label": "How to run",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L27",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "how to run",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme_how_to_run"
+    },
+    {
+      "label": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "k02 (server-build-plan.md) \u2014 go \u2194 soroban integration spike",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme_k02_server_build_plan_md_go_soroban_integration_spike"
+    },
+    {
+      "label": "Next step",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L39",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "next step",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme_next_step"
+    },
+    {
+      "label": "What it verifies \u2014 results",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L9",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "what it verifies \u2014 results",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme_what_it_verifies_results"
+    },
+    {
+      "label": "k03-wallet-compat/README.md",
+      "file_type": "document",
+      "source_file": "spikes/k03-wallet-compat/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "k03-wallet-compat/readme.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_readme"
+    },
+    {
+      "label": "How to run",
+      "file_type": "document",
+      "source_file": "spikes/k03-wallet-compat/README.md",
+      "source_location": "L31",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "how to run",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_readme_how_to_run"
+    },
+    {
+      "label": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "file_type": "document",
+      "source_file": "spikes/k03-wallet-compat/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "k03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_readme_k03_server_build_plan_md_wallet_compatibility_check"
+    },
+    {
+      "label": "Next step",
+      "file_type": "document",
+      "source_file": "spikes/k03-wallet-compat/README.md",
+      "source_location": "L51",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "next step",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_readme_next_step"
+    },
+    {
+      "label": "Research finding (before touching any code)",
+      "file_type": "document",
+      "source_file": "spikes/k03-wallet-compat/README.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "research finding (before touching any code)",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_readme_research_finding_before_touching_any_code"
+    },
+    {
+      "label": "The test contract",
+      "file_type": "document",
+      "source_file": "spikes/k03-wallet-compat/README.md",
+      "source_location": "L18",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "the test contract",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_readme_the_test_contract"
+    },
+    {
+      "label": "What happens with the results",
+      "file_type": "document",
+      "source_file": "spikes/k03-wallet-compat/README.md",
+      "source_location": "L46",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "what happens with the results",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_readme_what_happens_with_the_results"
     },
     {
       "label": "apply.ts",
@@ -4639,81 +4818,92 @@
       "norm_label": "dom"
     },
     {
-      "label": "e06-vertical-slice.ts",
+      "label": "[locale]/page.tsx",
       "file_type": "code",
-      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
+      "source_file": "apps/web/src/app/[locale]/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_scripts_e06_vertical_slice",
+      "id": "apps_web_src_app_locale_page",
       "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "e06-vertical-slice.ts"
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "[locale]/page.tsx"
     },
     {
-      "label": "accounts",
+      "label": "offline/page.tsx",
       "file_type": "code",
-      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
-      "source_location": "L29",
-      "_origin": "ast",
-      "id": "apps_web_scripts_e06_vertical_slice_accounts",
-      "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "accounts"
-    },
-    {
-      "label": "fees.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/fees.ts",
+      "source_file": "apps/web/src/app/offline/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_fees",
+      "id": "apps_web_src_app_offline_page",
       "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "fees.ts"
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "offline/page.tsx"
     },
     {
-      "label": "fees.test.ts",
+      "label": "prism-background.tsx",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/fees.test.ts",
+      "source_file": "apps/web/src/components/prism-background.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_fees_test",
+      "id": "apps_web_src_components_prism_background",
       "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "fees.test.ts"
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "prism-background.tsx"
     },
     {
-      "label": "TRUSTLESS_WORK_FEE_RATE",
+      "label": "button.tsx",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/fees.ts",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_fees_trustless_work_fee_rate",
-      "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "trustless_work_fee_rate"
-    },
-    {
-      "label": "ADR-0007",
-      "file_type": "concept",
-      "source_file": "apps/web/scripts/e06-vertical-slice.ts",
-      "source_location": "L4",
-      "_origin": "ast",
-      "id": "apps_web_scripts_e06_vertical_slice_ts_docref_adr_0007",
-      "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "adr-0007"
-    },
-    {
-      "label": "ADR-0005",
-      "file_type": "concept",
-      "source_file": "apps/web/src/lib/escrow/fees.ts",
+      "source_file": "apps/web/src/components/ui/button.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "docref_adr_0005",
+      "id": "apps_web_src_components_ui_button",
       "community": 23,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "adr-0005"
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "button.tsx"
+    },
+    {
+      "label": "buttonVariants",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/button.tsx",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "apps_web_src_components_ui_button_buttonvariants",
+      "community": 23,
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "buttonvariants"
+    },
+    {
+      "label": "wallet-connect-button.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/wallet-connect-button.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_wallet_connect_button",
+      "community": 23,
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "wallet-connect-button.tsx"
+    },
+    {
+      "label": "utils.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/utils.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_utils",
+      "community": 23,
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "utils.ts"
+    },
+    {
+      "label": "utils.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/utils.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_utils_test",
+      "community": 23,
+      "community_name": "wallet-connect-button.tsx",
+      "norm_label": "utils.test.ts"
     },
     {
       "label": "\ud83c\udf20 Astrea",
@@ -4736,6 +4926,28 @@
       "norm_label": "\ud83d\udcd6 documentation",
       "community_name": "\ud83c\udf20 Astrea",
       "id": "readme_documentation"
+    },
+    {
+      "label": "Environment Variables",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L131",
+      "_origin": "ast",
+      "community": 24,
+      "norm_label": "environment variables",
+      "community_name": "\ud83c\udf20 Astrea",
+      "id": "readme_environment_variables"
+    },
+    {
+      "label": "\ud83c\udfc1 Getting Started",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L102",
+      "_origin": "ast",
+      "community": 24,
+      "norm_label": "\ud83c\udfc1 getting started",
+      "community_name": "\ud83c\udf20 Astrea",
+      "id": "readme_getting_started"
     },
     {
       "label": "\ud83d\ude80 How It Works",
@@ -4782,6 +4994,17 @@
       "id": "readme_our_solution"
     },
     {
+      "label": "Setup",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L113",
+      "_origin": "ast",
+      "community": 24,
+      "norm_label": "setup",
+      "community_name": "\ud83c\udf20 Astrea",
+      "id": "readme_setup"
+    },
+    {
       "label": "\ud83d\udee0\ufe0f Technology Stack",
       "file_type": "document",
       "source_file": "README.md",
@@ -4815,103 +5038,92 @@
       "id": "readme_what_is_astrea"
     },
     {
-      "label": "architecture.md",
-      "file_type": "document",
-      "source_file": "docs/architecture.md",
+      "label": "stellar-network.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "apps_web_src_lib_stellar_network",
       "community": 25,
-      "norm_label": "architecture.md",
-      "community_name": "build-plan.md",
-      "id": "docs_architecture"
+      "community_name": "stellar-network.ts",
+      "norm_label": "stellar-network.ts"
     },
     {
-      "label": "build-plan.md",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
+      "label": "NETWORK_CONFIG",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_stellar_network_network_config",
+      "community": 25,
+      "community_name": "stellar-network.ts",
+      "norm_label": "network_config"
+    },
+    {
+      "label": "STELLAR_ACCOUNT_ID",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_stellar_network_stellar_account_id",
+      "community": 25,
+      "community_name": "stellar-network.ts",
+      "norm_label": "stellar_account_id"
+    },
+    {
+      "label": "STELLAR_NETWORK",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_stellar_network_stellar_network",
+      "community": 25,
+      "community_name": "stellar-network.ts",
+      "norm_label": "stellar_network"
+    },
+    {
+      "label": "kit.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/kit.ts",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "apps_web_src_lib_wallet_kit",
       "community": 25,
-      "norm_label": "build-plan.md",
-      "community_name": "build-plan.md",
-      "id": "docs_build_plan"
+      "community_name": "stellar-network.ts",
+      "norm_label": "kit.ts"
     },
     {
-      "label": "contracts-build-plan.md",
-      "file_type": "document",
-      "source_file": "docs/contracts-build-plan.md",
+      "label": "provider.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/provider.tsx",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "apps_web_src_lib_wallet_provider",
       "community": 25,
-      "norm_label": "contracts-build-plan.md",
-      "community_name": "build-plan.md",
-      "id": "docs_contracts_build_plan"
+      "community_name": "stellar-network.ts",
+      "norm_label": "provider.tsx"
     },
     {
-      "label": "build_plan_task.md",
-      "file_type": "document",
-      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
+      "label": "WalletContext",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/provider.tsx",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_wallet_provider_walletcontext",
+      "community": 25,
+      "community_name": "stellar-network.ts",
+      "norm_label": "walletcontext"
+    },
+    {
+      "label": "session.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/session.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "github_issue_template_build_plan_task",
+      "id": "apps_web_src_lib_wallet_session",
       "community": 25,
-      "community_name": "build-plan.md",
-      "norm_label": "build_plan_task.md"
-    },
-    {
-      "label": "CODE \u2014 Short task title",
-      "file_type": "document",
-      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "github_issue_template_build_plan_task_code_short_task_title",
-      "community": 25,
-      "community_name": "build-plan.md",
-      "norm_label": "code \u2014 short task title"
-    },
-    {
-      "label": "k01-soroban-escrow/README.md",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 25,
-      "norm_label": "k01-soroban-escrow/readme.md",
-      "community_name": "build-plan.md",
-      "id": "spikes_k01_soroban_escrow_readme"
-    },
-    {
-      "label": "k02-go-soroban/README.md",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 25,
-      "norm_label": "k02-go-soroban/readme.md",
-      "community_name": "build-plan.md",
-      "id": "spikes_k02_go_soroban_readme"
-    },
-    {
-      "label": "Environment Variables",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L131",
-      "_origin": "ast",
-      "community": 26,
-      "norm_label": "environment variables",
-      "community_name": "\ud83c\udfc1 Getting Started",
-      "id": "readme_environment_variables"
-    },
-    {
-      "label": "\ud83c\udfc1 Getting Started",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L102",
-      "_origin": "ast",
-      "community": 26,
-      "norm_label": "\ud83c\udfc1 getting started",
-      "community_name": "\ud83c\udfc1 Getting Started",
-      "id": "readme_getting_started"
+      "community_name": "stellar-network.ts",
+      "norm_label": "session.ts"
     },
     {
       "label": "Prerequisites",
@@ -4921,19 +5133,8 @@
       "_origin": "ast",
       "community": 26,
       "norm_label": "prerequisites",
-      "community_name": "\ud83c\udfc1 Getting Started",
+      "community_name": "Go backend (services/core-go)",
       "id": "readme_prerequisites"
-    },
-    {
-      "label": "Setup",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L113",
-      "_origin": "ast",
-      "community": 26,
-      "norm_label": "setup",
-      "community_name": "\ud83c\udfc1 Getting Started",
-      "id": "readme_setup"
     },
     {
       "label": "core-go/main.go",
@@ -6118,7 +6319,7 @@
       "label": "geistMono",
       "file_type": "code",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "_origin": "ast",
       "id": "apps_web_src_app_locale_layout_geistmono",
       "community": 5,
@@ -6129,7 +6330,7 @@
       "label": "geistSans",
       "file_type": "code",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L12",
+      "source_location": "L13",
       "_origin": "ast",
       "id": "apps_web_src_app_locale_layout_geistsans",
       "community": 5,
@@ -6137,15 +6338,15 @@
       "norm_label": "geistsans"
     },
     {
-      "label": "page.tsx",
+      "label": "viewport",
       "file_type": "code",
-      "source_file": "apps/web/src/app/[locale]/page.tsx",
-      "source_location": "L1",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L108",
       "_origin": "ast",
-      "id": "apps_web_src_app_locale_page",
+      "id": "apps_web_src_app_locale_layout_viewport",
       "community": 5,
       "community_name": "layout.tsx",
-      "norm_label": "page.tsx"
+      "norm_label": "viewport"
     },
     {
       "label": "sitemap.ts",
@@ -6181,15 +6382,15 @@
       "norm_label": "locale_labels"
     },
     {
-      "label": "prism-background.tsx",
+      "label": "pwa-register.tsx",
       "file_type": "code",
-      "source_file": "apps/web/src/components/prism-background.tsx",
+      "source_file": "apps/web/src/components/pwa-register.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_components_prism_background",
+      "id": "apps_web_src_components_pwa_register",
       "community": 5,
       "community_name": "layout.tsx",
-      "norm_label": "prism-background.tsx"
+      "norm_label": "pwa-register.tsx"
     },
     {
       "label": "site-footer.tsx",
@@ -6212,39 +6413,6 @@
       "community": 5,
       "community_name": "layout.tsx",
       "norm_label": "site-header.tsx"
-    },
-    {
-      "label": "button.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/button.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_ui_button",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "button.tsx"
-    },
-    {
-      "label": "buttonVariants",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/button.tsx",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "apps_web_src_components_ui_button_buttonvariants",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "buttonvariants"
-    },
-    {
-      "label": "wallet-connect-button.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/wallet-connect-button.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_wallet_connect_button",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "wallet-connect-button.tsx"
     },
     {
       "label": "navigation.ts",
@@ -6300,61 +6468,6 @@
       "community": 5,
       "community_name": "layout.tsx",
       "norm_label": "routing"
-    },
-    {
-      "label": "utils.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/utils.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_utils",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "utils.ts"
-    },
-    {
-      "label": "utils.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/utils.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_utils_test",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "utils.test.ts"
-    },
-    {
-      "label": "provider.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_provider",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "provider.tsx"
-    },
-    {
-      "label": "WalletContext",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L21",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_provider_walletcontext",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "walletcontext"
-    },
-    {
-      "label": "session.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_session",
-      "community": 5,
-      "community_name": "layout.tsx",
-      "norm_label": "session.ts"
     },
     {
       "label": "proxy.ts",
@@ -7407,6 +7520,111 @@
       "id": "spikes_k02_go_soroban_readme_contract"
     },
     {
+      "label": "Organizer creates an event step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 48",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 107,
+      "norm_label": "organizer creates an event step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_event_creation_step"
+    },
+    {
+      "label": "How It Works (5-step flow)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 46-53",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 107,
+      "norm_label": "how it works (5-step flow)",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_how_it_works_flow"
+    },
+    {
+      "label": "Judges approve and release step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 51",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 107,
+      "norm_label": "judges approve and release step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_judge_approval_step"
+    },
+    {
+      "label": "Judge panel",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 61",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 107,
+      "norm_label": "judge panel",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_judge_panel"
+    },
+    {
+      "label": "Everything on the record step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 52",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 107,
+      "norm_label": "everything on the record step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_public_record_step"
+    },
+    {
+      "label": "Participants register and submit step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 50",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 107,
+      "norm_label": "participants register and submit step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_registration_step"
+    },
+    {
+      "label": "Astrea (escrow-backed prize payouts platform)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 1-17",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 108,
+      "norm_label": "astrea (escrow-backed prize payouts platform)",
+      "_origin": "semantic",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
+      "id": "readme_astrea_project"
+    },
+    {
       "label": "Organizer funds the escrow step",
       "file_type": "concept",
       "source_file": "README.md",
@@ -7418,38 +7636,8 @@
       "community": 108,
       "norm_label": "organizer funds the escrow step",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
       "id": "readme_escrow_funding_step"
-    },
-    {
-      "label": "EscrowClient interface",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 68",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 108,
-      "norm_label": "escrowclient interface",
-      "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
-      "id": "readme_escrowclient_interface"
-    },
-    {
-      "label": "Go backend (services/core-go)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 67, 91, 109",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 108,
-      "norm_label": "go backend (services/core-go)",
-      "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
-      "id": "readme_go_backend"
     },
     {
       "label": "Multi-release smart escrow",
@@ -7463,7 +7651,7 @@
       "community": 108,
       "norm_label": "multi-release smart escrow",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
       "id": "readme_smart_escrow"
     },
     {
@@ -7478,7 +7666,7 @@
       "community": 108,
       "norm_label": "custom soroban escrow smart contract (contracts/soroban)",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
       "id": "readme_soroban_contract"
     },
     {
@@ -7493,7 +7681,7 @@
       "community": 108,
       "norm_label": "stellar network",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
       "id": "readme_stellar"
     },
     {
@@ -7508,8 +7696,23 @@
       "community": 108,
       "norm_label": "usdc",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
       "id": "readme_usdc"
+    },
+    {
+      "label": "docs/architecture.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "lines 82, 173",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 108,
+      "norm_label": "docs/architecture.md",
+      "_origin": "semantic",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
+      "id": "readme_architecture_doc"
     },
     {
       "label": "Biome (lint/format)",
@@ -7632,6 +7835,21 @@
       "id": "readme_contributing_doc"
     },
     {
+      "label": "post-commit Husky hook (auto-rebuild graph)",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 62",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 115,
+      "norm_label": "post-commit husky hook (auto-rebuild graph)",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "contributing_post_commit_hook"
+    },
+    {
       "label": "Albedo wallet",
       "file_type": "concept",
       "source_file": "README.md",
@@ -7707,6 +7925,36 @@
       "id": "readme_xbull"
     },
     {
+      "label": "graphify-out-rebuilt uploaded artifact",
+      "file_type": "code",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 101-107",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 118,
+      "norm_label": "graphify-out-rebuilt uploaded artifact",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "github_workflows_ci_graphify_out_rebuilt_artifact"
+    },
+    {
+      "label": "Fail if graphify-out/ is stale step",
+      "file_type": "code",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 91-99",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 118,
+      "norm_label": "fail if graphify-out/ is stale step",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "github_workflows_ci_graphify_out_staleness_check"
+    },
+    {
       "label": "Fork-then-clone local setup workflow",
       "file_type": "concept",
       "source_file": "CONTRIBUTING.md",
@@ -7718,7 +7966,7 @@
       "community": 118,
       "norm_label": "fork-then-clone local setup workflow",
       "_origin": "semantic",
-      "community_name": "Opening a PR workflow",
+      "community_name": "Fail if graphify-out/ is stale step",
       "id": "contributing_fork_workflow"
     },
     {
@@ -7733,7 +7981,7 @@
       "community": 118,
       "norm_label": "opening a pr workflow",
       "_origin": "semantic",
-      "community_name": "Opening a PR workflow",
+      "community_name": "Fail if graphify-out/ is stale step",
       "id": "contributing_pr_workflow"
     },
     {
@@ -7748,7 +7996,7 @@
       "community": 118,
       "norm_label": "`security` label (extra review)",
       "_origin": "semantic",
-      "community_name": "Opening a PR workflow",
+      "community_name": "Fail if graphify-out/ is stale step",
       "id": "contributing_security_label"
     },
     {
@@ -7763,7 +8011,7 @@
       "community": 118,
       "norm_label": "upstream git remote",
       "_origin": "semantic",
-      "community_name": "Opening a PR workflow",
+      "community_name": "Fail if graphify-out/ is stale step",
       "id": "contributing_upstream_remote"
     },
     {
@@ -7778,7 +8026,7 @@
       "community": 118,
       "norm_label": "update docs/adrs alongside code policy",
       "_origin": "semantic",
-      "community_name": "Opening a PR workflow",
+      "community_name": "Fail if graphify-out/ is stale step",
       "id": "contributing_adr_update_policy"
     },
     {
@@ -7793,8 +8041,23 @@
       "community": 118,
       "norm_label": "money-movement change review requirement (e0*, escrow calls, signing, reconciliation job)",
       "_origin": "semantic",
-      "community_name": "Opening a PR workflow",
+      "community_name": "Fail if graphify-out/ is stale step",
       "id": "contributing_money_movement_review"
+    },
+    {
+      "label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
+      "file_type": "rationale",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 85-90",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 118,
+      "norm_label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "github_workflows_ci_manifest_cache_exclusion"
     },
     {
       "label": "/graphify --update command",
@@ -7917,21 +8180,6 @@
       "id": "contributing_graph_report"
     },
     {
-      "label": "README.md (referenced from CONTRIBUTING)",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 7",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "readme.md (referenced from contributing)",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_readme"
-    },
-    {
       "label": "graphify-out/GRAPH_REPORT.md",
       "file_type": "document",
       "source_file": "README.md",
@@ -7960,21 +8208,6 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_ci_graphify_check"
-    },
-    {
-      "label": "post-commit Husky hook (auto-rebuild graph)",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 62",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "post-commit husky hook (auto-rebuild graph)",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_post_commit_hook"
     },
     {
       "label": "Security issue reporting (email maintainer, no public issue)",
@@ -8292,21 +8525,6 @@
       "id": "readme_soroban_migration_e01"
     },
     {
-      "label": "Astrea (escrow-backed prize payouts platform)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 1-17",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "astrea (escrow-backed prize payouts platform)",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_astrea_project"
-    },
-    {
       "label": "Christopher Lamberti (Maintainer)",
       "file_type": "concept",
       "source_file": "README.md",
@@ -8352,19 +8570,19 @@
       "id": "readme_vercel"
     },
     {
-      "label": "docs/architecture.md",
+      "label": "README.md (referenced from CONTRIBUTING)",
       "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "lines 82, 173",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 7",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 16,
-      "norm_label": "docs/architecture.md",
+      "norm_label": "readme.md (referenced from contributing)",
       "_origin": "semantic",
       "community_name": "README.md",
-      "id": "readme_architecture_doc"
+      "id": "contributing_readme"
     },
     {
       "label": "docs/contracts-build-plan.md",
@@ -8532,19 +8750,34 @@
       "id": "docs_architecture_adr_005"
     },
     {
-      "label": "Organizer creates an event step",
+      "label": "K03 Ping Test Contract (CDIWLY6A...)",
       "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 48",
+      "source_file": "spikes/k03-wallet-compat/README.md",
+      "source_location": null,
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 22,
-      "norm_label": "organizer creates an event step",
+      "community": 2,
+      "norm_label": "k03 ping test contract (cdiwly6a...)",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_event_creation_step"
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_readme_pingcontract"
+    },
+    {
+      "label": "K03 Wallet Compat Test Page",
+      "file_type": "document",
+      "source_file": "spikes/k03-wallet-compat/web/index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 2,
+      "norm_label": "k03 wallet compat test page",
+      "_origin": "semantic",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_web_index"
     },
     {
       "label": "Event wizard",
@@ -8558,53 +8791,8 @@
       "community": 22,
       "norm_label": "event wizard",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_event_wizard"
-    },
-    {
-      "label": "How It Works (5-step flow)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 46-53",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 22,
-      "norm_label": "how it works (5-step flow)",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_how_it_works_flow"
-    },
-    {
-      "label": "Judges approve and release step",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 51",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 22,
-      "norm_label": "judges approve and release step",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_judge_approval_step"
-    },
-    {
-      "label": "Judge panel",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 61",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 22,
-      "norm_label": "judge panel",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_judge_panel"
     },
     {
       "label": "Next.js (App Router)",
@@ -8618,7 +8806,7 @@
       "community": 22,
       "norm_label": "next.js (app router)",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_nextjs"
     },
     {
@@ -8633,38 +8821,8 @@
       "community": 22,
       "norm_label": "public event pages",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_public_event_pages"
-    },
-    {
-      "label": "Everything on the record step",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 52",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 22,
-      "norm_label": "everything on the record step",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_public_record_step"
-    },
-    {
-      "label": "Participants register and submit step",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 50",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 22,
-      "norm_label": "participants register and submit step",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_registration_step"
     },
     {
       "label": "TypeScript (strict)",
@@ -8678,7 +8836,7 @@
       "community": 22,
       "norm_label": "typescript (strict)",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_typescript_strict"
     },
     {
@@ -8693,7 +8851,7 @@
       "community": 22,
       "norm_label": "client-side xdr signing",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_client_side_xdr_signing"
     },
     {
@@ -8708,38 +8866,53 @@
       "community": 22,
       "norm_label": "non-custodial guarantee",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_solution_non_custodial"
     },
     {
-      "label": "K03 Ping Test Contract (CDIWLY6A...)",
+      "label": "EscrowClient interface",
       "file_type": "concept",
-      "source_file": "spikes/k03-wallet-compat/README.md",
-      "source_location": null,
+      "source_file": "README.md",
+      "source_location": "line 68",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
-      "norm_label": "k03 ping test contract (cdiwly6a...)",
+      "community": 26,
+      "norm_label": "escrowclient interface",
       "_origin": "semantic",
-      "community_name": "build-plan.md",
-      "id": "spikes_k03_wallet_compat_readme_pingcontract"
+      "community_name": "Go backend (services/core-go)",
+      "id": "readme_escrowclient_interface"
     },
     {
-      "label": "K03 Wallet Compat Test Page",
-      "file_type": "document",
-      "source_file": "spikes/k03-wallet-compat/web/index.html",
-      "source_location": null,
+      "label": "Go backend (services/core-go)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 67, 91, 109",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
-      "norm_label": "k03 wallet compat test page",
+      "community": 26,
+      "norm_label": "go backend (services/core-go)",
       "_origin": "semantic",
-      "community_name": "build-plan.md",
-      "id": "spikes_k03_wallet_compat_web_index"
+      "community_name": "Go backend (services/core-go)",
+      "id": "readme_go_backend"
+    },
+    {
+      "label": "Stellar Horizon",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 77",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "stellar horizon",
+      "_origin": "semantic",
+      "community_name": "Go backend (services/core-go)",
+      "id": "readme_horizon"
     },
     {
       "label": "Postgres",
@@ -8753,7 +8926,7 @@
       "community": 26,
       "norm_label": "postgres",
       "_origin": "semantic",
-      "community_name": "\ud83c\udfc1 Getting Started",
+      "community_name": "Go backend (services/core-go)",
       "id": "readme_postgres"
     },
     {
@@ -8768,7 +8941,7 @@
       "community": 26,
       "norm_label": "prisma orm",
       "_origin": "semantic",
-      "community_name": "\ud83c\udfc1 Getting Started",
+      "community_name": "Go backend (services/core-go)",
       "id": "readme_prisma"
     },
     {
@@ -8783,8 +8956,38 @@
       "community": 26,
       "norm_label": "supabase",
       "_origin": "semantic",
-      "community_name": "\ud83c\udfc1 Getting Started",
+      "community_name": "Go backend (services/core-go)",
       "id": "readme_supabase"
+    },
+    {
+      "label": "Chain is source of truth; database is a mirror",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "line 82",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "chain is source of truth; database is a mirror",
+      "_origin": "semantic",
+      "community_name": "Go backend (services/core-go)",
+      "id": "readme_chain_source_of_truth"
+    },
+    {
+      "label": "Reconciliation job (DB mirrors chain)",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "lines 77, 82",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "reconciliation job (db mirrors chain)",
+      "_origin": "semantic",
+      "community_name": "Go backend (services/core-go)",
+      "id": "readme_reconciliation_job"
     },
     {
       "label": "Migration Baseline Gotcha",
@@ -9162,36 +9365,6 @@
       "id": "github_workflows_ci_graphify_drift_check_job"
     },
     {
-      "label": "graphify-out-rebuilt uploaded artifact",
-      "file_type": "code",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 101-107",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "graphify-out-rebuilt uploaded artifact",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "github_workflows_ci_graphify_out_rebuilt_artifact"
-    },
-    {
-      "label": "Fail if graphify-out/ is stale step",
-      "file_type": "code",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 91-99",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "fail if graphify-out/ is stale step",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "github_workflows_ci_graphify_out_staleness_check"
-    },
-    {
       "label": "npm ci --legacy-peer-deps step",
       "file_type": "code",
       "source_file": ".github/workflows/ci.yml",
@@ -9267,21 +9440,6 @@
       "id": "readme_github_actions"
     },
     {
-      "label": "Stellar Horizon",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 77",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "stellar horizon",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_horizon"
-    },
-    {
       "label": "GRAPHIFY_MAX_WORKERS=1 env var",
       "file_type": "rationale",
       "source_file": ".github/workflows/ci.yml",
@@ -9312,21 +9470,6 @@
       "id": "github_workflows_ci_graphifyy_package"
     },
     {
-      "label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
-      "file_type": "rationale",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 85-90",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "github_workflows_ci_manifest_cache_exclusion"
-    },
-    {
       "label": "postinstall `prisma generate` producing apps/web/src/generated/prisma",
       "file_type": "rationale",
       "source_file": ".github/workflows/ci.yml",
@@ -9355,36 +9498,6 @@
       "_origin": "semantic",
       "community_name": "Knowledge graph in sync (code) job",
       "id": "github_workflows_ci_pythonhashseed_env"
-    },
-    {
-      "label": "Chain is source of truth; database is a mirror",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "line 82",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "chain is source of truth; database is a mirror",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_chain_source_of_truth"
-    },
-    {
-      "label": "Reconciliation job (DB mirrors chain)",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "lines 77, 82",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "reconciliation job (db mirrors chain)",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_reconciliation_job"
     },
     {
       "label": "Non-custodial, Always",
@@ -10194,6 +10307,30 @@
       "source": "apps_web_scripts_seed_demo_event_main",
       "target": "apps_web_src_lib_trustline_verify_trustline_hasusdctrustline",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/app/offline/page.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_offline_page_offlinepage",
+      "target": "apps_web_src_lib_utils_cn"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/app/offline/page.tsx",
+      "source_location": "L41",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_offline_page_offlinepage",
+      "target": "apps_web_src_components_ui_button_buttonvariants"
     },
     {
       "relation": "calls",
@@ -11929,11 +12066,23 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_layout",
+      "target": "apps_web_src_lib_wallet_provider_walletprovider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
-      "target": "apps_web_src_components_site_footer_sitefooter",
+      "target": "apps_web_src_components_pwa_register_pwaregister",
       "confidence_score": 1.0
     },
     {
@@ -11945,7 +12094,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
-      "target": "apps_web_src_components_site_header_siteheader",
+      "target": "apps_web_src_components_site_footer_sitefooter",
       "confidence_score": 1.0
     },
     {
@@ -11957,7 +12106,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
-      "target": "apps_web_src_i18n_routing_routing",
+      "target": "apps_web_src_components_site_header_siteheader",
       "confidence_score": 1.0
     },
     {
@@ -11969,7 +12118,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
-      "target": "apps_web_src_lib_wallet_provider_walletprovider",
+      "target": "apps_web_src_i18n_routing_routing",
       "confidence_score": 1.0
     },
     {
@@ -11994,6 +12143,54 @@
       "_origin": "ast",
       "source": "apps_web_src_app_locale_page",
       "target": "apps_web_src_components_wallet_connect_button_walletconnectbutton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/manifest.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_manifest_test",
+      "target": "apps_web_src_app_manifest_manifest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/offline/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_offline_page",
+      "target": "apps_web_src_components_ui_button_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/offline/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_offline_page",
+      "target": "apps_web_src_components_ui_button_buttonvariants",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/offline/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_offline_page",
+      "target": "apps_web_src_lib_utils_cn",
       "confidence_score": 1.0
     },
     {
@@ -13129,11 +13326,23 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_layout",
+      "target": "apps_web_src_lib_wallet_provider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
-      "target": "apps_web_src_components_site_footer",
+      "target": "apps_web_src_components_pwa_register",
       "confidence_score": 1.0
     },
     {
@@ -13145,7 +13354,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
-      "target": "apps_web_src_components_site_header",
+      "target": "apps_web_src_components_site_footer",
       "confidence_score": 1.0
     },
     {
@@ -13157,7 +13366,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
-      "target": "apps_web_src_i18n_routing",
+      "target": "apps_web_src_components_site_header",
       "confidence_score": 1.0
     },
     {
@@ -13169,7 +13378,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
-      "target": "apps_web_src_lib_wallet_provider",
+      "target": "apps_web_src_i18n_routing",
       "confidence_score": 1.0
     },
     {
@@ -13194,6 +13403,42 @@
       "_origin": "ast",
       "source": "apps_web_src_app_locale_page",
       "target": "apps_web_src_components_wallet_connect_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/manifest.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_manifest_test",
+      "target": "apps_web_src_app_manifest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/offline/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_offline_page",
+      "target": "apps_web_src_components_ui_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/offline/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_offline_page",
+      "target": "apps_web_src_lib_utils",
       "confidence_score": 1.0
     },
     {
@@ -15748,6 +15993,17 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "apps/web/public/sw.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_public_sw",
+      "target": "apps_web_public_sw_precache_assets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "apps/web/scripts/e06-vertical-slice.ts",
       "source_location": "L25",
       "weight": 1.0,
@@ -15881,7 +16137,29 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L12",
+      "source_location": "L108",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_layout",
+      "target": "apps_web_src_app_locale_layout_viewport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L115",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_layout",
+      "target": "apps_web_src_app_locale_layout_localelayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
@@ -15892,7 +16170,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
@@ -15903,7 +16181,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
@@ -15914,22 +16192,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L28",
+      "source_location": "L29",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_app_locale_layout",
       "target": "apps_web_src_app_locale_layout_generatemetadata",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L97",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_app_locale_layout",
-      "target": "apps_web_src_app_locale_layout_localelayout",
       "confidence_score": 1.0
     },
     {
@@ -15941,6 +16208,28 @@
       "_origin": "ast",
       "source": "apps_web_src_app_locale_page",
       "target": "apps_web_src_app_locale_page_home",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/manifest.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_manifest",
+      "target": "apps_web_src_app_manifest_manifest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/offline/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_offline_page",
+      "target": "apps_web_src_app_offline_page_offlinepage",
       "confidence_score": 1.0
     },
     {
@@ -16007,6 +16296,17 @@
       "_origin": "ast",
       "source": "apps_web_src_components_prism_background",
       "target": "apps_web_src_components_prism_background_prismbackground",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/pwa-register.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_pwa_register",
+      "target": "apps_web_src_components_pwa_register_pwaregister",
       "confidence_score": 1.0
     },
     {
@@ -21864,5 +22164,5 @@
       "source_file": "CONTRIBUTING.md"
     }
   ],
-  "built_at_commit": "48618bff3bef7a5eb8c12f4d6d31ba92fe760405"
+  "built_at_commit": "80d2a1c528946b1228af21ef4b3cf4d6939185fb"
 }
