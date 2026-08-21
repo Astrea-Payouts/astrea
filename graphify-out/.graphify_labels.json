@@ -1,5 +1,5 @@
 {
-  "0": "e06-vertical-slice.ts",
+  "0": "seed-demo-event.ts",
   "1": "trustless-work-adapter.ts",
   "2": "Astrea — Build Plan",
   "3": "dependencies",
@@ -22,7 +22,7 @@
   "20": "prize.ts",
   "21": "compilerOptions",
   "22": "Next.js (App Router)",
-  "23": "Astrea (escrow-backed prize payouts platform)",
+  "23": "e06-vertical-slice.ts",
   "24": "🌠 Astrea",
   "25": "Wallet testing",
   "26": "Go backend (services/core-go)",
@@ -102,17 +102,16 @@
   "100": "K01 Soroban Escrow Contract (CBFPD4YF...)",
   "101": "K02 Go-Soroban Contract (CC76XEKP...)",
   "102": "k03-wallet-compat/web/package.json",
-  "103": "stellar-network.ts",
-  "104": "stellar-payment.ts",
+  "103": "pipeline.ts",
+  "104": "stellar-network.ts",
   "105": "Contributing to Astrea",
   "106": "Database setup",
-  "107": "EscrowProvider",
+  "107": "run.ts",
   "108": "PULL_REQUEST_TEMPLATE.md",
   "109": "Fail if graphify-out/ is stale step",
   "110": "CONTRIBUTING.md",
   "111": "env.ts",
   "112": "How It Works (5-step flow)",
   "113": "transaction-confirmation.ts",
-  "114": "robots.ts",
-  "115": "sitemap.ts"
+  "114": "robots.ts"
 }
