@@ -9,6 +9,13 @@
 - [ ] `npm run lint` / `npm run typecheck` / `npm run test` / `npm run build` all pass locally
 - [ ] Commit messages follow Conventional Commits (checked by a separate CI job — see CONTRIBUTING.md if a hook rejects yours)
 
+## Screenshots
+
+<!-- Required for any UI change (new component, layout, or visual behavior). Before/after if it's a visual fix. Drag images directly into this box. -->
+
+- [ ] Included below
+- [ ] N/A — no UI change
+
 ## Money-path change?
 
 <!-- Escrow calls, signing, reconciliation — anything under E0*. -->

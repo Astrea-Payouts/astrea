@@ -14,6 +14,7 @@ labels: []
 | **Size** | S / M / L |
 | **Depends on** | other issue numbers/codes, or — |
 | **Money path** | Yes/No — Yes needs the `security` label and extra review |
+| **Screenshot required** | Yes/No — Yes for any `phase: product-ui` task; the PR isn't mergeable without one (see PR template) |
 
 **Executive summary**
 2-4 sentences: what this delivers, why it matters, what breaks or stalls without it.
@@ -47,7 +48,7 @@ Relevant ADR(s) from docs/architecture.md, and any pattern this should follow.
 
 **Test plan**
 - **Unit:** what's covered by automated tests.
-- **Manual:** what a human verifies by hand (e.g. a real testnet transaction).
+- **Manual:** what a human verifies by hand (e.g. a real testnet transaction). For UI tasks, include a screenshot of the rendered result — attach it to the PR (see PR template), not just described in words.
 
 **Risks & pitfalls**
 - Known sharp edges, past mistakes in this area, non-obvious failure modes.

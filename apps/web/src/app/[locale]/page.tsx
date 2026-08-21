@@ -1,7 +1,10 @@
+import { useTranslations } from "next-intl";
 import { PrismBackground } from "@/components/prism-background";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 
 export default function Home() {
+	const t = useTranslations("HomePage");
+
 	return (
 		<main className="relative isolate flex min-h-screen flex-1 flex-col overflow-hidden bg-black">
 			{/* Canvas spans the full hero (no flat black slab on the left) —
@@ -22,26 +25,27 @@ export default function Home() {
 			<div className="relative z-10 flex flex-1 items-center px-6 py-24 md:px-12">
 				<div className="max-w-xl">
 					<p className="mb-5 text-xs font-semibold tracking-[0.14em] text-white/55 uppercase">
-						Built on Stellar
+						{t("eyebrow")}
 					</p>
 					<h1 className="mb-6 font-serif text-5xl leading-[1.02] font-bold text-white md:text-6xl">
-						Astrea
+						{t("title")}
 					</h1>
 					<p className="mb-9 max-w-md text-lg leading-relaxed text-white/70">
-						Escrow-backed prize payouts for hackathons, bounties, and community
-						challenges — funds locked on-chain before the event starts.
+						{t("tagline")}
 					</p>
 					<div className="flex flex-wrap items-center gap-5">
 						<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
 						<p className="text-sm text-white/55">
-							MVP in active development. See the{" "}
-							<a
-								className="text-white/85 underline underline-offset-4 hover:text-white"
-								href="https://github.com/Astrea-Payouts/astrea/blob/main/docs/build-plan.md"
-							>
-								build plan
-							</a>{" "}
-							for what&apos;s next.
+							{t.rich("mvpNotice", {
+								link: (chunks) => (
+									<a
+										className="text-white/85 underline underline-offset-4 hover:text-white"
+										href="https://github.com/Astrea-Payouts/astrea/blob/main/docs/build-plan.md"
+									>
+										{chunks}
+									</a>
+								),
+							})}
 						</p>
 					</div>
 				</div>
