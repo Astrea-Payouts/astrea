@@ -234,19 +234,6 @@
       "id": "apps_web_src_lib_state_machines_apply_transitionprizeextra"
     },
     {
-      "label": "ForwardPaymentParams",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
-      "source_location": "L16",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "forwardpaymentparams",
-      "id": "apps_web_src_lib_escrow_stellar_payment_forwardpaymentparams"
-    },
-    {
       "label": "ApproveMilestoneParams",
       "file_type": "code",
       "source_file": "apps/web/src/lib/escrow/types.ts",
@@ -323,19 +310,6 @@
       "community_name": "trustless-work-adapter.ts",
       "norm_label": "escrowmilestonestate",
       "id": "apps_web_src_lib_escrow_types_escrowmilestonestate"
-    },
-    {
-      "label": "EscrowProvider",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L119",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "escrowprovider",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider"
     },
     {
       "label": "EscrowProviderError",
@@ -429,6 +403,45 @@
       "id": "apps_web_src_lib_escrow_types_resolvemilestonedisputeparams"
     },
     {
+      "label": "StellarNetworkName",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L12",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "stellarnetworkname",
+      "id": "apps_web_src_lib_stellar_network_stellarnetworkname"
+    },
+    {
+      "label": "WalletContextValue",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/provider.tsx",
+      "source_location": "L14",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "walletcontextvalue",
+      "id": "apps_web_src_lib_wallet_provider_walletcontextvalue"
+    },
+    {
+      "label": "ForwardPaymentParams",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "source_location": "L16",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 104,
+      "community_name": "stellar-payment.ts",
+      "norm_label": "forwardpaymentparams",
+      "id": "apps_web_src_lib_escrow_stellar_payment_forwardpaymentparams"
+    },
+    {
       "label": "SubmittedTx",
       "file_type": "code",
       "source_file": "apps/web/src/lib/escrow/types.ts",
@@ -436,8 +449,8 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
+      "community": 104,
+      "community_name": "stellar-payment.ts",
       "norm_label": "submittedtx",
       "id": "apps_web_src_lib_escrow_types_submittedtx"
     },
@@ -449,23 +462,23 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
+      "community": 104,
+      "community_name": "stellar-payment.ts",
       "norm_label": "unsignedtx",
       "id": "apps_web_src_lib_escrow_types_unsignedtx"
     },
     {
-      "label": "StellarNetworkName",
+      "label": "EscrowProvider",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L12",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L119",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellarnetworkname",
-      "id": "apps_web_src_lib_stellar_network_stellarnetworkname"
+      "community": 107,
+      "community_name": "EscrowProvider",
+      "norm_label": "escrowprovider",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider"
     },
     {
       "label": "InvalidTransitionError",
@@ -489,22 +502,9 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "prismbackgroundprops",
       "id": "apps_web_src_components_prism_background_prismbackgroundprops"
-    },
-    {
-      "label": "WalletContextValue",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L14",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "walletcontextvalue",
-      "id": "apps_web_src_lib_wallet_provider_walletcontextvalue"
     },
     {
       "label": "findOrCreateWallet()",
@@ -759,42 +759,6 @@
       "id": "apps_web_src_lib_reconciliation_stalled_forwards_findstalledforwards"
     },
     {
-      "label": "isNotFoundError()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
-      "source_location": "L18",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "isnotfounderror()",
-      "id": "apps_web_src_lib_reconciliation_transaction_confirmation_isnotfounderror"
-    },
-    {
-      "label": "isTransactionConfirmed()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
-      "source_location": "L7",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "istransactionconfirmed()",
-      "id": "apps_web_src_lib_reconciliation_transaction_confirmation_istransactionconfirmed"
-    },
-    {
-      "label": "mockTransactionCall()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.test.ts",
-      "source_location": "L5",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "mocktransactioncall()",
-      "id": "apps_web_src_lib_reconciliation_transaction_confirmation_test_mocktransactioncall"
-    },
-    {
       "label": "transitionEvent()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/state-machines/apply.ts",
@@ -867,30 +831,6 @@
       "id": "apps_web_src_lib_trustline_verify_trustline_test_mockloadaccount"
     },
     {
-      "label": "parseEnv()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/env.ts",
-      "source_location": "L42",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "parseenv()",
-      "id": "apps_web_src_lib_env_parseenv"
-    },
-    {
-      "label": "loadEnvWith()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/env.test.ts",
-      "source_location": "L10",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "loadenvwith()",
-      "id": "apps_web_src_lib_env_test_loadenvwith"
-    },
-    {
       "label": "jsonResponse()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/escrow/trustless-work-adapter.test.ts",
@@ -927,102 +867,6 @@
       "id": "apps_web_src_lib_escrow_trustless_work_adapter_twrequest"
     },
     {
-      "label": ".approveMilestone()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L122",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".approvemilestone()",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_approvemilestone"
-    },
-    {
-      "label": ".deployEscrow()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L120",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".deployescrow()",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_deployescrow"
-    },
-    {
-      "label": ".disputeMilestone()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L124",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".disputemilestone()",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_disputemilestone"
-    },
-    {
-      "label": ".fundEscrow()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L121",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".fundescrow()",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_fundescrow"
-    },
-    {
-      "label": ".getEscrow()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L129",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".getescrow()",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_getescrow"
-    },
-    {
-      "label": ".releaseMilestone()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L123",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".releasemilestone()",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_releasemilestone"
-    },
-    {
-      "label": ".resolveMilestoneDispute()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L125",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".resolvemilestonedispute()",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_resolvemilestonedispute"
-    },
-    {
-      "label": ".submitSignedTransaction()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L128",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": ".submitsignedtransaction()",
-      "id": "apps_web_src_lib_escrow_types_escrowprovider_submitsignedtransaction"
-    },
-    {
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/escrow/types.ts",
@@ -1033,6 +877,246 @@
       "community_name": "trustless-work-adapter.ts",
       "norm_label": ".constructor()",
       "id": "apps_web_src_lib_escrow_types_escrowprovidererror_constructor"
+    },
+    {
+      "label": "initWalletKit()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/kit.ts",
+      "source_location": "L23",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "initwalletkit()",
+      "id": "apps_web_src_lib_wallet_kit_initwalletkit"
+    },
+    {
+      "label": "WalletProvider()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/provider.tsx",
+      "source_location": "L23",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "walletprovider()",
+      "id": "apps_web_src_lib_wallet_provider_walletprovider"
+    },
+    {
+      "label": "associateWallet()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/session.ts",
+      "source_location": "L17",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "associatewallet()",
+      "id": "apps_web_src_lib_wallet_session_associatewallet"
+    },
+    {
+      "label": "clearWalletSession()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/session.ts",
+      "source_location": "L44",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "clearwalletsession()",
+      "id": "apps_web_src_lib_wallet_session_clearwalletsession"
+    },
+    {
+      "label": "getSessionWallet()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/session.ts",
+      "source_location": "L49",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "getsessionwallet()",
+      "id": "apps_web_src_lib_wallet_session_getsessionwallet"
+    },
+    {
+      "label": ".approveMilestone()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L122",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 107,
+      "community_name": "EscrowProvider",
+      "norm_label": ".approvemilestone()",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_approvemilestone"
+    },
+    {
+      "label": ".deployEscrow()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L120",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 107,
+      "community_name": "EscrowProvider",
+      "norm_label": ".deployescrow()",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_deployescrow"
+    },
+    {
+      "label": ".disputeMilestone()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L124",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 107,
+      "community_name": "EscrowProvider",
+      "norm_label": ".disputemilestone()",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_disputemilestone"
+    },
+    {
+      "label": ".fundEscrow()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L121",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 107,
+      "community_name": "EscrowProvider",
+      "norm_label": ".fundescrow()",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_fundescrow"
+    },
+    {
+      "label": ".getEscrow()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L129",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 107,
+      "community_name": "EscrowProvider",
+      "norm_label": ".getescrow()",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_getescrow"
+    },
+    {
+      "label": ".releaseMilestone()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L123",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 107,
+      "community_name": "EscrowProvider",
+      "norm_label": ".releasemilestone()",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_releasemilestone"
+    },
+    {
+      "label": ".resolveMilestoneDispute()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L125",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 107,
+      "community_name": "EscrowProvider",
+      "norm_label": ".resolvemilestonedispute()",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_resolvemilestonedispute"
+    },
+    {
+      "label": ".submitSignedTransaction()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L128",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 107,
+      "community_name": "EscrowProvider",
+      "norm_label": ".submitsignedtransaction()",
+      "id": "apps_web_src_lib_escrow_types_escrowprovider_submitsignedtransaction"
+    },
+    {
+      "label": "parseEnv()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/env.ts",
+      "source_location": "L42",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 111,
+      "community_name": "env.ts",
+      "norm_label": "parseenv()",
+      "id": "apps_web_src_lib_env_parseenv"
+    },
+    {
+      "label": "loadEnvWith()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/env.test.ts",
+      "source_location": "L10",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 111,
+      "community_name": "env.ts",
+      "norm_label": "loadenvwith()",
+      "id": "apps_web_src_lib_env_test_loadenvwith"
+    },
+    {
+      "label": "isNotFoundError()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
+      "source_location": "L18",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 113,
+      "community_name": "transaction-confirmation.ts",
+      "norm_label": "isnotfounderror()",
+      "id": "apps_web_src_lib_reconciliation_transaction_confirmation_isnotfounderror"
+    },
+    {
+      "label": "isTransactionConfirmed()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
+      "source_location": "L7",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 113,
+      "community_name": "transaction-confirmation.ts",
+      "norm_label": "istransactionconfirmed()",
+      "id": "apps_web_src_lib_reconciliation_transaction_confirmation_istransactionconfirmed"
+    },
+    {
+      "label": "mockTransactionCall()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.test.ts",
+      "source_location": "L5",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 113,
+      "community_name": "transaction-confirmation.ts",
+      "norm_label": "mocktransactioncall()",
+      "id": "apps_web_src_lib_reconciliation_transaction_confirmation_test_mocktransactioncall"
+    },
+    {
+      "label": "robots()",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/robots.ts",
+      "source_location": "L3",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_app_robots_robots",
+      "community": 114,
+      "community_name": "robots.ts",
+      "norm_label": "robots()"
+    },
+    {
+      "label": "sitemap()",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/sitemap.ts",
+      "source_location": "L3",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_app_sitemap_sitemap",
+      "community": 115,
+      "community_name": "sitemap.ts",
+      "norm_label": "sitemap()"
     },
     {
       "label": ".constructor()",
@@ -1134,13 +1218,13 @@
       "label": "RootLayout()",
       "file_type": "code",
       "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L24",
+      "source_location": "L78",
       "_callable": true,
       "_origin": "ast",
+      "id": "apps_web_src_app_layout_rootlayout",
       "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "rootlayout()",
-      "id": "apps_web_src_app_layout_rootlayout"
+      "community_name": "layout.tsx",
+      "norm_label": "rootlayout()"
     },
     {
       "label": "Home()",
@@ -1150,7 +1234,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "home()",
       "id": "apps_web_src_app_page_home"
     },
@@ -1162,7 +1246,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "prismbackground()",
       "id": "apps_web_src_components_prism_background_prismbackground"
     },
@@ -1174,7 +1258,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "sitefooter()",
       "id": "apps_web_src_components_site_footer_sitefooter"
     },
@@ -1186,7 +1270,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "githubicon()",
       "id": "apps_web_src_components_site_header_githubicon"
     },
@@ -1198,7 +1282,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "siteheader()",
       "id": "apps_web_src_components_site_header_siteheader"
     },
@@ -1210,7 +1294,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "button()",
       "id": "apps_web_src_components_ui_button_button"
     },
@@ -1222,7 +1306,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "truncate()",
       "id": "apps_web_src_components_wallet_connect_button_truncate"
     },
@@ -1234,7 +1318,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "walletconnectbutton()",
       "id": "apps_web_src_components_wallet_connect_button_walletconnectbutton"
     },
@@ -1246,21 +1330,9 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "cn()",
       "id": "apps_web_src_lib_utils_cn"
-    },
-    {
-      "label": "initWalletKit()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/kit.ts",
-      "source_location": "L23",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "initwalletkit()",
-      "id": "apps_web_src_lib_wallet_kit_initwalletkit"
     },
     {
       "label": "useWallet()",
@@ -1270,57 +1342,9 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "usewallet()",
       "id": "apps_web_src_lib_wallet_provider_usewallet"
-    },
-    {
-      "label": "WalletProvider()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L23",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "walletprovider()",
-      "id": "apps_web_src_lib_wallet_provider_walletprovider"
-    },
-    {
-      "label": "associateWallet()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L17",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "associatewallet()",
-      "id": "apps_web_src_lib_wallet_session_associatewallet"
-    },
-    {
-      "label": "clearWalletSession()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L44",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "clearwalletsession()",
-      "id": "apps_web_src_lib_wallet_session_clearwalletsession"
-    },
-    {
-      "label": "getSessionWallet()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L49",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "getsessionwallet()",
-      "id": "apps_web_src_lib_wallet_session_getsessionwallet"
     },
     {
       "label": "e06-vertical-slice.ts",
@@ -1398,6 +1422,17 @@
       "community_name": "e06-vertical-slice.ts",
       "norm_label": "globalforprisma",
       "id": "apps_web_src_lib_db_globalforprisma"
+    },
+    {
+      "label": "env",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/env.ts",
+      "source_location": "L72",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "e06-vertical-slice.ts",
+      "norm_label": "env",
+      "id": "apps_web_src_lib_env_env"
     },
     {
       "label": "fees.ts",
@@ -1508,28 +1543,6 @@
       "community_name": "e06-vertical-slice.ts",
       "norm_label": "now",
       "id": "apps_web_src_lib_reconciliation_stalled_forwards_test_now"
-    },
-    {
-      "label": "transaction-confirmation.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "transaction-confirmation.ts",
-      "id": "apps_web_src_lib_reconciliation_transaction_confirmation"
-    },
-    {
-      "label": "transaction-confirmation.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "transaction-confirmation.test.ts",
-      "id": "apps_web_src_lib_reconciliation_transaction_confirmation_test"
     },
     {
       "label": "apply.ts",
@@ -1653,105 +1666,6 @@
       "id": "docref_adr_0005"
     },
     {
-      "label": "env.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/env.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "env.ts",
-      "id": "apps_web_src_lib_env"
-    },
-    {
-      "label": "env",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/env.ts",
-      "source_location": "L72",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "env",
-      "id": "apps_web_src_lib_env_env"
-    },
-    {
-      "label": "serverSchema",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/env.ts",
-      "source_location": "L16",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "serverschema",
-      "id": "apps_web_src_lib_env_serverschema"
-    },
-    {
-      "label": "env.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/env.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "env.test.ts",
-      "id": "apps_web_src_lib_env_test"
-    },
-    {
-      "label": "baseEnv",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/env.test.ts",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "baseenv",
-      "id": "apps_web_src_lib_env_test_baseenv"
-    },
-    {
-      "label": "stellar-payment.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellar-payment.ts",
-      "id": "apps_web_src_lib_escrow_stellar_payment"
-    },
-    {
-      "label": "stellar-payment.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellar-payment.test.ts",
-      "id": "apps_web_src_lib_escrow_stellar_payment_test"
-    },
-    {
-      "label": "FROM",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
-      "source_location": "L11",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "from",
-      "id": "apps_web_src_lib_escrow_stellar_payment_test_from"
-    },
-    {
-      "label": "TO",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "to",
-      "id": "apps_web_src_lib_escrow_stellar_payment_test_to"
-    },
-    {
       "label": "trustless-work-adapter.ts",
       "file_type": "code",
       "source_file": "apps/web/src/lib/escrow/trustless-work-adapter.ts",
@@ -1805,72 +1719,6 @@
       "community_name": "trustless-work-adapter.ts",
       "norm_label": "types.ts",
       "id": "apps_web_src_lib_escrow_types"
-    },
-    {
-      "label": "stellar-network.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellar-network.ts",
-      "id": "apps_web_src_lib_stellar_network"
-    },
-    {
-      "label": "HORIZON_URL",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L30",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "horizon_url",
-      "id": "apps_web_src_lib_stellar_network_horizon_url"
-    },
-    {
-      "label": "NETWORK_CONFIG",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L17",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "network_config",
-      "id": "apps_web_src_lib_stellar_network_network_config"
-    },
-    {
-      "label": "STELLAR_ACCOUNT_ID",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L10",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellar_account_id",
-      "id": "apps_web_src_lib_stellar_network_stellar_account_id"
-    },
-    {
-      "label": "STELLAR_NETWORK_PASSPHRASE",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L28",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "stellar_network_passphrase",
-      "id": "apps_web_src_lib_stellar_network_stellar_network_passphrase"
-    },
-    {
-      "label": "ADR-0007",
-      "file_type": "concept",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "trustless-work-adapter.ts",
-      "norm_label": "adr-0007",
-      "id": "apps_web_src_lib_escrow_stellar_payment_ts_docref_adr_0007"
     },
     {
       "label": "ADR-0001",
@@ -2368,213 +2216,158 @@
       "id": "vite"
     },
     {
-      "label": "architecture.md",
-      "file_type": "document",
-      "source_file": "docs/architecture.md",
+      "label": "stellar-network.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
       "source_location": "L1",
       "_origin": "ast",
       "community": 103,
-      "norm_label": "architecture.md",
-      "community_name": "build-plan.md",
-      "id": "docs_architecture"
+      "community_name": "stellar-network.ts",
+      "norm_label": "stellar-network.ts",
+      "id": "apps_web_src_lib_stellar_network"
     },
     {
-      "label": "build-plan.md",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
+      "label": "NETWORK_CONFIG",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L17",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "network_config",
+      "id": "apps_web_src_lib_stellar_network_network_config"
+    },
+    {
+      "label": "STELLAR_ACCOUNT_ID",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L10",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "stellar_account_id",
+      "id": "apps_web_src_lib_stellar_network_stellar_account_id"
+    },
+    {
+      "label": "STELLAR_NETWORK",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L14",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "stellar_network",
+      "id": "apps_web_src_lib_stellar_network_stellar_network"
+    },
+    {
+      "label": "kit.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/kit.ts",
       "source_location": "L1",
       "_origin": "ast",
       "community": 103,
-      "norm_label": "build-plan.md",
-      "community_name": "build-plan.md",
-      "id": "docs_build_plan"
+      "community_name": "stellar-network.ts",
+      "norm_label": "kit.ts",
+      "id": "apps_web_src_lib_wallet_kit"
     },
     {
-      "label": "contracts-build-plan.md",
-      "file_type": "document",
-      "source_file": "docs/contracts-build-plan.md",
+      "label": "provider.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/provider.tsx",
       "source_location": "L1",
       "_origin": "ast",
       "community": 103,
-      "norm_label": "contracts-build-plan.md",
-      "community_name": "build-plan.md",
-      "id": "docs_contracts_build_plan"
+      "community_name": "stellar-network.ts",
+      "norm_label": "provider.tsx",
+      "id": "apps_web_src_lib_wallet_provider"
     },
     {
-      "label": "product-flows.md",
-      "file_type": "document",
-      "source_file": "docs/product-flows.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 103,
-      "norm_label": "product-flows.md",
-      "community_name": "build-plan.md",
-      "id": "docs_product_flows"
-    },
-    {
-      "label": "ui-motion.md",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 103,
-      "norm_label": "ui-motion.md",
-      "community_name": "build-plan.md",
-      "id": "docs_ui_motion"
-    },
-    {
-      "label": "build_plan_task.md",
-      "file_type": "document",
-      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "github_issue_template_build_plan_task",
-      "community": 103,
-      "community_name": "build-plan.md",
-      "norm_label": "build_plan_task.md"
-    },
-    {
-      "label": "CODE \u2014 Short task title",
-      "file_type": "document",
-      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "github_issue_template_build_plan_task_code_short_task_title",
-      "community": 103,
-      "community_name": "build-plan.md",
-      "norm_label": "code \u2014 short task title"
-    },
-    {
-      "label": "k01-soroban-escrow/README.md",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 103,
-      "norm_label": "k01-soroban-escrow/readme.md",
-      "community_name": "build-plan.md",
-      "id": "spikes_k01_soroban_escrow_readme"
-    },
-    {
-      "label": "k02-go-soroban/README.md",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 103,
-      "norm_label": "k02-go-soroban/readme.md",
-      "community_name": "build-plan.md",
-      "id": "spikes_k02_go_soroban_readme"
-    },
-    {
-      "label": "Architecture summary",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 104,
-      "norm_label": "architecture summary",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_architecture_summary"
-    },
-    {
-      "label": "Astrea \u2014 Build Plan",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 104,
-      "norm_label": "astrea \u2014 build plan",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_astrea_build_plan"
-    },
-    {
-      "label": "Milestone \u2014 Apply to GrantFox as maintainer",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L44",
-      "_origin": "ast",
-      "community": 104,
-      "norm_label": "milestone \u2014 apply to grantfox as maintainer",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_milestone_apply_to_grantfox_as_maintainer"
-    },
-    {
-      "label": "Phase 0 \u2014 Spike (de-risk before anything else)",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L13",
-      "_origin": "ast",
-      "community": 104,
-      "norm_label": "phase 0 \u2014 spike (de-risk before anything else)",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_0_spike_de_risk_before_anything_else"
-    },
-    {
-      "label": "Phase 1 \u2014 Foundations",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
+      "label": "WalletContext",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/provider.tsx",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 104,
-      "norm_label": "phase 1 \u2014 foundations",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_1_foundations"
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "walletcontext",
+      "id": "apps_web_src_lib_wallet_provider_walletcontext"
     },
     {
-      "label": "Phase 2 \u2014 Core system (event lifecycle, backend, real-time tracking)",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L32",
+      "label": "session.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/wallet/session.ts",
+      "source_location": "L1",
       "_origin": "ast",
-      "community": 104,
-      "norm_label": "phase 2 \u2014 core system (event lifecycle, backend, real-time tracking)",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_2_core_system_event_lifecycle_backend_real_time_tracking"
+      "community": 103,
+      "community_name": "stellar-network.ts",
+      "norm_label": "session.ts",
+      "id": "apps_web_src_lib_wallet_session"
     },
     {
-      "label": "Phase 3 \u2014 Product UI",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L53",
+      "label": "stellar-payment.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "source_location": "L1",
       "_origin": "ast",
       "community": 104,
-      "norm_label": "phase 3 \u2014 product ui",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_3_product_ui"
+      "community_name": "stellar-payment.ts",
+      "norm_label": "stellar-payment.ts",
+      "id": "apps_web_src_lib_escrow_stellar_payment"
     },
     {
-      "label": "Phase 4 \u2014 Trust & edge cases",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L70",
+      "label": "stellar-payment.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
+      "source_location": "L1",
       "_origin": "ast",
       "community": 104,
-      "norm_label": "phase 4 \u2014 trust & edge cases",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_4_trust_edge_cases"
+      "community_name": "stellar-payment.ts",
+      "norm_label": "stellar-payment.test.ts",
+      "id": "apps_web_src_lib_escrow_stellar_payment_test"
     },
     {
-      "label": "Phase 5 \u2014 Hardening",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L81",
+      "label": "FROM",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
+      "source_location": "L11",
       "_origin": "ast",
       "community": 104,
-      "norm_label": "phase 5 \u2014 hardening",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_5_hardening"
+      "community_name": "stellar-payment.ts",
+      "norm_label": "from",
+      "id": "apps_web_src_lib_escrow_stellar_payment_test_from"
     },
     {
-      "label": "Sequencing rules",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L90",
+      "label": "TO",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
+      "source_location": "L12",
       "_origin": "ast",
       "community": 104,
-      "norm_label": "sequencing rules",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_sequencing_rules"
+      "community_name": "stellar-payment.ts",
+      "norm_label": "to",
+      "id": "apps_web_src_lib_escrow_stellar_payment_test_to"
+    },
+    {
+      "label": "STELLAR_NETWORK_PASSPHRASE",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 104,
+      "community_name": "stellar-payment.ts",
+      "norm_label": "stellar_network_passphrase",
+      "id": "apps_web_src_lib_stellar_network_stellar_network_passphrase"
+    },
+    {
+      "label": "ADR-0007",
+      "file_type": "concept",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 104,
+      "community_name": "stellar-payment.ts",
+      "norm_label": "adr-0007",
+      "id": "apps_web_src_lib_escrow_stellar_payment_ts_docref_adr_0007"
     },
     {
       "label": "Before you start",
@@ -2742,81 +2535,15 @@
       "id": "apps_web_prisma_readme_rls_model"
     },
     {
-      "label": "Astrea \u2014 UI motion & React Bits components",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 107,
-      "norm_label": "astrea \u2014 ui motion & react bits components",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_astrea_ui_motion_react_bits_components"
-    },
-    {
-      "label": "Build-plan cross-references",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L62",
-      "_origin": "ast",
-      "community": 107,
-      "norm_label": "build-plan cross-references",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_build_plan_cross_references"
-    },
-    {
-      "label": "Component placement",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L40",
-      "_origin": "ast",
-      "community": 107,
-      "norm_label": "component placement",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_component_placement"
-    },
-    {
-      "label": "Corrections to the original placement assumptions",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L54",
-      "_origin": "ast",
-      "community": 107,
-      "norm_label": "corrections to the original placement assumptions",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_corrections_to_the_original_placement_assumptions"
-    },
-    {
-      "label": "Hero background \u2014 decision",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 107,
-      "norm_label": "hero background \u2014 decision",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_hero_background_decision"
-    },
-    {
-      "label": "Principles",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 107,
-      "norm_label": "principles",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_principles"
-    },
-    {
       "label": "PULL_REQUEST_TEMPLATE.md",
       "file_type": "document",
       "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "github_pull_request_template",
       "community": 108,
       "community_name": "PULL_REQUEST_TEMPLATE.md",
-      "norm_label": "pull_request_template.md"
+      "norm_label": "pull_request_template.md",
+      "id": "github_pull_request_template"
     },
     {
       "label": "Docs",
@@ -2824,10 +2551,10 @@
       "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
       "source_location": "L28",
       "_origin": "ast",
-      "id": "github_pull_request_template_docs",
       "community": 108,
       "community_name": "PULL_REQUEST_TEMPLATE.md",
-      "norm_label": "docs"
+      "norm_label": "docs",
+      "id": "github_pull_request_template_docs"
     },
     {
       "label": "How I verified it",
@@ -2835,10 +2562,10 @@
       "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "github_pull_request_template_how_i_verified_it",
       "community": 108,
       "community_name": "PULL_REQUEST_TEMPLATE.md",
-      "norm_label": "how i verified it"
+      "norm_label": "how i verified it",
+      "id": "github_pull_request_template_how_i_verified_it"
     },
     {
       "label": "Money-path change?",
@@ -2846,10 +2573,10 @@
       "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "github_pull_request_template_money_path_change",
       "community": 108,
       "community_name": "PULL_REQUEST_TEMPLATE.md",
-      "norm_label": "money-path change?"
+      "norm_label": "money-path change?",
+      "id": "github_pull_request_template_money_path_change"
     },
     {
       "label": "Screenshots",
@@ -2857,10 +2584,10 @@
       "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "github_pull_request_template_screenshots",
       "community": 108,
       "community_name": "PULL_REQUEST_TEMPLATE.md",
-      "norm_label": "screenshots"
+      "norm_label": "screenshots",
+      "id": "github_pull_request_template_screenshots"
     },
     {
       "label": "What this does",
@@ -2868,65 +2595,10 @@
       "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "github_pull_request_template_what_this_does",
       "community": 108,
       "community_name": "PULL_REQUEST_TEMPLATE.md",
-      "norm_label": "what this does"
-    },
-    {
-      "label": "Findings folded into ADR-008",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L20",
-      "_origin": "ast",
-      "community": 109,
-      "norm_label": "findings folded into adr-008",
-      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "id": "spikes_k01_soroban_escrow_readme_findings_folded_into_adr_008"
-    },
-    {
-      "label": "How to run",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L28",
-      "_origin": "ast",
-      "community": 109,
-      "norm_label": "how to run",
-      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "id": "spikes_k01_soroban_escrow_readme_how_to_run"
-    },
-    {
-      "label": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 109,
-      "norm_label": "k01 (server-build-plan.md) \u2014 custom soroban escrow spike",
-      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "id": "spikes_k01_soroban_escrow_readme_k01_server_build_plan_md_custom_soroban_escrow_spike"
-    },
-    {
-      "label": "Next step",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L44",
-      "_origin": "ast",
-      "community": 109,
-      "norm_label": "next step",
-      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "id": "spikes_k01_soroban_escrow_readme_next_step"
-    },
-    {
-      "label": "What it verifies \u2014 results",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L7",
-      "_origin": "ast",
-      "community": 109,
-      "norm_label": "what it verifies \u2014 results",
-      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "id": "spikes_k01_soroban_escrow_readme_what_it_verifies_results"
+      "norm_label": "what this does",
+      "id": "github_pull_request_template_what_this_does"
     },
     {
       "label": "components.json",
@@ -3171,59 +2843,103 @@
       "id": "apps_web_components_tsx"
     },
     {
-      "label": "Findings folded into ADR-008",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L20",
-      "_origin": "ast",
-      "community": 110,
-      "norm_label": "findings folded into adr-008",
-      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "id": "spikes_k02_go_soroban_readme_findings_folded_into_adr_008"
-    },
-    {
-      "label": "How to run",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L27",
-      "_origin": "ast",
-      "community": 110,
-      "norm_label": "how to run",
-      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "id": "spikes_k02_go_soroban_readme_how_to_run"
-    },
-    {
-      "label": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
+      "label": "env.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/env.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 110,
-      "norm_label": "k02 (server-build-plan.md) \u2014 go \u2194 soroban integration spike",
-      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "id": "spikes_k02_go_soroban_readme_k02_server_build_plan_md_go_soroban_integration_spike"
+      "community": 111,
+      "community_name": "env.ts",
+      "norm_label": "env.ts",
+      "id": "apps_web_src_lib_env"
     },
     {
-      "label": "Next step",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L39",
+      "label": "serverSchema",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/env.ts",
+      "source_location": "L16",
       "_origin": "ast",
-      "community": 110,
-      "norm_label": "next step",
-      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "id": "spikes_k02_go_soroban_readme_next_step"
+      "community": 111,
+      "community_name": "env.ts",
+      "norm_label": "serverschema",
+      "id": "apps_web_src_lib_env_serverschema"
     },
     {
-      "label": "What it verifies \u2014 results",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L9",
+      "label": "env.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/env.test.ts",
+      "source_location": "L1",
       "_origin": "ast",
-      "community": 110,
-      "norm_label": "what it verifies \u2014 results",
-      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "id": "spikes_k02_go_soroban_readme_what_it_verifies_results"
+      "community": 111,
+      "community_name": "env.ts",
+      "norm_label": "env.test.ts",
+      "id": "apps_web_src_lib_env_test"
+    },
+    {
+      "label": "baseEnv",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/env.test.ts",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 111,
+      "community_name": "env.ts",
+      "norm_label": "baseenv",
+      "id": "apps_web_src_lib_env_test_baseenv"
+    },
+    {
+      "label": "HORIZON_URL",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L30",
+      "_origin": "ast",
+      "community": 111,
+      "community_name": "env.ts",
+      "norm_label": "horizon_url",
+      "id": "apps_web_src_lib_stellar_network_horizon_url"
+    },
+    {
+      "label": "transaction-confirmation.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 113,
+      "community_name": "transaction-confirmation.ts",
+      "norm_label": "transaction-confirmation.ts",
+      "id": "apps_web_src_lib_reconciliation_transaction_confirmation"
+    },
+    {
+      "label": "transaction-confirmation.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 113,
+      "community_name": "transaction-confirmation.ts",
+      "norm_label": "transaction-confirmation.test.ts",
+      "id": "apps_web_src_lib_reconciliation_transaction_confirmation_test"
+    },
+    {
+      "label": "robots.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/robots.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_app_robots",
+      "community": 114,
+      "community_name": "robots.ts",
+      "norm_label": "robots.ts"
+    },
+    {
+      "label": "sitemap.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/sitemap.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_app_sitemap",
+      "community": 115,
+      "community_name": "sitemap.ts",
+      "norm_label": "sitemap.ts"
     },
     {
       "label": "CONTRIBUTING.md",
@@ -3721,6 +3437,17 @@
       "id": "readme"
     },
     {
+      "label": "product-flows.md",
+      "file_type": "document",
+      "source_file": "docs/product-flows.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "product-flows.md",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_product_flows"
+    },
+    {
       "label": "Astrea \u2014 Product Flows",
       "file_type": "document",
       "source_file": "docs/product-flows.md",
@@ -3818,6 +3545,83 @@
       "norm_label": "roles",
       "community_name": "Astrea \u2014 Product Flows",
       "id": "docs_product_flows_roles"
+    },
+    {
+      "label": "ui-motion.md",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "ui-motion.md",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion"
+    },
+    {
+      "label": "Astrea \u2014 UI motion & React Bits components",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "astrea \u2014 ui motion & react bits components",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_astrea_ui_motion_react_bits_components"
+    },
+    {
+      "label": "Build-plan cross-references",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L62",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "build-plan cross-references",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_build_plan_cross_references"
+    },
+    {
+      "label": "Component placement",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L40",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "component placement",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_component_placement"
+    },
+    {
+      "label": "Corrections to the original placement assumptions",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L54",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "corrections to the original placement assumptions",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_corrections_to_the_original_placement_assumptions"
+    },
+    {
+      "label": "Hero background \u2014 decision",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "hero background \u2014 decision",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_hero_background_decision"
+    },
+    {
+      "label": "Principles",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "principles",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_principles"
     },
     {
       "label": "ADR-001 \u2014 Custom Soroban escrow contract, no third-party provider",
@@ -4117,6 +3921,149 @@
       "id": "tokenclient"
     },
     {
+      "label": "architecture.md",
+      "file_type": "document",
+      "source_file": "docs/architecture.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "architecture.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_architecture"
+    },
+    {
+      "label": "build-plan.md",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "build-plan.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan"
+    },
+    {
+      "label": "Architecture summary",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "architecture summary",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_architecture_summary"
+    },
+    {
+      "label": "Astrea \u2014 Build Plan",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "astrea \u2014 build plan",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_astrea_build_plan"
+    },
+    {
+      "label": "Milestone \u2014 Apply to GrantFox as maintainer",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L44",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "milestone \u2014 apply to grantfox as maintainer",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_milestone_apply_to_grantfox_as_maintainer"
+    },
+    {
+      "label": "Phase 0 \u2014 Spike (de-risk before anything else)",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "phase 0 \u2014 spike (de-risk before anything else)",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_0_spike_de_risk_before_anything_else"
+    },
+    {
+      "label": "Phase 1 \u2014 Foundations",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L21",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "phase 1 \u2014 foundations",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_1_foundations"
+    },
+    {
+      "label": "Phase 2 \u2014 Core system (event lifecycle, backend, real-time tracking)",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L32",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "phase 2 \u2014 core system (event lifecycle, backend, real-time tracking)",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_2_core_system_event_lifecycle_backend_real_time_tracking"
+    },
+    {
+      "label": "Phase 3 \u2014 Product UI",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L53",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "phase 3 \u2014 product ui",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_3_product_ui"
+    },
+    {
+      "label": "Phase 4 \u2014 Trust & edge cases",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L70",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "phase 4 \u2014 trust & edge cases",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_4_trust_edge_cases"
+    },
+    {
+      "label": "Phase 5 \u2014 Hardening",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L81",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "phase 5 \u2014 hardening",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_5_hardening"
+    },
+    {
+      "label": "Sequencing rules",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L90",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "sequencing rules",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_sequencing_rules"
+    },
+    {
+      "label": "contracts-build-plan.md",
+      "file_type": "document",
+      "source_file": "docs/contracts-build-plan.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "contracts-build-plan.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_contracts_build_plan"
+    },
+    {
       "label": "Astrea \u2014 Contracts Build Plan",
       "file_type": "document",
       "source_file": "docs/contracts-build-plan.md",
@@ -4124,7 +4071,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "astrea \u2014 contracts build plan",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "docs_contracts_build_plan_astrea_contracts_build_plan"
     },
     {
@@ -4135,7 +4082,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "phase 0 \u2014 spike (de-risk before anything else)",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "docs_contracts_build_plan_phase_0_spike_de_risk_before_anything_else"
     },
     {
@@ -4146,7 +4093,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "phase 1 \u2014 production contract",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "docs_contracts_build_plan_phase_1_production_contract"
     },
     {
@@ -4157,7 +4104,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "phase 2 \u2014 hardening (before mainnet)",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "docs_contracts_build_plan_phase_2_hardening_before_mainnet"
     },
     {
@@ -4168,8 +4115,162 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "sequencing rules",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "docs_contracts_build_plan_sequencing_rules"
+    },
+    {
+      "label": "build_plan_task.md",
+      "file_type": "document",
+      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Astrea \u2014 Build Plan",
+      "norm_label": "build_plan_task.md",
+      "id": "github_issue_template_build_plan_task"
+    },
+    {
+      "label": "CODE \u2014 Short task title",
+      "file_type": "document",
+      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
+      "source_location": "L8",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Astrea \u2014 Build Plan",
+      "norm_label": "code \u2014 short task title",
+      "id": "github_issue_template_build_plan_task_code_short_task_title"
+    },
+    {
+      "label": "k01-soroban-escrow/README.md",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "k01-soroban-escrow/readme.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme"
+    },
+    {
+      "label": "Findings folded into ADR-008",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "findings folded into adr-008",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme_findings_folded_into_adr_008"
+    },
+    {
+      "label": "How to run",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "how to run",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme_how_to_run"
+    },
+    {
+      "label": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "k01 (server-build-plan.md) \u2014 custom soroban escrow spike",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme_k01_server_build_plan_md_custom_soroban_escrow_spike"
+    },
+    {
+      "label": "Next step",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L44",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "next step",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme_next_step"
+    },
+    {
+      "label": "What it verifies \u2014 results",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "what it verifies \u2014 results",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k01_soroban_escrow_readme_what_it_verifies_results"
+    },
+    {
+      "label": "k02-go-soroban/README.md",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "k02-go-soroban/readme.md",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme"
+    },
+    {
+      "label": "Findings folded into ADR-008",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "findings folded into adr-008",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme_findings_folded_into_adr_008"
+    },
+    {
+      "label": "How to run",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L27",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "how to run",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme_how_to_run"
+    },
+    {
+      "label": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "k02 (server-build-plan.md) \u2014 go \u2194 soroban integration spike",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme_k02_server_build_plan_md_go_soroban_integration_spike"
+    },
+    {
+      "label": "Next step",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L39",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "next step",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme_next_step"
+    },
+    {
+      "label": "What it verifies \u2014 results",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L9",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "what it verifies \u2014 results",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k02_go_soroban_readme_what_it_verifies_results"
     },
     {
       "label": "k03-wallet-compat/README.md",
@@ -4179,7 +4280,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "k03-wallet-compat/readme.md",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "spikes_k03_wallet_compat_readme"
     },
     {
@@ -4190,7 +4291,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "how to run",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "spikes_k03_wallet_compat_readme_how_to_run"
     },
     {
@@ -4201,7 +4302,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "k03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "spikes_k03_wallet_compat_readme_k03_server_build_plan_md_wallet_compatibility_check"
     },
     {
@@ -4212,7 +4313,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "next step",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "spikes_k03_wallet_compat_readme_next_step"
     },
     {
@@ -4223,7 +4324,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "research finding (before touching any code)",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "spikes_k03_wallet_compat_readme_research_finding_before_touching_any_code"
     },
     {
@@ -4234,7 +4335,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "the test contract",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "spikes_k03_wallet_compat_readme_the_test_contract"
     },
     {
@@ -4245,7 +4346,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "what happens with the results",
-      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
+      "community_name": "Astrea \u2014 Build Plan",
       "id": "spikes_k03_wallet_compat_readme_what_happens_with_the_results"
     },
     {
@@ -4502,6 +4603,28 @@
       "id": "readme_documentation"
     },
     {
+      "label": "Environment Variables",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L131",
+      "_origin": "ast",
+      "community": 24,
+      "norm_label": "environment variables",
+      "community_name": "\ud83c\udf20 Astrea",
+      "id": "readme_environment_variables"
+    },
+    {
+      "label": "\ud83c\udfc1 Getting Started",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L102",
+      "_origin": "ast",
+      "community": 24,
+      "norm_label": "\ud83c\udfc1 getting started",
+      "community_name": "\ud83c\udf20 Astrea",
+      "id": "readme_getting_started"
+    },
+    {
       "label": "\ud83d\ude80 How It Works",
       "file_type": "document",
       "source_file": "README.md",
@@ -4544,6 +4667,17 @@
       "norm_label": "our solution",
       "community_name": "\ud83c\udf20 Astrea",
       "id": "readme_our_solution"
+    },
+    {
+      "label": "Setup",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L113",
+      "_origin": "ast",
+      "community": 24,
+      "norm_label": "setup",
+      "community_name": "\ud83c\udf20 Astrea",
+      "id": "readme_setup"
     },
     {
       "label": "\ud83d\udee0\ufe0f Technology Stack",
@@ -4601,28 +4735,6 @@
       "id": "readme_wallet_requirements"
     },
     {
-      "label": "Environment Variables",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L131",
-      "_origin": "ast",
-      "community": 26,
-      "norm_label": "environment variables",
-      "community_name": "\ud83c\udfc1 Getting Started",
-      "id": "readme_environment_variables"
-    },
-    {
-      "label": "\ud83c\udfc1 Getting Started",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L102",
-      "_origin": "ast",
-      "community": 26,
-      "norm_label": "\ud83c\udfc1 getting started",
-      "community_name": "\ud83c\udfc1 Getting Started",
-      "id": "readme_getting_started"
-    },
-    {
       "label": "Prerequisites",
       "file_type": "document",
       "source_file": "README.md",
@@ -4630,19 +4742,8 @@
       "_origin": "ast",
       "community": 26,
       "norm_label": "prerequisites",
-      "community_name": "\ud83c\udfc1 Getting Started",
+      "community_name": "Go backend (services/core-go)",
       "id": "readme_prerequisites"
-    },
-    {
-      "label": "Setup",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L113",
-      "_origin": "ast",
-      "community": 26,
-      "norm_label": "setup",
-      "community_name": "\ud83c\udfc1 Getting Started",
-      "id": "readme_setup"
     },
     {
       "label": "core-go/main.go",
@@ -5785,10 +5886,10 @@
       "source_file": "apps/web/src/app/layout.tsx",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "apps_web_src_app_layout",
       "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "layout.tsx",
-      "id": "apps_web_src_app_layout"
+      "community_name": "layout.tsx",
+      "norm_label": "layout.tsx"
     },
     {
       "label": "geistMono",
@@ -5796,10 +5897,10 @@
       "source_file": "apps/web/src/app/layout.tsx",
       "source_location": "L13",
       "_origin": "ast",
+      "id": "apps_web_src_app_layout_geistmono",
       "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "geistmono",
-      "id": "apps_web_src_app_layout_geistmono"
+      "community_name": "layout.tsx",
+      "norm_label": "geistmono"
     },
     {
       "label": "geistSans",
@@ -5807,21 +5908,21 @@
       "source_file": "apps/web/src/app/layout.tsx",
       "source_location": "L8",
       "_origin": "ast",
+      "id": "apps_web_src_app_layout_geistsans",
       "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "geistsans",
-      "id": "apps_web_src_app_layout_geistsans"
+      "community_name": "layout.tsx",
+      "norm_label": "geistsans"
     },
     {
       "label": "metadata",
       "file_type": "code",
       "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L18",
+      "source_location": "L20",
       "_origin": "ast",
+      "id": "apps_web_src_app_layout_metadata",
       "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "metadata",
-      "id": "apps_web_src_app_layout_metadata"
+      "community_name": "layout.tsx",
+      "norm_label": "metadata"
     },
     {
       "label": "page.tsx",
@@ -5830,7 +5931,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "page.tsx",
       "id": "apps_web_src_app_page"
     },
@@ -5841,7 +5942,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "prism-background.tsx",
       "id": "apps_web_src_components_prism_background"
     },
@@ -5852,7 +5953,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "site-footer.tsx",
       "id": "apps_web_src_components_site_footer"
     },
@@ -5863,7 +5964,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "links",
       "id": "apps_web_src_components_site_footer_links"
     },
@@ -5874,7 +5975,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "site-header.tsx",
       "id": "apps_web_src_components_site_header"
     },
@@ -5885,7 +5986,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "button.tsx",
       "id": "apps_web_src_components_ui_button"
     },
@@ -5896,7 +5997,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "buttonvariants",
       "id": "apps_web_src_components_ui_button_buttonvariants"
     },
@@ -5907,20 +6008,9 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "wallet-connect-button.tsx",
       "id": "apps_web_src_components_wallet_connect_button"
-    },
-    {
-      "label": "STELLAR_NETWORK",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L14",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "stellar_network",
-      "id": "apps_web_src_lib_stellar_network_stellar_network"
     },
     {
       "label": "utils.ts",
@@ -5929,7 +6019,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "utils.ts",
       "id": "apps_web_src_lib_utils"
     },
@@ -5940,53 +6030,9 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider.tsx",
+      "community_name": "layout.tsx",
       "norm_label": "utils.test.ts",
       "id": "apps_web_src_lib_utils_test"
-    },
-    {
-      "label": "kit.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/kit.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "kit.ts",
-      "id": "apps_web_src_lib_wallet_kit"
-    },
-    {
-      "label": "provider.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "provider.tsx",
-      "id": "apps_web_src_lib_wallet_provider"
-    },
-    {
-      "label": "WalletContext",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L21",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "walletcontext",
-      "id": "apps_web_src_lib_wallet_provider_walletcontext"
-    },
-    {
-      "label": "session.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "provider.tsx",
-      "norm_label": "session.ts",
-      "id": "apps_web_src_lib_wallet_session"
     },
     {
       "label": "vitest.setup.ts",
@@ -7017,34 +7063,364 @@
       "id": "spikes_k02_go_soroban_readme_contract"
     },
     {
-      "label": "K03 Ping Test Contract (CDIWLY6A...)",
-      "file_type": "concept",
-      "source_file": "spikes/k03-wallet-compat/README.md",
-      "source_location": null,
+      "label": "graphify-out-rebuilt uploaded artifact",
+      "file_type": "code",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 101-107",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 103,
-      "norm_label": "k03 ping test contract (cdiwly6a...)",
+      "community": 109,
+      "norm_label": "graphify-out-rebuilt uploaded artifact",
       "_origin": "semantic",
-      "community_name": "build-plan.md",
-      "id": "spikes_k03_wallet_compat_readme_pingcontract"
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "github_workflows_ci_graphify_out_rebuilt_artifact"
     },
     {
-      "label": "K03 Wallet Compat Test Page",
-      "file_type": "document",
-      "source_file": "spikes/k03-wallet-compat/web/index.html",
-      "source_location": null,
+      "label": "Fail if graphify-out/ is stale step",
+      "file_type": "code",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 91-99",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 103,
-      "norm_label": "k03 wallet compat test page",
+      "community": 109,
+      "norm_label": "fail if graphify-out/ is stale step",
       "_origin": "semantic",
-      "community_name": "build-plan.md",
-      "id": "spikes_k03_wallet_compat_web_index"
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "github_workflows_ci_graphify_out_staleness_check"
+    },
+    {
+      "label": "Fork-then-clone local setup workflow",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 13-22",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 109,
+      "norm_label": "fork-then-clone local setup workflow",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_fork_workflow"
+    },
+    {
+      "label": "Opening a PR workflow",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 74-80",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 109,
+      "norm_label": "opening a pr workflow",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_pr_workflow"
+    },
+    {
+      "label": "`security` label (extra review)",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 79",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 109,
+      "norm_label": "`security` label (extra review)",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_security_label"
+    },
+    {
+      "label": "upstream git remote",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 24-30",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 109,
+      "norm_label": "upstream git remote",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_upstream_remote"
+    },
+    {
+      "label": "Update docs/ADRs alongside code policy",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 80",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 109,
+      "norm_label": "update docs/adrs alongside code policy",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_adr_update_policy"
+    },
+    {
+      "label": "Money-movement change review requirement (E0*, escrow calls, signing, reconciliation job)",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 79",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 109,
+      "norm_label": "money-movement change review requirement (e0*, escrow calls, signing, reconciliation job)",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_money_movement_review"
+    },
+    {
+      "label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
+      "file_type": "rationale",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 85-90",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 109,
+      "norm_label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "github_workflows_ci_manifest_cache_exclusion"
+    },
+    {
+      "label": "Biome (lint/format)",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 52",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 110,
+      "norm_label": "biome (lint/format)",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "contributing_biome"
+    },
+    {
+      "label": "Husky",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 52",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 110,
+      "norm_label": "husky",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "contributing_husky"
+    },
+    {
+      "label": "lint-staged pre-commit hook",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 54",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 110,
+      "norm_label": "lint-staged pre-commit hook",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "contributing_lint_staged"
+    },
+    {
+      "label": "Biome",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 184",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 110,
+      "norm_label": "biome",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "readme_biome"
+    },
+    {
+      "label": "commitlint",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 184",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 110,
+      "norm_label": "commitlint",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "readme_commitlint"
+    },
+    {
+      "label": "Conventional Commits",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 184",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 110,
+      "norm_label": "conventional commits",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "readme_conventional_commits"
+    },
+    {
+      "label": "Husky",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 184",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 110,
+      "norm_label": "husky",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "readme_husky"
+    },
+    {
+      "label": "CONTRIBUTING.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "lines 182, 184",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 110,
+      "norm_label": "contributing.md",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "readme_contributing_doc"
+    },
+    {
+      "label": "post-commit Husky hook (auto-rebuild graph)",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 62",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 110,
+      "norm_label": "post-commit husky hook (auto-rebuild graph)",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "contributing_post_commit_hook"
+    },
+    {
+      "label": "Organizer creates an event step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 48",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 112,
+      "norm_label": "organizer creates an event step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_event_creation_step"
+    },
+    {
+      "label": "How It Works (5-step flow)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 46-53",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 112,
+      "norm_label": "how it works (5-step flow)",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_how_it_works_flow"
+    },
+    {
+      "label": "Judges approve and release step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 51",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 112,
+      "norm_label": "judges approve and release step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_judge_approval_step"
+    },
+    {
+      "label": "Judge panel",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 61",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 112,
+      "norm_label": "judge panel",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_judge_panel"
+    },
+    {
+      "label": "Everything on the record step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 52",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 112,
+      "norm_label": "everything on the record step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_public_record_step"
+    },
+    {
+      "label": "Participants register and submit step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 50",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 112,
+      "norm_label": "participants register and submit step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_registration_step"
     },
     {
       "label": "/graphify --update command",
@@ -7060,21 +7436,6 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_graphify_update_command"
-    },
-    {
-      "label": "Biome (lint/format)",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 52",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "biome (lint/format)",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_biome"
     },
     {
       "label": "CI checks: lint, typecheck, test, build",
@@ -7122,36 +7483,6 @@
       "id": "contributing_graphify"
     },
     {
-      "label": "Husky",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 52",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "husky",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_husky"
-    },
-    {
-      "label": "lint-staged pre-commit hook",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 54",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "lint-staged pre-commit hook",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_lint_staged"
-    },
-    {
       "label": "Stellar Developers Discord",
       "file_type": "concept",
       "source_file": "CONTRIBUTING.md",
@@ -7165,66 +7496,6 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_stellar_discord"
-    },
-    {
-      "label": "Biome",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 184",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "biome",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_biome"
-    },
-    {
-      "label": "commitlint",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 184",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "commitlint",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_commitlint"
-    },
-    {
-      "label": "Conventional Commits",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 184",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "conventional commits",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_conventional_commits"
-    },
-    {
-      "label": "Husky",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 184",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "husky",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_husky"
     },
     {
       "label": "MIT License",
@@ -7257,21 +7528,6 @@
       "id": "contributing_graph_html"
     },
     {
-      "label": "graphify-out/GRAPH_REPORT.md",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 62",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "graphify-out/graph_report.md",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_graph_report"
-    },
-    {
       "label": "README.md (referenced from CONTRIBUTING)",
       "file_type": "document",
       "source_file": "CONTRIBUTING.md",
@@ -7287,36 +7543,6 @@
       "id": "contributing_readme"
     },
     {
-      "label": "CONTRIBUTING.md",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "lines 182, 184",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "contributing.md",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_contributing_doc"
-    },
-    {
-      "label": "graphify-out/GRAPH_REPORT.md",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "line 176",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "graphify-out/graph_report.md",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_graph_report_doc"
-    },
-    {
       "label": "CI enforcement of code-graph sync",
       "file_type": "rationale",
       "source_file": "CONTRIBUTING.md",
@@ -7330,21 +7556,6 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_ci_graphify_check"
-    },
-    {
-      "label": "post-commit Husky hook (auto-rebuild graph)",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 62",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "post-commit husky hook (auto-rebuild graph)",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_post_commit_hook"
     },
     {
       "label": "Security issue reporting (email maintainer, no public issue)",
@@ -7452,6 +7663,21 @@
       "id": "contributing_adr_003"
     },
     {
+      "label": "coded GitHub issue tasks (e.g. [E02], [U01])",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 15,
+      "norm_label": "coded github issue tasks (e.g. [e02], [u01])",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "contributing_issue_task_codes"
+    },
+    {
       "label": "Supabase (free project for DATABASE_URL/DIRECT_URL)",
       "file_type": "concept",
       "source_file": "CONTRIBUTING.md",
@@ -7480,6 +7706,21 @@
       "_origin": "semantic",
       "community_name": "docs/architecture.md",
       "id": "contributing_trustless_work"
+    },
+    {
+      "label": "Task S01 (project scaffold)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 104",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 15,
+      "norm_label": "task s01 (project scaffold)",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "readme_task_s01"
     },
     {
       "label": "Trustless Work (current server-side integration)",
@@ -7512,6 +7753,21 @@
       "id": "contributing_architecture_doc"
     },
     {
+      "label": "docs/build-plan.md",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 15,
+      "norm_label": "docs/build-plan.md",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "contributing_build_plan"
+    },
+    {
       "label": "apps/web/prisma/README.md",
       "file_type": "document",
       "source_file": "CONTRIBUTING.md",
@@ -7525,6 +7781,21 @@
       "_origin": "semantic",
       "community_name": "docs/architecture.md",
       "id": "contributing_prisma_readme"
+    },
+    {
+      "label": "docs/build-plan.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "lines 104, 174, 182",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 15,
+      "norm_label": "docs/build-plan.md",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "readme_build_plan_doc"
     },
     {
       "label": "ALLOW_MAINNET=false gate",
@@ -7587,19 +7858,19 @@
       "id": "readme_allow_mainnet_gate"
     },
     {
-      "label": "Astrea (escrow-backed prize payouts platform)",
-      "file_type": "concept",
+      "label": "E01 task: migration from Trustless Work to custom Soroban contract",
+      "file_type": "rationale",
       "source_file": "README.md",
-      "source_location": "lines 1-17",
+      "source_location": "line 153",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 16,
-      "norm_label": "astrea (escrow-backed prize payouts platform)",
+      "community": 15,
+      "norm_label": "e01 task: migration from trustless work to custom soroban contract",
       "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_astrea_project"
+      "community_name": "docs/architecture.md",
+      "id": "readme_soroban_migration_e01"
     },
     {
       "label": "Christopher Lamberti (Maintainer)",
@@ -7632,21 +7903,6 @@
       "id": "readme_shadcnui"
     },
     {
-      "label": "Stellar network",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 3",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "stellar network",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_stellar"
-    },
-    {
       "label": "Vercel (CI/CD)",
       "file_type": "concept",
       "source_file": "README.md",
@@ -7662,19 +7918,19 @@
       "id": "readme_vercel"
     },
     {
-      "label": "docs/architecture.md",
+      "label": "graphify-out/GRAPH_REPORT.md",
       "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "lines 82, 173",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 62",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 16,
-      "norm_label": "docs/architecture.md",
+      "norm_label": "graphify-out/graph_report.md",
       "_origin": "semantic",
       "community_name": "README.md",
-      "id": "readme_architecture_doc"
+      "id": "contributing_graph_report"
     },
     {
       "label": "docs/contracts-build-plan.md",
@@ -7690,6 +7946,21 @@
       "_origin": "semantic",
       "community_name": "README.md",
       "id": "readme_contracts_build_plan_doc"
+    },
+    {
+      "label": "graphify-out/GRAPH_REPORT.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "line 176",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 16,
+      "norm_label": "graphify-out/graph_report.md",
+      "_origin": "semantic",
+      "community_name": "README.md",
+      "id": "readme_graph_report_doc"
     },
     {
       "label": "docs/product-flows.md",
@@ -7842,19 +8113,34 @@
       "id": "docs_architecture_adr_005"
     },
     {
-      "label": "Organizer creates an event step",
+      "label": "K03 Ping Test Contract (CDIWLY6A...)",
       "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 48",
+      "source_file": "spikes/k03-wallet-compat/README.md",
+      "source_location": null,
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 22,
-      "norm_label": "organizer creates an event step",
+      "community": 2,
+      "norm_label": "k03 ping test contract (cdiwly6a...)",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_event_creation_step"
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_readme_pingcontract"
+    },
+    {
+      "label": "K03 Wallet Compat Test Page",
+      "file_type": "document",
+      "source_file": "spikes/k03-wallet-compat/web/index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 2,
+      "norm_label": "k03 wallet compat test page",
+      "_origin": "semantic",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "spikes_k03_wallet_compat_web_index"
     },
     {
       "label": "Event wizard",
@@ -7868,53 +8154,8 @@
       "community": 22,
       "norm_label": "event wizard",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_event_wizard"
-    },
-    {
-      "label": "How It Works (5-step flow)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 46-53",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 22,
-      "norm_label": "how it works (5-step flow)",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_how_it_works_flow"
-    },
-    {
-      "label": "Judges approve and release step",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 51",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 22,
-      "norm_label": "judges approve and release step",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_judge_approval_step"
-    },
-    {
-      "label": "Judge panel",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 61",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 22,
-      "norm_label": "judge panel",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_judge_panel"
     },
     {
       "label": "Next.js (App Router)",
@@ -7928,7 +8169,7 @@
       "community": 22,
       "norm_label": "next.js (app router)",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_nextjs"
     },
     {
@@ -7943,38 +8184,8 @@
       "community": 22,
       "norm_label": "public event pages",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_public_event_pages"
-    },
-    {
-      "label": "Everything on the record step",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 52",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 22,
-      "norm_label": "everything on the record step",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_public_record_step"
-    },
-    {
-      "label": "Participants register and submit step",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 50",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 22,
-      "norm_label": "participants register and submit step",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_registration_step"
     },
     {
       "label": "TypeScript (strict)",
@@ -7988,7 +8199,7 @@
       "community": 22,
       "norm_label": "typescript (strict)",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_typescript_strict"
     },
     {
@@ -8003,7 +8214,7 @@
       "community": 22,
       "norm_label": "client-side xdr signing",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_client_side_xdr_signing"
     },
     {
@@ -8018,23 +8229,23 @@
       "community": 22,
       "norm_label": "non-custodial guarantee",
       "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
+      "community_name": "Next.js (App Router)",
       "id": "readme_solution_non_custodial"
     },
     {
-      "label": "coded GitHub issue tasks (e.g. [E02], [U01])",
+      "label": "Astrea (escrow-backed prize payouts platform)",
       "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 9",
+      "source_file": "README.md",
+      "source_location": "lines 1-17",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 23,
-      "norm_label": "coded github issue tasks (e.g. [e02], [u01])",
+      "norm_label": "astrea (escrow-backed prize payouts platform)",
       "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "contributing_issue_task_codes"
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
+      "id": "readme_astrea_project"
     },
     {
       "label": "Organizer funds the escrow step",
@@ -8048,38 +8259,8 @@
       "community": 23,
       "norm_label": "organizer funds the escrow step",
       "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
       "id": "readme_escrow_funding_step"
-    },
-    {
-      "label": "EscrowClient interface",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 68",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 23,
-      "norm_label": "escrowclient interface",
-      "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "readme_escrowclient_interface"
-    },
-    {
-      "label": "Go backend (services/core-go)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 67, 91, 109",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 23,
-      "norm_label": "go backend (services/core-go)",
-      "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "readme_go_backend"
     },
     {
       "label": "Multi-release smart escrow",
@@ -8093,7 +8274,7 @@
       "community": 23,
       "norm_label": "multi-release smart escrow",
       "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
       "id": "readme_smart_escrow"
     },
     {
@@ -8108,23 +8289,23 @@
       "community": 23,
       "norm_label": "custom soroban escrow smart contract (contracts/soroban)",
       "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
       "id": "readme_soroban_contract"
     },
     {
-      "label": "Task S01 (project scaffold)",
+      "label": "Stellar network",
       "file_type": "concept",
       "source_file": "README.md",
-      "source_location": "line 104",
+      "source_location": "line 3",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 23,
-      "norm_label": "task s01 (project scaffold)",
+      "norm_label": "stellar network",
       "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "readme_task_s01"
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
+      "id": "readme_stellar"
     },
     {
       "label": "USDC",
@@ -8138,53 +8319,23 @@
       "community": 23,
       "norm_label": "usdc",
       "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
       "id": "readme_usdc"
     },
     {
-      "label": "docs/build-plan.md",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 9",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 23,
-      "norm_label": "docs/build-plan.md",
-      "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "contributing_build_plan"
-    },
-    {
-      "label": "docs/build-plan.md",
+      "label": "docs/architecture.md",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "lines 104, 174, 182",
+      "source_location": "lines 82, 173",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 23,
-      "norm_label": "docs/build-plan.md",
+      "norm_label": "docs/architecture.md",
       "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "readme_build_plan_doc"
-    },
-    {
-      "label": "E01 task: migration from Trustless Work to custom Soroban contract",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "line 153",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 23,
-      "norm_label": "e01 task: migration from trustless work to custom soroban contract",
-      "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "readme_soroban_migration_e01"
+      "community_name": "Astrea (escrow-backed prize payouts platform)",
+      "id": "readme_architecture_doc"
     },
     {
       "label": "Albedo wallet",
@@ -8262,6 +8413,51 @@
       "id": "readme_xbull"
     },
     {
+      "label": "EscrowClient interface",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 68",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "escrowclient interface",
+      "_origin": "semantic",
+      "community_name": "Go backend (services/core-go)",
+      "id": "readme_escrowclient_interface"
+    },
+    {
+      "label": "Go backend (services/core-go)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 67, 91, 109",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "go backend (services/core-go)",
+      "_origin": "semantic",
+      "community_name": "Go backend (services/core-go)",
+      "id": "readme_go_backend"
+    },
+    {
+      "label": "Stellar Horizon",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 77",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "stellar horizon",
+      "_origin": "semantic",
+      "community_name": "Go backend (services/core-go)",
+      "id": "readme_horizon"
+    },
+    {
       "label": "Postgres",
       "file_type": "concept",
       "source_file": "README.md",
@@ -8273,7 +8469,7 @@
       "community": 26,
       "norm_label": "postgres",
       "_origin": "semantic",
-      "community_name": "\ud83c\udfc1 Getting Started",
+      "community_name": "Go backend (services/core-go)",
       "id": "readme_postgres"
     },
     {
@@ -8288,7 +8484,7 @@
       "community": 26,
       "norm_label": "prisma orm",
       "_origin": "semantic",
-      "community_name": "\ud83c\udfc1 Getting Started",
+      "community_name": "Go backend (services/core-go)",
       "id": "readme_prisma"
     },
     {
@@ -8303,8 +8499,38 @@
       "community": 26,
       "norm_label": "supabase",
       "_origin": "semantic",
-      "community_name": "\ud83c\udfc1 Getting Started",
+      "community_name": "Go backend (services/core-go)",
       "id": "readme_supabase"
+    },
+    {
+      "label": "Chain is source of truth; database is a mirror",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "line 82",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "chain is source of truth; database is a mirror",
+      "_origin": "semantic",
+      "community_name": "Go backend (services/core-go)",
+      "id": "readme_chain_source_of_truth"
+    },
+    {
+      "label": "Reconciliation job (DB mirrors chain)",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "lines 77, 82",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "reconciliation job (db mirrors chain)",
+      "_origin": "semantic",
+      "community_name": "Go backend (services/core-go)",
+      "id": "readme_reconciliation_job"
     },
     {
       "label": "Migration Baseline Gotcha",
@@ -8682,36 +8908,6 @@
       "id": "github_workflows_ci_graphify_drift_check_job"
     },
     {
-      "label": "graphify-out-rebuilt uploaded artifact",
-      "file_type": "code",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 101-107",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "graphify-out-rebuilt uploaded artifact",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "github_workflows_ci_graphify_out_rebuilt_artifact"
-    },
-    {
-      "label": "Fail if graphify-out/ is stale step",
-      "file_type": "code",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 91-99",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "fail if graphify-out/ is stale step",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "github_workflows_ci_graphify_out_staleness_check"
-    },
-    {
       "label": "npm ci --legacy-peer-deps step",
       "file_type": "code",
       "source_file": ".github/workflows/ci.yml",
@@ -8772,66 +8968,6 @@
       "id": "github_workflows_ci_wagoid_commitlint_action"
     },
     {
-      "label": "Fork-then-clone local setup workflow",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 13-22",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "fork-then-clone local setup workflow",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_fork_workflow"
-    },
-    {
-      "label": "Opening a PR workflow",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 74-80",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "opening a pr workflow",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_pr_workflow"
-    },
-    {
-      "label": "`security` label (extra review)",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 79",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "`security` label (extra review)",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_security_label"
-    },
-    {
-      "label": "upstream git remote",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 24-30",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "upstream git remote",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_upstream_remote"
-    },
-    {
       "label": "GitHub Actions (CI/CD)",
       "file_type": "concept",
       "source_file": "README.md",
@@ -8845,51 +8981,6 @@
       "_origin": "semantic",
       "community_name": "Knowledge graph in sync (code) job",
       "id": "readme_github_actions"
-    },
-    {
-      "label": "Stellar Horizon",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 77",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "stellar horizon",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_horizon"
-    },
-    {
-      "label": "Update docs/ADRs alongside code policy",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 80",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "update docs/adrs alongside code policy",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_adr_update_policy"
-    },
-    {
-      "label": "Money-movement change review requirement (E0*, escrow calls, signing, reconciliation job)",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 79",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "money-movement change review requirement (e0*, escrow calls, signing, reconciliation job)",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_money_movement_review"
     },
     {
       "label": "GRAPHIFY_MAX_WORKERS=1 env var",
@@ -8922,21 +9013,6 @@
       "id": "github_workflows_ci_graphifyy_package"
     },
     {
-      "label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
-      "file_type": "rationale",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 85-90",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "github_workflows_ci_manifest_cache_exclusion"
-    },
-    {
       "label": "postinstall `prisma generate` producing apps/web/src/generated/prisma",
       "file_type": "rationale",
       "source_file": ".github/workflows/ci.yml",
@@ -8965,36 +9041,6 @@
       "_origin": "semantic",
       "community_name": "Knowledge graph in sync (code) job",
       "id": "github_workflows_ci_pythonhashseed_env"
-    },
-    {
-      "label": "Chain is source of truth; database is a mirror",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "line 82",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "chain is source of truth; database is a mirror",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_chain_source_of_truth"
-    },
-    {
-      "label": "Reconciliation job (DB mirrors chain)",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "lines 77, 82",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "reconciliation job (db mirrors chain)",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_reconciliation_job"
     },
     {
       "label": "Non-custodial, Always",
@@ -11530,9 +11576,9 @@
       "source_location": "L3",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "apps_web_src_app_layout",
-      "target": "apps_web_src_components_site_footer_sitefooter"
+      "target": "apps_web_src_components_site_footer_sitefooter",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -11542,9 +11588,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "apps_web_src_app_layout",
-      "target": "apps_web_src_components_site_header_siteheader"
+      "target": "apps_web_src_components_site_header_siteheader",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -11554,9 +11600,9 @@
       "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "apps_web_src_app_layout",
-      "target": "apps_web_src_lib_wallet_provider_walletprovider"
+      "target": "apps_web_src_lib_wallet_provider_walletprovider",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -12646,9 +12692,9 @@
       "source_location": "L3",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "apps_web_src_app_layout",
-      "target": "apps_web_src_components_site_footer"
+      "target": "apps_web_src_components_site_footer",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -12658,9 +12704,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "apps_web_src_app_layout",
-      "target": "apps_web_src_components_site_header"
+      "target": "apps_web_src_components_site_header",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -12670,9 +12716,9 @@
       "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "apps_web_src_app_layout",
-      "target": "apps_web_src_lib_wallet_provider"
+      "target": "apps_web_src_lib_wallet_provider",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -15268,31 +15314,31 @@
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "apps_web_src_app_layout",
-      "target": "apps_web_src_app_layout_geistmono"
+      "target": "apps_web_src_app_layout_geistmono",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "apps_web_src_app_layout",
-      "target": "apps_web_src_app_layout_metadata"
+      "target": "apps_web_src_app_layout_metadata",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L24",
+      "source_location": "L78",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "apps_web_src_app_layout",
-      "target": "apps_web_src_app_layout_rootlayout"
+      "target": "apps_web_src_app_layout_rootlayout",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -15301,9 +15347,9 @@
       "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "apps_web_src_app_layout",
-      "target": "apps_web_src_app_layout_geistsans"
+      "target": "apps_web_src_app_layout_geistsans",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -15315,6 +15361,28 @@
       "confidence_score": 1.0,
       "source": "apps_web_src_app_page",
       "target": "apps_web_src_app_page_home"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/robots.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_robots",
+      "target": "apps_web_src_app_robots_robots",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/sitemap.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_sitemap",
+      "target": "apps_web_src_app_sitemap_sitemap",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -17523,9 +17591,9 @@
       "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "github_issue_template_build_plan_task",
-      "target": "github_issue_template_build_plan_task_code_short_task_title",
-      "confidence_score": 1.0
+      "target": "github_issue_template_build_plan_task_code_short_task_title"
     },
     {
       "relation": "contains",
@@ -17534,9 +17602,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "github_pull_request_template_what_this_does",
-      "confidence_score": 1.0
+      "target": "github_pull_request_template_what_this_does"
     },
     {
       "relation": "contains",
@@ -17545,9 +17613,9 @@
       "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "github_pull_request_template_screenshots",
-      "confidence_score": 1.0
+      "target": "github_pull_request_template_screenshots"
     },
     {
       "relation": "contains",
@@ -17556,9 +17624,9 @@
       "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "github_pull_request_template_money_path_change",
-      "confidence_score": 1.0
+      "target": "github_pull_request_template_money_path_change"
     },
     {
       "relation": "contains",
@@ -17567,9 +17635,9 @@
       "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "github_pull_request_template_docs",
-      "confidence_score": 1.0
+      "target": "github_pull_request_template_docs"
     },
     {
       "relation": "contains",
@@ -17578,9 +17646,9 @@
       "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "github_pull_request_template_how_i_verified_it",
-      "confidence_score": 1.0
+      "target": "github_pull_request_template_how_i_verified_it"
     },
     {
       "relation": "contains",
@@ -19039,9 +19107,9 @@
       "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "github_issue_template_build_plan_task",
-      "target": "docs_build_plan",
-      "confidence_score": 1.0
+      "target": "docs_build_plan"
     },
     {
       "relation": "references",
@@ -19050,9 +19118,9 @@
       "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "github_issue_template_build_plan_task",
-      "target": "docs_contracts_build_plan",
-      "confidence_score": 1.0
+      "target": "docs_contracts_build_plan"
     },
     {
       "relation": "references",
@@ -19061,9 +19129,9 @@
       "source_location": "L34",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "contributing",
-      "confidence_score": 1.0
+      "target": "contributing"
     },
     {
       "relation": "references",
@@ -20984,5 +21052,5 @@
       "source_file": "CONTRIBUTING.md"
     }
   ],
-  "built_at_commit": "37a2e486fbc897b0f2a3baf60667871cf4421653"
+  "built_at_commit": "67aae9daab20305c9b369ee3d3528a36476b12ae"
 }
