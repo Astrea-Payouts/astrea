@@ -71,6 +71,7 @@ Once Phases 0–2 are done, the core promise (registration, real-time tracking, 
 | U12 | Persistent "my events" view: every event a connected wallet is registered in or judging, with a live countdown to the next relevant deadline (registration close, judging deadline) | M | Depends on S07 (needs a verified session to be trustworthy across devices, not just the current browser's cookie) |
 | U13 | Participant earnings view: past payouts received across events, wallet-scoped | S | Depends on S07. Reads `Payout` joined on the verified `Wallet.id` |
 | U14 | In-app submission checklist: participant-tracked task list against their submission, with a completion percentage shown to the participant (and optionally the organizer) | M | Depends on U04. Checklist items can be organizer-defined per event or participant-defined — decide which in the PR, document the choice |
+| U15 | PWA: web manifest, service worker (offline shell + cache-first static assets), installable on mobile/desktop | M | Self-contained on top of L00's shell. Participants often check event status from their phone mid-event — installable + resilient-to-flaky-wifi matters more here than for a typical marketing site |
 
 ## Phase 4 — Trust & edge cases
 
