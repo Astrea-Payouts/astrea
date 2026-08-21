@@ -1,0 +1,30 @@
+{
+	"Metadata": {
+		"title": "Astrea — Pagos de premios con escrow en Stellar",
+		"description": "Pagos de premios con escrow para hackathons, bounties y desafíos de comunidad — impulsado por escrows inteligentes de Stellar."
+	},
+	"HomePage": {
+		"eyebrow": "Construido sobre Stellar",
+		"title": "Astrea",
+		"tagline": "Pagos de premios con escrow para hackathons, bounties y desafíos de comunidad — los fondos quedan bloqueados on-chain antes de que empiece el evento.",
+		"mvpNotice": "MVP en desarrollo activo. Mirá el <link>plan de construcción</link> para ver qué sigue."
+	},
+	"SiteHeader": {
+		"githubAriaLabel": "Astrea en GitHub"
+	},
+	"SiteFooter": {
+		"copyright": "© {year} Astrea. Construido en abierto sobre Stellar.",
+		"github": "GitHub",
+		"buildPlan": "Plan de construcción",
+		"architecture": "Arquitectura",
+		"contributing": "Cómo contribuir",
+		"license": "Licencia MIT"
+	},
+	"WalletConnect": {
+		"connecting": "Conectando…",
+		"connect": "Conectar wallet"
+	},
+	"LanguageSwitcher": {
+		"label": "Idioma"
+	}
+}
