@@ -1,7 +1,7 @@
 {
   "0": "e06-vertical-slice.ts",
   "1": "trustless-work-adapter.ts",
-  "2": "Astrea — Build Plan",
+  "2": "K03 (server-build-plan.md) — wallet compatibility check",
   "3": "dependencies",
   "4": "devDependencies",
   "5": "provider.tsx",
@@ -21,8 +21,8 @@
   "19": "test.rs",
   "20": "prize.ts",
   "21": "compilerOptions",
-  "22": "Next.js (App Router)",
-  "23": "Go backend (services/core-go)",
+  "22": "How It Works (5-step flow)",
+  "23": "docs/build-plan.md",
   "24": "🌠 Astrea",
   "25": "Wallet testing",
   "26": "🏁 Getting Started",
@@ -102,6 +102,12 @@
   "100": "K01 Soroban Escrow Contract (CBFPD4YF...)",
   "101": "K02 Go-Soroban Contract (CC76XEKP...)",
   "102": "k03-wallet-compat/web/package.json",
-  "103": "Fail if graphify-out/ is stale step",
-  "105": "How It Works (5-step flow)"
+  "103": "build-plan.md",
+  "104": "Astrea — Build Plan",
+  "105": "Contributing to Astrea",
+  "106": "Database setup",
+  "107": "Astrea — UI motion & React Bits components",
+  "108": "PULL_REQUEST_TEMPLATE.md",
+  "109": "K01 (server-build-plan.md) — custom Soroban escrow spike",
+  "110": "K02 (server-build-plan.md) — Go ↔ Soroban integration spike"
 }

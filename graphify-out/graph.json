@@ -2368,6 +2368,567 @@
       "id": "vite"
     },
     {
+      "label": "architecture.md",
+      "file_type": "document",
+      "source_file": "docs/architecture.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 103,
+      "norm_label": "architecture.md",
+      "community_name": "build-plan.md",
+      "id": "docs_architecture"
+    },
+    {
+      "label": "build-plan.md",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 103,
+      "norm_label": "build-plan.md",
+      "community_name": "build-plan.md",
+      "id": "docs_build_plan"
+    },
+    {
+      "label": "contracts-build-plan.md",
+      "file_type": "document",
+      "source_file": "docs/contracts-build-plan.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 103,
+      "norm_label": "contracts-build-plan.md",
+      "community_name": "build-plan.md",
+      "id": "docs_contracts_build_plan"
+    },
+    {
+      "label": "product-flows.md",
+      "file_type": "document",
+      "source_file": "docs/product-flows.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 103,
+      "norm_label": "product-flows.md",
+      "community_name": "build-plan.md",
+      "id": "docs_product_flows"
+    },
+    {
+      "label": "ui-motion.md",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 103,
+      "norm_label": "ui-motion.md",
+      "community_name": "build-plan.md",
+      "id": "docs_ui_motion"
+    },
+    {
+      "label": "build_plan_task.md",
+      "file_type": "document",
+      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "github_issue_template_build_plan_task",
+      "community": 103,
+      "community_name": "build-plan.md",
+      "norm_label": "build_plan_task.md"
+    },
+    {
+      "label": "CODE \u2014 Short task title",
+      "file_type": "document",
+      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "github_issue_template_build_plan_task_code_short_task_title",
+      "community": 103,
+      "community_name": "build-plan.md",
+      "norm_label": "code \u2014 short task title"
+    },
+    {
+      "label": "k01-soroban-escrow/README.md",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 103,
+      "norm_label": "k01-soroban-escrow/readme.md",
+      "community_name": "build-plan.md",
+      "id": "spikes_k01_soroban_escrow_readme"
+    },
+    {
+      "label": "k02-go-soroban/README.md",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 103,
+      "norm_label": "k02-go-soroban/readme.md",
+      "community_name": "build-plan.md",
+      "id": "spikes_k02_go_soroban_readme"
+    },
+    {
+      "label": "Architecture summary",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 104,
+      "norm_label": "architecture summary",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_architecture_summary"
+    },
+    {
+      "label": "Astrea \u2014 Build Plan",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 104,
+      "norm_label": "astrea \u2014 build plan",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_astrea_build_plan"
+    },
+    {
+      "label": "Milestone \u2014 Apply to GrantFox as maintainer",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L44",
+      "_origin": "ast",
+      "community": 104,
+      "norm_label": "milestone \u2014 apply to grantfox as maintainer",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_milestone_apply_to_grantfox_as_maintainer"
+    },
+    {
+      "label": "Phase 0 \u2014 Spike (de-risk before anything else)",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 104,
+      "norm_label": "phase 0 \u2014 spike (de-risk before anything else)",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_0_spike_de_risk_before_anything_else"
+    },
+    {
+      "label": "Phase 1 \u2014 Foundations",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L21",
+      "_origin": "ast",
+      "community": 104,
+      "norm_label": "phase 1 \u2014 foundations",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_1_foundations"
+    },
+    {
+      "label": "Phase 2 \u2014 Core system (event lifecycle, backend, real-time tracking)",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L32",
+      "_origin": "ast",
+      "community": 104,
+      "norm_label": "phase 2 \u2014 core system (event lifecycle, backend, real-time tracking)",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_2_core_system_event_lifecycle_backend_real_time_tracking"
+    },
+    {
+      "label": "Phase 3 \u2014 Product UI",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L53",
+      "_origin": "ast",
+      "community": 104,
+      "norm_label": "phase 3 \u2014 product ui",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_3_product_ui"
+    },
+    {
+      "label": "Phase 4 \u2014 Trust & edge cases",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L70",
+      "_origin": "ast",
+      "community": 104,
+      "norm_label": "phase 4 \u2014 trust & edge cases",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_4_trust_edge_cases"
+    },
+    {
+      "label": "Phase 5 \u2014 Hardening",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L81",
+      "_origin": "ast",
+      "community": 104,
+      "norm_label": "phase 5 \u2014 hardening",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_phase_5_hardening"
+    },
+    {
+      "label": "Sequencing rules",
+      "file_type": "document",
+      "source_file": "docs/build-plan.md",
+      "source_location": "L90",
+      "_origin": "ast",
+      "community": 104,
+      "norm_label": "sequencing rules",
+      "community_name": "Astrea \u2014 Build Plan",
+      "id": "docs_build_plan_sequencing_rules"
+    },
+    {
+      "label": "Before you start",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 105,
+      "community_name": "Contributing to Astrea",
+      "norm_label": "before you start",
+      "id": "contributing_before_you_start"
+    },
+    {
+      "label": "Code quality \u2014 enforced, not optional",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L50",
+      "_origin": "ast",
+      "community": 105,
+      "community_name": "Contributing to Astrea",
+      "norm_label": "code quality \u2014 enforced, not optional",
+      "id": "contributing_code_quality_enforced_not_optional"
+    },
+    {
+      "label": "Contributing to Astrea",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 105,
+      "community_name": "Contributing to Astrea",
+      "norm_label": "contributing to astrea",
+      "id": "contributing_contributing_to_astrea"
+    },
+    {
+      "label": "Keeping the knowledge graph updated",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L60",
+      "_origin": "ast",
+      "community": 105,
+      "community_name": "Contributing to Astrea",
+      "norm_label": "keeping the knowledge graph updated",
+      "id": "contributing_keeping_the_knowledge_graph_updated"
+    },
+    {
+      "label": "License",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L91",
+      "_origin": "ast",
+      "community": 105,
+      "community_name": "Contributing to Astrea",
+      "norm_label": "license",
+      "id": "contributing_license"
+    },
+    {
+      "label": "Local setup",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L11",
+      "_origin": "ast",
+      "community": 105,
+      "community_name": "Contributing to Astrea",
+      "norm_label": "local setup",
+      "id": "contributing_local_setup"
+    },
+    {
+      "label": "Opening a PR",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L74",
+      "_origin": "ast",
+      "community": 105,
+      "community_name": "Contributing to Astrea",
+      "norm_label": "opening a pr",
+      "id": "contributing_opening_a_pr"
+    },
+    {
+      "label": "Reporting a security issue",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L87",
+      "_origin": "ast",
+      "community": 105,
+      "community_name": "Contributing to Astrea",
+      "norm_label": "reporting a security issue",
+      "id": "contributing_reporting_a_security_issue"
+    },
+    {
+      "label": "Where to ask questions",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "L82",
+      "_origin": "ast",
+      "community": 105,
+      "community_name": "Contributing to Astrea",
+      "norm_label": "where to ask questions",
+      "id": "contributing_where_to_ask_questions"
+    },
+    {
+      "label": "prisma/README.md",
+      "file_type": "document",
+      "source_file": "apps/web/prisma/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 106,
+      "norm_label": "prisma/readme.md",
+      "community_name": "Database setup",
+      "id": "apps_web_prisma_readme"
+    },
+    {
+      "label": "Database setup",
+      "file_type": "document",
+      "source_file": "apps/web/prisma/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 106,
+      "norm_label": "database setup",
+      "community_name": "Database setup",
+      "id": "apps_web_prisma_readme_database_setup"
+    },
+    {
+      "label": "Environment variables",
+      "file_type": "document",
+      "source_file": "apps/web/prisma/README.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 106,
+      "norm_label": "environment variables",
+      "community_name": "Database setup",
+      "id": "apps_web_prisma_readme_environment_variables"
+    },
+    {
+      "label": "Everyday commands",
+      "file_type": "document",
+      "source_file": "apps/web/prisma/README.md",
+      "source_location": "L35",
+      "_origin": "ast",
+      "community": 106,
+      "norm_label": "everyday commands",
+      "community_name": "Database setup",
+      "id": "apps_web_prisma_readme_everyday_commands"
+    },
+    {
+      "label": "\u26a0\ufe0f Migration baseline (read before running `prisma migrate dev`)",
+      "file_type": "document",
+      "source_file": "apps/web/prisma/README.md",
+      "source_location": "L21",
+      "_origin": "ast",
+      "community": 106,
+      "norm_label": "\u26a0\ufe0f migration baseline (read before running `prisma migrate dev`)",
+      "community_name": "Database setup",
+      "id": "apps_web_prisma_readme_migration_baseline_read_before_running_prisma_migrate_dev"
+    },
+    {
+      "label": "RLS model",
+      "file_type": "document",
+      "source_file": "apps/web/prisma/README.md",
+      "source_location": "L43",
+      "_origin": "ast",
+      "community": 106,
+      "norm_label": "rls model",
+      "community_name": "Database setup",
+      "id": "apps_web_prisma_readme_rls_model"
+    },
+    {
+      "label": "Astrea \u2014 UI motion & React Bits components",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 107,
+      "norm_label": "astrea \u2014 ui motion & react bits components",
+      "community_name": "Astrea \u2014 UI motion & React Bits components",
+      "id": "docs_ui_motion_astrea_ui_motion_react_bits_components"
+    },
+    {
+      "label": "Build-plan cross-references",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L62",
+      "_origin": "ast",
+      "community": 107,
+      "norm_label": "build-plan cross-references",
+      "community_name": "Astrea \u2014 UI motion & React Bits components",
+      "id": "docs_ui_motion_build_plan_cross_references"
+    },
+    {
+      "label": "Component placement",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L40",
+      "_origin": "ast",
+      "community": 107,
+      "norm_label": "component placement",
+      "community_name": "Astrea \u2014 UI motion & React Bits components",
+      "id": "docs_ui_motion_component_placement"
+    },
+    {
+      "label": "Corrections to the original placement assumptions",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L54",
+      "_origin": "ast",
+      "community": 107,
+      "norm_label": "corrections to the original placement assumptions",
+      "community_name": "Astrea \u2014 UI motion & React Bits components",
+      "id": "docs_ui_motion_corrections_to_the_original_placement_assumptions"
+    },
+    {
+      "label": "Hero background \u2014 decision",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 107,
+      "norm_label": "hero background \u2014 decision",
+      "community_name": "Astrea \u2014 UI motion & React Bits components",
+      "id": "docs_ui_motion_hero_background_decision"
+    },
+    {
+      "label": "Principles",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 107,
+      "norm_label": "principles",
+      "community_name": "Astrea \u2014 UI motion & React Bits components",
+      "id": "docs_ui_motion_principles"
+    },
+    {
+      "label": "PULL_REQUEST_TEMPLATE.md",
+      "file_type": "document",
+      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "github_pull_request_template",
+      "community": 108,
+      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "norm_label": "pull_request_template.md"
+    },
+    {
+      "label": "Docs",
+      "file_type": "document",
+      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "github_pull_request_template_docs",
+      "community": 108,
+      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "norm_label": "docs"
+    },
+    {
+      "label": "How I verified it",
+      "file_type": "document",
+      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "github_pull_request_template_how_i_verified_it",
+      "community": 108,
+      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "norm_label": "how i verified it"
+    },
+    {
+      "label": "Money-path change?",
+      "file_type": "document",
+      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "github_pull_request_template_money_path_change",
+      "community": 108,
+      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "norm_label": "money-path change?"
+    },
+    {
+      "label": "Screenshots",
+      "file_type": "document",
+      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "github_pull_request_template_screenshots",
+      "community": 108,
+      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "norm_label": "screenshots"
+    },
+    {
+      "label": "What this does",
+      "file_type": "document",
+      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "github_pull_request_template_what_this_does",
+      "community": 108,
+      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "norm_label": "what this does"
+    },
+    {
+      "label": "Findings folded into ADR-008",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 109,
+      "norm_label": "findings folded into adr-008",
+      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "id": "spikes_k01_soroban_escrow_readme_findings_folded_into_adr_008"
+    },
+    {
+      "label": "How to run",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 109,
+      "norm_label": "how to run",
+      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "id": "spikes_k01_soroban_escrow_readme_how_to_run"
+    },
+    {
+      "label": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 109,
+      "norm_label": "k01 (server-build-plan.md) \u2014 custom soroban escrow spike",
+      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "id": "spikes_k01_soroban_escrow_readme_k01_server_build_plan_md_custom_soroban_escrow_spike"
+    },
+    {
+      "label": "Next step",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L44",
+      "_origin": "ast",
+      "community": 109,
+      "norm_label": "next step",
+      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "id": "spikes_k01_soroban_escrow_readme_next_step"
+    },
+    {
+      "label": "What it verifies \u2014 results",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 109,
+      "norm_label": "what it verifies \u2014 results",
+      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "id": "spikes_k01_soroban_escrow_readme_what_it_verifies_results"
+    },
+    {
       "label": "components.json",
       "file_type": "code",
       "source_file": "apps/web/components.json",
@@ -2610,70 +3171,59 @@
       "id": "apps_web_components_tsx"
     },
     {
-      "label": "prisma/README.md",
+      "label": "Findings folded into ADR-008",
       "file_type": "document",
-      "source_file": "apps/web/prisma/README.md",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 110,
+      "norm_label": "findings folded into adr-008",
+      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
+      "id": "spikes_k02_go_soroban_readme_findings_folded_into_adr_008"
+    },
+    {
+      "label": "How to run",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L27",
+      "_origin": "ast",
+      "community": 110,
+      "norm_label": "how to run",
+      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
+      "id": "spikes_k02_go_soroban_readme_how_to_run"
+    },
+    {
+      "label": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
+      "file_type": "document",
+      "source_file": "spikes/k02-go-soroban/README.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 12,
-      "norm_label": "prisma/readme.md",
-      "community_name": "CONTRIBUTING.md",
-      "id": "apps_web_prisma_readme"
+      "community": 110,
+      "norm_label": "k02 (server-build-plan.md) \u2014 go \u2194 soroban integration spike",
+      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
+      "id": "spikes_k02_go_soroban_readme_k02_server_build_plan_md_go_soroban_integration_spike"
     },
     {
-      "label": "Database setup",
+      "label": "Next step",
       "file_type": "document",
-      "source_file": "apps/web/prisma/README.md",
-      "source_location": "L1",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L39",
       "_origin": "ast",
-      "community": 12,
-      "norm_label": "database setup",
-      "community_name": "CONTRIBUTING.md",
-      "id": "apps_web_prisma_readme_database_setup"
+      "community": 110,
+      "norm_label": "next step",
+      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
+      "id": "spikes_k02_go_soroban_readme_next_step"
     },
     {
-      "label": "Environment variables",
+      "label": "What it verifies \u2014 results",
       "file_type": "document",
-      "source_file": "apps/web/prisma/README.md",
-      "source_location": "L5",
+      "source_file": "spikes/k02-go-soroban/README.md",
+      "source_location": "L9",
       "_origin": "ast",
-      "community": 12,
-      "norm_label": "environment variables",
-      "community_name": "CONTRIBUTING.md",
-      "id": "apps_web_prisma_readme_environment_variables"
-    },
-    {
-      "label": "Everyday commands",
-      "file_type": "document",
-      "source_file": "apps/web/prisma/README.md",
-      "source_location": "L35",
-      "_origin": "ast",
-      "community": 12,
-      "norm_label": "everyday commands",
-      "community_name": "CONTRIBUTING.md",
-      "id": "apps_web_prisma_readme_everyday_commands"
-    },
-    {
-      "label": "\u26a0\ufe0f Migration baseline (read before running `prisma migrate dev`)",
-      "file_type": "document",
-      "source_file": "apps/web/prisma/README.md",
-      "source_location": "L21",
-      "_origin": "ast",
-      "community": 12,
-      "norm_label": "\u26a0\ufe0f migration baseline (read before running `prisma migrate dev`)",
-      "community_name": "CONTRIBUTING.md",
-      "id": "apps_web_prisma_readme_migration_baseline_read_before_running_prisma_migrate_dev"
-    },
-    {
-      "label": "RLS model",
-      "file_type": "document",
-      "source_file": "apps/web/prisma/README.md",
-      "source_location": "L43",
-      "_origin": "ast",
-      "community": 12,
-      "norm_label": "rls model",
-      "community_name": "CONTRIBUTING.md",
-      "id": "apps_web_prisma_readme_rls_model"
+      "community": 110,
+      "norm_label": "what it verifies \u2014 results",
+      "community_name": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
+      "id": "spikes_k02_go_soroban_readme_what_it_verifies_results"
     },
     {
       "label": "CONTRIBUTING.md",
@@ -2685,160 +3235,6 @@
       "community_name": "CONTRIBUTING.md",
       "norm_label": "contributing.md",
       "id": "contributing"
-    },
-    {
-      "label": "Before you start",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "before you start",
-      "id": "contributing_before_you_start"
-    },
-    {
-      "label": "Code quality \u2014 enforced, not optional",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "L50",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "code quality \u2014 enforced, not optional",
-      "id": "contributing_code_quality_enforced_not_optional"
-    },
-    {
-      "label": "Contributing to Astrea",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "contributing to astrea",
-      "id": "contributing_contributing_to_astrea"
-    },
-    {
-      "label": "Keeping the knowledge graph updated",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "L60",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "keeping the knowledge graph updated",
-      "id": "contributing_keeping_the_knowledge_graph_updated"
-    },
-    {
-      "label": "License",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "L91",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "license",
-      "id": "contributing_license"
-    },
-    {
-      "label": "Local setup",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "L11",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "local setup",
-      "id": "contributing_local_setup"
-    },
-    {
-      "label": "Opening a PR",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "L74",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "opening a pr",
-      "id": "contributing_opening_a_pr"
-    },
-    {
-      "label": "Reporting a security issue",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "L87",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "reporting a security issue",
-      "id": "contributing_reporting_a_security_issue"
-    },
-    {
-      "label": "Where to ask questions",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "L82",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "where to ask questions",
-      "id": "contributing_where_to_ask_questions"
-    },
-    {
-      "label": "PULL_REQUEST_TEMPLATE.md",
-      "file_type": "document",
-      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "pull_request_template.md",
-      "id": "github_pull_request_template"
-    },
-    {
-      "label": "Docs",
-      "file_type": "document",
-      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
-      "source_location": "L21",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "docs",
-      "id": "github_pull_request_template_docs"
-    },
-    {
-      "label": "How I verified it",
-      "file_type": "document",
-      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "how i verified it",
-      "id": "github_pull_request_template_how_i_verified_it"
-    },
-    {
-      "label": "Money-path change?",
-      "file_type": "document",
-      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "money-path change?",
-      "id": "github_pull_request_template_money_path_change"
-    },
-    {
-      "label": "What this does",
-      "file_type": "document",
-      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "CONTRIBUTING.md",
-      "norm_label": "what this does",
-      "id": "github_pull_request_template_what_this_does"
     },
     {
       "label": "Option",
@@ -3325,17 +3721,6 @@
       "id": "readme"
     },
     {
-      "label": "product-flows.md",
-      "file_type": "document",
-      "source_file": "docs/product-flows.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 17,
-      "norm_label": "product-flows.md",
-      "community_name": "Astrea \u2014 Product Flows",
-      "id": "docs_product_flows"
-    },
-    {
       "label": "Astrea \u2014 Product Flows",
       "file_type": "document",
       "source_file": "docs/product-flows.md",
@@ -3433,83 +3818,6 @@
       "norm_label": "roles",
       "community_name": "Astrea \u2014 Product Flows",
       "id": "docs_product_flows_roles"
-    },
-    {
-      "label": "ui-motion.md",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 17,
-      "norm_label": "ui-motion.md",
-      "community_name": "Astrea \u2014 Product Flows",
-      "id": "docs_ui_motion"
-    },
-    {
-      "label": "Astrea \u2014 UI motion & React Bits components",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 17,
-      "norm_label": "astrea \u2014 ui motion & react bits components",
-      "community_name": "Astrea \u2014 Product Flows",
-      "id": "docs_ui_motion_astrea_ui_motion_react_bits_components"
-    },
-    {
-      "label": "Build-plan cross-references",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L62",
-      "_origin": "ast",
-      "community": 17,
-      "norm_label": "build-plan cross-references",
-      "community_name": "Astrea \u2014 Product Flows",
-      "id": "docs_ui_motion_build_plan_cross_references"
-    },
-    {
-      "label": "Component placement",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L40",
-      "_origin": "ast",
-      "community": 17,
-      "norm_label": "component placement",
-      "community_name": "Astrea \u2014 Product Flows",
-      "id": "docs_ui_motion_component_placement"
-    },
-    {
-      "label": "Corrections to the original placement assumptions",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L54",
-      "_origin": "ast",
-      "community": 17,
-      "norm_label": "corrections to the original placement assumptions",
-      "community_name": "Astrea \u2014 Product Flows",
-      "id": "docs_ui_motion_corrections_to_the_original_placement_assumptions"
-    },
-    {
-      "label": "Hero background \u2014 decision",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 17,
-      "norm_label": "hero background \u2014 decision",
-      "community_name": "Astrea \u2014 Product Flows",
-      "id": "docs_ui_motion_hero_background_decision"
-    },
-    {
-      "label": "Principles",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 17,
-      "norm_label": "principles",
-      "community_name": "Astrea \u2014 Product Flows",
-      "id": "docs_ui_motion_principles"
     },
     {
       "label": "ADR-001 \u2014 Custom Soroban escrow contract, no third-party provider",
@@ -3809,149 +4117,6 @@
       "id": "tokenclient"
     },
     {
-      "label": "architecture.md",
-      "file_type": "document",
-      "source_file": "docs/architecture.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "architecture.md",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_architecture"
-    },
-    {
-      "label": "build-plan.md",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "build-plan.md",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan"
-    },
-    {
-      "label": "Architecture summary",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "architecture summary",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_architecture_summary"
-    },
-    {
-      "label": "Astrea \u2014 Build Plan",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "astrea \u2014 build plan",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_astrea_build_plan"
-    },
-    {
-      "label": "Milestone \u2014 Apply to GrantFox as maintainer",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L44",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "milestone \u2014 apply to grantfox as maintainer",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_milestone_apply_to_grantfox_as_maintainer"
-    },
-    {
-      "label": "Phase 0 \u2014 Spike (de-risk before anything else)",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L13",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "phase 0 \u2014 spike (de-risk before anything else)",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_0_spike_de_risk_before_anything_else"
-    },
-    {
-      "label": "Phase 1 \u2014 Foundations",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L21",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "phase 1 \u2014 foundations",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_1_foundations"
-    },
-    {
-      "label": "Phase 2 \u2014 Core system (event lifecycle, backend, real-time tracking)",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L32",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "phase 2 \u2014 core system (event lifecycle, backend, real-time tracking)",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_2_core_system_event_lifecycle_backend_real_time_tracking"
-    },
-    {
-      "label": "Phase 3 \u2014 Product UI",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L53",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "phase 3 \u2014 product ui",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_3_product_ui"
-    },
-    {
-      "label": "Phase 4 \u2014 Trust & edge cases",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L70",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "phase 4 \u2014 trust & edge cases",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_4_trust_edge_cases"
-    },
-    {
-      "label": "Phase 5 \u2014 Hardening",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L81",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "phase 5 \u2014 hardening",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_phase_5_hardening"
-    },
-    {
-      "label": "Sequencing rules",
-      "file_type": "document",
-      "source_file": "docs/build-plan.md",
-      "source_location": "L90",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "sequencing rules",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_build_plan_sequencing_rules"
-    },
-    {
-      "label": "contracts-build-plan.md",
-      "file_type": "document",
-      "source_file": "docs/contracts-build-plan.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "contracts-build-plan.md",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "docs_contracts_build_plan"
-    },
-    {
       "label": "Astrea \u2014 Contracts Build Plan",
       "file_type": "document",
       "source_file": "docs/contracts-build-plan.md",
@@ -3959,7 +4124,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "astrea \u2014 contracts build plan",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "docs_contracts_build_plan_astrea_contracts_build_plan"
     },
     {
@@ -3970,7 +4135,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "phase 0 \u2014 spike (de-risk before anything else)",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "docs_contracts_build_plan_phase_0_spike_de_risk_before_anything_else"
     },
     {
@@ -3981,7 +4146,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "phase 1 \u2014 production contract",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "docs_contracts_build_plan_phase_1_production_contract"
     },
     {
@@ -3992,7 +4157,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "phase 2 \u2014 hardening (before mainnet)",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "docs_contracts_build_plan_phase_2_hardening_before_mainnet"
     },
     {
@@ -4003,162 +4168,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "sequencing rules",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "docs_contracts_build_plan_sequencing_rules"
-    },
-    {
-      "label": "build_plan_task.md",
-      "file_type": "document",
-      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "github_issue_template_build_plan_task",
-      "community": 2,
-      "community_name": "Astrea \u2014 Build Plan",
-      "norm_label": "build_plan_task.md"
-    },
-    {
-      "label": "CODE \u2014 Short task title",
-      "file_type": "document",
-      "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "github_issue_template_build_plan_task_code_short_task_title",
-      "community": 2,
-      "community_name": "Astrea \u2014 Build Plan",
-      "norm_label": "code \u2014 short task title"
-    },
-    {
-      "label": "k01-soroban-escrow/README.md",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "k01-soroban-escrow/readme.md",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k01_soroban_escrow_readme"
-    },
-    {
-      "label": "Findings folded into ADR-008",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L20",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "findings folded into adr-008",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k01_soroban_escrow_readme_findings_folded_into_adr_008"
-    },
-    {
-      "label": "How to run",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L28",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "how to run",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k01_soroban_escrow_readme_how_to_run"
-    },
-    {
-      "label": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "k01 (server-build-plan.md) \u2014 custom soroban escrow spike",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k01_soroban_escrow_readme_k01_server_build_plan_md_custom_soroban_escrow_spike"
-    },
-    {
-      "label": "Next step",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L44",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "next step",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k01_soroban_escrow_readme_next_step"
-    },
-    {
-      "label": "What it verifies \u2014 results",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L7",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "what it verifies \u2014 results",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k01_soroban_escrow_readme_what_it_verifies_results"
-    },
-    {
-      "label": "k02-go-soroban/README.md",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "k02-go-soroban/readme.md",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k02_go_soroban_readme"
-    },
-    {
-      "label": "Findings folded into ADR-008",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L20",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "findings folded into adr-008",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k02_go_soroban_readme_findings_folded_into_adr_008"
-    },
-    {
-      "label": "How to run",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L27",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "how to run",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k02_go_soroban_readme_how_to_run"
-    },
-    {
-      "label": "K02 (server-build-plan.md) \u2014 Go \u2194 Soroban integration spike",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "k02 (server-build-plan.md) \u2014 go \u2194 soroban integration spike",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k02_go_soroban_readme_k02_server_build_plan_md_go_soroban_integration_spike"
-    },
-    {
-      "label": "Next step",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L39",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "next step",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k02_go_soroban_readme_next_step"
-    },
-    {
-      "label": "What it verifies \u2014 results",
-      "file_type": "document",
-      "source_file": "spikes/k02-go-soroban/README.md",
-      "source_location": "L9",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "what it verifies \u2014 results",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k02_go_soroban_readme_what_it_verifies_results"
     },
     {
       "label": "k03-wallet-compat/README.md",
@@ -4168,7 +4179,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "k03-wallet-compat/readme.md",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "spikes_k03_wallet_compat_readme"
     },
     {
@@ -4179,7 +4190,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "how to run",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "spikes_k03_wallet_compat_readme_how_to_run"
     },
     {
@@ -4190,7 +4201,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "k03 (server-build-plan.md) \u2014 wallet compatibility check",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "spikes_k03_wallet_compat_readme_k03_server_build_plan_md_wallet_compatibility_check"
     },
     {
@@ -4201,7 +4212,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "next step",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "spikes_k03_wallet_compat_readme_next_step"
     },
     {
@@ -4212,7 +4223,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "research finding (before touching any code)",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "spikes_k03_wallet_compat_readme_research_finding_before_touching_any_code"
     },
     {
@@ -4223,7 +4234,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "the test contract",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "spikes_k03_wallet_compat_readme_the_test_contract"
     },
     {
@@ -4234,7 +4245,7 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "what happens with the results",
-      "community_name": "Astrea \u2014 Build Plan",
+      "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "spikes_k03_wallet_compat_readme_what_happens_with_the_results"
     },
     {
@@ -7006,184 +7017,34 @@
       "id": "spikes_k02_go_soroban_readme_contract"
     },
     {
-      "label": "graphify-out-rebuilt uploaded artifact",
-      "file_type": "code",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 101-107",
+      "label": "K03 Ping Test Contract (CDIWLY6A...)",
+      "file_type": "concept",
+      "source_file": "spikes/k03-wallet-compat/README.md",
+      "source_location": null,
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 103,
-      "norm_label": "graphify-out-rebuilt uploaded artifact",
+      "norm_label": "k03 ping test contract (cdiwly6a...)",
       "_origin": "semantic",
-      "community_name": "Fail if graphify-out/ is stale step",
-      "id": "github_workflows_ci_graphify_out_rebuilt_artifact"
+      "community_name": "build-plan.md",
+      "id": "spikes_k03_wallet_compat_readme_pingcontract"
     },
     {
-      "label": "Fail if graphify-out/ is stale step",
-      "file_type": "code",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 91-99",
+      "label": "K03 Wallet Compat Test Page",
+      "file_type": "document",
+      "source_file": "spikes/k03-wallet-compat/web/index.html",
+      "source_location": null,
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 103,
-      "norm_label": "fail if graphify-out/ is stale step",
+      "norm_label": "k03 wallet compat test page",
       "_origin": "semantic",
-      "community_name": "Fail if graphify-out/ is stale step",
-      "id": "github_workflows_ci_graphify_out_staleness_check"
-    },
-    {
-      "label": "Stellar Horizon",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 77",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 103,
-      "norm_label": "stellar horizon",
-      "_origin": "semantic",
-      "community_name": "Fail if graphify-out/ is stale step",
-      "id": "readme_horizon"
-    },
-    {
-      "label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
-      "file_type": "rationale",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 85-90",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 103,
-      "norm_label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
-      "_origin": "semantic",
-      "community_name": "Fail if graphify-out/ is stale step",
-      "id": "github_workflows_ci_manifest_cache_exclusion"
-    },
-    {
-      "label": "Chain is source of truth; database is a mirror",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "line 82",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 103,
-      "norm_label": "chain is source of truth; database is a mirror",
-      "_origin": "semantic",
-      "community_name": "Fail if graphify-out/ is stale step",
-      "id": "readme_chain_source_of_truth"
-    },
-    {
-      "label": "Reconciliation job (DB mirrors chain)",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "lines 77, 82",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 103,
-      "norm_label": "reconciliation job (db mirrors chain)",
-      "_origin": "semantic",
-      "community_name": "Fail if graphify-out/ is stale step",
-      "id": "readme_reconciliation_job"
-    },
-    {
-      "label": "Organizer creates an event step",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 48",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 105,
-      "norm_label": "organizer creates an event step",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_event_creation_step"
-    },
-    {
-      "label": "How It Works (5-step flow)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 46-53",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 105,
-      "norm_label": "how it works (5-step flow)",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_how_it_works_flow"
-    },
-    {
-      "label": "Judges approve and release step",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 51",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 105,
-      "norm_label": "judges approve and release step",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_judge_approval_step"
-    },
-    {
-      "label": "Judge panel",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 61",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 105,
-      "norm_label": "judge panel",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_judge_panel"
-    },
-    {
-      "label": "Everything on the record step",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 52",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 105,
-      "norm_label": "everything on the record step",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_public_record_step"
-    },
-    {
-      "label": "Participants register and submit step",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 50",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 105,
-      "norm_label": "participants register and submit step",
-      "_origin": "semantic",
-      "community_name": "How It Works (5-step flow)",
-      "id": "readme_registration_step"
+      "community_name": "build-plan.md",
+      "id": "spikes_k03_wallet_compat_web_index"
     },
     {
       "label": "/graphify --update command",
@@ -7229,21 +7090,6 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_ci_checks"
-    },
-    {
-      "label": "Fork-then-clone local setup workflow",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 13-22",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "fork-then-clone local setup workflow",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_fork_workflow"
     },
     {
       "label": "GitHub Discussions",
@@ -7306,36 +7152,6 @@
       "id": "contributing_lint_staged"
     },
     {
-      "label": "Opening a PR workflow",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 74-80",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "opening a pr workflow",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_pr_workflow"
-    },
-    {
-      "label": "`security` label (extra review)",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 79",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "`security` label (extra review)",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_security_label"
-    },
-    {
       "label": "Stellar Developers Discord",
       "file_type": "concept",
       "source_file": "CONTRIBUTING.md",
@@ -7349,21 +7165,6 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_stellar_discord"
-    },
-    {
-      "label": "upstream git remote",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 24-30",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "upstream git remote",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_upstream_remote"
     },
     {
       "label": "Biome",
@@ -7516,21 +7317,6 @@
       "id": "readme_graph_report_doc"
     },
     {
-      "label": "Update docs/ADRs alongside code policy",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 80",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "update docs/adrs alongside code policy",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_adr_update_policy"
-    },
-    {
       "label": "CI enforcement of code-graph sync",
       "file_type": "rationale",
       "source_file": "CONTRIBUTING.md",
@@ -7544,21 +7330,6 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_ci_graphify_check"
-    },
-    {
-      "label": "Money-movement change review requirement (E0*, escrow calls, signing, reconciliation job)",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 79",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "money-movement change review requirement (e0*, escrow calls, signing, reconciliation job)",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_money_movement_review"
     },
     {
       "label": "post-commit Husky hook (auto-rebuild graph)",
@@ -7681,21 +7452,6 @@
       "id": "contributing_adr_003"
     },
     {
-      "label": "coded GitHub issue tasks (e.g. [E02], [U01])",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 9",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "coded github issue tasks (e.g. [e02], [u01])",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "contributing_issue_task_codes"
-    },
-    {
       "label": "Supabase (free project for DATABASE_URL/DIRECT_URL)",
       "file_type": "concept",
       "source_file": "CONTRIBUTING.md",
@@ -7724,21 +7480,6 @@
       "_origin": "semantic",
       "community_name": "docs/architecture.md",
       "id": "contributing_trustless_work"
-    },
-    {
-      "label": "Task S01 (project scaffold)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 104",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "task s01 (project scaffold)",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "readme_task_s01"
     },
     {
       "label": "Trustless Work (current server-side integration)",
@@ -7771,21 +7512,6 @@
       "id": "contributing_architecture_doc"
     },
     {
-      "label": "docs/build-plan.md",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 9",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "docs/build-plan.md",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "contributing_build_plan"
-    },
-    {
       "label": "apps/web/prisma/README.md",
       "file_type": "document",
       "source_file": "CONTRIBUTING.md",
@@ -7799,21 +7525,6 @@
       "_origin": "semantic",
       "community_name": "docs/architecture.md",
       "id": "contributing_prisma_readme"
-    },
-    {
-      "label": "docs/build-plan.md",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "lines 104, 174, 182",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "docs/build-plan.md",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "readme_build_plan_doc"
     },
     {
       "label": "ALLOW_MAINNET=false gate",
@@ -7876,21 +7587,6 @@
       "id": "readme_allow_mainnet_gate"
     },
     {
-      "label": "E01 task: migration from Trustless Work to custom Soroban contract",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "line 153",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "e01 task: migration from trustless work to custom soroban contract",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "readme_soroban_migration_e01"
-    },
-    {
       "label": "Astrea (escrow-backed prize payouts platform)",
       "file_type": "concept",
       "source_file": "README.md",
@@ -7934,6 +7630,21 @@
       "_origin": "semantic",
       "community_name": "README.md",
       "id": "readme_shadcnui"
+    },
+    {
+      "label": "Stellar network",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 16,
+      "norm_label": "stellar network",
+      "_origin": "semantic",
+      "community_name": "README.md",
+      "id": "readme_stellar"
     },
     {
       "label": "Vercel (CI/CD)",
@@ -8131,34 +7842,19 @@
       "id": "docs_architecture_adr_005"
     },
     {
-      "label": "K03 Ping Test Contract (CDIWLY6A...)",
+      "label": "Organizer creates an event step",
       "file_type": "concept",
-      "source_file": "spikes/k03-wallet-compat/README.md",
-      "source_location": null,
+      "source_file": "README.md",
+      "source_location": "line 48",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
-      "norm_label": "k03 ping test contract (cdiwly6a...)",
+      "community": 22,
+      "norm_label": "organizer creates an event step",
       "_origin": "semantic",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k03_wallet_compat_readme_pingcontract"
-    },
-    {
-      "label": "K03 Wallet Compat Test Page",
-      "file_type": "document",
-      "source_file": "spikes/k03-wallet-compat/web/index.html",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 2,
-      "norm_label": "k03 wallet compat test page",
-      "_origin": "semantic",
-      "community_name": "Astrea \u2014 Build Plan",
-      "id": "spikes_k03_wallet_compat_web_index"
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_event_creation_step"
     },
     {
       "label": "Event wizard",
@@ -8172,8 +7868,53 @@
       "community": 22,
       "norm_label": "event wizard",
       "_origin": "semantic",
-      "community_name": "Next.js (App Router)",
+      "community_name": "How It Works (5-step flow)",
       "id": "readme_event_wizard"
+    },
+    {
+      "label": "How It Works (5-step flow)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 46-53",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "how it works (5-step flow)",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_how_it_works_flow"
+    },
+    {
+      "label": "Judges approve and release step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 51",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "judges approve and release step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_judge_approval_step"
+    },
+    {
+      "label": "Judge panel",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 61",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "judge panel",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_judge_panel"
     },
     {
       "label": "Next.js (App Router)",
@@ -8187,7 +7928,7 @@
       "community": 22,
       "norm_label": "next.js (app router)",
       "_origin": "semantic",
-      "community_name": "Next.js (App Router)",
+      "community_name": "How It Works (5-step flow)",
       "id": "readme_nextjs"
     },
     {
@@ -8202,8 +7943,38 @@
       "community": 22,
       "norm_label": "public event pages",
       "_origin": "semantic",
-      "community_name": "Next.js (App Router)",
+      "community_name": "How It Works (5-step flow)",
       "id": "readme_public_event_pages"
+    },
+    {
+      "label": "Everything on the record step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 52",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "everything on the record step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_public_record_step"
+    },
+    {
+      "label": "Participants register and submit step",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 50",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "participants register and submit step",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_registration_step"
     },
     {
       "label": "TypeScript (strict)",
@@ -8217,7 +7988,7 @@
       "community": 22,
       "norm_label": "typescript (strict)",
       "_origin": "semantic",
-      "community_name": "Next.js (App Router)",
+      "community_name": "How It Works (5-step flow)",
       "id": "readme_typescript_strict"
     },
     {
@@ -8232,7 +8003,7 @@
       "community": 22,
       "norm_label": "client-side xdr signing",
       "_origin": "semantic",
-      "community_name": "Next.js (App Router)",
+      "community_name": "How It Works (5-step flow)",
       "id": "readme_client_side_xdr_signing"
     },
     {
@@ -8247,8 +8018,23 @@
       "community": 22,
       "norm_label": "non-custodial guarantee",
       "_origin": "semantic",
-      "community_name": "Next.js (App Router)",
+      "community_name": "How It Works (5-step flow)",
       "id": "readme_solution_non_custodial"
+    },
+    {
+      "label": "coded GitHub issue tasks (e.g. [E02], [U01])",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 23,
+      "norm_label": "coded github issue tasks (e.g. [e02], [u01])",
+      "_origin": "semantic",
+      "community_name": "docs/build-plan.md",
+      "id": "contributing_issue_task_codes"
     },
     {
       "label": "Organizer funds the escrow step",
@@ -8262,7 +8048,7 @@
       "community": 23,
       "norm_label": "organizer funds the escrow step",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "docs/build-plan.md",
       "id": "readme_escrow_funding_step"
     },
     {
@@ -8277,7 +8063,7 @@
       "community": 23,
       "norm_label": "escrowclient interface",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "docs/build-plan.md",
       "id": "readme_escrowclient_interface"
     },
     {
@@ -8292,7 +8078,7 @@
       "community": 23,
       "norm_label": "go backend (services/core-go)",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "docs/build-plan.md",
       "id": "readme_go_backend"
     },
     {
@@ -8307,7 +8093,7 @@
       "community": 23,
       "norm_label": "multi-release smart escrow",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "docs/build-plan.md",
       "id": "readme_smart_escrow"
     },
     {
@@ -8322,23 +8108,23 @@
       "community": 23,
       "norm_label": "custom soroban escrow smart contract (contracts/soroban)",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "docs/build-plan.md",
       "id": "readme_soroban_contract"
     },
     {
-      "label": "Stellar network",
+      "label": "Task S01 (project scaffold)",
       "file_type": "concept",
       "source_file": "README.md",
-      "source_location": "line 3",
+      "source_location": "line 104",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 23,
-      "norm_label": "stellar network",
+      "norm_label": "task s01 (project scaffold)",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
-      "id": "readme_stellar"
+      "community_name": "docs/build-plan.md",
+      "id": "readme_task_s01"
     },
     {
       "label": "USDC",
@@ -8352,8 +8138,53 @@
       "community": 23,
       "norm_label": "usdc",
       "_origin": "semantic",
-      "community_name": "Go backend (services/core-go)",
+      "community_name": "docs/build-plan.md",
       "id": "readme_usdc"
+    },
+    {
+      "label": "docs/build-plan.md",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 23,
+      "norm_label": "docs/build-plan.md",
+      "_origin": "semantic",
+      "community_name": "docs/build-plan.md",
+      "id": "contributing_build_plan"
+    },
+    {
+      "label": "docs/build-plan.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "lines 104, 174, 182",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 23,
+      "norm_label": "docs/build-plan.md",
+      "_origin": "semantic",
+      "community_name": "docs/build-plan.md",
+      "id": "readme_build_plan_doc"
+    },
+    {
+      "label": "E01 task: migration from Trustless Work to custom Soroban contract",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "line 153",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 23,
+      "norm_label": "e01 task: migration from trustless work to custom soroban contract",
+      "_origin": "semantic",
+      "community_name": "docs/build-plan.md",
+      "id": "readme_soroban_migration_e01"
     },
     {
       "label": "Albedo wallet",
@@ -8851,6 +8682,36 @@
       "id": "github_workflows_ci_graphify_drift_check_job"
     },
     {
+      "label": "graphify-out-rebuilt uploaded artifact",
+      "file_type": "code",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 101-107",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "graphify-out-rebuilt uploaded artifact",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "github_workflows_ci_graphify_out_rebuilt_artifact"
+    },
+    {
+      "label": "Fail if graphify-out/ is stale step",
+      "file_type": "code",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 91-99",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "fail if graphify-out/ is stale step",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "github_workflows_ci_graphify_out_staleness_check"
+    },
+    {
       "label": "npm ci --legacy-peer-deps step",
       "file_type": "code",
       "source_file": ".github/workflows/ci.yml",
@@ -8911,6 +8772,66 @@
       "id": "github_workflows_ci_wagoid_commitlint_action"
     },
     {
+      "label": "Fork-then-clone local setup workflow",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 13-22",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "fork-then-clone local setup workflow",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "contributing_fork_workflow"
+    },
+    {
+      "label": "Opening a PR workflow",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 74-80",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "opening a pr workflow",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "contributing_pr_workflow"
+    },
+    {
+      "label": "`security` label (extra review)",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 79",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "`security` label (extra review)",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "contributing_security_label"
+    },
+    {
+      "label": "upstream git remote",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 24-30",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "upstream git remote",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "contributing_upstream_remote"
+    },
+    {
       "label": "GitHub Actions (CI/CD)",
       "file_type": "concept",
       "source_file": "README.md",
@@ -8924,6 +8845,51 @@
       "_origin": "semantic",
       "community_name": "Knowledge graph in sync (code) job",
       "id": "readme_github_actions"
+    },
+    {
+      "label": "Stellar Horizon",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 77",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "stellar horizon",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "readme_horizon"
+    },
+    {
+      "label": "Update docs/ADRs alongside code policy",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 80",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "update docs/adrs alongside code policy",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "contributing_adr_update_policy"
+    },
+    {
+      "label": "Money-movement change review requirement (E0*, escrow calls, signing, reconciliation job)",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 79",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "money-movement change review requirement (e0*, escrow calls, signing, reconciliation job)",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "contributing_money_movement_review"
     },
     {
       "label": "GRAPHIFY_MAX_WORKERS=1 env var",
@@ -8956,6 +8922,21 @@
       "id": "github_workflows_ci_graphifyy_package"
     },
     {
+      "label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
+      "file_type": "rationale",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 85-90",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "github_workflows_ci_manifest_cache_exclusion"
+    },
+    {
       "label": "postinstall `prisma generate` producing apps/web/src/generated/prisma",
       "file_type": "rationale",
       "source_file": ".github/workflows/ci.yml",
@@ -8984,6 +8965,36 @@
       "_origin": "semantic",
       "community_name": "Knowledge graph in sync (code) job",
       "id": "github_workflows_ci_pythonhashseed_env"
+    },
+    {
+      "label": "Chain is source of truth; database is a mirror",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "line 82",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "chain is source of truth; database is a mirror",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "readme_chain_source_of_truth"
+    },
+    {
+      "label": "Reconciliation job (DB mirrors chain)",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "lines 77, 82",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 6,
+      "norm_label": "reconciliation job (db mirrors chain)",
+      "_origin": "semantic",
+      "community_name": "Knowledge graph in sync (code) job",
+      "id": "readme_reconciliation_job"
     },
     {
       "label": "Non-custodial, Always",
@@ -17523,9 +17534,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "github_pull_request_template_what_this_does"
+      "target": "github_pull_request_template_what_this_does",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -17534,20 +17545,31 @@
       "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "github_pull_request_template_money_path_change"
+      "target": "github_pull_request_template_screenshots",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
-      "source_location": "L21",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "github_pull_request_template_docs"
+      "target": "github_pull_request_template_money_path_change",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "github_pull_request_template",
+      "target": "github_pull_request_template_docs",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -17556,9 +17578,9 @@
       "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "github_pull_request_template_how_i_verified_it"
+      "target": "github_pull_request_template_how_i_verified_it",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -19014,7 +19036,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
-      "source_location": "L60",
+      "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
       "source": "github_issue_template_build_plan_task",
@@ -19025,7 +19047,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": ".github/ISSUE_TEMPLATE/build_plan_task.md",
-      "source_location": "L60",
+      "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
       "source": "github_issue_template_build_plan_task",
@@ -19036,12 +19058,12 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": ".github/PULL_REQUEST_TEMPLATE.md",
-      "source_location": "L27",
+      "source_location": "L34",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "github_pull_request_template",
-      "target": "contributing"
+      "target": "contributing",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -20962,5 +20984,5 @@
       "source_file": "CONTRIBUTING.md"
     }
   ],
-  "built_at_commit": "2cd60cbde0ef352e709683fa01246c3d6f1dde3f"
+  "built_at_commit": "37a2e486fbc897b0f2a3baf60667871cf4421653"
 }
