@@ -28,6 +28,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | S04 | Environment config: network (testnet/mainnet), contract ID, treasury signer handling (never in plaintext env vars), Postgres connection, boot-time validation in both `apps/web` and `services/core-go` | S | An env-config module already exists for the frontend; needs updating for the contract ID and the new Go service's own config |
 | S05 | ✅ **Done** — Wallet connect (frontend): Stellar Wallets Kit integration (Freighter, Albedo, xBull, LOBSTR), session association | M | See ADR-005. API is a static-class rewrite, not the instance-based API in most tutorials/docs — verified against the installed package's own `.d.ts` files |
 | S06 | ✅ **Done** — `.env.example`, `CONTRIBUTING.md` (including fork instructions for external contributors), issue/PR templates (Conventional Commits checkbox, build-plan task-code hint, split money-path checkboxes), labels, `LICENSE`, a Husky commit-msg hook that explains *why* a commit was rejected instead of printing bare rule codes | S | Set up with the GrantFox contributor phase in mind |
+| S07 | Sign-In With Stellar (SEP-0043 `signMessage`) + optional email on `Wallet`, replacing the unverified session cookie from S05 | M | See ADR-005 "Triggered (S07)". Unlocks U12/U13 (persistent, verified per-wallet views) and T03 (email notifications). Additive — no money-moving action starts trusting this session |
 
 ## Phase 2 — Core system (event lifecycle, backend, real-time tracking)
 
@@ -66,6 +67,10 @@ Once Phases 0–2 are done, the core promise (registration, real-time tracking, 
 | U08 | Marketing homepage: expand L00's hero, "see it in action," "how it works," primary CTA; design `SiteHeader`'s solid (non-transparent) variant for the new non-hero pages landing around this time | M | |
 | U09 | Site-wide technical SEO + social cards: `robots.ts`, `sitemap.ts`, root Open Graph/Twitter Card metadata + a default OG image | S | GFI. Self-contained — works against L00's homepage today, doesn't need any later page to land first |
 | U10 | Per-event SEO: dynamic metadata, OG image, `schema.org/Event` JSON-LD | M | Depends on U03 |
+| U11 | QR code on the public event page for organizers to share (deep-links to U03) | S | GFI. Self-contained — needs only U03's public event page |
+| U12 | Persistent "my events" view: every event a connected wallet is registered in or judging, with a live countdown to the next relevant deadline (registration close, judging deadline) | M | Depends on S07 (needs a verified session to be trustworthy across devices, not just the current browser's cookie) |
+| U13 | Participant earnings view: past payouts received across events, wallet-scoped | S | Depends on S07. Reads `Payout` joined on the verified `Wallet.id` |
+| U14 | In-app submission checklist: participant-tracked task list against their submission, with a completion percentage shown to the participant (and optionally the organizer) | M | Depends on U04. Checklist items can be organizer-defined per event or participant-defined — decide which in the PR, document the choice |
 
 ## Phase 4 — Trust & edge cases
 

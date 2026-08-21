@@ -102,6 +102,8 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 **Failure mode this avoids:** if the DB/session write fails, the client-side wallet connection still succeeds — session-association failures are caught and logged, never allowed to undo a real wallet connection the user just approved in their extension.
 **Revisit when:** if a future feature needs to trust "this browser really controls address X" for something other than display, upgrade to a signed challenge-response ("Sign-In With Stellar," SEP-0043's `signMessage`) rather than trusting the cookie alone.
 
+**Triggered (S07):** participant-facing features that persist across sessions and devices — earnings history, a persistent "my events" list, notification email — need a verified identity, not just a client-asserted address. Sign-In With Stellar (SEP-0043 `signMessage`) replaces the unverified cookie with a signed challenge-response, with an optional email field attached to the verified `Wallet` for notifications (T03). This is additive, not a reversal: money-moving actions still never trust this session — every escrow operation still requires its own on-chain signature, verified by the contract.
+
 **Verified:** wallet kit initializes client-side only (guarded against SSR execution); connect modal renders all four target wallets (Freighter, Albedo, xBull, LOBSTR) with no console errors. Signing against the escrow contract itself is verified per-wallet in K03 ([docs/build-plan.md](build-plan.md)) — Freighter and Albedo confirmed so far.
 
 ## Security notes
