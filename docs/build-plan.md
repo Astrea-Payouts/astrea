@@ -17,6 +17,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | K02 | ✅ **Done (2026-08-06)** — Go ↔ escrow contract integration spike: confirmed a Go service can build, sign, and submit Stellar transactions against the contract end-to-end (deploy/fund/approve/release) using the Stellar Go SDK | M | Findings in [spikes/k02-go-soroban](../spikes/k02-go-soroban/README.md) — no high-level "invoke" helper in the Go SDK, simulate→sign→submit→poll had to be hand-rolled |
 | K03 | 🔜 **In progress (2026-08-06)** — wallet compatibility check: confirm the contract works across the wallets the team plans to support (Freighter, Albedo, xBull, LOBSTR via Stellar Wallets Kit) | S | See [spikes/k03-wallet-compat](../spikes/k03-wallet-compat/README.md). Freighter ✅ and Albedo ✅ confirmed signing a real contract call end-to-end; xBull and LOBSTR pending |
 | K04 | Fold K03's complete results into ADR-005 once all four wallets are tested | S | |
+| K05 | Expand wallet support beyond the initial four: Stellar Wallets Kit ships 16 wallet modules total (see `apps/web/node_modules/@creit.tech/stellar-wallets-kit`), we only wire up 4. Add + test the rest: Rabet/Hana/Klever, D'CENT/OneKey/HotWallet, Bitget/CactusLink/Fordefi, Ledger/Trezor, and WalletConnect | M — tracked as 5 sub-issues | Same pattern as K03: connect + sign a real testnet contract call per wallet. WalletConnect is its own protocol integration, not just one more module, and opens the door to further wallets beyond this list |
 
 ## Phase 1 — Foundations
 
