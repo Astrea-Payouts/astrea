@@ -1,7 +1,7 @@
 "use client";
 
+import { RefreshCw, WifiOff } from "lucide-react";
 import Link from "next/link";
-import { WifiOff, RefreshCw } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,8 @@ export default function OfflinePage() {
 			</h1>
 
 			<p className="mt-3 max-w-md text-sm text-neutral-400">
-				Astrea needs an active internet connection to load new data. Previously cached pages and the app shell remain accessible.
+				Astrea needs an active internet connection to load new data. Previously
+				cached pages and the app shell remain accessible.
 			</p>
 
 			<div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -38,7 +39,7 @@ export default function OfflinePage() {
 					href="/"
 					className={cn(
 						buttonVariants({ variant: "default" }),
-						"bg-white text-black hover:bg-neutral-200"
+						"bg-white text-black hover:bg-neutral-200",
 					)}
 				>
 					Return home
