@@ -1,16 +1,16 @@
-# Graph Report - astrea  (2026-08-18)
+# Graph Report - astrea  (2026-08-20)
 
 ## Corpus Check
-- 90 files · ~265,804 words
+- 91 files · ~266,104 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 783 nodes · 1001 edges · 105 communities (40 shown, 65 thin omitted)
+- 783 nodes · 1002 edges · 105 communities (40 shown, 65 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 12 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `98ec2f78`
+- Built from commit: `2cd60cbd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -159,7 +159,7 @@ Nodes (32): env, serverSchema, baseEnv, loadEnvWith(), ForwardPaymentParams, FRO
 
 ### Community 2 - "Astrea — Build Plan"
 Cohesion: 0.05
-Nodes (35): Architecture summary, Astrea — Build Plan, Milestone — Apply to GrantFox as maintainer, Phase 0 — Spike (de-risk before anything else), Phase 1 — Foundations, Phase 2 — Core system (event lifecycle, backend, real-time tracking), Phase 3 — Product UI, Phase 4 — Trust & edge cases (+27 more)
+Nodes (34): Architecture summary, Astrea — Build Plan, Milestone — Apply to GrantFox as maintainer, Phase 0 — Spike (de-risk before anything else), Phase 1 — Foundations, Phase 2 — Core system (event lifecycle, backend, real-time tracking), Phase 3 — Product UI, Phase 4 — Trust & edge cases (+26 more)
 
 ### Community 3 - "dependencies"
 Cohesion: 0.05
@@ -286,7 +286,7 @@ Cohesion: 0.33
 Nodes (6): Organizer creates an event step, How It Works (5-step flow), Judges approve and release step, Judge panel, Everything on the record step, Participants register and submit step
 
 ## Knowledge Gaps
-- **353 isolated node(s):** `github.com/Astrea-Payouts/astrea/services/core-go`, `Keys`, `Keys`, `OpRecord`, `PrepareDecision` (+348 more)
+- **354 isolated node(s):** `CODE — Short task title`, `Keys`, `Keys`, `OpRecord`, `PrepareDecision` (+349 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **65 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -297,13 +297,13 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.072) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `devDependencies` to `README.md`?**
   _High betweenness centrality (0.067) - this node is a cross-community bridge._
-- **What connects `github.com/Astrea-Payouts/astrea/services/core-go`, `Keys`, `Keys` to the rest of the system?**
-  _353 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `CODE — Short task title`, `Keys`, `Keys` to the rest of the system?**
+  _354 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `e06-vertical-slice.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.05405405405405406 - nodes in this community are weakly interconnected._
 - **Should `trustless-work-adapter.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.06095791001451379 - nodes in this community are weakly interconnected._
 - **Should `Astrea — Build Plan` be split into smaller, more focused modules?**
-  _Cohesion score 0.0524390243902439 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05365853658536585 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.05405405405405406 - nodes in this community are weakly interconnected._
