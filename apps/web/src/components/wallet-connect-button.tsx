@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/lib/wallet/provider";
 
@@ -8,6 +9,7 @@ function truncate(address: string) {
 }
 
 export function WalletConnectButton({ className }: { className?: string }) {
+	const t = useTranslations("WalletConnect");
 	const { address, isConnecting, connect, disconnect } = useWallet();
 
 	if (address) {
@@ -20,7 +22,7 @@ export function WalletConnectButton({ className }: { className?: string }) {
 
 	return (
 		<Button onClick={connect} disabled={isConnecting} className={className}>
-			{isConnecting ? "Connecting…" : "Connect wallet"}
+			{isConnecting ? t("connecting") : t("connect")}
 		</Button>
 	);
 }

@@ -1,0 +1,30 @@
+{
+	"Metadata": {
+		"title": "Astrea — Escrow-Backed Prize Payouts on Stellar",
+		"description": "Escrow-backed prize payouts for hackathons, bounties, and community challenges — powered by Stellar smart escrows."
+	},
+	"HomePage": {
+		"eyebrow": "Built on Stellar",
+		"title": "Astrea",
+		"tagline": "Escrow-backed prize payouts for hackathons, bounties, and community challenges — funds locked on-chain before the event starts.",
+		"mvpNotice": "MVP in active development. See the <link>build plan</link> for what's next."
+	},
+	"SiteHeader": {
+		"githubAriaLabel": "Astrea on GitHub"
+	},
+	"SiteFooter": {
+		"copyright": "© {year} Astrea. Built in the open on Stellar.",
+		"github": "GitHub",
+		"buildPlan": "Build plan",
+		"architecture": "Architecture",
+		"contributing": "Contributing",
+		"license": "MIT License"
+	},
+	"WalletConnect": {
+		"connecting": "Connecting…",
+		"connect": "Connect wallet"
+	},
+	"LanguageSwitcher": {
+		"label": "Language"
+	}
+}

@@ -1,6 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
+import { Link } from "@/i18n/navigation";
 
 function GithubIcon() {
 	return (
@@ -27,6 +29,8 @@ function GithubIcon() {
 // -trimmed.png is the same mark cropped to its bounding box (+small margin,
 // ~88% fill), so `h-*` here actually controls the visible logo size.
 export function SiteHeader() {
+	const t = useTranslations("SiteHeader");
+
 	return (
 		<header className="absolute inset-x-0 top-0 z-20">
 			<div className="flex items-center justify-between gap-4 px-6 py-4 md:px-12">
@@ -41,13 +45,14 @@ export function SiteHeader() {
 					/>
 				</Link>
 				<nav className="flex items-center gap-4">
-					<Link
+					<LanguageSwitcher />
+					<a
 						href="https://github.com/Astrea-Payouts/astrea"
 						className="text-white/70 hover:text-white"
-						aria-label="Astrea on GitHub"
+						aria-label={t("githubAriaLabel")}
 					>
 						<GithubIcon />
-					</Link>
+					</a>
 					<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
 				</nav>
 			</div>
