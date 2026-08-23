@@ -1,16 +1,16 @@
-# Graph Report - astrea  (2026-08-21)
+# Graph Report - astrea  (2026-08-23)
 
 ## Corpus Check
-- 107 files · ~274,953 words
+- 111 files · ~275,487 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 829 nodes · 1062 edges · 119 communities (50 shown, 69 thin omitted)
+- 838 nodes · 1083 edges · 115 communities (46 shown, 69 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 12 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `80d2a1c5`
+- Built from commit: `321c00c0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -35,13 +35,12 @@
 - Astrea — Product Flows
 - Astrea — Architecture
 - test.rs
-- apply.ts
+- prize.ts
 - compilerOptions
-- Next.js (App Router)
-- wallet-connect-button.tsx
+- How It Works (5-step flow)
+- tx-hash-link.tsx
 - 🌠 Astrea
 - stellar-network.ts
-- Go backend (services/core-go)
 - github.com/Astrea-Payouts/astrea/services/core-go
 - post-commit
 - .ping
@@ -116,16 +115,13 @@
 - env.ts
 - Contributing to Astrea
 - EscrowProvider
-- How It Works (5-step flow)
 - Astrea (escrow-backed prize payouts platform)
 - manifest.ts
 - sw.js
 - Contributor Covenant Code of Conduct
 - transaction-confirmation.ts
-- CONTRIBUTING.md
 - Wallet testing
 - Database setup
-- Fail if graphify-out/ is stale step
 - PULL_REQUEST_TEMPLATE.md
 
 ## God Nodes (most connected - your core abstractions)
@@ -145,10 +141,10 @@
   CONTRIBUTING.md → .github/workflows/ci.yml
 - `Chain is source of truth; database is a mirror` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
   README.md → .github/workflows/ci.yml
-- `Commit messages (Conventional Commits) job` --implements--> `Conventional Commits`  [INFERRED]
-  .github/workflows/ci.yml → README.md
 - `docs/architecture.md` --conceptually_related_to--> `docs/architecture.md`  [INFERRED]
   README.md → CONTRIBUTING.md
+- `Commit messages (Conventional Commits) job` --implements--> `Conventional Commits`  [INFERRED]
+  .github/workflows/ci.yml → README.md
 - `Biome` --conceptually_related_to--> `Biome (lint/format)`  [INFERRED]
   README.md → CONTRIBUTING.md
 
@@ -160,11 +156,11 @@
 - **Supported Stellar wallet ecosystem (Freighter, Albedo, xBull, LOBSTR via Stellar Wallets Kit)** — readme_freighter, readme_albedo, readme_xbull, readme_lobstr, readme_stellar_wallets_kit, contributing_wallet_testing [EXTRACTED 1.00]
 - **Knowledge graph maintenance workflow (code auto-rebuild + doc manual /graphify + CI enforcement)** — contributing_graphify, contributing_post_commit_hook, contributing_graphify_update_command, contributing_ci_graphify_check, github_workflows_ci_graphify_drift_check_job [INFERRED 0.85]
 
-## Communities (119 total, 69 thin omitted)
+## Communities (115 total, 69 thin omitted)
 
 ### Community 0 - "e06-vertical-slice.ts"
 Cohesion: 0.06
-Nodes (50): accounts, findOrCreateWallet(), Keys, main(), signXdr(), step(), ADR-0007, accounts (+42 more)
+Nodes (53): accounts, findOrCreateWallet(), Keys, main(), signXdr(), step(), ADR-0007, accounts (+45 more)
 
 ### Community 1 - "trustless-work-adapter.ts"
 Cohesion: 0.13
@@ -187,8 +183,8 @@ Cohesion: 0.12
 Nodes (11): geistMono, geistSans, viewport, LanguageSwitcher(), LOCALE_LABELS, PwaRegister(), SiteFooter(), SiteHeader() (+3 more)
 
 ### Community 6 - "Knowledge graph in sync (code) job"
-Cohesion: 0.14
-Nodes (18): CI workflow, actions/checkout@v5, actions/setup-node@v5 (Node 24), actions/setup-python@v6 (Python 3.12), Lint (Biome) step, Lint, typecheck, test, build (web) job, Build step, Commit messages (Conventional Commits) job (+10 more)
+Cohesion: 0.08
+Nodes (30): Update docs/ADRs alongside code policy, Fork-then-clone local setup workflow, Money-movement change review requirement (E0*, escrow calls, signing, reconciliation job), Opening a PR workflow, `security` label (extra review), upstream git remote, CI workflow, actions/checkout@v5 (+22 more)
 
 ### Community 7 - "compilerOptions"
 Cohesion: 0.07
@@ -211,8 +207,8 @@ Cohesion: 0.09
 Nodes (21): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent (+13 more)
 
 ### Community 12 - "CONTRIBUTING.md"
-Cohesion: 0.20
-Nodes (11): CI checks: lint, typecheck, test, build, CI enforcement of code-graph sync, GitHub Discussions, graphify-out/graph.html (interactive view), graphify-out/GRAPH_REPORT.md, graphify knowledge graph, /graphify --update command, Security issue reporting (email maintainer, no public issue) (+3 more)
+Cohesion: 0.15
+Nodes (19): Biome (lint/format), CI checks: lint, typecheck, test, build, CI enforcement of code-graph sync, GitHub Discussions, graphify-out/graph.html (interactive view), graphify knowledge graph, /graphify --update command, Husky (+11 more)
 
 ### Community 13 - "EscrowContract"
 Cohesion: 0.32
@@ -227,8 +223,8 @@ Cohesion: 0.11
 Nodes (20): ADR-001, ADR-003, ALLOW_MAINNET=false gate, docs/architecture.md, docs/build-plan.md, .env.example, coded GitHub issue tasks (e.g. [E02], [U01]), migration-baseline gotcha before first `prisma migrate dev` (+12 more)
 
 ### Community 16 - "README.md"
-Cohesion: 0.18
-Nodes (11): README.md (referenced from CONTRIBUTING), docs/contracts-build-plan.md, Christopher Lamberti (Maintainer), The Problem We Solve (broken hackathon-payout promises), docs/product-flows.md, shadcn/ui, Fully auditable guarantee, Fast payouts guarantee (+3 more)
+Cohesion: 0.13
+Nodes (17): graphify-out/GRAPH_REPORT.md, docs/contracts-build-plan.md, Go backend (services/core-go), graphify-out/GRAPH_REPORT.md, Christopher Lamberti (Maintainer), Postgres, Prerequisites, Prisma ORM (+9 more)
 
 ### Community 17 - "Astrea — Product Flows"
 Cohesion: 0.12
@@ -242,21 +238,21 @@ Nodes (16): ADR-001 — Custom Soroban escrow contract, no third-party provider,
 Cohesion: 0.13
 Nodes (6): EscrowContractClient, Address, Env, Setup, StellarAssetClient, TokenClient
 
-### Community 20 - "apply.ts"
-Cohesion: 0.19
-Nodes (11): transitionPrize(), TransitionPrizeExtra, ADR-0007, InvalidTransitionError, assertEventTransition(), canTransitionEvent(), EVENT_TRANSITIONS, assertPrizeTransition() (+3 more)
+### Community 20 - "prize.ts"
+Cohesion: 0.23
+Nodes (8): InvalidTransitionError, assertEventTransition(), canTransitionEvent(), EVENT_TRANSITIONS, assertPrizeTransition(), canTransitionPrize(), PRIZE_TRANSITIONS, ADR-0007
 
 ### Community 21 - "compilerOptions"
 Cohesion: 0.15
 Nodes (12): ES2022, main.ts, compilerOptions, lib, module, moduleResolution, noEmit, skipLibCheck (+4 more)
 
-### Community 22 - "Next.js (App Router)"
-Cohesion: 0.33
-Nodes (6): Client-side XDR signing, Event wizard, Next.js (App Router), Public event pages, Non-custodial guarantee, TypeScript (strict)
+### Community 22 - "How It Works (5-step flow)"
+Cohesion: 0.17
+Nodes (12): Client-side XDR signing, Organizer creates an event step, Event wizard, How It Works (5-step flow), Judges approve and release step, Judge panel, Next.js (App Router), Public event pages (+4 more)
 
-### Community 23 - "wallet-connect-button.tsx"
-Cohesion: 0.23
-Nodes (9): OfflinePage(), PrismBackground(), PrismBackgroundProps, Button(), buttonVariants, truncate(), WalletConnectButton(), cn() (+1 more)
+### Community 23 - "tx-hash-link.tsx"
+Cohesion: 0.16
+Nodes (14): OfflinePage(), PrismBackground(), PrismBackgroundProps, TxHashLink(), TxHashLinkProps, Button(), buttonVariants, truncate() (+6 more)
 
 ### Community 24 - "🌠 Astrea"
 Cohesion: 0.17
@@ -265,10 +261,6 @@ Nodes (12): 🌠 Astrea, 📖 Documentation, Environment Variables, 🏁 Getting
 ### Community 25 - "stellar-network.ts"
 Cohesion: 0.22
 Nodes (10): NETWORK_CONFIG, STELLAR_ACCOUNT_ID, STELLAR_NETWORK, StellarNetworkName, initWalletKit(), WalletContext, WalletContextValue, WalletProvider() (+2 more)
-
-### Community 26 - "Go backend (services/core-go)"
-Cohesion: 0.25
-Nodes (9): Chain is source of truth; database is a mirror, EscrowClient interface, Go backend (services/core-go), Stellar Horizon, Postgres, Prerequisites, Prisma ORM, Reconciliation job (DB mirrors chain) (+1 more)
 
 ### Community 29 - "post-commit"
 Cohesion: 0.40
@@ -302,21 +294,13 @@ Nodes (4): serverSchema, baseEnv, loadEnvWith(), HORIZON_URL
 Cohesion: 0.22
 Nodes (9): Before you start, Code quality — enforced, not optional, Contributing to Astrea, Keeping the knowledge graph updated, License, Local setup, Opening a PR, Reporting a security issue (+1 more)
 
-### Community 107 - "How It Works (5-step flow)"
-Cohesion: 0.33
-Nodes (6): Organizer creates an event step, How It Works (5-step flow), Judges approve and release step, Judge panel, Everything on the record step, Participants register and submit step
-
 ### Community 108 - "Astrea (escrow-backed prize payouts platform)"
-Cohesion: 0.33
-Nodes (7): docs/architecture.md, Astrea (escrow-backed prize payouts platform), Organizer funds the escrow step, Multi-release smart escrow, Custom Soroban escrow smart contract (contracts/soroban), Stellar network, USDC
+Cohesion: 0.29
+Nodes (8): docs/architecture.md, Astrea (escrow-backed prize payouts platform), Organizer funds the escrow step, EscrowClient interface, Multi-release smart escrow, Custom Soroban escrow smart contract (contracts/soroban), Stellar network, USDC
 
 ### Community 112 - "Contributor Covenant Code of Conduct"
 Cohesion: 0.15
 Nodes (12): 1. Correction, 2. Warning, 3. Temporary Ban, 4. Permanent Ban, Attribution, Contributor Covenant Code of Conduct, Enforcement, Enforcement Guidelines (+4 more)
-
-### Community 115 - "CONTRIBUTING.md"
-Cohesion: 0.31
-Nodes (9): Biome (lint/format), Husky, lint-staged pre-commit hook, post-commit Husky hook (auto-rebuild graph), Biome, commitlint, CONTRIBUTING.md, Conventional Commits (+1 more)
 
 ### Community 116 - "Wallet testing"
 Cohesion: 0.57
@@ -325,10 +309,6 @@ Nodes (7): Wallet testing, Albedo wallet, Freighter wallet, LOBSTR wallet, Stell
 ### Community 117 - "Database setup"
 Cohesion: 0.33
 Nodes (5): Database setup, Environment variables, Everyday commands, ⚠️ Migration baseline (read before running `prisma migrate dev`), RLS model
-
-### Community 118 - "Fail if graphify-out/ is stale step"
-Cohesion: 0.22
-Nodes (9): Update docs/ADRs alongside code policy, Fork-then-clone local setup workflow, Money-movement change review requirement (E0*, escrow calls, signing, reconciliation job), Opening a PR workflow, `security` label (extra review), upstream git remote, graphify-out-rebuilt uploaded artifact, Fail if graphify-out/ is stale step (+1 more)
 
 ### Community 119 - "PULL_REQUEST_TEMPLATE.md"
 Cohesion: 0.33
@@ -343,13 +323,13 @@ Nodes (5): Docs, How I verified it, Money-path change?, Screenshots, What this d
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `devDependencies` to `scripts`?**
-  _High betweenness centrality (0.067) - this node is a cross-community bridge._
+  _High betweenness centrality (0.066) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `devDependencies` to `README.md`?**
-  _High betweenness centrality (0.062) - this node is a cross-community bridge._
+  _High betweenness centrality (0.061) - this node is a cross-community bridge._
 - **What connects `$schema`, `root`, `enabled` to the rest of the system?**
   _373 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `e06-vertical-slice.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.057971014492753624 - nodes in this community are weakly interconnected._
 - **Should `trustless-work-adapter.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.13043478260869565 - nodes in this community are weakly interconnected._
 - **Should `Astrea — Build Plan` be split into smaller, more focused modules?**
