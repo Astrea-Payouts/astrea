@@ -1,0 +1,38 @@
+#!/bin/sh
+# graphify-prepush-hook-start
+# Blocks `git push` if graphify-out/ is out of sync with the code being pushed.
+# Unlike post-commit/post-checkout (async, best-effort), this runs synchronously
+# so a stale graph never reaches CI.
+
+# Skip if graphify-out/ doesn't exist yet (nothing to keep in sync).
+[ -d "graphify-out" ] || exit 0
+
+# Allow an explicit bypass (e.g. WIP branches, docs-only pushes reviewed by hand).
+[ "${GRAPHIFY_SKIP_HOOK:-0}" = "1" ] && exit 0
+
+# Resolve the graphify CLI (same detection order as the CI workflow: PATH first).
+if ! command -v graphify >/dev/null 2>&1; then
+	echo "[graphify pre-push] 'graphify' not found on PATH - skipping stale-graph check."
+	echo "[graphify pre-push] Install it with: pip install graphifyy==0.9.45"
+	exit 0
+fi
+
+echo "[graphify pre-push] Checking whether the knowledge graph is in sync..."
+PYTHONHASHSEED=0 GRAPHIFY_MAX_WORKERS=1 graphify update . >/tmp/graphify-prepush.log 2>&1
+
+if ! git diff --quiet -- graphify-out/graph.json graphify-out/graph.html graphify-out/GRAPH_REPORT.md graphify-out/cache/ast/; then
+	echo ""
+	echo "[graphify pre-push] BLOCKED: graphify-out/ was stale and has just been rebuilt."
+	echo "[graphify pre-push] Review the diff, then commit it before pushing:"
+	echo ""
+	echo "    git add graphify-out/"
+	echo "    git commit -m 'chore(graphify): resync knowledge graph'"
+	echo "    git push"
+	echo ""
+	echo "[graphify pre-push] To bypass once (not recommended): GRAPHIFY_SKIP_HOOK=1 git push"
+	exit 1
+fi
+
+echo "[graphify pre-push] Graph is in sync."
+exit 0
+# graphify-prepush-hook-end
