@@ -96,3 +96,9 @@ Apply these across every UI task in Phase 3, not just one flow:
 - Fiat on/off ramps.
 - Multi-asset prizes (USDC only).
 - Automated judging or scoring.
+
+## Future direction — per-audience frontends (deferred)
+
+Longer-term, the plan is to split into three properties by audience — inspired by GrantFox's own structure (`grantfox.xyz` main site, `contribute.grantfox.xyz`, `maintainer.grantfox.xyz`): a marketing/docs site at the main domain (with a hero question routing the visitor as participant or organizer), plus a dedicated participant frontend and a dedicated organizer frontend, each on its own subdomain.
+
+**Deliberately deferred, not built now.** For the MVP, all of this lives in one Next.js app with route-based sections (`/participant`, `/organizer`), not separate deployments — a 2-person team with no real users yet doesn't have the evidence to justify the operational cost of 3 deploys, 3 CI pipelines, and cross-subdomain wallet-session sharing. Revisit only once real organizer/participant usage surfaces a concrete reason route groups aren't enough (not just a branding preference).
