@@ -58,7 +58,7 @@ Once Phases 0–2 are done, the core promise (registration, real-time tracking, 
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| U01 | Event creation wizard (details → prize → review & sign) | L → split | |
+| U01 | Event creation wizard (details → prize → review & sign) | L → split | The prize step needs dynamic rows, not a fixed 1st/2nd/3rd form — the organizer picks how many positions get paid (1 through N) and the amount for each. This isn't a special mode: it's the same prize-list `create_event` already takes (see ADR-002/K06), so "1st place only" and "5 ranked prizes" are the same code path with a different list length |
 | U02 | Organizer dashboard: funding flow, event status, participant management. Shows a "Ready to start" state once `conditionsMetAt` is set, with an explicit "Start event" action calling the Go service — the event never activates on its own | M | Depends on E03 |
 | U03 | Public event page: prize info, "verified on-chain" badge, contract link, payout history | M | SSR |
 | U04 | Participant flow: register (trustline check), real-time progress view | M | |

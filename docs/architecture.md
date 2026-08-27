@@ -83,6 +83,8 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 **Verified (K06, 2026-08, in-process test):** a single `close_event()` call paying multiple winners scales linearly at ~168k CPU instructions per additional winner — ~1.2% of Stellar Mainnet's per-invocation instruction budget even at 25 winners in one call, far more than any realistic event needs. No separate contract is warranted for the multi-winner case. See [spikes/k06-multi-release-budget](../spikes/k06-multi-release-budget/README.md).
 
+**Corollary:** "ranked prizes" (1st/2nd/3rd, or organizer-chosen up to N positions) and "prizes by category" are the same mechanism, not two contract paths — both are just a list of amounts with an off-chain label (`Prize.rank` in the Postgres sketch above) attached to each entry. The organizer choosing how many ranked positions pay out, and how much each pays, needs no new contract capability — it's the existing prize list at a different length.
+
 ### ADR-003 — Organizer is not in the payout path
 
 **Decision:** the judge holds both the `approver` and `release_signer` addresses on the escrow. The organizer's address appears nowhere in the payout path — no function callable by the organizer can move escrowed funds anywhere.
