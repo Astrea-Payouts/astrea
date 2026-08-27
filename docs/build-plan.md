@@ -83,7 +83,7 @@ Once Phases 0–2 are done, the core promise (registration, real-time tracking, 
 | --- | --- | --- | --- |
 | T01 | Dispute flow: open, evidence, resolver signing, resolution record | L → split | Built against the contract's `dispute`/`resolve-dispute` functions |
 | T02 | Event cancellation + refund flow | M | |
-| T03 | Notifications on state changes (registration confirmed, event started, winner announced, payout sent) — email or in-app, triggered from the Go service | M | GFI-able parts. Should include a notification when `conditionsMetAt` is set, so the admin knows the event is ready to start |
+| T03 | Notifications on state changes — email, triggered from the Go service | M | GFI-able parts. See docs/architecture.md ADR-007 for the provider choice, the full trigger list, and the testing strategy. **Depends on Astrea owning a verified custom domain** (not just the Vercel subdomain) — buying/verifying that is a cheap, no-dependency task that should happen before this is picked up, not the day someone starts coding it |
 | T04 | E2E tests on testnet for the money paths (fund→release; dispute) | M | |
 
 ## Phase 5 — Hardening
