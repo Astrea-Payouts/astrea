@@ -65,7 +65,7 @@ Once Phases 0–2 are done, the core promise (registration, real-time tracking, 
 | U05 | Judge panel: scoring/progress review, winner assignment, approval signing | M | |
 | U06 | Payout flow UI + confirmation states ("pending on-chain" UX) | S | |
 | U07 | Explorer links (stellar.expert) + tx hash display components | S | GFI |
-| U08 | Marketing homepage: expand L00's hero, "see it in action," "how it works," primary CTA; design `SiteHeader`'s solid (non-transparent) variant for the new non-hero pages landing around this time | M | |
+| U08 | Marketing homepage: expand L00's hero, "see it in action," "how it works," primary CTA; design `SiteHeader`'s solid (non-transparent) variant for the new non-hero pages landing around this time | M | Add the hero question ("are you here as a participant or organizer?") routing to `/participant` or `/organizer` — same app, route-based sections, not separate domains yet. See docs/product-flows.md's "Future direction" section for the deferred per-audience-subdomain plan |
 | U09 | Site-wide technical SEO + social cards: `robots.ts`, `sitemap.ts`, root Open Graph/Twitter Card metadata + a default OG image | S | GFI. Self-contained — works against L00's homepage today, doesn't need any later page to land first |
 | U10 | Per-event SEO: dynamic metadata, OG image, `schema.org/Event` JSON-LD | M | Depends on U03 |
 | U11 | QR code on the public event page for organizers to share (deep-links to U03) | S | GFI. Self-contained — needs only U03's public event page |
