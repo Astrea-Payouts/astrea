@@ -1,7 +1,7 @@
-# Graph Report - astrea  (2026-08-26)
+# Graph Report - astrea  (2026-08-27)
 
 ## Corpus Check
-- 116 files · ~277,427 words
+- 116 files · ~279,279 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `facd6a84`
+- Built from commit: `fb0a51d7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -136,10 +136,10 @@
 10. `main()` - 9 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Update docs/ADRs alongside code policy` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
-  CONTRIBUTING.md → .github/workflows/ci.yml
 - `Chain is source of truth; database is a mirror` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
   README.md → .github/workflows/ci.yml
+- `Update docs/ADRs alongside code policy` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
+  CONTRIBUTING.md → .github/workflows/ci.yml
 - `Commit messages (Conventional Commits) job` --implements--> `Conventional Commits`  [INFERRED]
   .github/workflows/ci.yml → README.md
 - `docs/architecture.md` --conceptually_related_to--> `docs/architecture.md`  [INFERRED]
@@ -310,7 +310,7 @@ Cohesion: 0.33
 Nodes (5): Database setup, Environment variables, Everyday commands, ⚠️ Migration baseline (read before running `prisma migrate dev`), RLS model
 
 ## Knowledge Gaps
-- **378 isolated node(s):** `k06-multi-release-budget`, `Result`, `The N=50 failure (and why it doesn't count)`, `Running it`, `Answer to the Council's question` (+373 more)
+- **378 isolated node(s):** `$schema`, `root`, `enabled`, `clientKind`, `useIgnoreFile` (+373 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **69 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -321,7 +321,7 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.063) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `devDependencies` to `README.md`?**
   _High betweenness centrality (0.058) - this node is a cross-community bridge._
-- **What connects `k06-multi-release-budget`, `Result`, `The N=50 failure (and why it doesn't count)` to the rest of the system?**
+- **What connects `$schema`, `root`, `enabled` to the rest of the system?**
   _378 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `e06-vertical-slice.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.05714285714285714 - nodes in this community are weakly interconnected._
