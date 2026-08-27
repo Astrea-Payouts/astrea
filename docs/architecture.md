@@ -127,6 +127,53 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 2. **Pre-launch emergency override.** Before an event reaches `Active` state, the organizer can request an early exit on funds already assigned to that event, but it requires **two signatures**: the organizer's (requesting it) and the resolver's (approving it, based on an off-chain-reviewed justification). Neither party can do this alone, and it is never possible once the event is `Active`.
 3. **`cancel_event()` is a simple refund only pre-launch.** While the event hasn't reached `Active`, cancelling returns its reward(s) to `AdminWallet`'s free balance automatically, in the same call. Once `Active`, cancellation is not a bare refund — it routes through `resolve_dispute` instead (ADR-003), because participants may have already invested real work by then, and an unconditional refund to the organizer would let them extract free labor with no consequence.
 
+### ADR-007 — Notifications via Resend, not Nodemailer
+
+**Decision:** email notifications (T03) go through [Resend](https://resend.com)'s HTTP API, called directly from `services/core-go` (the service that already owns every state change that triggers a notification). Not Nodemailer — Nodemailer is an SMTP client for Node.js, and would force Go to call back into `apps/web` just to send an email, an extra hop with no benefit.
+
+**Domain dependency:** sending to arbitrary recipients requires a verified custom domain (SPF/DKIM/DMARC) — Astrea currently only has the Vercel-assigned subdomain (`astrea-payouts.vercel.app`), not a domain it owns. Buying and verifying one is cheap and has no engineering dependency, so it should happen whenever convenient, not be discovered as a blocker the day T03 is picked up.
+
+**Testing strategy:**
+- **Unit:** mock the Resend client, same pattern as the Trustless Work/Horizon mocks elsewhere in the codebase — assert the right notification fires with the right data, never hit the real API.
+- **Manual:** Resend's sandbox sender (`onboarding@resend.dev`) works without any domain and can send to the account owner's own verified address — enough to eyeball real templates before a custom domain exists.
+- **Production:** requires the verified custom domain above.
+
+**Volume/reputation notes (why this isn't "just send an email"):**
+- Resend's free tier has real daily/monthly caps — check current numbers before assuming headroom (they change; this is exactly the kind of fact to verify with `search_docs` or Resend's own pricing page at implementation time, not to hardcode from a conversation).
+- High-volume, low-engagement sends (e.g. an email per registration milestone with no cap) can hurt sending-domain reputation over time — see the milestone-notification note below.
+- Fan-out sends (notifying every registered participant an event is starting soon) should use Resend's batch-send endpoint and go through the same idempotent-operation/outbox pattern (`OpLog`) as money-moving operations, not a naive loop of one API call per recipient — a partial failure shouldn't silently lose notifications, and a retry shouldn't double-send them either.
+
+**Full trigger list:**
+
+| Audience | Trigger |
+| --- | --- |
+| Participant | Registration confirmed |
+| Participant | Trustline missing/invalid at registration (ADR-004) — fix-it nudge |
+| Participant | Event starting soon (T-minus reminder) |
+| Participant | Submission deadline approaching |
+| Participant | Event cancelled |
+| Participant | Winner(s) announced (sent to all registrants, not just winners) |
+| Participant (winner) | Payout sent, with the transaction hash / explorer link |
+| Organizer | Escrow funded / event ready to start (`conditionsMetAt` set) |
+| Organizer | Registration milestones (see decay rule below) |
+| Organizer | A team/participant submitted (also sent to the judge) |
+| Organizer | Event starting soon |
+| Organizer | Judging deadline approaching — sent *before* it passes, specifically to reduce how often the resolver fallback actually has to fire |
+| Organizer | Event closed / payout completed |
+| Organizer | A dispute was opened on their event |
+| Judge | Assigned as judge for an event |
+| Judge | A submission came in |
+| Judge | Judging deadline approaching |
+| Judge | Event starting soon |
+| Resolver | Assigned as resolver for an event (non-default resolver case) |
+| Resolver | Action needed — dispute opened (judge never signed, cancel-after-launch, or a pre-launch emergency-withdraw request) |
+| Resolver | Event starting soon |
+| Resolver | Dispute resolved — outcome confirmation |
+| Astrea (internal) | A support request came in from a participant, organizer, or external resolver |
+| Astrea (internal) | Astrea is acting as the default resolver and needs to act — same case as "Resolver: action needed" above, routed to an internal channel (Telegram/Slack) instead of a personal inbox |
+
+**Registration-milestone decay rule:** the interval between organizer milestone notifications grows by 10 each time (10, 20, 30, 40, ...), so notifications fire at the triangular-number counts 10, 30, 60, 100, 150, 210, 280, 360, ... This was chosen over two alternatives: a fixed staircase (every 10 up to 100, then every 50, then every 100) needs arbitrary thresholds that would eventually need revisiting as events grow past whatever ceiling was picked; a multiplicative decay (interval ×1.5 each time — 10, 25, 48, 87, ...) tapers too fast for the realistic scale of Astrea's events (tens to low hundreds of participants), making notifications feel like they stop right when an event is getting interesting. The additive-growth rule needs no threshold ever, self-scales to any event size, and stays gentle enough that it never needs a hard cap.
+
 ## Security notes
 
 - Contract treasury/signer key handling: never in plaintext env vars — see [docs/contracts-build-plan.md](contracts-build-plan.md) for the security pass before mainnet.
