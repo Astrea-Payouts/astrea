@@ -13,7 +13,7 @@
 - **Frontend** — Next.js App Router (`apps/web`), TypeScript strict, Tailwind + shadcn/ui. Wallet connectivity through Stellar Wallets Kit. Signs XDR client-side. Renders public event pages (SSR for shareability/SEO — see build-plan.md U09/U10).
 - **Backend** — Go service (`services/core-go`). Owns the event/prize state machine, participant registration, real-time tracking, the build-sign-submit transaction pipeline, and reconciliation. The only service that writes transactional state or calls the escrow contract.
 - **Database** — Postgres. Mirror tables for events, prizes, participants, wallets, payouts, and an append-only op log for idempotency/auditability.
-- **Escrow layer** — a custom Soroban smart contract (`contracts/soroban`): deploy, fund, approve, release, dispute, resolve-dispute. One escrow per event; one milestone per prize (target design, see ADR-002). The winner's address is supplied at `release` time, not fixed when the escrow is funded — release pays the winner directly, with no separate forwarding step.
+- **Escrow layer** — a single custom Soroban smart contract (`contracts/soroban`) shared across all organizers, not one instance deployed per event (see ADR-006). Each organizer holds a balance inside the contract (`AdminWallet`); they deposit into it, then create events against it. Functions: `deposit_funds`, `withdraw_funds`, `create_event`, `cancel_event`, `close_event` (pays one or more winners in a single call — see ADR-002), `dispute`, `resolve_dispute`. The winner's address is supplied at `close_event` time, not fixed when the event is funded — release pays the winner directly, with no separate forwarding step.
 
 ## Domain model (Postgres sketch)
 
@@ -77,15 +77,22 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 ### ADR-002 — Multi-release escrow, one milestone per prize
 
-**Decision:** one escrow per event; each prize is an independently approvable/releasable milestone.
-**Why:** prizes resolve at different times (judging per category, a dispute on one prize must not block another). Multi-release maps 1:1 to this reality.
-**Status:** target design for the production contract (`E01`, [docs/contracts-build-plan.md](contracts-build-plan.md)). K01 validated the role model on a single-milestone contract; multi-milestone support is part of building the production contract, not yet re-verified.
+**Decision:** each event can carry more than one prize (a list of milestones on the `Event`, not a single fixed amount), and each prize is independently payable — a single-winner event is simply the N=1 case of this list, not a separate code path.
+**Why:** prizes resolve at different times or in different shapes (judging per category, a dispute on one prize must not block another). A list-of-prizes model maps 1:1 to this reality without a special case for "just one winner."
+**Status:** target design for the production contract (`E01`, [docs/contracts-build-plan.md](contracts-build-plan.md)), implemented as a list of prizes on a single `Event` record inside the shared contract (ADR-006), not as a separate contract per multi-winner event. K01 validated the role model on a single-milestone contract.
+
+**Verified (K06, 2026-08, in-process test):** a single `close_event()` call paying multiple winners scales linearly at ~168k CPU instructions per additional winner — ~1.2% of Stellar Mainnet's per-invocation instruction budget even at 25 winners in one call, far more than any realistic event needs. No separate contract is warranted for the multi-winner case. See [spikes/k06-multi-release-budget](../spikes/k06-multi-release-budget/README.md).
 
 ### ADR-003 — Organizer is not in the payout path
 
 **Decision:** the judge holds both the `approver` and `release_signer` addresses on the escrow. The organizer's address appears nowhere in the payout path — no function callable by the organizer can move escrowed funds anywhere.
 **Why:** if the organizer had to co-sign releases, an absent or hostile organizer could strand approved winners — which would make any "the funds are locked and will pay out" claim dishonest. Removing them from the release path is what turns the locked funds into a credible promise.
 **Residual trust:** judges (can go silent or collude) and the dispute resolver (a designated party). Both are mitigated by transparency: judges and resolver are published on the event page before the event starts, and judging deadlines trigger the dispute path.
+
+**Resolver identity:** by default, Astrea's own team acts as resolver — recommended as a multisig, not a single key, given the power this role has (see ADR-006). An organizer may name their own third-party resolver instead at event creation. Whichever applies is published on the event page before the event starts, so participants know who backstops it before they commit their time.
+
+**Judge picks a winner but never signs the release:** every event carries a `judging_deadline`. If it passes without a completed `close_event`, anyone (organizer, a participant, or an automated trigger) can open a dispute, and the resolver can execute the release on the judge's behalf — using whatever winner was already recorded off-chain, or its own review of submissions if none was recorded. This is the same resolver role as above, just triggered by a deadline instead of an open conflict between parties.
+
 **Multi-judge panels:** the contract takes a single `approver`/`release_signer` address — for a panel of multiple human judges, that address should be a Stellar multisig account with each judge as a signer and a threshold (e.g. 2-of-3), giving genuine multi-judge approval with no contract changes needed. Deferred to Phase 3 (`U05`).
 
 **Verified (K01/K02, 2026-08-06, testnet):** an organizer-signed direct release attempt was rejected — at the client signing-key level in K01, and rejected on-chain by the contract's own `require_auth` check in K02, confirming the guarantee is structural, not a client-side convention.
@@ -106,6 +113,20 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 **Verified:** wallet kit initializes client-side only (guarded against SSR execution); connect modal renders all four target wallets (Freighter, Albedo, xBull, LOBSTR) with no console errors. Signing against the escrow contract itself is verified per-wallet in K03 ([docs/build-plan.md](build-plan.md)) — Freighter and Albedo confirmed so far.
 
+### ADR-006 — Shared per-organizer ledger, not one contract instance per event
+
+**Decision:** a single deployed `EventEscrow` contract holds a per-organizer balance (`AdminWallet`, keyed by the organizer's address) instead of a fresh contract instance being deployed for every event. The organizer deposits into their own `AdminWallet` first (`deposit_funds`); creating an event (`create_event`) reserves part of that balance as the event's reward(s).
+
+**Why:** deploying a new contract instance per event means a deploy transaction on top of the fund transaction, for every single event. A shared contract with per-organizer accounting removes the deploy step entirely — an organizer who runs many events funds once and creates events against that balance repeatedly.
+
+**What doesn't change:** ADR-001 (custom contract, no third party) and ADR-003 (organizer excluded from the payout path) still hold. `AdminWallet.balance` and an `Event`'s reward(s) are separate ledger entries inside the same contract — once `create_event` moves an amount out of the wallet's free balance and into an event, that amount is no longer withdrawable as free balance.
+
+**Rules this introduces:**
+
+1. **`withdraw_funds()` only touches `AdminWallet`'s free balance**, enforced with an explicit assert, not left as an assumption. It can never reach funds already assigned to a created `Event` — with one deliberate exception, below.
+2. **Pre-launch emergency override.** Before an event reaches `Active` state, the organizer can request an early exit on funds already assigned to that event, but it requires **two signatures**: the organizer's (requesting it) and the resolver's (approving it, based on an off-chain-reviewed justification). Neither party can do this alone, and it is never possible once the event is `Active`.
+3. **`cancel_event()` is a simple refund only pre-launch.** While the event hasn't reached `Active`, cancelling returns its reward(s) to `AdminWallet`'s free balance automatically, in the same call. Once `Active`, cancellation is not a bare refund — it routes through `resolve_dispute` instead (ADR-003), because participants may have already invested real work by then, and an unconditional refund to the organizer would let them extract free labor with no consequence.
+
 ## Security notes
 
 - Contract treasury/signer key handling: never in plaintext env vars — see [docs/contracts-build-plan.md](contracts-build-plan.md) for the security pass before mainnet.
@@ -121,6 +142,9 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 | Tx confirmed on-chain, DB write lost | Reconciler confirms the `OpLog` txHash directly against Horizon; `Payout` is append-only |
 | Contract/RPC endpoint down | Operations queue in `OpLog`, retry with backoff; UI shows degraded state |
 | Judge unresponsive | Dispute flow with resolver; deadline surfaced in UI |
+| Judge picks a winner but never signs `close_event` | `judging_deadline` passes → resolver executes the release on the judge's behalf (ADR-003) |
+| Organizer cancels an event already `Active` | Routes through `resolve_dispute`, not a bare refund — resolver decides the distribution (ADR-006) |
+| Organizer needs an early exit before the event starts | Two-signature override only (organizer + resolver) — never a unilateral `withdraw_funds` on already-assigned funds (ADR-006) |
 | Winner without trustline | Prevented at assignment (ADR-004) |
 | Duplicate submit (double-click / retry) | Idempotency keys on every operation |
 | Testnet/mainnet mix-up | Network is part of Event records; config validated at boot; mainnet behind explicit gate |

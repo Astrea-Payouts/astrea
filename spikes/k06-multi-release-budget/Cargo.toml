@@ -1,0 +1,26 @@
+[package]
+name = "k06-multi-release-budget"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+doctest = false
+
+[dependencies]
+soroban-sdk = "27"
+
+[dev-dependencies]
+soroban-sdk = { version = "27", features = ["testutils"] }
+soroban-env-host = "27"
+
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+strip = "symbols"
+debug-assertions = false
+panic = "abort"
+codegen-units = 1
+lto = true

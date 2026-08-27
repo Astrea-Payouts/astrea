@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { PwaRegister } from "@/components/pwa-register";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
@@ -91,8 +92,25 @@ export async function generateMetadata({
 				"max-snippet": -1,
 			},
 		},
+		manifest: "/manifest.webmanifest",
+		appleWebApp: {
+			capable: true,
+			statusBarStyle: "black-translucent",
+			title: "Astrea",
+		},
+		icons: {
+			icon: "/favicon.ico",
+			apple: "/icons/apple-touch-icon.png",
+		},
 	};
 }
+
+export const viewport: Viewport = {
+	themeColor: "#05060d",
+	width: "device-width",
+	initialScale: 1,
+	maximumScale: 5,
+};
 
 export default async function LocaleLayout({
 	children,
@@ -119,6 +137,7 @@ export default async function LocaleLayout({
 						<SiteFooter />
 					</WalletProvider>
 				</NextIntlClientProvider>
+				<PwaRegister />
 			</body>
 		</html>
 	);
