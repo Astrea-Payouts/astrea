@@ -1,5 +1,9 @@
+"use client";
+
+import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 import { Link } from "@/i18n/navigation";
@@ -30,6 +34,7 @@ function GithubIcon() {
 // ~88% fill), so `h-*` here actually controls the visible logo size.
 export function SiteHeader() {
 	const t = useTranslations("SiteHeader");
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 	return (
 		<header className="absolute inset-x-0 top-0 z-20">
@@ -44,7 +49,8 @@ export function SiteHeader() {
 						priority
 					/>
 				</Link>
-				<nav className="flex items-center gap-4">
+
+				<nav className="hidden items-center gap-4 md:flex">
 					<LanguageSwitcher />
 					<a
 						href="https://github.com/Astrea-Payouts/astrea"
@@ -55,7 +61,36 @@ export function SiteHeader() {
 					</a>
 					<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
 				</nav>
+
+				<button
+					type="button"
+					onClick={() => setIsMenuOpen((open) => !open)}
+					aria-expanded={isMenuOpen}
+					aria-label={isMenuOpen ? t("closeMenu") : t("openMenu")}
+					className="inline-flex size-9 items-center justify-center rounded-lg text-white/80 hover:text-white md:hidden"
+				>
+					{isMenuOpen ? (
+						<X className="size-6" aria-hidden="true" />
+					) : (
+						<Menu className="size-6" aria-hidden="true" />
+					)}
+				</button>
 			</div>
+
+			{isMenuOpen && (
+				<nav className="flex flex-col items-start gap-5 border-t border-white/10 bg-black/95 px-6 py-6 md:hidden">
+					<LanguageSwitcher />
+					<a
+						href="https://github.com/Astrea-Payouts/astrea"
+						className="flex items-center gap-2 text-white/70 hover:text-white"
+						aria-label={t("githubAriaLabel")}
+					>
+						<GithubIcon />
+						<span className="text-sm">{t("githubAriaLabel")}</span>
+					</a>
+					<WalletConnectButton className="w-full bg-white text-black hover:bg-white/90" />
+				</nav>
+			)}
 		</header>
 	);
 }
