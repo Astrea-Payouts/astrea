@@ -1,10 +1,9 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { StaggeredMenu } from "@/components/staggered-menu";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 import { Link } from "@/i18n/navigation";
 
@@ -32,13 +31,19 @@ function GithubIcon() {
 // container height barely grew the visible glyph. astrea-sided-logo-light
 // -trimmed.png is the same mark cropped to its bounding box (+small margin,
 // ~88% fill), so `h-*` here actually controls the visible logo size.
+//
+// Below `md`, the desktop row is replaced by React Bits' Staggered Menu
+// (docs/ui-motion.md: "replaces a plain hamburger in the PWA shell") — its
+// own logo uses astrea-logo-mark.png (a white glow mark) so it reads
+// correctly over the dark hero when closed, and its own CSS
+// (staggered-menu.css) auto-inverts it to black once the white panel opens,
+// with no extra wiring needed here.
 export function SiteHeader() {
 	const t = useTranslations("SiteHeader");
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 	return (
 		<header className="absolute inset-x-0 top-0 z-20">
-			<div className="flex items-center justify-between gap-4 px-6 py-4 md:px-12">
+			<div className="hidden items-center justify-between gap-4 px-6 py-4 md:flex md:px-12">
 				<Link href="/" className="flex items-center">
 					<Image
 						src="/astrea-sided-logo-light-trimmed.png"
@@ -50,7 +55,7 @@ export function SiteHeader() {
 					/>
 				</Link>
 
-				<nav className="hidden items-center gap-4 md:flex">
+				<nav className="flex items-center gap-4">
 					<LanguageSwitcher />
 					<a
 						href="https://github.com/Astrea-Payouts/astrea"
@@ -61,36 +66,39 @@ export function SiteHeader() {
 					</a>
 					<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
 				</nav>
-
-				<button
-					type="button"
-					onClick={() => setIsMenuOpen((open) => !open)}
-					aria-expanded={isMenuOpen}
-					aria-label={isMenuOpen ? t("closeMenu") : t("openMenu")}
-					className="inline-flex size-9 items-center justify-center rounded-lg text-white/80 hover:text-white md:hidden"
-				>
-					{isMenuOpen ? (
-						<X className="size-6" aria-hidden="true" />
-					) : (
-						<Menu className="size-6" aria-hidden="true" />
-					)}
-				</button>
 			</div>
 
-			{isMenuOpen && (
-				<nav className="flex flex-col items-start gap-5 border-t border-white/10 bg-black/95 px-6 py-6 md:hidden">
-					<LanguageSwitcher />
-					<a
-						href="https://github.com/Astrea-Payouts/astrea"
-						className="flex items-center gap-2 text-white/70 hover:text-white"
-						aria-label={t("githubAriaLabel")}
-					>
-						<GithubIcon />
-						<span className="text-sm">{t("githubAriaLabel")}</span>
-					</a>
-					<WalletConnectButton className="w-full bg-white text-black hover:bg-white/90" />
-				</nav>
-			)}
+			<StaggeredMenu
+				className="md:hidden"
+				isFixed
+				position="right"
+				items={[
+					{ label: t("homeLabel"), ariaLabel: t("homeAriaLabel"), link: "/" },
+				]}
+				socialItems={[
+					{
+						label: t("githubAriaLabel"),
+						link: "https://github.com/Astrea-Payouts/astrea",
+					},
+				]}
+				displaySocials
+				displayItemNumbering={false}
+				logoUrl="/astrea-logo-mark.png"
+				colors={["#0a0a0a", "#000000"]}
+				accentColor="#000000"
+				menuButtonColor="#fff"
+				openMenuButtonColor="#000"
+				openAriaLabel={t("openMenu")}
+				closeAriaLabel={t("closeMenu")}
+				menuLabel={t("menuLabel")}
+				closeLabel={t("closeLabel")}
+				panelExtra={
+					<>
+						<LanguageSwitcher variant="light" />
+						<WalletConnectButton className="w-full justify-center bg-black text-white hover:bg-black/90" />
+					</>
+				}
+			/>
 		</header>
 	);
 }
