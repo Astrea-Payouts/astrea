@@ -9,7 +9,11 @@ import {
 	useState,
 } from "react";
 import { initWalletKit, StellarWalletsKit } from "./kit";
-import { associateWallet, clearWalletSession } from "./session";
+import {
+	associateVerifiedWallet,
+	clearWalletSession,
+	getAuthNonce,
+} from "./session";
 
 type WalletContextValue = {
 	address: string | null;
@@ -42,16 +46,23 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 			const { address: connected } = await StellarWalletsKit.authModal();
 			setAddress(connected);
 
-			// Server-side "who's browsing as which wallet" association — a UX
-			// convenience session, not a security boundary (see docs/architecture.md:
-			// every money-moving action is independently authorized by the actual
-			// on-chain signature, regardless of what this session claims). If the
-			// backend/DB hiccups here, the user is still genuinely connected to
-			// their wallet — don't undo that over an association failure.
+			// Server-side signed challenge-response session (S07 / SEP-0043):
+			// The wallet signs a server-issued challenge nonce to prove control of the address.
 			try {
-				await associateWallet(connected);
+				const { nonce, message } = await getAuthNonce(connected);
+				const { signedMessage } = await StellarWalletsKit.signMessage(message, {
+					address: connected,
+				});
+				await associateVerifiedWallet({
+					address: connected,
+					signature: signedMessage,
+					nonce,
+				});
 			} catch (err) {
-				console.error("Wallet connected, but session association failed:", err);
+				console.error(
+					"Wallet connected, but session verification failed:",
+					err,
+				);
 			}
 		} finally {
 			setIsConnecting(false);

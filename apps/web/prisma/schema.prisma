@@ -70,6 +70,7 @@ model Wallet {
   id                      String    @id @default(uuid())
   userId                  String
   address                 String    @unique
+  email                   String?
   usdcTrustlineVerifiedAt DateTime?
   createdAt               DateTime  @default(now())
 
