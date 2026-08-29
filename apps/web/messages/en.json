@@ -10,7 +10,13 @@
 		"mvpNotice": "MVP in active development. See the <link>build plan</link> for what's next."
 	},
 	"SiteHeader": {
-		"githubAriaLabel": "Astrea on GitHub"
+		"githubAriaLabel": "Astrea on GitHub",
+		"openMenu": "Open menu",
+		"closeMenu": "Close menu",
+		"menuLabel": "Menu",
+		"closeLabel": "Close",
+		"homeLabel": "Home",
+		"homeAriaLabel": "Go to homepage"
 	},
 	"SiteFooter": {
 		"copyright": "© {year} Astrea. Built in the open on Stellar.",
