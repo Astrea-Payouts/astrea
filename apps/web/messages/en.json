@@ -9,6 +9,33 @@
 		"tagline": "Escrow-backed prize payouts for hackathons, bounties, and community challenges — funds locked on-chain before the event starts.",
 		"mvpNotice": "MVP in active development. See the <link>build plan</link> for what's next."
 	},
+	"EarningsPage": {
+		"badge": "On-Chain Verified Payouts",
+		"title": "Participant Earnings & History",
+		"subtitle": "Verifiable earnings across all hackathons, milestone releases, and prizes tied to your connected Stellar wallet.",
+		"totalEarned": "Total Earned",
+		"totalEarnedDesc": "Direct on-chain net distributions",
+		"totalPayouts": "Total Payouts",
+		"totalPayoutsDesc": "Confirmed milestone & prize transactions",
+		"eventsWon": "Events Won",
+		"eventsWonDesc": "Distinct hackathons and challenges",
+		"latestPayout": "Latest Payout",
+		"latestPayoutDesc": "Most recent settlement date",
+		"searchPlaceholder": "Search by event or challenge name...",
+		"all": "All",
+		"testnet": "Testnet",
+		"mainnet": "Mainnet",
+		"newest": "Newest First",
+		"oldest": "Oldest First",
+		"highest": "Highest Amount",
+		"lowest": "Lowest Amount",
+		"noEarningsTitle": "No earnings found",
+		"noEarningsDescConnected": "No payouts have been settled to this connected wallet address yet.",
+		"noEarningsDescDisconnected": "Connect your wallet or join hackathons to win and receive verified escrow payouts.",
+		"exploreCta": "Explore Active Hackathons",
+		"rank": "Rank #{rank}",
+		"directPayout": "USDC Direct Payout"
+	},
 	"SiteHeader": {
 		"githubAriaLabel": "Astrea on GitHub"
 	},

@@ -5,3 +5,5 @@
 process.env.TW_API_KEY ??= "test-key";
 process.env.USDC_ISSUER ??=
 	"GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5";
+process.env.DATABASE_URL ??=
+	"postgresql://postgres:postgres@localhost:5432/astrea_test";

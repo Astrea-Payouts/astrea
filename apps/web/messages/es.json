@@ -9,6 +9,33 @@
 		"tagline": "Pagos de premios con escrow para hackathons, bounties y desafíos de comunidad — los fondos quedan bloqueados on-chain antes de que empiece el evento.",
 		"mvpNotice": "MVP en desarrollo activo. Mirá el <link>plan de construcción</link> para ver qué sigue."
 	},
+	"EarningsPage": {
+		"badge": "Pagos Verificados On-Chain",
+		"title": "Ganancias e Historial del Participante",
+		"subtitle": "Ganancias verificables en todas las hackathons, hitos liberados y premios vinculados a tu wallet de Stellar conectada.",
+		"totalEarned": "Total Ganado",
+		"totalEarnedDesc": "Distribuciones netas directas on-chain",
+		"totalPayouts": "Total de Pagos",
+		"totalPayoutsDesc": "Transacciones confirmadas de hitos y premios",
+		"eventsWon": "Eventos Ganados",
+		"eventsWonDesc": "Hackathons y desafíos distintos",
+		"latestPayout": "Último Pago",
+		"latestPayoutDesc": "Fecha de liquidación más reciente",
+		"searchPlaceholder": "Buscar por nombre de evento o desafío...",
+		"all": "Todos",
+		"testnet": "Testnet",
+		"mainnet": "Mainnet",
+		"newest": "Más recientes primero",
+		"oldest": "Más antiguos primero",
+		"highest": "Mayor monto",
+		"lowest": "Menor monto",
+		"noEarningsTitle": "No se encontraron ganancias",
+		"noEarningsDescConnected": "Aún no se han liquidado pagos a esta dirección de wallet conectada.",
+		"noEarningsDescDisconnected": "Conectá tu wallet o unite a hackathons para ganar y recibir pagos con escrow verificados.",
+		"exploreCta": "Explorar Hackathons Activas",
+		"rank": "Puesto #{rank}",
+		"directPayout": "Pago Directo en USDC"
+	},
 	"SiteHeader": {
 		"githubAriaLabel": "Astrea en GitHub"
 	},
