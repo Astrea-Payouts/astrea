@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { StaggeredMenu } from "@/components/staggered-menu";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
 
 function GithubIcon() {
 	return (
@@ -20,29 +21,28 @@ function GithubIcon() {
 	);
 }
 
-// Absolute + transparent so it floats over the homepage hero's dark
-// background instead of sitting on its own solid bar. This only works
-// because the only page today IS that hero — once Phase 3 adds pages
-// without one (dashboard, event pages), this needs a non-transparent variant
-// for those, or the logo/button here will be invisible against a light page.
-//
-// The source PNG (astrea-sided-logo-light.png) has ~32% vertical fill — a
-// lot of baked-in transparent padding around the mark — so scaling its
-// container height barely grew the visible glyph. astrea-sided-logo-light
-// -trimmed.png is the same mark cropped to its bounding box (+small margin,
-// ~88% fill), so `h-*` here actually controls the visible logo size.
-//
-// Below `md`, the desktop row is replaced by React Bits' Staggered Menu
-// (docs/ui-motion.md: "replaces a plain hamburger in the PWA shell") — its
-// own logo uses astrea-logo-mark.png (a white glow mark) so it reads
-// correctly over the dark hero when closed, and its own CSS
-// (staggered-menu.css) auto-inverts it to black once the white panel opens,
-// with no extra wiring needed here.
-export function SiteHeader() {
+export interface SiteHeaderProps {
+	variant?: "transparent" | "solid";
+	className?: string;
+}
+
+export function SiteHeader({ variant, className }: SiteHeaderProps) {
 	const t = useTranslations("SiteHeader");
+	const pathname = usePathname();
+
+	// Default to transparent on homepage hero, solid on non-hero pages
+	const resolvedVariant =
+		variant ?? (pathname === "/" ? "transparent" : "solid");
 
 	return (
-		<header className="absolute inset-x-0 top-0 z-20">
+		<header
+			className={cn(
+				resolvedVariant === "transparent"
+					? "absolute inset-x-0 top-0 z-20"
+					: "sticky top-0 z-40 border-b border-white/10 bg-zinc-950/95 backdrop-blur-md",
+				className,
+			)}
+		>
 			<div className="hidden items-center justify-between gap-4 px-6 py-4 md:flex md:px-12">
 				<Link href="/" className="flex items-center">
 					<Image
@@ -55,7 +55,19 @@ export function SiteHeader() {
 					/>
 				</Link>
 
-				<nav className="flex items-center gap-4">
+				<nav className="flex items-center gap-6">
+					<Link
+						href="/participant"
+						className="text-sm font-medium text-white/70 transition-colors hover:text-white"
+					>
+						{t("participantNav")}
+					</Link>
+					<Link
+						href="/organizer"
+						className="text-sm font-medium text-white/70 transition-colors hover:text-white"
+					>
+						{t("organizerNav")}
+					</Link>
 					<LanguageSwitcher />
 					<a
 						href="https://github.com/Astrea-Payouts/astrea"
@@ -74,6 +86,16 @@ export function SiteHeader() {
 				position="right"
 				items={[
 					{ label: t("homeLabel"), ariaLabel: t("homeAriaLabel"), link: "/" },
+					{
+						label: t("participantNav"),
+						ariaLabel: t("participantAriaLabel"),
+						link: "/participant",
+					},
+					{
+						label: t("organizerNav"),
+						ariaLabel: t("organizerAriaLabel"),
+						link: "/organizer",
+					},
 				]}
 				socialItems={[
 					{

@@ -203,6 +203,23 @@
 	color: var(--sm-accent, #ff0000);
 }
 
+.sm-socials-link {
+	font-size: 1.2rem;
+	font-weight: 500;
+	color: #111;
+	text-decoration: none;
+	position: relative;
+	padding: 2px 0;
+	display: inline-block;
+	transition:
+		color 0.3s ease,
+		opacity 0.3s ease;
+}
+
+.sm-socials-link:hover {
+	color: var(--sm-accent, #ff0000);
+}
+
 .sm-socials-list {
 	list-style: none;
 	margin: 0;
@@ -237,23 +254,6 @@
 
 .sm-socials-list:focus-within .sm-socials-link:focus-visible {
 	opacity: 1;
-}
-
-.sm-socials-link {
-	font-size: 1.2rem;
-	font-weight: 500;
-	color: #111;
-	text-decoration: none;
-	position: relative;
-	padding: 2px 0;
-	display: inline-block;
-	transition:
-		color 0.3s ease,
-		opacity 0.3s ease;
-}
-
-.sm-socials-link:hover {
-	color: var(--sm-accent, #ff0000);
 }
 
 .sm-panel-title {
