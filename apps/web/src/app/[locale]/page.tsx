@@ -42,7 +42,7 @@ export default function Home() {
 						</p>
 						<div className="flex flex-wrap items-center gap-4">
 							<Link href="/organizer">
-								<SpecularButton>
+								<SpecularButton size="lg" className="gap-2">
 									<span>{t("createEventCta")}</span>
 									<ArrowRight className="size-4" />
 								</SpecularButton>
@@ -149,7 +149,7 @@ export default function Home() {
 					</p>
 					<div className="mt-8 flex flex-wrap items-center justify-center gap-4">
 						<Link href="/organizer">
-							<SpecularButton className="px-8 py-3.5 text-base">
+							<SpecularButton size="lg" className="gap-2">
 								<span>{t("createEventCta")}</span>
 								<ArrowRight className="size-4" />
 							</SpecularButton>

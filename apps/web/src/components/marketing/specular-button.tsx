@@ -1,185 +1,336 @@
 "use client";
 
-import { Mesh, Program, Renderer, Triangle } from "ogl";
-import type React from "react";
-import { useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
+// Verified live-source port of React Bits SpecularButton
+// (https://reactbits.dev/components/specular-button) — TS-TW variant, JS→typed TSX with no logic changes.
+// See docs/ui-motion.md.
 
-interface SpecularButtonProps
-	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-	children: React.ReactNode;
-	className?: string;
+import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
+import {
+	type CSSProperties,
+	type MouseEventHandler,
+	type ReactNode,
+	useEffect,
+	useRef,
+} from "react";
+
+type ButtonSize = "sm" | "md" | "lg";
+
+export interface SpecularButtonProps {
+	children?: ReactNode;
+	size?: ButtonSize;
+	radius?: number;
+	tint?: string;
+	tintOpacity?: number;
+	blur?: number;
+	textColor?: string;
+	lineColor?: string;
+	baseColor?: string;
 	intensity?: number;
+	shineSize?: number;
+	shineFade?: number;
+	thickness?: number;
+	speed?: number;
+	followMouse?: boolean;
+	proximity?: number;
+	autoAnimate?: boolean;
+	disabled?: boolean;
+	onClick?: MouseEventHandler<HTMLButtonElement>;
+	className?: string;
+	type?: "button" | "submit" | "reset";
 }
 
-export function SpecularButton({
-	children,
-	className,
-	intensity = 1.0,
+interface ShaderProps {
+	radius: number;
+	lineColor: string;
+	baseColor: string;
+	intensity: number;
+	shineSize: number;
+	shineFade: number;
+	thickness: number;
+	speed: number;
+	followMouse: boolean;
+	proximity: number;
+	autoAnimate: boolean;
+}
+
+const PAD = 20;
+
+const SIZES: Record<ButtonSize, string> = {
+	sm: "text-[0.85rem] px-[22px] py-[10px]",
+	md: "text-[1rem] px-[30px] py-[14px]",
+	lg: "text-[1.15rem] px-10 py-[18px]",
+};
+
+const VERT = `#version 300 es
+in vec2 position;
+void main() {
+  gl_Position = vec4(position, 0.0, 1.0);
+}
+`;
+
+const FRAG = `#version 300 es
+precision highp float;
+
+uniform vec2 uCenter;
+uniform vec2 uHalfSize;
+uniform float uRadius;
+uniform float uAngle;
+uniform float uPx;
+uniform vec3 uLineColor;
+uniform vec3 uBaseColor;
+uniform float uIntensity;
+uniform float uShineSize;
+uniform float uShineFade;
+uniform float uThickness;
+uniform float uBaseWidth;
+
+out vec4 fragColor;
+
+float sdRoundedRect(vec2 p, vec2 b, float r) {
+  vec2 q = abs(p) - b + r;
+  return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
+}
+
+float shapeSDF(vec2 p) { return sdRoundedRect(p, uHalfSize, uRadius); }
+
+float gaussianLine(float d, float sigma) {
+  float x = d / (sigma + 1e-6);
+  float k = mix(1.0, 1.6, smoothstep(0.0, 1.5, x));
+  return exp(-k * x * x);
+}
+
+void main() {
+  vec2 p = gl_FragCoord.xy - uCenter;
+  float d = shapeSDF(p);
+  vec2 L = vec2(cos(uAngle), sin(uAngle));
+
+  // Dark base stroke hugging the edge for a sense of thickness
+  float base = (1.0 - smoothstep(0.0, uBaseWidth, abs(d))) * 0.45;
+
+  // Symmetric specular: the edges facing toward/away from the light both
+  // catch a streak. The angular window (size + fade) is measured with an
+  // elliptical normal so it varies continuously along straight edges.
+  vec2 nEll = normalize(p / (uHalfSize * uHalfSize) + 1e-6);
+  float phi = acos(clamp(abs(dot(nEll, L)), 0.0, 1.0));
+  float rim = 1.0 - smoothstep(uShineSize - uShineFade, uShineSize + uShineFade + 1e-4, phi);
+  float line = gaussianLine(d, uThickness);
+  float edgeClamp = 1.0 - smoothstep(0.5 * uPx, 3.0 * uPx, abs(d));
+  float hi = line * rim * edgeClamp * uIntensity;
+
+  vec3 col = uBaseColor * base + uLineColor * hi;
+  float a = clamp(base + hi, 0.0, 1.0);
+  fragColor = vec4(col, a);
+}
+`;
+
+const SpecularButton = ({
+	children = "Get Started",
+	size = "lg",
+	radius = 18,
+	tint = "#ffffff",
+	tintOpacity = 0,
+	blur = 0,
+	textColor = "#f5f5f5",
+	lineColor = "#ffffff",
+	baseColor = "#525252",
+	intensity = 1,
+	shineSize = 10,
+	shineFade = 40,
+	thickness = 1,
+	speed = 0.35,
+	followMouse = true,
+	proximity = 250,
+	autoAnimate = false,
+	disabled = false,
 	onClick,
-	...props
-}: SpecularButtonProps) {
-	const containerRef = useRef<HTMLButtonElement>(null);
-	const canvasRef = useRef<HTMLCanvasElement | null>(null);
+	className = "",
+	type = "button",
+}: SpecularButtonProps) => {
+	const btnRef = useRef<HTMLButtonElement>(null);
+	const fxRef = useRef<HTMLSpanElement>(null);
+	const propsRef = useRef<ShaderProps>({} as ShaderProps);
+
+	propsRef.current = {
+		radius,
+		lineColor,
+		baseColor,
+		intensity,
+		shineSize,
+		shineFade,
+		thickness,
+		speed,
+		followMouse,
+		proximity,
+		autoAnimate,
+	};
 
 	useEffect(() => {
-		const button = containerRef.current;
-		if (!button) return;
+		const btn = btnRef.current;
+		const fx = fxRef.current;
+		if (!btn || !fx) return;
 
-		let renderer: Renderer | null = null;
-		let animationFrameId: number;
+		const dpr = window.devicePixelRatio || 1;
+		const renderer = new Renderer({
+			alpha: true,
+			premultipliedAlpha: true,
+			antialias: true,
+			dpr,
+		});
+		const gl = renderer.gl;
+		gl.clearColor(0, 0, 0, 0);
+		gl.enable(gl.BLEND);
+		gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-		try {
-			const dpr = Math.min(2, window.devicePixelRatio || 1);
-			renderer = new Renderer({
-				dpr,
-				alpha: true,
-				antialias: false,
-			});
-			const gl = renderer.gl;
-			canvasRef.current = gl.canvas;
+		const geometry = new Triangle(gl);
+		if (geometry.attributes.uv) delete geometry.attributes.uv;
 
-			Object.assign(gl.canvas.style, {
-				position: "absolute",
-				inset: "0",
-				width: "100%",
-				height: "100%",
-				pointerEvents: "none",
-				borderRadius: "inherit",
-				zIndex: "1",
-			});
-			button.appendChild(gl.canvas);
+		const program = new Program(gl, {
+			vertex: VERT,
+			fragment: FRAG,
+			uniforms: {
+				uCenter: { value: [0, 0] },
+				uHalfSize: { value: [1, 1] },
+				uRadius: { value: 0 },
+				uAngle: { value: 2.4 },
+				uPx: { value: dpr },
+				uLineColor: { value: [1, 1, 1] },
+				uBaseColor: { value: [0.32, 0.32, 0.32] },
+				uIntensity: { value: 1 },
+				uShineSize: { value: 0.17 },
+				uShineFade: { value: 0.7 },
+				uThickness: { value: 1 },
 
-			const vertex = /* glsl */ `
-				attribute vec2 position;
-				varying vec2 vUv;
-				void main() {
-					vUv = position * 0.5 + 0.5;
-					gl_Position = vec4(position, 0.0, 1.0);
-				}
-			`;
+				uBaseWidth: { value: dpr },
+			},
+		});
 
-			const fragment = /* glsl */ `
-				precision highp float;
-				varying vec2 vUv;
-				uniform vec2 uResolution;
-				uniform vec2 uMouse;
-				uniform float uHover;
-				uniform float uIntensity;
+		const mesh = new Mesh(gl, { geometry, program });
+		fx.appendChild(gl.canvas);
 
-				void main() {
-					vec2 st = gl_FragCoord.xy / uResolution.xy;
-					vec2 mouseNorm = uMouse / uResolution.xy;
-					mouseNorm.y = 1.0 - mouseNorm.y;
+		const sizeRef = { w: 1, h: 1 };
+		const resize = () => {
+			// Fractional size + explicit center keep the SDF pinned to the exact
+			// CSS border, instead of drifting up to a pixel from offsetWidth rounding.
+			const rect = btn.getBoundingClientRect();
+			const w = rect.width;
+			const h = rect.height;
+			sizeRef.w = w;
+			sizeRef.h = h;
+			renderer.setSize(w + PAD * 2, h + PAD * 2);
+			program.uniforms.uCenter.value = [
+				(PAD + w / 2) * dpr,
+				(PAD + h / 2) * dpr,
+			];
+			program.uniforms.uHalfSize.value = [(w / 2) * dpr, (h / 2) * dpr];
+		};
+		const ro = new ResizeObserver(resize);
+		ro.observe(btn);
+		resize();
 
-					float dist = distance(st, mouseNorm);
-					float specular = smoothstep(0.4, 0.0, dist) * uHover * uIntensity;
-					
-					// Border shine
-					float edgeX = min(st.x, 1.0 - st.x);
-					float edgeY = min(st.y, 1.0 - st.y);
-					float edge = min(edgeX, edgeY) * 2.0;
-					float edgeGlow = (1.0 - smoothstep(0.0, 0.08, edge)) * 0.4 * uHover;
+		// Light angle steers toward the pointer (anywhere on the page) and falls
+		// back to a slow sweep when the pointer hasn't moved yet.
+		let pointerAngle: number | null = null;
+		let proximityT = 0;
+		const onPointerMove = (e: PointerEvent) => {
+			const rect = btn.getBoundingClientRect();
+			const cx = rect.left + rect.width / 2;
+			const cy = rect.top + rect.height / 2;
+			const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
+			const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
+			const dist = Math.hypot(dx, dy);
+			// Over the button itself the light settles on the diagonal (framing the
+			// corners) and gently sways with the cursor position within the button.
+			if (dist === 0) {
+				const nx = (e.clientX - cx) / (rect.width / 2);
+				const ny = (cy - e.clientY) / (rect.height / 2);
+				pointerAngle =
+					Math.atan2(2 / rect.height, -2 / rect.width) + nx * 0.3 + ny * 0.15;
+			} else {
+				pointerAngle = Math.atan2(cy - e.clientY, e.clientX - cx);
+			}
+			const t = Math.max(0, 1 - dist / Math.max(propsRef.current.proximity, 1));
+			proximityT = t * t * (3 - 2 * t);
+		};
+		window.addEventListener("pointermove", onPointerMove);
 
-					vec3 color = vec3(0.9, 0.95, 1.0) * (specular * 1.5 + edgeGlow);
-					float alpha = clamp(specular * 0.8 + edgeGlow * 0.5, 0.0, 0.85);
+		let angle = 2.4;
+		let idleAngle = 2.4;
+		let bright = 0;
+		let last = performance.now();
+		let raf = 0;
 
-					gl_FragColor = vec4(color, alpha);
-				}
-			`;
+		const lineC = new Color();
+		const baseC = new Color();
 
-			const geometry = new Triangle(gl);
-			const program = new Program(gl, {
-				vertex,
-				fragment,
-				uniforms: {
-					uResolution: { value: new Float32Array([100, 100]) },
-					uMouse: { value: new Float32Array([50, 50]) },
-					uHover: { value: 0 },
-					uIntensity: { value: intensity },
-				},
-				transparent: true,
-			});
+		const update = (now: number) => {
+			raf = requestAnimationFrame(update);
+			const dt = Math.min((now - last) / 1000, 0.05);
+			last = now;
+			const p = propsRef.current;
 
-			const mesh = new Mesh(gl, { geometry, program });
+			idleAngle += p.speed * dt;
+			const target =
+				p.followMouse &&
+				pointerAngle != null &&
+				(!p.autoAnimate || proximityT > 0)
+					? pointerAngle
+					: idleAngle;
+			const diff = ((target - angle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+			angle += diff * (1 - Math.exp(-dt * 7));
 
-			const updateSize = () => {
-				const rect = button.getBoundingClientRect();
-				const width = Math.max(1, rect.width);
-				const height = Math.max(1, rect.height);
-				renderer?.setSize(width, height);
-				program.uniforms.uResolution.value[0] = gl.drawingBufferWidth;
-				program.uniforms.uResolution.value[1] = gl.drawingBufferHeight;
-			};
+			// Shine fades in with pointer proximity unless autoAnimate keeps it on
+			const brightTarget = p.autoAnimate ? 1 : proximityT;
+			bright += (brightTarget - bright) * (1 - Math.exp(-dt * 8));
 
-			const resizeObserver = new ResizeObserver(updateSize);
-			resizeObserver.observe(button);
-			updateSize();
+			lineC.set(p.lineColor);
+			baseC.set(p.baseColor);
+			program.uniforms.uAngle.value = angle;
+			program.uniforms.uRadius.value =
+				Math.min(p.radius, Math.min(sizeRef.w, sizeRef.h) / 2) * dpr;
+			program.uniforms.uLineColor.value = [lineC.r, lineC.g, lineC.b];
+			program.uniforms.uBaseColor.value = [baseC.r, baseC.g, baseC.b];
+			program.uniforms.uIntensity.value = p.intensity * bright;
+			program.uniforms.uShineSize.value = (p.shineSize * Math.PI) / 180;
+			program.uniforms.uShineFade.value = (p.shineFade * Math.PI) / 180;
+			program.uniforms.uThickness.value = p.thickness * dpr;
+			renderer.render({ scene: mesh });
+		};
+		raf = requestAnimationFrame(update);
 
-			let currentHover = 0;
-			let targetHover = 0;
-			let targetMouseX = 50;
-			let targetMouseY = 50;
-			let currentMouseX = 50;
-			let currentMouseY = 50;
-
-			const onPointerMove = (e: PointerEvent) => {
-				const rect = button.getBoundingClientRect();
-				targetMouseX = (e.clientX - rect.left) * dpr;
-				targetMouseY = (e.clientY - rect.top) * dpr;
-				targetHover = 1.0;
-			};
-
-			const onPointerLeave = () => {
-				targetHover = 0.0;
-			};
-
-			button.addEventListener("pointermove", onPointerMove);
-			button.addEventListener("pointerleave", onPointerLeave);
-
-			const render = () => {
-				currentHover += (targetHover - currentHover) * 0.15;
-				currentMouseX += (targetMouseX - currentMouseX) * 0.2;
-				currentMouseY += (targetMouseY - currentMouseY) * 0.2;
-
-				program.uniforms.uHover.value = currentHover;
-				program.uniforms.uMouse.value[0] = currentMouseX;
-				program.uniforms.uMouse.value[1] = currentMouseY;
-
-				renderer?.render({ scene: mesh });
-				animationFrameId = requestAnimationFrame(render);
-			};
-
-			render();
-
-			return () => {
-				cancelAnimationFrame(animationFrameId);
-				resizeObserver.disconnect();
-				button.removeEventListener("pointermove", onPointerMove);
-				button.removeEventListener("pointerleave", onPointerLeave);
-				if (canvasRef.current && canvasRef.current.parentElement === button) {
-					button.removeChild(canvasRef.current);
-				}
-			};
-		} catch (e) {
-			console.warn("SpecularButton WebGL initialization skipped:", e);
-		}
-	}, [intensity]);
+		return () => {
+			cancelAnimationFrame(raf);
+			ro.disconnect();
+			window.removeEventListener("pointermove", onPointerMove);
+			if (gl.canvas.parentNode === fx) fx.removeChild(gl.canvas);
+			gl.getExtension("WEBGL_lose_context")?.loseContext();
+		};
+	}, []);
 
 	return (
 		<button
-			ref={containerRef}
-			type="button"
+			ref={btnRef}
+			type={type}
+			disabled={disabled}
 			onClick={onClick}
-			className={cn(
-				"relative isolate inline-flex items-center justify-center overflow-hidden rounded-full font-medium transition-all duration-300",
-				"bg-gradient-to-r from-blue-600 via-indigo-500 to-sky-400 px-7 py-3 text-sm text-white shadow-lg shadow-blue-500/25",
-				"hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98]",
-				className,
-			)}
-			{...props}
+			className={`relative m-0 inline-flex cursor-pointer items-center justify-center border-none font-medium leading-none tracking-[0.01em] outline-none transition-transform duration-150 active:scale-[0.97] disabled:cursor-default disabled:opacity-55 disabled:active:scale-100 [color:var(--sb-text-color)] [border-radius:var(--sb-radius)] [background:color-mix(in_srgb,var(--sb-tint)_calc(var(--sb-tint-opacity)*100%),transparent)] [backdrop-filter:blur(var(--sb-blur))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-offset-[3px] ${SIZES[size] || SIZES.md}${className ? ` ${className}` : ""}`}
+			style={
+				{
+					"--sb-radius": `${radius}px`,
+					"--sb-tint": tint,
+					"--sb-tint-opacity": tintOpacity,
+					"--sb-blur": `${blur}px`,
+					"--sb-text-color": textColor,
+				} as CSSProperties
+			}
 		>
-			<span className="relative z-10 flex items-center gap-2">{children}</span>
+			<span
+				ref={fxRef}
+				aria-hidden="true"
+				className="pointer-events-none absolute -inset-5 z-[1] [&_canvas]:block [&_canvas]:h-full [&_canvas]:w-full"
+			/>
+			<span className="relative z-[2]">{children}</span>
 		</button>
 	);
-}
+};
+
+export { SpecularButton };

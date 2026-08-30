@@ -1,6 +1,5 @@
 "use client";
 
-import { gsap } from "gsap";
 import {
 	CheckCircle2,
 	Coins,
@@ -9,7 +8,7 @@ import {
 	Trophy,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { Card, CardSwap } from "@/components/marketing/card-swap";
 
 interface SampleEvent {
 	id: string;
@@ -24,10 +23,6 @@ interface SampleEvent {
 
 export function SeeItInAction() {
 	const t = useTranslations("SeeItInAction");
-	const containerRef = useRef<HTMLDivElement>(null);
-	const cardsRef = useRef<(HTMLButtonElement | null)[]>([]);
-	const [activeIndex, setActiveIndex] = useState(0);
-	const [isPaused, setIsPaused] = useState(false);
 
 	const events: SampleEvent[] = [
 		{
@@ -74,79 +69,6 @@ export function SeeItInAction() {
 		},
 	];
 
-	useEffect(() => {
-		const container = containerRef.current;
-		if (!container) return;
-
-		const onEnter = () => setIsPaused(true);
-		const onLeave = () => setIsPaused(false);
-
-		container.addEventListener("mouseenter", onEnter);
-		container.addEventListener("mouseleave", onLeave);
-
-		return () => {
-			container.removeEventListener("mouseenter", onEnter);
-			container.removeEventListener("mouseleave", onLeave);
-		};
-	}, []);
-
-	useEffect(() => {
-		if (isPaused) return;
-
-		const interval = setInterval(() => {
-			setActiveIndex((prev) => (prev + 1) % events.length);
-		}, 3800);
-
-		return () => clearInterval(interval);
-	}, [isPaused, events.length]);
-
-	useEffect(() => {
-		cardsRef.current.forEach((card, idx) => {
-			if (!card) return;
-
-			// Calculate offset relative to activeIndex
-			const diff = (idx - activeIndex + events.length) % events.length;
-
-			if (diff === 0) {
-				// Front active card
-				gsap.to(card, {
-					scale: 1,
-					y: 0,
-					z: 0,
-					opacity: 1,
-					rotationX: 0,
-					duration: 0.6,
-					ease: "power2.out",
-					zIndex: 30,
-				});
-			} else if (diff === 1) {
-				// Second card
-				gsap.to(card, {
-					scale: 0.94,
-					y: 20,
-					z: -40,
-					opacity: 0.75,
-					rotationX: -4,
-					duration: 0.6,
-					ease: "power2.out",
-					zIndex: 20,
-				});
-			} else {
-				// Third / background card
-				gsap.to(card, {
-					scale: 0.88,
-					y: 40,
-					z: -80,
-					opacity: 0.45,
-					rotationX: -8,
-					duration: 0.6,
-					ease: "power2.out",
-					zIndex: 10,
-				});
-			}
-		});
-	}, [activeIndex, events.length]);
-
 	return (
 		<section className="relative overflow-hidden bg-zinc-950 py-24 text-white">
 			<div className="mx-auto max-w-6xl px-6 md:px-12">
@@ -187,90 +109,77 @@ export function SeeItInAction() {
 								</div>
 							</div>
 						</div>
-
-						{/* Interactive indicators */}
-						<div className="mt-8 flex items-center gap-2">
-							{events.map((evt, idx) => (
-								<button
-									key={`indicator-${evt.id}`}
-									type="button"
-									onClick={() => setActiveIndex(idx)}
-									className={`h-2 rounded-full transition-all duration-300 ${
-										activeIndex === idx
-											? "w-8 bg-blue-500"
-											: "w-2 bg-white/20 hover:bg-white/40"
-									}`}
-									aria-label={`Slide ${idx + 1}`}
-								/>
-							))}
-						</div>
 					</div>
 
-					<div
-						ref={containerRef}
-						className="relative flex h-[420px] items-center justify-center perspective-[1000px] lg:col-span-7"
-					>
-						{events.map((evt, idx) => (
-							<button
-								key={`card-${evt.id}`}
-								type="button"
-								ref={(el) => {
-									cardsRef.current[idx] = el;
-								}}
-								onClick={() =>
-									setActiveIndex((prev) => (prev + 1) % events.length)
-								}
-								className="absolute w-full max-w-lg text-left cursor-pointer rounded-2xl border border-white/10 bg-zinc-900/95 p-6 shadow-2xl backdrop-blur-xl transition-colors duration-300 hover:border-white/25 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-							>
-								<div className="flex items-center justify-between border-b border-white/10 pb-4">
-									<div className="flex items-center gap-2">
-										<span className="rounded-md bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-400">
-											{evt.category}
-										</span>
-										<span className="flex items-center gap-1 text-xs text-emerald-400">
-											<CheckCircle2 className="size-3.5" />
-											{evt.escrowStatus}
-										</span>
-									</div>
-									<span className="font-mono text-sm font-bold text-white">
-										{evt.prizePool}
-									</span>
-								</div>
-
-								<div className="mt-4">
-									<h3 className="text-xl font-bold text-white">{evt.title}</h3>
-									<p className="mt-1 text-xs text-zinc-400">
-										{evt.participants} verified builders registered
-									</p>
-								</div>
-
-								<div className="mt-5 space-y-2 rounded-xl bg-black/40 p-3.5 border border-white/5 font-mono text-xs">
-									<p className="text-[10px] uppercase tracking-wider text-zinc-400 font-sans">
-										Escrow Milestones
-									</p>
-									{evt.milestones.map((m) => (
-										<div
-											key={m}
-											className="flex items-center justify-between text-zinc-300"
-										>
-											<span>{m}</span>
+					{/* CardSwap needs a positioned parent; height reserves layout space. */}
+					<div className="relative h-[480px] lg:col-span-7">
+						<CardSwap
+							width={460}
+							height={380}
+							cardDistance={55}
+							verticalDistance={65}
+							delay={4500}
+							pauseOnHover
+							skewAmount={5}
+						>
+							{events.map((evt) => (
+								<Card
+									key={evt.id}
+									customClass="border-white/10 bg-zinc-900/95 p-6 shadow-2xl backdrop-blur-xl"
+								>
+									<div className="flex h-full flex-col text-left text-white">
+										<div className="flex items-center justify-between border-b border-white/10 pb-4">
+											<div className="flex items-center gap-2">
+												<span className="rounded-md bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-400">
+													{evt.category}
+												</span>
+												<span className="flex items-center gap-1 text-xs text-emerald-400">
+													<CheckCircle2 className="size-3.5" />
+													{evt.escrowStatus}
+												</span>
+											</div>
+											<span className="font-mono text-sm font-bold">
+												{evt.prizePool}
+											</span>
 										</div>
-									))}
-								</div>
 
-								<div className="mt-5 flex items-center justify-between pt-2 text-xs text-zinc-400 border-t border-white/5">
-									<div className="flex flex-col gap-0.5">
-										<span className="font-sans text-[10px] uppercase tracking-wider text-amber-400/90">
-											Illustrative example (not a live tx)
-										</span>
-										<span className="font-mono">Tx: {evt.txHash}</span>
+										<div className="mt-4">
+											<h3 className="text-xl font-bold">{evt.title}</h3>
+											<p className="mt-1 text-xs text-zinc-400">
+												{evt.participants} verified builders registered
+											</p>
+										</div>
+
+										<div className="mt-5 space-y-2 rounded-xl border border-white/5 bg-black/40 p-3.5 font-mono text-xs">
+											<p className="font-sans text-[10px] tracking-wider text-zinc-400 uppercase">
+												Escrow Milestones
+											</p>
+											{evt.milestones.map((m) => (
+												<div
+													key={m}
+													className="flex items-center justify-between text-zinc-300"
+												>
+													<span>{m}</span>
+												</div>
+											))}
+										</div>
+
+										<div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4 text-xs text-zinc-400">
+											<div className="flex flex-col gap-0.5">
+												<span className="font-sans text-[10px] tracking-wider text-amber-400/90 uppercase">
+													Illustrative example (not a live tx)
+												</span>
+												<span className="font-mono">Tx: {evt.txHash}</span>
+											</div>
+											<span className="flex items-center gap-1 text-blue-400">
+												View on Stellar Explorer{" "}
+												<ExternalLink className="size-3" />
+											</span>
+										</div>
 									</div>
-									<span className="flex items-center gap-1 text-blue-400 hover:text-blue-300">
-										View on Stellar Explorer <ExternalLink className="size-3" />
-									</span>
-								</div>
-							</button>
-						))}
+								</Card>
+							))}
+						</CardSwap>
 					</div>
 				</div>
 			</div>
