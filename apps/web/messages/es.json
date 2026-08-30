@@ -32,5 +32,38 @@
 	},
 	"LanguageSwitcher": {
 		"label": "Idioma"
+	},
+	"PublicEventPage": {
+		"metadataDescription": "{amount} USDC en premios bloqueados on-chain",
+		"verifiedBadge": "Premios verificados on-chain",
+		"prizesHeading": "Premios",
+		"judgesHeading": "Jueces y resolver",
+		"payoutHistoryHeading": "Historial de pagos",
+		"totalPrizePool": "Premio total: {amount} USDC",
+		"dateRange": "{start} – {end}",
+		"noPrizes": "Todavía no hay premios publicados.",
+		"noJudges": "Los jueces se publicarán antes de que empiece el evento.",
+		"defaultResolver": "Resolver de disputas: resolver por defecto de Astrea (multisig de respaldo salvo que el organizador nombre un tercero).",
+		"noPayoutsYet": "Todavía no hay pagos liberados.",
+		"prizeRank": "Puesto #{rank}",
+		"prizeAmount": "{amount} USDC",
+		"winner": "Ganador",
+		"releaseTx": "Transacción de release",
+		"payoutForRank": "Pago — puesto #{rank}",
+		"eventStatus": {
+			"CREATED": "Creado",
+			"FUNDED": "Financiado",
+			"LIVE": "En vivo",
+			"JUDGING": "En evaluación",
+			"COMPLETED": "Completado"
+		},
+		"prizeStatus": {
+			"PENDING": "Pendiente",
+			"ASSIGNED": "Ganador asignado",
+			"APPROVED": "Aprobado",
+			"RELEASED": "Liberado on-chain",
+			"PAID_OUT": "Pagado",
+			"DISPUTED": "En disputa"
+		}
 	}
 }

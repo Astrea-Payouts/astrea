@@ -1,12 +1,21 @@
 export type StellarNetwork = "testnet" | "mainnet" | "public";
 
+function explorerNetworkSegment(network: StellarNetwork): string {
+	return network === "mainnet" || network === "public" ? "public" : "testnet";
+}
+
 export function getExplorerTxUrl(
 	hash: string,
 	network: StellarNetwork = "testnet",
 ): string {
-	const explorerNetwork =
-		network === "mainnet" || network === "public" ? "public" : "testnet";
-	return `https://stellar.expert/explorer/${explorerNetwork}/tx/${hash}`;
+	return `https://stellar.expert/explorer/${explorerNetworkSegment(network)}/tx/${hash}`;
+}
+
+export function getExplorerContractUrl(
+	contractId: string,
+	network: StellarNetwork = "testnet",
+): string {
+	return `https://stellar.expert/explorer/${explorerNetworkSegment(network)}/contract/${contractId}`;
 }
 
 export function truncateHash(hash: string, leading = 4, trailing = 4): string {

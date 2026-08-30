@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { StaggeredMenu } from "@/components/staggered-menu";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
 
 function GithubIcon() {
 	return (
@@ -40,9 +41,18 @@ function GithubIcon() {
 // with no extra wiring needed here.
 export function SiteHeader() {
 	const t = useTranslations("SiteHeader");
+	const pathname = usePathname();
+	const isHeroPage = pathname === "/";
 
 	return (
-		<header className="absolute inset-x-0 top-0 z-20">
+		<header
+			className={cn(
+				"inset-x-0 top-0 z-20",
+				isHeroPage
+					? "absolute"
+					: "sticky border-b border-white/10 bg-zinc-950/95 backdrop-blur",
+			)}
+		>
 			<div className="hidden items-center justify-between gap-4 px-6 py-4 md:flex md:px-12">
 				<Link href="/" className="flex items-center">
 					<Image
@@ -50,7 +60,10 @@ export function SiteHeader() {
 						alt="Astrea"
 						width={1053}
 						height={381}
-						className="h-14 w-auto invert md:h-20"
+						className={cn(
+							"h-14 w-auto md:h-20",
+							isHeroPage ? "invert" : "dark:invert-0",
+						)}
 						priority
 					/>
 				</Link>
@@ -59,12 +72,20 @@ export function SiteHeader() {
 					<LanguageSwitcher />
 					<a
 						href="https://github.com/Astrea-Payouts/astrea"
-						className="text-white/70 hover:text-white"
+						className={cn(
+							isHeroPage
+								? "text-white/70 hover:text-white"
+								: "text-muted-foreground hover:text-foreground",
+						)}
 						aria-label={t("githubAriaLabel")}
 					>
 						<GithubIcon />
 					</a>
-					<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
+					<WalletConnectButton
+						className={
+							isHeroPage ? "bg-white text-black hover:bg-white/90" : undefined
+						}
+					/>
 				</nav>
 			</div>
 

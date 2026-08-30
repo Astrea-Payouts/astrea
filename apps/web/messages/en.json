@@ -32,5 +32,38 @@
 	},
 	"LanguageSwitcher": {
 		"label": "Language"
+	},
+	"PublicEventPage": {
+		"metadataDescription": "{amount} USDC prize pool locked on-chain",
+		"verifiedBadge": "Prizes verified on-chain",
+		"prizesHeading": "Prize pool",
+		"judgesHeading": "Judges & resolver",
+		"payoutHistoryHeading": "Payout history",
+		"totalPrizePool": "Total prize pool: {amount} USDC",
+		"dateRange": "{start} – {end}",
+		"noPrizes": "No prizes published yet.",
+		"noJudges": "Judges will be published before the event starts.",
+		"defaultResolver": "Dispute resolver: Astrea default resolver (multisig backstop unless the organizer named a third party).",
+		"noPayoutsYet": "No payouts released yet.",
+		"prizeRank": "Rank #{rank}",
+		"prizeAmount": "{amount} USDC",
+		"winner": "Winner",
+		"releaseTx": "Release transaction",
+		"payoutForRank": "Payout — rank #{rank}",
+		"eventStatus": {
+			"CREATED": "Created",
+			"FUNDED": "Funded",
+			"LIVE": "Live",
+			"JUDGING": "Judging",
+			"COMPLETED": "Completed"
+		},
+		"prizeStatus": {
+			"PENDING": "Pending",
+			"ASSIGNED": "Winner assigned",
+			"APPROVED": "Approved",
+			"RELEASED": "Released on-chain",
+			"PAID_OUT": "Paid out",
+			"DISPUTED": "Disputed"
+		}
 	}
 }

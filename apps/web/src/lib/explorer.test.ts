@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { getExplorerTxUrl, truncateHash } from "./explorer";
+import {
+	getExplorerContractUrl,
+	getExplorerTxUrl,
+	truncateHash,
+} from "./explorer";
 
 describe("explorer utils", () => {
 	const sampleHash =
@@ -27,6 +31,23 @@ describe("explorer utils", () => {
 		it("defaults to testnet if network is omitted", () => {
 			expect(getExplorerTxUrl(sampleHash)).toBe(
 				`https://stellar.expert/explorer/testnet/tx/${sampleHash}`,
+			);
+		});
+	});
+
+	describe("getExplorerContractUrl", () => {
+		const sampleContract =
+			"CA3D5KRYM6CB7OWQ6TWYRRYZ2V5KHAF6XAVICGY5YOF3A5Q77CVLDYHI";
+
+		it("builds correct testnet contract URL", () => {
+			expect(getExplorerContractUrl(sampleContract, "testnet")).toBe(
+				`https://stellar.expert/explorer/testnet/contract/${sampleContract}`,
+			);
+		});
+
+		it("builds correct mainnet contract URL", () => {
+			expect(getExplorerContractUrl(sampleContract, "mainnet")).toBe(
+				`https://stellar.expert/explorer/public/contract/${sampleContract}`,
 			);
 		});
 	});
