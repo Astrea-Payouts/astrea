@@ -179,11 +179,11 @@ async function main() {
 	if (!(await verifyAndRecordTrustline(winnerWallet.id, winner.publicKey))) {
 		throw new Error("demo participant has no USDC trustline");
 	}
-	await db.submission.create({
+	await db.participant.create({
 		data: {
 			eventId: event.id,
-			participantWalletId: winnerWallet.id,
-			url: "https://github.com/astrea-example/demo",
+			walletId: winnerWallet.id,
+			submissionUrl: "https://github.com/astrea-example/demo",
 		},
 	});
 

@@ -76,7 +76,7 @@ model Wallet {
   user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   organizedEvents Event[]      @relation("EventOrganizerWallet")
   wonPrizes       Prize[]      @relation("PrizeWinner")
-  submissions     Submission[]
+  participants    Participant[]
 
   @@index([userId])
   @@map("wallets")
@@ -93,6 +93,9 @@ model Event {
   status            EventStatus    @default(DRAFT)
   network           StellarNetwork @default(TESTNET)
   escrowContractId  String?        @unique
+  /// Set once when funding + minimum participants are both true (E03).
+  /// Distinct from status — never implies the event is active by itself.
+  conditionsMetAt   DateTime?
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 
@@ -100,7 +103,7 @@ model Event {
   organizerWallet Wallet       @relation("EventOrganizerWallet", fields: [organizerWalletId], references: [id])
   prizes          Prize[]
   judges          Judge[]
-  submissions     Submission[]
+  participants    Participant[]
 
   @@index([organizerId])
   @@index([organizerWalletId])
@@ -154,19 +157,21 @@ model Judge {
   @@map("judges")
 }
 
-model Submission {
-  id                  String   @id @default(uuid())
-  eventId             String
-  participantWalletId String
-  url                 String
-  submittedAt         DateTime @default(now())
+/// A registered participant on an event (docs/architecture.md domain model).
+/// Renamed from Submission in S03 to match the manual-start lifecycle (E03).
+model Participant {
+  id            String   @id @default(uuid())
+  eventId       String
+  walletId      String
+  submissionUrl String
+  registeredAt  DateTime @default(now())
 
-  event             Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  participantWallet Wallet @relation(fields: [participantWalletId], references: [id])
+  event  Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  wallet Wallet @relation(fields: [walletId], references: [id])
 
   @@index([eventId])
-  @@index([participantWalletId])
-  @@map("submissions")
+  @@index([walletId])
+  @@map("participants")
 }
 
 /// Append-only audit log. amountUsdc here is the NET amount actually

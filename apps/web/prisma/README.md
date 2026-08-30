@@ -28,9 +28,12 @@ The schema in this database was **not** created by running `prisma migrate dev` 
 npx prisma migrate resolve --applied 20260724025900_init
 npx prisma migrate resolve --applied 20260724025905_enable_rls
 npx prisma migrate resolve --applied 20260724025910_add_missing_fk_indexes
+npx prisma migrate resolve --applied 20260726064951_add_paid_out_prize_status
+npx prisma migrate resolve --applied 20260726065728_add_prize_forward_and_transition_timestamps
 ```
 
-After that, `prisma migrate dev` behaves normally for all future migrations.
+After that, `prisma migrate dev` behaves normally for all future migrations (including S03's
+`20260830082000_s03_conditions_met_at_and_participant_rename`).
 
 ## Everyday commands
 
@@ -42,4 +45,4 @@ npx prisma studio         # browse the data (uses DIRECT_URL)
 
 ## RLS model
 
-Every table has Row Level Security enabled. `events`, `prizes`, `judges`, `submissions`, and `payouts` have a public `SELECT` policy scoped to non-`DRAFT`/non-`CANCELLED` events — matching the product promise that a published event is publicly auditable. `users`, `wallets`, and `op_log` have RLS enabled with **no** policies: they're reachable only via the `service_role` key, which the Next.js backend holds server-side (never `NEXT_PUBLIC_`, same rule as the Trustless Work API key). No table has an `INSERT`/`UPDATE`/`DELETE` policy for `anon`/`authenticated` — every write goes through the backend, which owns state-machine validation and idempotency (see `docs/architecture.md`, Principle 1).
+Every table has Row Level Security enabled. `events`, `prizes`, `judges`, `participants`, and `payouts` have a public `SELECT` policy scoped to non-`DRAFT`/non-`CANCELLED` events — matching the product promise that a published event is publicly auditable. `users`, `wallets`, and `op_log` have RLS enabled with **no** policies: they're reachable only via the `service_role` key, which the Next.js backend holds server-side (never `NEXT_PUBLIC_`, same rule as the Trustless Work API key). No table has an `INSERT`/`UPDATE`/`DELETE` policy for `anon`/`authenticated` — every write goes through the backend, which owns state-machine validation and idempotency (see `docs/architecture.md`, Principle 1).
