@@ -24,7 +24,7 @@ const SESSION_COOKIE = "astrea_wallet_id";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
 export async function getAuthNonce(address: string) {
-	return issueAuthNonce(address);
+	return await issueAuthNonce(address);
 }
 
 export async function associateVerifiedWallet({
@@ -45,7 +45,7 @@ export async function associateVerifiedWallet({
 		throw new Error("Invalid Stellar address");
 	}
 
-	const nonceValid = consumeAuthNonce(nonce, address);
+	const nonceValid = await consumeAuthNonce(nonce, address);
 	if (!nonceValid) {
 		throw new Error("Invalid or expired authentication nonce");
 	}

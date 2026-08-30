@@ -14,19 +14,55 @@ import {
 	updateWalletEmail,
 } from "./session";
 
-const { mockCookieMap, mockDb } = vi.hoisted(() => ({
-	mockCookieMap: new Map<string, { value: string; options?: unknown }>(),
-	mockDb: {
-		wallet: {
-			findUnique: vi.fn(),
-			create: vi.fn(),
-			update: vi.fn(),
+const { mockCookieMap, mockDb, nonceRows } = vi.hoisted(() => {
+	const nonceRows = new Map<
+		string,
+		{ nonce: string; address: string; expiresAt: Date }
+	>();
+	return {
+		mockCookieMap: new Map<string, { value: string; options?: unknown }>(),
+		nonceRows,
+		mockDb: {
+			wallet: {
+				findUnique: vi.fn(),
+				create: vi.fn(),
+				update: vi.fn(),
+			},
+			user: {
+				create: vi.fn(),
+			},
+			authNonce: {
+				deleteMany: vi.fn(async ({ where }: { where: { expiresAt?: { lte: Date } } }) => {
+					if (where.expiresAt?.lte) {
+						const cutoff = where.expiresAt.lte.getTime();
+						for (const [k, v] of nonceRows.entries()) {
+							if (v.expiresAt.getTime() <= cutoff) nonceRows.delete(k);
+						}
+					}
+					return { count: 0 };
+				}),
+				create: vi.fn(
+					async ({
+						data,
+					}: {
+						data: { nonce: string; address: string; expiresAt: Date };
+					}) => {
+						nonceRows.set(data.nonce, data);
+						return data;
+					},
+				),
+				findUnique: vi.fn(async ({ where }: { where: { nonce: string } }) => {
+					return nonceRows.get(where.nonce) ?? null;
+				}),
+				delete: vi.fn(async ({ where }: { where: { nonce: string } }) => {
+					const row = nonceRows.get(where.nonce);
+					nonceRows.delete(where.nonce);
+					return row;
+				}),
+			},
 		},
-		user: {
-			create: vi.fn(),
-		},
-	},
-}));
+	};
+});
 
 vi.mock("next/headers", () => ({
 	cookies: async () => ({
@@ -50,6 +86,7 @@ describe("S07: Stellar challenge-response auth and session management", () => {
 
 	beforeEach(() => {
 		mockCookieMap.clear();
+		nonceRows.clear();
 		vi.clearAllMocks();
 	});
 
@@ -58,35 +95,39 @@ describe("S07: Stellar challenge-response auth and session management", () => {
 	});
 
 	describe("issueAuthNonce & consumeAuthNonce", () => {
-		it("issues a nonce and message for a valid Stellar address", () => {
-			const { nonce, message, expiresAt } = issueAuthNonce(address);
+		it("issues a nonce and message for a valid Stellar address", async () => {
+			const { nonce, message, expiresAt } = await issueAuthNonce(address);
 			expect(nonce).toBeDefined();
 			expect(typeof nonce).toBe("string");
 			expect(message).toBe(formatAuthMessage(address, nonce));
 			expect(expiresAt).toBeGreaterThan(Date.now());
 		});
 
-		it("throws an error for an invalid Stellar address", () => {
-			expect(() => issueAuthNonce("INVALID_STELLAR_ADDRESS")).toThrow(
+		it("throws an error for an invalid Stellar address", async () => {
+			await expect(issueAuthNonce("INVALID_STELLAR_ADDRESS")).rejects.toThrow(
 				/Invalid Stellar address/,
 			);
 		});
 
-		it("consumes a valid nonce successfully and enforces single-use", () => {
-			const { nonce } = issueAuthNonce(address);
-			expect(consumeAuthNonce(nonce, address)).toBe(true);
+		it("consumes a valid nonce successfully and enforces single-use", async () => {
+			const { nonce } = await issueAuthNonce(address);
+			expect(await consumeAuthNonce(nonce, address)).toBe(true);
 			// Replay attempt fails
-			expect(consumeAuthNonce(nonce, address)).toBe(false);
+			expect(await consumeAuthNonce(nonce, address)).toBe(false);
 		});
 
-		it("rejects consuming a nonce for a different address", () => {
+		it("rejects consuming a nonce for a different address", async () => {
 			const otherKeypair = Keypair.random();
-			const { nonce } = issueAuthNonce(address);
-			expect(consumeAuthNonce(nonce, otherKeypair.publicKey())).toBe(false);
+			const { nonce } = await issueAuthNonce(address);
+			expect(await consumeAuthNonce(nonce, otherKeypair.publicKey())).toBe(
+				false,
+			);
 		});
 
-		it("rejects non-existent nonces", () => {
-			expect(consumeAuthNonce("non-existent-nonce", address)).toBe(false);
+		it("rejects non-existent nonces", async () => {
+			expect(await consumeAuthNonce("non-existent-nonce", address)).toBe(
+				false,
+			);
 		});
 	});
 

@@ -15,7 +15,7 @@ export async function GET(request: Request) {
 	}
 
 	try {
-		const result = issueAuthNonce(address);
+		const result = await issueAuthNonce(address);
 		return NextResponse.json(result);
 	} catch (err: unknown) {
 		const message =

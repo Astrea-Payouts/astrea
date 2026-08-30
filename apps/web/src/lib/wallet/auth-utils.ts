@@ -1,6 +1,7 @@
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
 import { Keypair, StrKey } from "@stellar/stellar-sdk";
+import { db } from "@/lib/db";
 import { STELLAR_ACCOUNT_ID } from "@/lib/stellar-network";
 
 export const AUTH_MESSAGE_PREFIX = "Astrea Authentication";
@@ -10,19 +11,11 @@ export function formatAuthMessage(address: string, nonce: string): string {
 	return `${AUTH_MESSAGE_PREFIX}\nAddress: ${address}\nNonce: ${nonce}`;
 }
 
-type NonceEntry = {
-	address: string;
-	expiresAt: number;
-};
-
-// Server memory store for active challenge nonces
-const nonceStore = new Map<string, NonceEntry>();
-
-export function issueAuthNonce(address: string): {
+export async function issueAuthNonce(address: string): Promise<{
 	nonce: string;
 	message: string;
 	expiresAt: number;
-} {
+}> {
 	if (
 		!STELLAR_ACCOUNT_ID.test(address) ||
 		!StrKey.isValidEd25519PublicKey(address)
@@ -31,16 +24,20 @@ export function issueAuthNonce(address: string): {
 	}
 
 	const now = Date.now();
-	// Prune expired entries
-	for (const [key, entry] of nonceStore.entries()) {
-		if (entry.expiresAt <= now) {
-			nonceStore.delete(key);
-		}
-	}
+	// Best-effort prune of expired rows (full cleanup can be a later cron).
+	await db.authNonce.deleteMany({
+		where: { expiresAt: { lte: new Date(now) } },
+	});
 
 	const nonce = crypto.randomUUID();
 	const expiresAt = now + NONCE_TTL_MS;
-	nonceStore.set(nonce, { address, expiresAt });
+	await db.authNonce.create({
+		data: {
+			nonce,
+			address,
+			expiresAt: new Date(expiresAt),
+		},
+	});
 
 	return {
 		nonce,
@@ -49,15 +46,18 @@ export function issueAuthNonce(address: string): {
 	};
 }
 
-export function consumeAuthNonce(nonce: string, address: string): boolean {
-	const entry = nonceStore.get(nonce);
+export async function consumeAuthNonce(
+	nonce: string,
+	address: string,
+): Promise<boolean> {
+	const entry = await db.authNonce.findUnique({ where: { nonce } });
 	if (!entry) return false;
 
-	// Single-use: delete immediately to prevent replay
-	nonceStore.delete(nonce);
+	// Single-use: delete immediately to prevent replay (even on mismatch).
+	await db.authNonce.delete({ where: { nonce } });
 
 	if (entry.address !== address) return false;
-	if (entry.expiresAt <= Date.now()) return false;
+	if (entry.expiresAt.getTime() <= Date.now()) return false;
 
 	return true;
 }
