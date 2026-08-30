@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { resolveHeaderVariant } from "@/components/resolve-header-variant";
 import { StaggeredMenu } from "@/components/staggered-menu";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 import { Link, usePathname } from "@/i18n/navigation";
@@ -30,9 +31,7 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 	const t = useTranslations("SiteHeader");
 	const pathname = usePathname();
 
-	// Default to transparent on homepage hero, solid on non-hero pages
-	const resolvedVariant =
-		variant ?? (pathname === "/" ? "transparent" : "solid");
+	const resolvedVariant = resolveHeaderVariant(variant, pathname);
 
 	return (
 		<header

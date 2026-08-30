@@ -259,7 +259,12 @@ export function SeeItInAction() {
 								</div>
 
 								<div className="mt-5 flex items-center justify-between pt-2 text-xs text-zinc-400 border-t border-white/5">
-									<span className="font-mono">Tx: {evt.txHash}</span>
+									<div className="flex flex-col gap-0.5">
+										<span className="font-sans text-[10px] uppercase tracking-wider text-amber-400/90">
+											Illustrative example (not a live tx)
+										</span>
+										<span className="font-mono">Tx: {evt.txHash}</span>
+									</div>
 									<span className="flex items-center gap-1 text-blue-400 hover:text-blue-300">
 										View on Stellar Explorer <ExternalLink className="size-3" />
 									</span>

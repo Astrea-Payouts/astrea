@@ -1,14 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { resolveHeaderVariant } from "@/components/resolve-header-variant";
 
 describe("Marketing and Navigation Component logic", () => {
 	it("resolves header variant correctly", () => {
-		const resolveHeaderVariant = (
-			explicitVariant?: "transparent" | "solid",
-			pathname = "/",
-		) => {
-			return explicitVariant ?? (pathname === "/" ? "transparent" : "solid");
-		};
-
 		expect(resolveHeaderVariant(undefined, "/")).toBe("transparent");
 		expect(resolveHeaderVariant(undefined, "/participant")).toBe("solid");
 		expect(resolveHeaderVariant(undefined, "/organizer")).toBe("solid");
