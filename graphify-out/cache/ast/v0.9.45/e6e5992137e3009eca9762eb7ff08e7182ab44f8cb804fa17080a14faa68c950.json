@@ -1,0 +1,1 @@
+{"nodes": [{"id": "pkg_github_com_astrea_payouts_astrea_services_core_go", "label": "github.com/Astrea-Payouts/astrea/services/core-go", "file_type": "code", "type": "package", "ecosystem": "go", "source_file": "services/core-go/go.mod", "source_location": "L1"}], "edges": []}
