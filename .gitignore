@@ -76,6 +76,7 @@ spikes/k01-trustless-work/
 *.bak
 
 # Graphify_out Manifest
+graphify-out/
 /graphify_out/manifest.json
 
 /apps/web/src/generated/prisma
