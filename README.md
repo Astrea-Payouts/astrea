@@ -184,7 +184,7 @@ This project uses Biome for linting and formatting, and Husky with commitlint to
 | Name | Role | GitHub |
 | --- | --- | --- |
 | Christopher Lamberti | Maintainer | [cLamberti](https://github.com/cLamberti) |
-| Dereck Monge Chaves | Maintainer | [Dmong04](https://github.com/Dmong04) |
+| Dereck Monge | Maintainer | [Dmong04](https://github.com/Dmong04) |
 
 ## License
 

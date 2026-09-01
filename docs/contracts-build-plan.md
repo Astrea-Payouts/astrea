@@ -26,6 +26,11 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | L01 | Security pass: contract review (ideally an external audit, or at minimum a careful internal review against known Soroban contract pitfalls — reentrancy, integer overflow, auth bypass), treasury/signer key custody review | M | **Not optional to skip** — a homegrown contract handling real funds has no third-party liability backstop the way a third-party escrow provider would. This gates any mainnet deployment |
 | L02 | Formal verification or fuzz testing of the release/dispute paths, if the team has the resources for it | M | Stretch goal — proportionate to how much value the contract will hold at mainnet |
 
+**L01 running findings log** (fixed as found, not deferred to a single audit pass at the end):
+- **Fixed (2026-09-01):** `create_event` didn't reject a negative `reward` — `AdminWallet.balance -= reward` with a negative value inflated the caller's balance with no deposit, drainable via `withdraw_funds`. Same class of missing guard added to `withdraw_funds` (`amount > 0`, matching `deposit_funds`'s existing check). `release_reward` now caps `winners.len()` at 25 (K06's validated bound) to prevent a malformed winners list from blowing the transaction's resource budget mid-release.
+- **Open decision, documented not fixed:** token whitelist (`TokenWhitelistEnabled`) is default-deny-disabled — any SEP-41 token is accepted until the emergency admin explicitly enables the whitelist. Intentional for the testnet/pilot phase; **must be flipped to an explicit allowlist (e.g. USDC only) before accepting real funds.** See the doc comment on `is_token_allowed_internal` in `lib.rs`.
+- **Still open, tracked separately:** #20 (two-signature pre-launch emergency withdraw, resolver field), #22 (dispute/resolve_dispute — no path exists yet to unwind an `InProgress` event). Both explicitly block accepting real (non-testnet) funds — see their issue descriptions.
+
 ## Sequencing rules
 
 1. K01 before everything — if the spike falsifies the role-model assumption, this doc changes while changing docs is still cheap.
