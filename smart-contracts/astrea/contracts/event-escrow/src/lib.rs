@@ -15,6 +15,16 @@ const EVENTS_INDEX_TTL_EXTEND_TO: u32 = 120 * DAY_IN_LEDGERS;
 const GOVERNANCE_TTL_THRESHOLD: u32 = 30 * DAY_IN_LEDGERS;
 const GOVERNANCE_TTL_EXTEND_TO: u32 = 180 * DAY_IN_LEDGERS;
 
+/// K06 (spikes/k06-multi-release-budget) validated a single `release_reward`
+/// call paying up to 25 winners stays well inside the Stellar Mainnet
+/// instruction budget (~1.2% of it). This is an on-chain enforcement of
+/// that validated bound, not an arbitrary limit — an unbounded winners
+/// list is a griefing vector: a judge could submit a list large enough to
+/// blow the transaction's resource budget mid-call, aborting a legitimate
+/// event close with no recovery path until the dispute mechanism (#22)
+/// exists.
+const MAX_WINNERS: u32 = 25;
+
 #[contractevent(topics = ["evt_new"], data_format = "vec")]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct EventCreated {
@@ -214,6 +224,14 @@ fn assert_is_emergency_admin(env: &Env, caller: &Address) {
     );
 }
 
+/// Token whitelist is **default-deny-disabled**, i.e. any SEP-41 token is
+/// accepted unless `set_token_whitelist_enabled(true)` has been called by
+/// the emergency admin. This is a deliberate, documented decision for the
+/// current testnet/pilot phase, not an oversight: it keeps the contract
+/// usable while the token policy is still being decided. Before accepting
+/// real (non-testnet) funds, enable the whitelist and populate it with the
+/// specific tokens Astrea intends to support (e.g. USDC) — see the Council
+/// review referenced in build-plan.md's security pass (L01).
 fn is_token_allowed_internal(env: &Env, token: &Address) -> bool {
     let enabled: bool = env
         .storage()
@@ -252,6 +270,8 @@ fn create_event_internal(
     assert_not_paused(&env, &admin);
 
     assert_token_allowed(&env, &token);
+
+    assert!(reward > 0, "Reward must be greater than zero");
 
     if let Some(d) = deadline {
         assert!(
@@ -365,6 +385,8 @@ impl EventEscrow {
         admin.require_auth();
 
         assert_not_paused(&env, &admin);
+
+        assert!(amount > 0, "Amount must be greater than zero");
 
         let key = DataKey::Wallet(admin.clone());
 
@@ -701,6 +723,11 @@ impl EventEscrow {
         assert!(
             event.state == EventState::InProgress,
             "Event is not ready to release rewards"
+        );
+
+        assert!(
+            winners.len() <= MAX_WINNERS,
+            "Too many winners in a single release"
         );
 
         for winner in winners.iter() {

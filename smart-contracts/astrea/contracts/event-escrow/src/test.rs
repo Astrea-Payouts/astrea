@@ -184,6 +184,60 @@ fn test_withdraw_funds_rejects_insufficient_balance() {
 }
 
 #[test]
+#[should_panic(expected = "Amount must be greater than zero")]
+
+fn test_withdraw_funds_rejects_negative_amount() {
+    // Same fund-creation shape as the create_event reward bug: a negative
+    // amount would make `wallet.balance -= amount` INCREASE the balance
+    // with nothing withdrawn. See docs/contracts-build-plan.md's L01
+    // findings log.
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+
+    let client = EventEscrowClient::new(&env, &contract_id);
+
+    let admin = Address::generate(&env);
+
+    let token_admin = Address::generate(&env);
+
+    let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    asset_client.mint(&admin, &1_000);
+
+    client.deposit_funds(&admin, &token_address, &100);
+
+    client.withdraw_funds(&admin, &-500);
+}
+
+#[test]
+#[should_panic(expected = "Amount must be greater than zero")]
+
+fn test_withdraw_funds_rejects_zero_amount() {
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+
+    let client = EventEscrowClient::new(&env, &contract_id);
+
+    let admin = Address::generate(&env);
+
+    let token_admin = Address::generate(&env);
+
+    let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    asset_client.mint(&admin, &1_000);
+
+    client.deposit_funds(&admin, &token_address, &100);
+
+    client.withdraw_funds(&admin, &0);
+}
+
+#[test]
 #[should_panic(expected = "Admin has no wallet registered")]
 
 fn test_withdraw_funds_without_prior_wallet() {
@@ -306,6 +360,64 @@ fn test_create_event_rejects_insufficient_balance() {
     let id = test_event_id(&env, 1);
 
     client.create_event(&admin, &Address::generate(&env), &token_address, &500, &id);
+}
+
+#[test]
+#[should_panic(expected = "Reward must be greater than zero")]
+
+fn test_create_event_rejects_negative_reward() {
+    // A negative reward would make `wallet.balance -= reward` INCREASE the
+    // caller's balance with no deposit — a fund-creation exploit, not just
+    // an input-validation nicety. See docs/contracts-build-plan.md's L01
+    // findings log.
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+
+    let client = EventEscrowClient::new(&env, &contract_id);
+
+    let admin = Address::generate(&env);
+
+    let token_admin = Address::generate(&env);
+
+    let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    asset_client.mint(&admin, &1_000);
+
+    client.deposit_funds(&admin, &token_address, &100);
+
+    let id = test_event_id(&env, 1);
+
+    client.create_event(&admin, &Address::generate(&env), &token_address, &-500, &id);
+}
+
+#[test]
+#[should_panic(expected = "Reward must be greater than zero")]
+
+fn test_create_event_rejects_zero_reward() {
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+
+    let client = EventEscrowClient::new(&env, &contract_id);
+
+    let admin = Address::generate(&env);
+
+    let token_admin = Address::generate(&env);
+
+    let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    asset_client.mint(&admin, &1_000);
+
+    client.deposit_funds(&admin, &token_address, &100);
+
+    let id = test_event_id(&env, 1);
+
+    client.create_event(&admin, &Address::generate(&env), &token_address, &0, &id);
 }
 
 #[test]
@@ -1409,6 +1521,43 @@ fn test_release_reward_rejects_negative_amount_winner_even_if_sum_matches() {
             address: winner_bad
         },
     ];
+
+    client.release_reward(&judge, &event_id, &winners);
+}
+
+#[test]
+#[should_panic(expected = "Too many winners in a single release")]
+
+fn test_release_reward_rejects_too_many_winners() {
+    // K06 (spikes/k06-multi-release-budget) validated 25 winners as safe
+    // within Stellar Mainnet's instruction budget; this proves the
+    // contract enforces that bound on-chain rather than trusting the
+    // off-chain caller not to exceed it.
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+    let client = EventEscrowClient::new(&env, &contract_id);
+    let admin = Address::generate(&env);
+    let judge = Address::generate(&env);
+    let token_admin = Address::generate(&env);
+    let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    asset_client.mint(&admin, &1_000);
+    client.deposit_funds(&admin, &token_address, &1_000);
+    let event_id = test_event_id(&env, 1);
+    client.create_event(&admin, &judge, &token_address, &500, &event_id);
+    force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
+
+    let mut winners: Vec<Winner> = Vec::new(&env);
+    for i in 0..26u32 {
+        winners.push_back(Winner {
+            place: i + 1,
+            amount: 1,
+            address: Address::generate(&env),
+        });
+    }
 
     client.release_reward(&judge, &event_id, &winners);
 }
