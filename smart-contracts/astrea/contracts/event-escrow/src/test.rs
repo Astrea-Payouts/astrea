@@ -241,9 +241,9 @@ fn test_create_event_deducts_from_reserve_and_returns_the_given_id() {
 
     let id_2 = test_event_id(&env, 2);
 
-    let returned_1 = client.create_event(&admin, &token_address, &300, &id_1);
+    let returned_1 = client.create_event(&admin, &Address::generate(&env), &token_address, &300, &id_1);
 
-    let returned_2 = client.create_event(&admin, &token_address, &200, &id_2);
+    let returned_2 = client.create_event(&admin, &Address::generate(&env), &token_address, &200, &id_2);
 
     assert_eq!(returned_1, id_1);
 
@@ -276,9 +276,9 @@ fn test_create_event_rejects_duplicate_id() {
 
     let id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &200, &id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &200, &id);
 
-    client.create_event(&admin, &token_address, &100, &id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &100, &id);
 }
 
 #[test]
@@ -305,7 +305,7 @@ fn test_create_event_rejects_insufficient_balance() {
 
     let id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &500, &id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &id);
 }
 
 #[test]
@@ -328,7 +328,7 @@ fn test_create_event_without_prior_deposit() {
 
     let id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &100, &id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &100, &id);
 }
 
 #[test]
@@ -357,7 +357,7 @@ fn test_create_event_rejects_token_mismatched_with_wallet() {
 
     let id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_b, &100, &id);
+    client.create_event(&admin, &Address::generate(&env), &token_b, &100, &id);
 }
 
 #[test]
@@ -385,9 +385,9 @@ fn test_get_events_by_admin_returns_all_created_events() {
 
     let id_2 = test_event_id(&env, 2);
 
-    client.create_event(&admin, &token_address, &200, &id_1);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &200, &id_1);
 
-    client.create_event(&admin, &token_address, &300, &id_2);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &id_2);
 
     let events = client.get_events_by_admin(&admin);
 
@@ -447,9 +447,9 @@ fn test_get_events_by_admin_does_not_mix_different_admins() {
 
     let id_2 = test_event_id(&env, 2);
 
-    client.create_event(&admin_1, &token_address, &100, &id_1);
+    client.create_event(&admin_1, &Address::generate(&env), &token_address, &100, &id_1);
 
-    client.create_event(&admin_2, &token_address, &100, &id_2);
+    client.create_event(&admin_2, &Address::generate(&env), &token_address, &100, &id_2);
 
     let events_admin_1 = client.get_events_by_admin(&admin_1);
 
@@ -487,7 +487,7 @@ fn test_set_event_waiting_for_start_transitions_from_created() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -518,7 +518,7 @@ fn test_set_event_waiting_for_start_rejects_double_call() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -551,7 +551,7 @@ fn test_set_event_waiting_for_start_rejects_wrong_admin() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     client.set_event_waiting_for_start(&impostor_admin, &event_id);
 }
@@ -588,6 +588,8 @@ fn test_set_event_in_progress_allows_release_reward_afterwards() {
 
     let admin = Address::generate(&env);
 
+    let judge = Address::generate(&env);
+
     let token_admin = Address::generate(&env);
 
     let (token_address, token_client, asset_client) = create_test_token(&env, &token_admin);
@@ -600,7 +602,7 @@ fn test_set_event_in_progress_allows_release_reward_afterwards() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &judge, &token_address, &300, &event_id);
 
     client.set_event_in_progress(&admin, &event_id);
 
@@ -615,7 +617,7 @@ fn test_set_event_in_progress_allows_release_reward_afterwards() {
         },
     ];
 
-    client.release_reward(&admin, &event_id, &winners);
+    client.release_reward(&judge, &event_id, &winners);
 
     assert_eq!(token_client.balance(&winner_address), 300);
 }
@@ -633,6 +635,8 @@ fn test_set_event_in_progress_allows_transition_from_waiting_for_start() {
 
     let admin = Address::generate(&env);
 
+    let judge = Address::generate(&env);
+
     let token_admin = Address::generate(&env);
 
     let (token_address, token_client, asset_client) = create_test_token(&env, &token_admin);
@@ -645,7 +649,7 @@ fn test_set_event_in_progress_allows_transition_from_waiting_for_start() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &judge, &token_address, &300, &event_id);
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -662,7 +666,7 @@ fn test_set_event_in_progress_allows_transition_from_waiting_for_start() {
         },
     ];
 
-    client.release_reward(&admin, &event_id, &winners);
+    client.release_reward(&judge, &event_id, &winners);
 
     assert_eq!(token_client.balance(&winner_address), 300);
 }
@@ -691,7 +695,7 @@ fn test_set_event_in_progress_rejects_double_start() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     client.set_event_in_progress(&admin, &event_id);
 
@@ -724,7 +728,7 @@ fn test_set_event_in_progress_rejects_wrong_admin() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     client.set_event_in_progress(&impostor_admin, &event_id);
 }
@@ -771,7 +775,7 @@ fn test_set_event_cancelled_refunds_wallet_from_created_state() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     assert_eq!(client.get_balance(&admin), 200);
 
@@ -803,7 +807,7 @@ fn test_set_event_cancelled_refunds_wallet_from_waiting_for_start_state() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -813,8 +817,15 @@ fn test_set_event_cancelled_refunds_wallet_from_waiting_for_start_state() {
 }
 
 #[test]
+#[should_panic(expected = "Event cannot be cancelled in its current state")]
 
-fn test_set_event_cancelled_refunds_wallet_from_in_progress_state() {
+fn test_set_event_cancelled_rejects_in_progress_state() {
+    // ADR-006: cancelling a live (InProgress) event with an automatic,
+    // unconditional refund would let an organizer extract participants'
+    // already-invested work for free. Once InProgress, this function must
+    // reject the cancellation — unwinding a live event requires a
+    // resolver-adjudicated dispute instead (see #22 / build-plan.md E01d,
+    // not implemented yet), never a bare refund to the organizer.
     let env = Env::default();
 
     env.mock_all_auths();
@@ -835,13 +846,11 @@ fn test_set_event_cancelled_refunds_wallet_from_in_progress_state() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     client.set_event_in_progress(&admin, &event_id);
 
     client.set_event_cancelled(&admin, &event_id);
-
-    assert_eq!(client.get_balance(&admin), 500);
 }
 
 #[test]
@@ -870,7 +879,7 @@ fn test_set_event_cancelled_rejects_wrong_admin() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     client.set_event_cancelled(&impostor_admin, &event_id);
 }
@@ -899,7 +908,7 @@ fn test_set_event_cancelled_rejects_already_ended_event() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     force_event_state(&env, &contract_id, event_id.clone(), EventState::Ended);
 
@@ -952,7 +961,7 @@ fn test_release_compensation_pays_participants_from_admin_wallet() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
 
     client.set_event_cancelled(&admin, &event_id);
 
@@ -1006,7 +1015,7 @@ fn test_release_compensation_allows_amount_different_from_original_reward() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     client.set_event_cancelled(&admin, &event_id);
 
@@ -1052,7 +1061,7 @@ fn test_release_compensation_rejects_event_not_cancelled() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
 
     let participants = soroban_sdk::vec![
         &env,
@@ -1084,7 +1093,7 @@ fn test_release_compensation_rejects_wrong_admin() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -1116,7 +1125,7 @@ fn test_release_compensation_rejects_empty_participants() {
 
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
     client.set_event_cancelled(&admin, &event_id);
     let participants: Vec<Participants> = soroban_sdk::vec![&env];
     client.release_compensation(&admin, &event_id, &participants);
@@ -1140,7 +1149,7 @@ fn test_release_compensation_rejects_zero_amount_participant() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -1173,7 +1182,7 @@ fn test_release_compensation_rejects_negative_amount_participant() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -1210,7 +1219,7 @@ fn test_release_compensation_rejects_total_over_wallet_balance() {
     client.deposit_funds(&admin, &token_address, &500);
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -1266,7 +1275,7 @@ fn test_release_compensation_rejects_double_release() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -1291,6 +1300,7 @@ fn test_release_reward_distributes_to_winners_and_ends_event() {
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
     let admin = Address::generate(&env);
+    let judge = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, token_client, asset_client) = create_test_token(&env, &token_admin);
     let first_place = Address::generate(&env);
@@ -1300,7 +1310,7 @@ fn test_release_reward_distributes_to_winners_and_ends_event() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &600, &event_id);
+    client.create_event(&admin, &judge, &token_address, &600, &event_id);
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -1322,7 +1332,7 @@ fn test_release_reward_distributes_to_winners_and_ends_event() {
         },
     ];
 
-    client.release_reward(&admin, &event_id, &winners);
+    client.release_reward(&judge, &event_id, &winners);
 
     assert_eq!(token_client.balance(&first_place), 300);
     assert_eq!(token_client.balance(&second_place), 200);
@@ -1340,6 +1350,7 @@ fn test_release_reward_rejects_zero_amount_winner() {
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
     let admin = Address::generate(&env);
+    let judge = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
@@ -1347,7 +1358,7 @@ fn test_release_reward_rejects_zero_amount_winner() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &judge, &token_address, &500, &event_id);
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -1359,7 +1370,7 @@ fn test_release_reward_rejects_zero_amount_winner() {
         },
     ];
 
-    client.release_reward(&admin, &event_id, &winners);
+    client.release_reward(&judge, &event_id, &winners);
 }
 
 #[test]
@@ -1373,6 +1384,7 @@ fn test_release_reward_rejects_negative_amount_winner_even_if_sum_matches() {
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
     let admin = Address::generate(&env);
+    let judge = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_ok = Address::generate(&env);
@@ -1381,7 +1393,7 @@ fn test_release_reward_rejects_negative_amount_winner_even_if_sum_matches() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &judge, &token_address, &500, &event_id);
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -1398,11 +1410,11 @@ fn test_release_reward_rejects_negative_amount_winner_even_if_sum_matches() {
         },
     ];
 
-    client.release_reward(&admin, &event_id, &winners);
+    client.release_reward(&judge, &event_id, &winners);
 }
 
 #[test]
-#[should_panic(expected = "Only the event admin can release rewards")]
+#[should_panic(expected = "Only the event's judge can release rewards")]
 
 fn test_release_reward_rejects_non_owner_admin() {
     let env = Env::default();
@@ -1412,7 +1424,8 @@ fn test_release_reward_rejects_non_owner_admin() {
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
     let admin = Address::generate(&env);
-    let impostor_admin = Address::generate(&env);
+    let judge = Address::generate(&env);
+    let impostor_judge = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
@@ -1420,7 +1433,7 @@ fn test_release_reward_rejects_non_owner_admin() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &judge, &token_address, &500, &event_id);
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -1434,7 +1447,46 @@ fn test_release_reward_rejects_non_owner_admin() {
         },
     ];
 
-    client.release_reward(&impostor_admin, &event_id, &winners);
+    client.release_reward(&impostor_judge, &event_id, &winners);
+}
+
+#[test]
+#[should_panic(expected = "Only the event's judge can release rewards")]
+
+fn test_release_reward_rejects_the_organizer_itself() {
+    // ADR-003: the organizer is never in the payout path. Creating and
+    // funding an event does not grant the organizer any ability to release
+    // its reward — only the separately-designated judge can.
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+    let client = EventEscrowClient::new(&env, &contract_id);
+    let admin = Address::generate(&env);
+    let judge = Address::generate(&env);
+    let token_admin = Address::generate(&env);
+    let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+    let winner_address = Address::generate(&env);
+
+    asset_client.mint(&admin, &1_000);
+    client.deposit_funds(&admin, &token_address, &1_000);
+    let event_id = test_event_id(&env, 1);
+    client.create_event(&admin, &judge, &token_address, &500, &event_id);
+    force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
+
+    let winners = soroban_sdk::vec![
+        &env,
+        Winner {
+            place: 1,
+
+            amount: 500,
+
+            address: winner_address
+        },
+    ];
+
+    client.release_reward(&admin, &event_id, &winners);
 }
 
 #[test]
@@ -1448,6 +1500,7 @@ fn test_release_reward_rejects_event_not_in_progress() {
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
     let admin = Address::generate(&env);
+    let judge = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
@@ -1455,7 +1508,7 @@ fn test_release_reward_rejects_event_not_in_progress() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &judge, &token_address, &500, &event_id);
 
     let winners = soroban_sdk::vec![
         &env,
@@ -1468,7 +1521,7 @@ fn test_release_reward_rejects_event_not_in_progress() {
         },
     ];
 
-    client.release_reward(&admin, &event_id, &winners);
+    client.release_reward(&judge, &event_id, &winners);
 }
 
 #[test]
@@ -1482,6 +1535,7 @@ fn test_release_reward_rejects_double_release() {
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
     let admin = Address::generate(&env);
+    let judge = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
@@ -1489,7 +1543,7 @@ fn test_release_reward_rejects_double_release() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &judge, &token_address, &500, &event_id);
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -1503,8 +1557,8 @@ fn test_release_reward_rejects_double_release() {
         },
     ];
 
-    client.release_reward(&admin, &event_id, &winners);
-    client.release_reward(&admin, &event_id, &winners);
+    client.release_reward(&judge, &event_id, &winners);
+    client.release_reward(&judge, &event_id, &winners);
 }
 
 #[test]
@@ -1552,7 +1606,7 @@ fn test_get_event_returns_current_state() {
 
     client.deposit_funds(&admin, &token_address, &500);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
     let event = client.get_event(&event_id);
 
     assert_eq!(event.admin, admin);
@@ -1591,6 +1645,7 @@ fn test_release_reward_rejects_mismatched_total() {
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
     let admin = Address::generate(&env);
+    let judge = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
@@ -1598,7 +1653,7 @@ fn test_release_reward_rejects_mismatched_total() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &500, &event_id);
+    client.create_event(&admin, &judge, &token_address, &500, &event_id);
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -1612,7 +1667,7 @@ fn test_release_reward_rejects_mismatched_total() {
         },
     ];
 
-    client.release_reward(&admin, &event_id, &winners);
+    client.release_reward(&judge, &event_id, &winners);
 }
 
 #[test]
@@ -1657,7 +1712,7 @@ fn test_expire_event_refunds_after_deadline() {
     let event_id = test_event_id(&env, 1);
     let deadline = env.ledger().timestamp() + 100;
 
-    client.create_event_with_deadline(&admin, &token_address, &400, &event_id, &deadline);
+    client.create_event_with_deadline(&admin, &Address::generate(&env), &token_address, &400, &event_id, &deadline);
     assert_eq!(client.get_balance(&admin), 600);
     env.ledger().with_mut(|li| li.timestamp = deadline + 1);
 
@@ -1686,7 +1741,7 @@ fn test_expire_event_rejects_before_deadline() {
     let event_id = test_event_id(&env, 1);
     let deadline = env.ledger().timestamp() + 1_000;
 
-    client.create_event_with_deadline(&admin, &token_address, &400, &event_id, &deadline);
+    client.create_event_with_deadline(&admin, &Address::generate(&env), &token_address, &400, &event_id, &deadline);
     client.expire_event(&event_id);
 }
 
@@ -1708,7 +1763,7 @@ fn test_expire_event_rejects_event_without_deadline() {
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &400, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &400, &event_id);
     client.expire_event(&event_id);
 }
 
@@ -1732,7 +1787,7 @@ fn test_create_event_with_deadline_rejects_past_deadline() {
     env.ledger().with_mut(|li| li.timestamp = 1_000);
     let event_id = test_event_id(&env, 1);
     let past_deadline = 500u64;
-    client.create_event_with_deadline(&admin, &token_address, &400, &event_id, &past_deadline);
+    client.create_event_with_deadline(&admin, &Address::generate(&env), &token_address, &400, &event_id, &past_deadline);
 }
 
 #[test]
@@ -1756,7 +1811,7 @@ fn test_get_events_by_admin_page_returns_bounded_slices() {
     for n in 1..=5u8 {
         let id = test_event_id(&env, n);
 
-        client.create_event(&admin, &token_address, &100, &id);
+        client.create_event(&admin, &Address::generate(&env), &token_address, &100, &id);
 
         ids.push_back(id);
     }
@@ -1803,12 +1858,12 @@ fn test_emergency_pause_blocks_and_unblocks_writes() {
     assert_eq!(client.is_paused(), true);
 
     let event_id = test_event_id(&env, 1);
-    let result = client.try_create_event(&admin, &token_address, &100, &event_id);
+    let result = client.try_create_event(&admin, &Address::generate(&env), &token_address, &100, &event_id);
 
     assert!(result.is_err());
     client.set_paused(&emergency_admin, &false);
     assert_eq!(client.is_paused(), false);
-    client.create_event(&admin, &token_address, &100, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &100, &event_id);
 }
 
 #[test]
@@ -1870,12 +1925,12 @@ fn test_set_admin_paused_blocks_only_target_admin() {
     assert_eq!(client.is_admin_paused(&admin_a), true);
     assert_eq!(client.is_admin_paused(&admin_b), false);
     let event_id_a = test_event_id(&env, 1);
-    let result = client.try_create_event(&admin_a, &token_address, &100, &event_id_a);
+    let result = client.try_create_event(&admin_a, &Address::generate(&env), &token_address, &100, &event_id_a);
 
     assert!(result.is_err());
     let event_id_b = test_event_id(&env, 2);
 
-    client.create_event(&admin_b, &token_address, &100, &event_id_b);
+    client.create_event(&admin_b, &Address::generate(&env), &token_address, &100, &event_id_b);
 }
 
 #[test]
@@ -1900,7 +1955,7 @@ fn test_expire_event_works_even_when_globally_paused() {
     let event_id = test_event_id(&env, 1);
     let deadline = env.ledger().timestamp() + 100;
 
-    client.create_event_with_deadline(&admin, &token_address, &300, &event_id, &deadline);
+    client.create_event_with_deadline(&admin, &Address::generate(&env), &token_address, &300, &event_id, &deadline);
     client.set_paused(&emergency_admin, &true);
 
     env.ledger().with_mut(|li| li.timestamp = deadline + 1);
@@ -1996,7 +2051,7 @@ fn test_event_created_is_emitted() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
 
     assert_eq!(
         env.events().all().filter_by_contract(&contract_id),
@@ -2027,7 +2082,7 @@ fn test_event_expired_is_emitted() {
     let event_id = test_event_id(&env, 1);
     let deadline = env.ledger().timestamp() + 100;
 
-    client.create_event_with_deadline(&admin, &token_address, &300, &event_id, &deadline);
+    client.create_event_with_deadline(&admin, &Address::generate(&env), &token_address, &300, &event_id, &deadline);
 
     env.ledger().with_mut(|li| li.timestamp = deadline + 1);
     client.expire_event(&event_id);
@@ -2059,7 +2114,7 @@ fn test_event_waiting_for_start_is_emitted() {
     client.deposit_funds(&admin, &token_address, &500);
 
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
     client.set_event_waiting_for_start(&admin, &event_id);
 
     assert_eq!(
@@ -2088,7 +2143,7 @@ fn test_event_started_is_emitted() {
     client.deposit_funds(&admin, &token_address, &500);
 
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
     client.set_event_in_progress(&admin, &event_id);
 
     assert_eq!(
@@ -2117,7 +2172,7 @@ fn test_event_cancelled_is_emitted() {
     client.deposit_funds(&admin, &token_address, &500);
 
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
     client.set_event_cancelled(&admin, &event_id);
 
     assert_eq!(
@@ -2148,7 +2203,7 @@ fn test_compensation_released_event_is_emitted() {
     client.deposit_funds(&admin, &token_address, &500);
 
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -2181,6 +2236,7 @@ fn test_reward_released_event_is_emitted() {
     let client = EventEscrowClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
+    let judge = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner = Address::generate(&env);
@@ -2189,7 +2245,7 @@ fn test_reward_released_event_is_emitted() {
     client.deposit_funds(&admin, &token_address, &500);
 
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &token_address, &300, &event_id);
+    client.create_event(&admin, &judge, &token_address, &300, &event_id);
     client.set_event_in_progress(&admin, &event_id);
 
     let winners = soroban_sdk::vec![
@@ -2201,7 +2257,7 @@ fn test_reward_released_event_is_emitted() {
         },
     ];
 
-    client.release_reward(&admin, &event_id, &winners);
+    client.release_reward(&judge, &event_id, &winners);
 
     assert_eq!(
         env.events().all().filter_by_contract(&contract_id),
