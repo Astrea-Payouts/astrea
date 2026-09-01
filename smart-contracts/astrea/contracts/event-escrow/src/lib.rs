@@ -115,6 +115,10 @@ pub struct AdminWallet {
 
 pub struct Event {
     pub admin: Address,
+    /// The judge/release-signer for this event — deliberately distinct from
+    /// `admin`. The organizer is never in the payout path: `release_reward`
+    /// requires this address's auth, not `admin`'s. See ADR-003.
+    pub judge: Address,
     pub token: Address,
     pub reward: i128,
     pub state: EventState,
@@ -237,6 +241,7 @@ fn assert_token_allowed(env: &Env, token: &Address) {
 fn create_event_internal(
     env: Env,
     admin: Address,
+    judge: Address,
     token: Address,
     reward: i128,
     event_id: BytesN<16>,
@@ -288,6 +293,7 @@ fn create_event_internal(
 
     let event = Event {
         admin: admin.clone(),
+        judge,
         token,
         reward,
         state: EventState::Created,
@@ -398,24 +404,27 @@ impl EventEscrow {
 
         admin: Address,
 
+        judge: Address,
+
         token: Address,
 
         reward: i128,
 
         event_id: BytesN<16>,
     ) -> BytesN<16> {
-        create_event_internal(env, admin, token, reward, event_id, None)
+        create_event_internal(env, admin, judge, token, reward, event_id, None)
     }
 
     pub fn create_event_with_deadline(
         env: Env,
         admin: Address,
+        judge: Address,
         token: Address,
         reward: i128,
         event_id: BytesN<16>,
         deadline: u64,
     ) -> BytesN<16> {
-        create_event_internal(env, admin, token, reward, event_id, Some(deadline))
+        create_event_internal(env, admin, judge, token, reward, event_id, Some(deadline))
     }
 
     pub fn expire_event(env: Env, event_id: BytesN<16>) {
@@ -552,10 +561,15 @@ impl EventEscrow {
             "Only the event admin can cancel the event"
         );
 
+        // InProgress is deliberately excluded: cancelling a live event with an
+        // automatic, unconditional refund would let an organizer extract
+        // participants' already-invested work for free (ADR-006). Once an
+        // event is InProgress, unwinding it requires a resolver-adjudicated
+        // dispute instead (build-plan.md E01d/#22) — not implemented yet, so
+        // for now an InProgress event simply cannot be cancelled at all. That
+        // is the correct, safe interim state (fails closed).
         assert!(
-            event.state == EventState::Created
-                || event.state == EventState::WaitingForStart
-                || event.state == EventState::InProgress,
+            event.state == EventState::Created || event.state == EventState::WaitingForStart,
             "Event cannot be cancelled in its current state"
         );
 
@@ -666,10 +680,8 @@ impl EventEscrow {
         .publish(&env);
     }
 
-    pub fn release_reward(env: Env, admin: Address, event_id: BytesN<16>, winners: Vec<Winner>) {
-        admin.require_auth();
-
-        assert_not_paused(&env, &admin);
+    pub fn release_reward(env: Env, judge: Address, event_id: BytesN<16>, winners: Vec<Winner>) {
+        judge.require_auth();
 
         let event_key = DataKey::Event(event_id.clone());
 
@@ -679,9 +691,11 @@ impl EventEscrow {
             .get(&event_key)
             .expect("Event does not exist");
 
+        assert_not_paused(&env, &event.admin);
+
         assert!(
-            event.admin == admin,
-            "Only the event admin can release rewards"
+            event.judge == judge,
+            "Only the event's judge can release rewards"
         );
 
         assert!(
@@ -715,7 +729,7 @@ impl EventEscrow {
 
         RewardReleased {
             event_id,
-            admin: admin.clone(),
+            admin: event.admin.clone(),
             total_distributed,
         }
         .publish(&env);
