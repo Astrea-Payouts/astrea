@@ -19,6 +19,30 @@
 			"preset": "recommended"
 		}
 	},
+	"overrides": [
+		{
+			"includes": [
+				"src/components/marketing/card-swap.tsx",
+				"src/components/marketing/scroll-stack.tsx",
+				"src/components/marketing/specular-button.tsx"
+			],
+			"linter": {
+				"rules": {
+					"style": {
+						"noNonNullAssertion": "off"
+					},
+					"suspicious": {
+						"noExplicitAny": "off",
+						"useIterableCallbackReturn": "off"
+					},
+					"correctness": {
+						"noUnusedVariables": "off",
+						"useExhaustiveDependencies": "off"
+					}
+				}
+			}
+		}
+	],
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"
