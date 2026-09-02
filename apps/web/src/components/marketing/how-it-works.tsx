@@ -70,8 +70,8 @@ export function HowItWorks() {
 	];
 
 	return (
-		<section className="relative bg-black pt-12 pb-0 text-white md:pt-16">
-			<div className="mx-auto max-w-5xl px-6 md:px-12">
+		<section className="relative bg-black pt-1 pb-0 text-white md:pt-16">
+			<div className="mx-auto max-w-5xl px-3 md:px-12">
 				<div className="text-center">
 					<div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1 text-xs font-semibold text-white/70">
 						<Sparkles className="size-3.5 text-blue-400" />
@@ -85,15 +85,25 @@ export function HowItWorks() {
 					</p>
 				</div>
 
-				{/* Verified React Bits ScrollStack (window scroll = homepage-only). */}
-				<div className="mt-10">
+				{/* ScrollStack ships as its own scroll container (root is
+				`h-full overflow-y-auto`, inner track carries a pt-[20vh] /
+				pb-[50rem] pin runway). Used that way it needs a bounded parent
+				height and becomes a nested scroll area — with overscroll-behavior
+				contain, the page stops scrolling while the pointer is over it,
+				which traps visitors on a marketing page.
+
+				So we drive it from window scroll instead, and neutralise the
+				inner runway here. Left alone under useWindowScroll that padding
+				lands in page flow as ~833px of dead black after the last card.
+				The override lives at the call site so scroll-stack.tsx stays a
+				byte-identical port of the live source. */}
+				<div className="mt-10 [&_.scroll-stack-inner]:!min-h-0 [&_.scroll-stack-inner]:!px-0 [&_.scroll-stack-inner]:!pt-[8vh] [&_.scroll-stack-inner]:!pb-[16rem]">
 					<ScrollStack
 						useWindowScroll
 						itemDistance={80}
 						itemStackDistance={28}
 						stackPosition="18%"
 						baseScale={0.88}
-						className="relative"
 					>
 						{steps.map((step) => (
 							<ScrollStackItem
