@@ -1,5 +1,6 @@
 import { ArrowRight, Code2, Sparkles, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
+import BorderGlow from "@/components/marketing/border-glow";
 import { HowItWorks } from "@/components/marketing/how-it-works";
 import { SeeItInAction } from "@/components/marketing/see-it-in-action";
 import { SpecularButton } from "@/components/marketing/specular-button";
@@ -45,7 +46,7 @@ export default function Home() {
 						</p>
 						<div className="flex flex-wrap items-center gap-4">
 							<Link href="/organizer">
-								<SpecularButton size="lg">
+								<SpecularButton size="lg" tint="#000000" tintOpacity={1}>
 									<span>{t("createEventCta")}</span>
 								</SpecularButton>
 							</Link>
@@ -84,59 +85,58 @@ export default function Home() {
 
 					<div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
 						{/* Participant Option */}
-						<Link
-							href="/participant"
-							className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-8 shadow-[0_0_0_0_rgba(59,130,246,0)] transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-500/50 hover:bg-blue-500/[0.04] hover:shadow-[0_0_28px_-4px_rgba(59,130,246,0.45)]"
+						<BorderGlow
+							backgroundColor="#09090b"
+							borderRadius={16}
+							glowColor="217 91 60"
+							colors={["#3b82f6", "#60a5fa", "#38bdf8"]}
+							className="group"
 						>
-							{/* Glow that tracks the border itself, so the hover state
-							reads as the edge lighting up rather than the whole card
-							changing tint. */}
-							<span
-								aria-hidden
-								className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 [background:radial-gradient(120%_80%_at_50%_0%,rgba(59,130,246,0.16),transparent_60%)]"
-							/>
-							<div className="relative flex items-center justify-between">
-								<div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-3 text-blue-400">
-									<Code2 className="size-6" />
+							<Link href="/participant" className="block p-8">
+								<div className="flex items-center justify-between">
+									<div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-3 text-blue-400">
+										<Code2 className="size-6" />
+									</div>
+									<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-blue-400" />
 								</div>
-								<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-blue-400" />
-							</div>
-							<h3 className="relative mt-6 text-xl font-bold text-white group-hover:text-blue-300">
-								{t("participantRoleTitle")}
-							</h3>
-							<p className="relative mt-2 text-sm leading-relaxed text-zinc-400">
-								{t("participantRoleDesc")}
-							</p>
-							<span className="relative mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400">
-								{t("participantRoleAction")} <ArrowRight className="size-3" />
-							</span>
-						</Link>
+								<h3 className="mt-6 text-xl font-bold text-white group-hover:text-blue-300">
+									{t("participantRoleTitle")}
+								</h3>
+								<p className="mt-2 text-sm leading-relaxed text-zinc-400">
+									{t("participantRoleDesc")}
+								</p>
+								<span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400">
+									{t("participantRoleAction")} <ArrowRight className="size-3" />
+								</span>
+							</Link>
+						</BorderGlow>
 
 						{/* Organizer Option */}
-						<Link
-							href="/organizer"
-							className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-8 shadow-[0_0_0_0_rgba(16,185,129,0)] transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-500/50 hover:bg-emerald-500/[0.04] hover:shadow-[0_0_28px_-4px_rgba(16,185,129,0.45)]"
+						<BorderGlow
+							backgroundColor="#09090b"
+							borderRadius={16}
+							glowColor="160 84 55"
+							colors={["#10b981", "#34d399", "#6ee7b7"]}
+							className="group"
 						>
-							<span
-								aria-hidden
-								className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 [background:radial-gradient(120%_80%_at_50%_0%,rgba(16,185,129,0.16),transparent_60%)]"
-							/>
-							<div className="relative flex items-center justify-between">
-								<div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-400">
-									<Users className="size-6" />
+							<Link href="/organizer" className="block p-8">
+								<div className="flex items-center justify-between">
+									<div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-400">
+										<Users className="size-6" />
+									</div>
+									<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-emerald-400" />
 								</div>
-								<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-emerald-400" />
-							</div>
-							<h3 className="relative mt-6 text-xl font-bold text-white group-hover:text-emerald-300">
-								{t("organizerRoleTitle")}
-							</h3>
-							<p className="relative mt-2 text-sm leading-relaxed text-zinc-400">
-								{t("organizerRoleDesc")}
-							</p>
-							<span className="relative mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
-								{t("organizerRoleAction")} <ArrowRight className="size-3" />
-							</span>
-						</Link>
+								<h3 className="mt-6 text-xl font-bold text-white group-hover:text-emerald-300">
+									{t("organizerRoleTitle")}
+								</h3>
+								<p className="mt-2 text-sm leading-relaxed text-zinc-400">
+									{t("organizerRoleDesc")}
+								</p>
+								<span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
+									{t("organizerRoleAction")} <ArrowRight className="size-3" />
+								</span>
+							</Link>
+						</BorderGlow>
 					</div>
 				</div>
 			</section>
@@ -162,7 +162,7 @@ export default function Home() {
 					</p>
 					<div className="mt-8 flex flex-wrap items-center justify-center gap-4">
 						<Link href="/organizer">
-							<SpecularButton size="lg">
+							<SpecularButton size="lg" tint="#000000" tintOpacity={1}>
 									<span>{t("createEventCta")}</span>
 								</SpecularButton>
 						</Link>

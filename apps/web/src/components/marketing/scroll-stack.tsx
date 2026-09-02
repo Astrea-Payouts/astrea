@@ -1,8 +1,22 @@
 "use client";
 
-// Verified live-source port of React Bits ScrollStack
-// (https://reactbits.dev/components/scroll-stack) — TS-TW variant, JS→typed TSX with no logic changes.
-// See docs/ui-motion.md.
+// Port of React Bits ScrollStack (https://reactbits.dev/components/scroll-stack),
+// TS-TW variant. See docs/ui-motion.md.
+//
+// DIVERGES from the live source — do not treat this as a clean port when
+// diffing against upstream. Deliberate local changes, all tuning, none
+// structural:
+//   1. calculateProgress applies smoothstep instead of returning the raw
+//      linear ratio (upstream cards start/stop scaling abruptly at the
+//      trigger boundaries).
+//   2. Lenis lerp 0.1 -> 0.075.
+//   3. The hasChanged thresholds are tighter (translateY 0.1 -> 0.01,
+//      scale 0.001 -> 0.0002, with scale rounded to 4dp instead of 3) —
+//      upstream's values quantise motion into visible steps.
+//   4. .scroll-stack-inner padding: upstream's pt-[20vh] px-20 pb-[50rem]
+//      left a screen and a half of dead space and broke narrow layouts.
+//
+// Everything else is upstream verbatim. Re-apply these four on any upgrade.
 
 import Lenis from "lenis";
 import type React from "react";
