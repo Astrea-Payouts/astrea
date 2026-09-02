@@ -35,7 +35,6 @@ fn test_event_id(env: &Env, n: u8) -> BytesN<16> {
 /// Test-only helper: directly overwrites an event's state in storage.
 /// Needed to reach states that would otherwise require a full flow
 /// (e.g. jumping straight to Ended without a real release_reward call).
-
 fn force_event_state(env: &Env, contract_id: &Address, event_id: BytesN<16>, state: EventState) {
     env.as_contract(contract_id, || {
         let mut event: Event = env
@@ -53,7 +52,6 @@ fn force_event_state(env: &Env, contract_id: &Address, event_id: BytesN<16>, sta
 }
 
 #[test]
-
 fn test_deposit_funds_increases_balance() {
     let env = Env::default();
 
@@ -82,7 +80,6 @@ fn test_deposit_funds_increases_balance() {
 
 #[test]
 #[should_panic(expected = "Amount must be greater than zero")]
-
 fn test_deposit_funds_rejects_zero_amount() {
     let env = Env::default();
 
@@ -103,7 +100,6 @@ fn test_deposit_funds_rejects_zero_amount() {
 
 #[test]
 #[should_panic(expected = "This admin already has a wallet with a different token")]
-
 fn test_deposit_funds_rejects_different_token() {
     let env = Env::default();
 
@@ -131,7 +127,6 @@ fn test_deposit_funds_rejects_different_token() {
 }
 
 #[test]
-
 fn test_withdraw_funds_reduces_balance_and_transfers() {
     let env = Env::default();
 
@@ -160,7 +155,6 @@ fn test_withdraw_funds_reduces_balance_and_transfers() {
 
 #[test]
 #[should_panic(expected = "Insufficient balance in wallet")]
-
 fn test_withdraw_funds_rejects_insufficient_balance() {
     let env = Env::default();
 
@@ -185,7 +179,6 @@ fn test_withdraw_funds_rejects_insufficient_balance() {
 
 #[test]
 #[should_panic(expected = "Amount must be greater than zero")]
-
 fn test_withdraw_funds_rejects_negative_amount() {
     // Same fund-creation shape as the create_event reward bug: a negative
     // amount would make `wallet.balance -= amount` INCREASE the balance
@@ -214,7 +207,6 @@ fn test_withdraw_funds_rejects_negative_amount() {
 
 #[test]
 #[should_panic(expected = "Amount must be greater than zero")]
-
 fn test_withdraw_funds_rejects_zero_amount() {
     let env = Env::default();
 
@@ -239,7 +231,6 @@ fn test_withdraw_funds_rejects_zero_amount() {
 
 #[test]
 #[should_panic(expected = "Admin has no wallet registered")]
-
 fn test_withdraw_funds_without_prior_wallet() {
     let env = Env::default();
 
@@ -255,7 +246,6 @@ fn test_withdraw_funds_without_prior_wallet() {
 }
 
 #[test]
-
 fn test_get_balance_admin_without_wallet_returns_zero() {
     let env = Env::default();
 
@@ -271,7 +261,6 @@ fn test_get_balance_admin_without_wallet_returns_zero() {
 }
 
 #[test]
-
 fn test_create_event_deducts_from_reserve_and_returns_the_given_id() {
     let env = Env::default();
 
@@ -320,7 +309,6 @@ fn test_create_event_deducts_from_reserve_and_returns_the_given_id() {
 
 #[test]
 #[should_panic(expected = "Event already exists")]
-
 fn test_create_event_rejects_duplicate_id() {
     let env = Env::default();
 
@@ -349,7 +337,6 @@ fn test_create_event_rejects_duplicate_id() {
 
 #[test]
 #[should_panic(expected = "Insufficient balance in wallet to create event")]
-
 fn test_create_event_rejects_insufficient_balance() {
     let env = Env::default();
 
@@ -376,7 +363,6 @@ fn test_create_event_rejects_insufficient_balance() {
 
 #[test]
 #[should_panic(expected = "Reward must be greater than zero")]
-
 fn test_create_event_rejects_negative_reward() {
     // A negative reward would make `wallet.balance -= reward` INCREASE the
     // caller's balance with no deposit — a fund-creation exploit, not just
@@ -407,7 +393,6 @@ fn test_create_event_rejects_negative_reward() {
 
 #[test]
 #[should_panic(expected = "Reward must be greater than zero")]
-
 fn test_create_event_rejects_zero_reward() {
     let env = Env::default();
 
@@ -434,7 +419,6 @@ fn test_create_event_rejects_zero_reward() {
 
 #[test]
 #[should_panic(expected = "Admin must deposit funds before the event")]
-
 fn test_create_event_without_prior_deposit() {
     let env = Env::default();
 
@@ -457,7 +441,6 @@ fn test_create_event_without_prior_deposit() {
 
 #[test]
 #[should_panic(expected = "Admin wallet token doesn't match the event's token")]
-
 fn test_create_event_rejects_token_mismatched_with_wallet() {
     let env = Env::default();
 
@@ -485,7 +468,6 @@ fn test_create_event_rejects_token_mismatched_with_wallet() {
 }
 
 #[test]
-
 fn test_get_events_by_admin_returns_all_created_events() {
     let env = Env::default();
 
@@ -535,7 +517,6 @@ fn test_get_events_by_admin_returns_all_created_events() {
 }
 
 #[test]
-
 fn test_get_events_by_admin_returns_empty_for_unknown_admin() {
     let env = Env::default();
 
@@ -553,7 +534,6 @@ fn test_get_events_by_admin_returns_empty_for_unknown_admin() {
 }
 
 #[test]
-
 fn test_get_events_by_admin_does_not_mix_different_admins() {
     let env = Env::default();
 
@@ -613,7 +593,6 @@ fn test_get_events_by_admin_does_not_mix_different_admins() {
 }
 
 #[test]
-
 fn test_set_event_waiting_for_start_transitions_from_created() {
     let env = Env::default();
 
@@ -650,7 +629,6 @@ fn test_set_event_waiting_for_start_transitions_from_created() {
 
 #[test]
 #[should_panic(expected = "Event must be in Created state to wait for start")]
-
 fn test_set_event_waiting_for_start_rejects_double_call() {
     let env = Env::default();
 
@@ -687,7 +665,6 @@ fn test_set_event_waiting_for_start_rejects_double_call() {
 
 #[test]
 #[should_panic(expected = "Only the event admin can update the event")]
-
 fn test_set_event_waiting_for_start_rejects_wrong_admin() {
     let env = Env::default();
 
@@ -724,7 +701,6 @@ fn test_set_event_waiting_for_start_rejects_wrong_admin() {
 
 #[test]
 #[should_panic(expected = "Event does not exist")]
-
 fn test_set_event_waiting_for_start_rejects_nonexistent_event() {
     let env = Env::default();
 
@@ -742,7 +718,6 @@ fn test_set_event_waiting_for_start_rejects_nonexistent_event() {
 }
 
 #[test]
-
 fn test_set_event_in_progress_allows_release_reward_afterwards() {
     let env = Env::default();
 
@@ -789,7 +764,6 @@ fn test_set_event_in_progress_allows_release_reward_afterwards() {
 }
 
 #[test]
-
 fn test_set_event_in_progress_allows_transition_from_waiting_for_start() {
     let env = Env::default();
 
@@ -839,7 +813,6 @@ fn test_set_event_in_progress_allows_transition_from_waiting_for_start() {
 
 #[test]
 #[should_panic(expected = "Event must be in Created or WaitingForStart state to start")]
-
 fn test_set_event_in_progress_rejects_double_start() {
     let env = Env::default();
 
@@ -876,7 +849,6 @@ fn test_set_event_in_progress_rejects_double_start() {
 
 #[test]
 #[should_panic(expected = "Only the event admin can start the event")]
-
 fn test_set_event_in_progress_rejects_wrong_admin() {
     let env = Env::default();
 
@@ -913,7 +885,6 @@ fn test_set_event_in_progress_rejects_wrong_admin() {
 
 #[test]
 #[should_panic(expected = "Event does not exist")]
-
 fn test_set_event_in_progress_rejects_nonexistent_event() {
     let env = Env::default();
 
@@ -931,7 +902,6 @@ fn test_set_event_in_progress_rejects_nonexistent_event() {
 }
 
 #[test]
-
 fn test_set_event_cancelled_refunds_wallet_from_created_state() {
     let env = Env::default();
 
@@ -969,7 +939,6 @@ fn test_set_event_cancelled_refunds_wallet_from_created_state() {
 }
 
 #[test]
-
 fn test_set_event_cancelled_refunds_wallet_from_waiting_for_start_state() {
     let env = Env::default();
 
@@ -1008,7 +977,6 @@ fn test_set_event_cancelled_refunds_wallet_from_waiting_for_start_state() {
 
 #[test]
 #[should_panic(expected = "Event cannot be cancelled in its current state")]
-
 fn test_set_event_cancelled_rejects_in_progress_state() {
     // ADR-006: cancelling a live (InProgress) event with an automatic,
     // unconditional refund would let an organizer extract participants'
@@ -1051,7 +1019,6 @@ fn test_set_event_cancelled_rejects_in_progress_state() {
 
 #[test]
 #[should_panic(expected = "Only the event admin can cancel the event")]
-
 fn test_set_event_cancelled_rejects_wrong_admin() {
     let env = Env::default();
 
@@ -1088,7 +1055,6 @@ fn test_set_event_cancelled_rejects_wrong_admin() {
 
 #[test]
 #[should_panic(expected = "Event cannot be cancelled in its current state")]
-
 fn test_set_event_cancelled_rejects_already_ended_event() {
     let env = Env::default();
 
@@ -1125,7 +1091,6 @@ fn test_set_event_cancelled_rejects_already_ended_event() {
 
 #[test]
 #[should_panic(expected = "Event does not exist")]
-
 fn test_set_event_cancelled_rejects_nonexistent_event() {
     let env = Env::default();
 
@@ -1143,7 +1108,6 @@ fn test_set_event_cancelled_rejects_nonexistent_event() {
 }
 
 #[test]
-
 fn test_release_compensation_pays_participants_from_admin_wallet() {
     let env = Env::default();
 
@@ -1205,7 +1169,6 @@ fn test_release_compensation_pays_participants_from_admin_wallet() {
 }
 
 #[test]
-
 fn test_release_compensation_allows_amount_different_from_original_reward() {
     let env = Env::default();
 
@@ -1257,7 +1220,6 @@ fn test_release_compensation_allows_amount_different_from_original_reward() {
 
 #[test]
 #[should_panic(expected = "Event is not cancelled")]
-
 fn test_release_compensation_rejects_event_not_cancelled() {
     let env = Env::default();
 
@@ -1302,7 +1264,6 @@ fn test_release_compensation_rejects_event_not_cancelled() {
 
 #[test]
 #[should_panic(expected = "Only admin can release the compensation")]
-
 fn test_release_compensation_rejects_wrong_admin() {
     let env = Env::default();
 
@@ -1341,7 +1302,6 @@ fn test_release_compensation_rejects_wrong_admin() {
 
 #[test]
 #[should_panic(expected = "No participants provided")]
-
 fn test_release_compensation_rejects_empty_participants() {
     let env = Env::default();
 
@@ -1371,7 +1331,6 @@ fn test_release_compensation_rejects_empty_participants() {
 
 #[test]
 #[should_panic(expected = "Compensation must be greater than zero")]
-
 fn test_release_compensation_rejects_zero_amount_participant() {
     let env = Env::default();
 
@@ -1409,7 +1368,6 @@ fn test_release_compensation_rejects_zero_amount_participant() {
 
 #[test]
 #[should_panic(expected = "Compensation must be greater than zero")]
-
 fn test_release_compensation_rejects_negative_amount_participant() {
     let env = Env::default();
 
@@ -1452,7 +1410,6 @@ fn test_release_compensation_rejects_negative_amount_participant() {
 
 #[test]
 #[should_panic(expected = "Insufficient wallet balance to cover compensation")]
-
 fn test_release_compensation_rejects_total_over_wallet_balance() {
     let env = Env::default();
 
@@ -1491,7 +1448,6 @@ fn test_release_compensation_rejects_total_over_wallet_balance() {
 
 #[test]
 #[should_panic(expected = "Event does not exist")]
-
 fn test_release_compensation_rejects_nonexistent_event() {
     let env = Env::default();
 
@@ -1515,7 +1471,6 @@ fn test_release_compensation_rejects_nonexistent_event() {
 
 #[test]
 #[should_panic(expected = "Event is not cancelled")]
-
 fn test_release_compensation_rejects_double_release() {
     let env = Env::default();
 
@@ -1553,7 +1508,6 @@ fn test_release_compensation_rejects_double_release() {
 }
 
 #[test]
-
 fn test_release_reward_distributes_to_winners_and_ends_event() {
     let env = Env::default();
 
@@ -1603,7 +1557,6 @@ fn test_release_reward_distributes_to_winners_and_ends_event() {
 
 #[test]
 #[should_panic(expected = "Winner amount must be greater than zero")]
-
 fn test_release_reward_rejects_zero_amount_winner() {
     let env = Env::default();
 
@@ -1637,7 +1590,6 @@ fn test_release_reward_rejects_zero_amount_winner() {
 
 #[test]
 #[should_panic(expected = "Winner amount must be greater than zero")]
-
 fn test_release_reward_rejects_negative_amount_winner_even_if_sum_matches() {
     let env = Env::default();
 
@@ -1677,7 +1629,6 @@ fn test_release_reward_rejects_negative_amount_winner_even_if_sum_matches() {
 
 #[test]
 #[should_panic(expected = "Too many winners in a single release")]
-
 fn test_release_reward_rejects_too_many_winners() {
     // K06 (spikes/k06-multi-release-budget) validated 25 winners as safe
     // within Stellar Mainnet's instruction budget; this proves the
@@ -1714,7 +1665,6 @@ fn test_release_reward_rejects_too_many_winners() {
 
 #[test]
 #[should_panic(expected = "Only the event's judge can release rewards")]
-
 fn test_release_reward_rejects_non_owner_admin() {
     let env = Env::default();
 
@@ -1751,7 +1701,6 @@ fn test_release_reward_rejects_non_owner_admin() {
 
 #[test]
 #[should_panic(expected = "Only the event's judge can release rewards")]
-
 fn test_release_reward_rejects_the_organizer_itself() {
     // ADR-003: the organizer is never in the payout path. Creating and
     // funding an event does not grant the organizer any ability to release
@@ -1790,7 +1739,6 @@ fn test_release_reward_rejects_the_organizer_itself() {
 
 #[test]
 #[should_panic(expected = "Event is not ready to release rewards")]
-
 fn test_release_reward_rejects_event_not_in_progress() {
     let env = Env::default();
 
@@ -1825,7 +1773,6 @@ fn test_release_reward_rejects_event_not_in_progress() {
 
 #[test]
 #[should_panic(expected = "Event is not ready to release rewards")]
-
 fn test_release_reward_rejects_double_release() {
     let env = Env::default();
 
@@ -1862,7 +1809,6 @@ fn test_release_reward_rejects_double_release() {
 
 #[test]
 #[should_panic(expected = "Event does not exist")]
-
 fn test_release_reward_rejects_nonexistent_event() {
     let env = Env::default();
 
@@ -1889,7 +1835,6 @@ fn test_release_reward_rejects_nonexistent_event() {
 }
 
 #[test]
-
 fn test_get_event_returns_current_state() {
     let env = Env::default();
 
@@ -1926,7 +1871,6 @@ fn test_get_event_returns_current_state() {
 
 #[test]
 #[should_panic(expected = "Event does not exist")]
-
 fn test_get_event_rejects_nonexistent_event() {
     let env = Env::default();
 
@@ -1941,7 +1885,6 @@ fn test_get_event_rejects_nonexistent_event() {
 
 #[test]
 #[should_panic(expected = "Distributed amount does not match the locked reward")]
-
 fn test_release_reward_rejects_mismatched_total() {
     let env = Env::default();
 
@@ -1976,7 +1919,6 @@ fn test_release_reward_rejects_mismatched_total() {
 }
 
 #[test]
-
 fn test_has_wallet_distinguishes_no_wallet_from_zero_balance() {
     let env = Env::default();
 
@@ -1989,17 +1931,16 @@ fn test_has_wallet_distinguishes_no_wallet_from_zero_balance() {
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
 
-    assert_eq!(client.has_wallet(&admin_without_wallet), false);
+    assert!(!client.has_wallet(&admin_without_wallet));
     assert_eq!(client.get_balance(&admin_without_wallet), 0);
     asset_client.mint(&admin_with_zero_balance, &1_000);
     client.deposit_funds(&admin_with_zero_balance, &token_address, &500);
     client.withdraw_funds(&admin_with_zero_balance, &500);
-    assert_eq!(client.has_wallet(&admin_with_zero_balance), true);
+    assert!(client.has_wallet(&admin_with_zero_balance));
     assert_eq!(client.get_balance(&admin_with_zero_balance), 0);
 }
 
 #[test]
-
 fn test_expire_event_refunds_after_deadline() {
     let env = Env::default();
 
@@ -2036,7 +1977,6 @@ fn test_expire_event_refunds_after_deadline() {
 
 #[test]
 #[should_panic(expected = "Event deadline has not passed yet")]
-
 fn test_expire_event_rejects_before_deadline() {
     let env = Env::default();
 
@@ -2066,7 +2006,6 @@ fn test_expire_event_rejects_before_deadline() {
 
 #[test]
 #[should_panic(expected = "Event has no deadline configured")]
-
 fn test_expire_event_rejects_event_without_deadline() {
     let env = Env::default();
 
@@ -2094,7 +2033,6 @@ fn test_expire_event_rejects_event_without_deadline() {
 
 #[test]
 #[should_panic(expected = "Deadline must be in the future")]
-
 fn test_create_event_with_deadline_rejects_past_deadline() {
     let env = Env::default();
 
@@ -2123,7 +2061,6 @@ fn test_create_event_with_deadline_rejects_past_deadline() {
 }
 
 #[test]
-
 fn test_get_events_by_admin_page_returns_bounded_slices() {
     let env = Env::default();
 
@@ -2169,7 +2106,6 @@ fn test_get_events_by_admin_page_returns_bounded_slices() {
 }
 
 #[test]
-
 fn test_emergency_pause_blocks_and_unblocks_writes() {
     let env = Env::default();
 
@@ -2183,11 +2119,11 @@ fn test_emergency_pause_blocks_and_unblocks_writes() {
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
 
     client.initialize_emergency_admin(&emergency_admin);
-    assert_eq!(client.is_paused(), false);
+    assert!(!client.is_paused());
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     client.set_paused(&emergency_admin, &true);
-    assert_eq!(client.is_paused(), true);
+    assert!(client.is_paused());
 
     let event_id = test_event_id(&env, 1);
     let result = client.try_create_event(
@@ -2200,7 +2136,7 @@ fn test_emergency_pause_blocks_and_unblocks_writes() {
 
     assert!(result.is_err());
     client.set_paused(&emergency_admin, &false);
-    assert_eq!(client.is_paused(), false);
+    assert!(!client.is_paused());
     client.create_event(
         &admin,
         &Address::generate(&env),
@@ -2212,7 +2148,6 @@ fn test_emergency_pause_blocks_and_unblocks_writes() {
 
 #[test]
 #[should_panic(expected = "Emergency admin already initialized")]
-
 fn test_initialize_emergency_admin_rejects_double_call() {
     let env = Env::default();
 
@@ -2229,7 +2164,6 @@ fn test_initialize_emergency_admin_rejects_double_call() {
 
 #[test]
 #[should_panic(expected = "Only the emergency admin can perform this action")]
-
 fn test_set_paused_rejects_non_emergency_admin() {
     let env = Env::default();
 
@@ -2245,7 +2179,6 @@ fn test_set_paused_rejects_non_emergency_admin() {
 }
 
 #[test]
-
 fn test_set_admin_paused_blocks_only_target_admin() {
     let env = Env::default();
 
@@ -2266,8 +2199,8 @@ fn test_set_admin_paused_blocks_only_target_admin() {
     client.deposit_funds(&admin_b, &token_address, &1_000);
     client.set_admin_paused(&emergency_admin, &admin_a, &true);
 
-    assert_eq!(client.is_admin_paused(&admin_a), true);
-    assert_eq!(client.is_admin_paused(&admin_b), false);
+    assert!(client.is_admin_paused(&admin_a));
+    assert!(!client.is_admin_paused(&admin_b));
     let event_id_a = test_event_id(&env, 1);
     let result = client.try_create_event(
         &admin_a,
@@ -2290,7 +2223,6 @@ fn test_set_admin_paused_blocks_only_target_admin() {
 }
 
 #[test]
-
 fn test_expire_event_works_even_when_globally_paused() {
     let env = Env::default();
 
@@ -2328,7 +2260,6 @@ fn test_expire_event_works_even_when_globally_paused() {
 }
 
 #[test]
-
 fn test_token_whitelist_disabled_by_default_allows_any_token() {
     let env = Env::default();
 
@@ -2344,7 +2275,7 @@ fn test_token_whitelist_disabled_by_default_allows_any_token() {
 
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
 
-    assert_eq!(client.is_token_allowed(&token_address), true);
+    assert!(client.is_token_allowed(&token_address));
 
     asset_client.mint(&admin, &1_000);
 
@@ -2354,7 +2285,6 @@ fn test_token_whitelist_disabled_by_default_allows_any_token() {
 }
 
 #[test]
-
 fn test_token_whitelist_enabled_blocks_non_allowed_tokens() {
     let env = Env::default();
 
@@ -2380,9 +2310,9 @@ fn test_token_whitelist_enabled_blocks_non_allowed_tokens() {
 
     client.set_token_allowed(&emergency_admin, &token_a, &true);
 
-    assert_eq!(client.is_token_allowed(&token_a), true);
+    assert!(client.is_token_allowed(&token_a));
 
-    assert_eq!(client.is_token_allowed(&token_b), false);
+    assert!(!client.is_token_allowed(&token_b));
 
     asset_a.mint(&admin, &1_000);
 
