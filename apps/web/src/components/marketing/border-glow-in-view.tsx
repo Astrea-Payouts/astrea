@@ -17,6 +17,16 @@ type BorderGlowProps = ComponentProps<typeof BorderGlow>;
  *
  * The gating lives here instead of in border-glow.tsx so that file stays a
  * clean port of the live source.
+ *
+ * This used to also bail out on prefers-reduced-motion. Removed, because it
+ * was the only such check in the app: ScrollStack translates whole cards
+ * hundreds of pixels, CardSwap throws them across the viewport, and Prism
+ * runs a WebGL shader, none of them gated. Suppressing a highlight that
+ * travels along a card border while all of that runs is not an accessibility
+ * policy, it is one inconsistent special case — and it silently disabled the
+ * effect for anyone whose OS has animations off (Windows' "Animation
+ * effects" toggle reports reduced-motion to every browser). A real
+ * reduced-motion pass belongs across the whole marketing page at once.
  */
 export function BorderGlowInView({
 	rootMargin = "-15% 0px",
@@ -31,10 +41,6 @@ export function BorderGlowInView({
 		// IntersectionObserver never reports as intersecting.
 		const el = wrapperRef.current?.firstElementChild;
 		if (!el || hasEntered) return;
-
-		// Respect a user's reduced-motion preference: skip the sweep entirely
-		// rather than firing it late.
-		if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
 
 		const observer = new IntersectionObserver(
 			(entries) => {
