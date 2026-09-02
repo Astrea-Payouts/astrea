@@ -1,8 +1,13 @@
 "use client";
 
 // Verified live-source port of React Bits ScrollStack
-// (https://reactbits.dev/components/scroll-stack) — TS-TW variant, JS→typed TSX with no logic changes.
-// See docs/ui-motion.md.
+// (https://reactbits.dev/components/scroll-stack) — TS-TW variant, JS→typed TSX.
+//
+// One deliberate deviation from upstream: `getElementOffset` no longer derives
+// the window-scroll offset from getBoundingClientRect, because that read-back
+// includes this component's own translateY and turns the pin into a feedback
+// loop. See the comment on that function. Everything else is byte-identical to
+// the live source. See docs/ui-motion.md.
 
 import Lenis from "lenis";
 import type React from "react";
@@ -107,8 +112,25 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 	const getElementOffset = useCallback(
 		(element: HTMLElement) => {
 			if (useWindowScroll) {
-				const rect = element.getBoundingClientRect();
-				return rect.top + window.scrollY;
+				// Upstream reads `getBoundingClientRect().top + window.scrollY`
+				// here. That rect already includes the translateY this component
+				// wrote on the previous frame, so every frame feeds its own output
+				// back in: the pin ends up tracking scroll at roughly half speed and
+				// the stack creeps upward instead of holding. Measured on this page
+				// with four cards - the read-back offset was off by exactly the
+				// applied translateY (821/577/374/121px).
+				//
+				// `offsetTop` is layout-only and therefore transform-independent, so
+				// walking the offsetParent chain gives the same document offset with
+				// no feedback. Upstream never hits this because its own demo uses the
+				// default (non-window) path, which already reads `offsetTop`.
+				let top = 0;
+				let node: HTMLElement | null = element;
+				while (node) {
+					top += node.offsetTop;
+					node = node.offsetParent as HTMLElement | null;
+				}
+				return top;
 			} else {
 				return element.offsetTop;
 			}

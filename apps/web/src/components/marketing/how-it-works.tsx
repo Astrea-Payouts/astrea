@@ -2,13 +2,70 @@
 
 import { Check, Gavel, Layers, Send, Sparkles, Wallet } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useRef } from "react";
 import {
 	ScrollStack,
 	ScrollStackItem,
 } from "@/components/marketing/scroll-stack";
 
+// Passed to ScrollStack below AND used to size its pin runway, so the two can
+// never drift apart. ITEM_SCALE is the component's own default.
+const ITEM_DISTANCE = 80;
+const ITEM_STACK_DISTANCE = 28;
+const STACK_POSITION = 0.18; // fraction of viewport height
+const BASE_SCALE = 0.88;
+const ITEM_SCALE = 0.03;
+
+// Breathing room we want left between the last card and the next section.
+const TARGET_GAP = 56;
+
 export function HowItWorks() {
 	const t = useTranslations("HowItWorks");
+	const stackRef = useRef<HTMLDivElement>(null);
+
+	// ScrollStack fakes its pin with translateY, so the last card is painted far
+	// below its own layout box and the track needs bottom runway or the card
+	// spills into the CTA section. The leftover gap works out to
+	//   runway + vh/2 - stackPosition*vh - itemStackDistance*(n-1) - cardHeight
+	// (the vh/2 is the component releasing the pin once .scroll-stack-end
+	// reaches mid-viewport), so solving that for TARGET_GAP gives the runway.
+	//
+	// cardHeight has to be measured, not assumed: the same card is ~332px tall
+	// in the desktop row layout and ~529px once it wraps at 375px. A hard-coded
+	// calc() tuned on desktop overlapped the CTA section by 135px on mobile.
+	const syncRunway = useCallback(() => {
+		const el = stackRef.current;
+		const cards = el?.querySelectorAll<HTMLElement>(".scroll-stack-card");
+		const last = cards?.[cards.length - 1];
+		if (!el || !cards || !last) return;
+
+		// offsetHeight is layout height, so it ignores the scale transform the
+		// component has already written onto the card.
+		const scale = BASE_SCALE + (cards.length - 1) * ITEM_SCALE;
+		const runway =
+			TARGET_GAP +
+			last.offsetHeight * scale +
+			ITEM_STACK_DISTANCE * (cards.length - 1) -
+			window.innerHeight * (0.5 - STACK_POSITION);
+
+		el.style.setProperty(
+			"--stack-runway",
+			`${Math.max(32, Math.round(runway))}px`,
+		);
+	}, []);
+
+	useEffect(() => {
+		syncRunway();
+		const el = stackRef.current;
+		if (!el) return;
+		const observer = new ResizeObserver(syncRunway);
+		observer.observe(el);
+		window.addEventListener("resize", syncRunway);
+		return () => {
+			observer.disconnect();
+			window.removeEventListener("resize", syncRunway);
+		};
+	}, [syncRunway]);
 
 	const steps = [
 		{
@@ -23,7 +80,7 @@ export function HowItWorks() {
 				"Appointed judges and fallback dispute resolver",
 				"Configurable milestone release percentages",
 			],
-			itemClassName: "border border-blue-500/30 bg-zinc-950/95 text-white",
+			itemClassName: "border border-blue-500/30 bg-zinc-950 text-white",
 		},
 		{
 			id: "step-escrow",
@@ -37,7 +94,7 @@ export function HowItWorks() {
 				"Instant 'Prizes Verified On-Chain' public badge",
 				"Zero trust needed — organizers cannot pull funds unilaterally",
 			],
-			itemClassName: "border border-emerald-500/30 bg-zinc-950/95 text-white",
+			itemClassName: "border border-emerald-500/30 bg-zinc-950 text-white",
 		},
 		{
 			id: "step-judging",
@@ -51,7 +108,7 @@ export function HowItWorks() {
 				"Transparent audit trail preserved in Postgres and OpLog",
 				"Automated dispute handling if milestone criteria disputed",
 			],
-			itemClassName: "border border-indigo-500/30 bg-zinc-950/95 text-white",
+			itemClassName: "border border-indigo-500/30 bg-zinc-950 text-white",
 		},
 		{
 			id: "step-payout",
@@ -65,7 +122,7 @@ export function HowItWorks() {
 				"Instant settlement via Stellar Horizon RPC",
 				"Public transaction hash and explorer link per prize",
 			],
-			itemClassName: "border border-sky-500/30 bg-zinc-950/95 text-white",
+			itemClassName: "border border-sky-500/30 bg-zinc-950 text-white",
 		},
 	];
 
@@ -89,21 +146,25 @@ export function HowItWorks() {
 				`h-full overflow-y-auto`, inner track carries a pt-[20vh] /
 				pb-[50rem] pin runway). Used that way it needs a bounded parent
 				height and becomes a nested scroll area — with overscroll-behavior
-				contain, the page stops scrolling while the pointer is over it,
+				contain the page stops scrolling while the pointer is over it,
 				which traps visitors on a marketing page.
 
-				So we drive it from window scroll instead, and neutralise the
-				inner runway here. Left alone under useWindowScroll that padding
-				lands in page flow as ~833px of dead black after the last card.
-				The override lives at the call site so scroll-stack.tsx stays a
-				byte-identical port of the live source. */}
-				<div className="mt-10 [&_.scroll-stack-inner]:!min-h-0 [&_.scroll-stack-inner]:!px-0 [&_.scroll-stack-inner]:!pt-[8vh] [&_.scroll-stack-inner]:!pb-[16rem]">
+				So we drive it from window scroll instead and replace the inner
+				track's own padding here: left alone, that 50rem lands in page
+				flow as dead black after the last card. --stack-runway is measured
+				by syncRunway above; the fallback only applies before the first
+				effect run. The overrides live at the call site so
+				scroll-stack.tsx stays a faithful port. */}
+				<div
+					ref={stackRef}
+					className="mt-10 [&_.scroll-stack-inner]:!min-h-0 [&_.scroll-stack-inner]:!px-0 [&_.scroll-stack-inner]:!pt-[8vh] [&_.scroll-stack-inner]:!pb-[var(--stack-runway,16rem)]"
+				>
 					<ScrollStack
 						useWindowScroll
-						itemDistance={80}
-						itemStackDistance={28}
-						stackPosition="18%"
-						baseScale={0.88}
+						itemDistance={ITEM_DISTANCE}
+						itemStackDistance={ITEM_STACK_DISTANCE}
+						stackPosition={`${STACK_POSITION * 100}%`}
+						baseScale={BASE_SCALE}
 					>
 						{steps.map((step) => (
 							<ScrollStackItem
