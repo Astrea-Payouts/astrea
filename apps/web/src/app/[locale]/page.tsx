@@ -1,10 +1,10 @@
 import { ArrowRight, Code2, Sparkles, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { BorderGlowInView } from "@/components/marketing/border-glow-in-view";
+import { HeroPrism } from "@/components/marketing/hero-prism";
 import { HowItWorks } from "@/components/marketing/how-it-works";
 import { SeeItInAction } from "@/components/marketing/see-it-in-action";
 import { SpecularButton } from "@/components/marketing/specular-button";
-import { PrismBackground } from "@/components/prism-background";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 import { Link } from "@/i18n/navigation";
 
@@ -19,11 +19,7 @@ export default function Home() {
 				small so the glow still spreads across the full width instead of
 				leaving a flat black slab on the left. */}
 				<div className="pointer-events-none absolute inset-0 z-0">
-					<PrismBackground
-						suspendWhenOffscreen
-						offset={{ x: 90 }}
-						className="h-full w-full"
-					/>
+					<HeroPrism />
 				</div>
 				{/* Readability scrim for the text column only. It has to fade out
 				well before the glow's core, otherwise the left half reads as dead
@@ -163,8 +159,8 @@ export default function Home() {
 					<div className="mt-8 flex flex-wrap items-center justify-center gap-4">
 						<Link href="/organizer">
 							<SpecularButton size="lg" tint="#000000" tintOpacity={1}>
-									<span>{t("createEventCta")}</span>
-								</SpecularButton>
+								<span>{t("createEventCta")}</span>
+							</SpecularButton>
 						</Link>
 						<Link
 							href="/participant"

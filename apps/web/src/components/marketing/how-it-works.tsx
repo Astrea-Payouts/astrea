@@ -2,11 +2,24 @@
 
 import { Check, Gavel, Layers, Send, Sparkles, Wallet } from "lucide-react";
 import { useTranslations } from "next-intl";
+import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef } from "react";
 import {
 	ScrollStack,
 	ScrollStackItem,
 } from "@/components/marketing/scroll-stack";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
+
+interface Step {
+	id: string;
+	number: string;
+	title: string;
+	description: string;
+	badge: string;
+	icon: ReactNode;
+	details: string[];
+	itemClassName: string;
+}
 
 // Passed to ScrollStack below AND used to size its pin runway, so the two can
 // never drift apart. ITEM_SCALE is the component's own default.
@@ -21,6 +34,7 @@ const TARGET_GAP = 56;
 
 export function HowItWorks() {
 	const t = useTranslations("HowItWorks");
+	const reduced = useReducedMotion();
 	const stackRef = useRef<HTMLDivElement>(null);
 
 	// ScrollStack fakes its pin with translateY, so the last card is painted far
@@ -55,6 +69,8 @@ export function HowItWorks() {
 	}, []);
 
 	useEffect(() => {
+		// Nothing to size when the static list is rendered instead.
+		if (reduced) return;
 		syncRunway();
 		const el = stackRef.current;
 		if (!el) return;
@@ -65,9 +81,9 @@ export function HowItWorks() {
 			observer.disconnect();
 			window.removeEventListener("resize", syncRunway);
 		};
-	}, [syncRunway]);
+	}, [syncRunway, reduced]);
 
-	const steps = [
+	const steps: Step[] = [
 		{
 			id: "step-wizard",
 			number: "01",
@@ -142,76 +158,102 @@ export function HowItWorks() {
 					</p>
 				</div>
 
-				{/* ScrollStack ships as its own scroll container (root is
-				`h-full overflow-y-auto`, inner track carries a pt-[20vh] /
-				pb-[50rem] pin runway). Used that way it needs a bounded parent
-				height and becomes a nested scroll area — with overscroll-behavior
-				contain the page stops scrolling while the pointer is over it,
-				which traps visitors on a marketing page.
-
-				So we drive it from window scroll instead and replace the inner
-				track's own padding here: left alone, that 50rem lands in page
-				flow as dead black after the last card. --stack-runway is measured
-				by syncRunway above; the fallback only applies before the first
-				effect run. The overrides live at the call site so
-				scroll-stack.tsx stays a faithful port. */}
-				<div
-					ref={stackRef}
-					className="mt-10 [&_.scroll-stack-inner]:!min-h-0 [&_.scroll-stack-inner]:!px-0 [&_.scroll-stack-inner]:!pt-[8vh] [&_.scroll-stack-inner]:!pb-[var(--stack-runway,16rem)]"
-				>
-					<ScrollStack
-						useWindowScroll
-						itemDistance={ITEM_DISTANCE}
-						itemStackDistance={ITEM_STACK_DISTANCE}
-						stackPosition={`${STACK_POSITION * 100}%`}
-						baseScale={BASE_SCALE}
-					>
+				{reduced ? (
+					/* Reduced motion: the same four cards as a plain list. ScrollStack
+					is scroll-driven — it translates each card hundreds of pixels and
+					installs Lenis, which replaces the browser's own scrolling for the
+					whole page. Both are Tier 1 under the policy in docs/ui-motion.md,
+					and neither survives being "damped": the pin only reads as a stack
+					because the cards move. So the section drops the choreography and
+					keeps the content. */
+					<ol className="mt-10 space-y-6">
 						{steps.map((step) => (
-							<ScrollStackItem
+							<li
 								key={step.id}
-								itemClassName={`${step.itemClassName} !h-auto !rounded-3xl !p-8 md:!p-10 shadow-2xl`}
+								className={`${step.itemClassName} rounded-3xl p-8 shadow-2xl md:p-10`}
 							>
-								<div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-									<div className="max-w-xl">
-										<div className="flex items-center gap-3">
-											<span className="font-mono text-2xl font-black text-blue-400/80">
-												{step.number}
-											</span>
-											<span className="rounded-full bg-white/10 px-3 py-0.5 text-xs font-medium text-white/80">
-												{step.badge}
-											</span>
-										</div>
-										<h3 className="mt-4 text-2xl font-bold text-white md:text-3xl">
-											{step.title}
-										</h3>
-										<p className="mt-3 text-base leading-relaxed text-zinc-400">
-											{step.description}
-										</p>
-
-										<div className="mt-6 space-y-2.5">
-											{step.details.map((detail) => (
-												<div
-													key={detail}
-													className="flex items-center gap-2.5 text-sm text-zinc-300"
-												>
-													<div className="flex size-4.5 items-center justify-center rounded-full bg-white/10 text-white">
-														<Check className="size-3" />
-													</div>
-													<span>{detail}</span>
-												</div>
-											))}
-										</div>
-									</div>
-
-									<div className="flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-6 md:size-28">
-										{step.icon}
-									</div>
-								</div>
-							</ScrollStackItem>
+								<StepCardBody step={step} />
+							</li>
 						))}
-					</ScrollStack>
-				</div>
+					</ol>
+				) : (
+					/* ScrollStack ships as its own scroll container (root is
+					`h-full overflow-y-auto`, inner track carries a pt-[20vh] /
+					pb-[50rem] pin runway). Used that way it needs a bounded parent
+					height and becomes a nested scroll area — with overscroll-behavior
+					contain the page stops scrolling while the pointer is over it,
+					which traps visitors on a marketing page.
+
+					So we drive it from window scroll instead and replace the inner
+					track's own padding here: left alone, that 50rem lands in page
+					flow as dead black after the last card. --stack-runway is measured
+					by syncRunway above; the fallback only applies before the first
+					effect run. The overrides live at the call site so
+					scroll-stack.tsx stays a faithful port. */
+					<div
+						ref={stackRef}
+						className="mt-10 [&_.scroll-stack-inner]:!min-h-0 [&_.scroll-stack-inner]:!px-0 [&_.scroll-stack-inner]:!pt-[8vh] [&_.scroll-stack-inner]:!pb-[var(--stack-runway,16rem)]"
+					>
+						<ScrollStack
+							useWindowScroll
+							itemDistance={ITEM_DISTANCE}
+							itemStackDistance={ITEM_STACK_DISTANCE}
+							stackPosition={`${STACK_POSITION * 100}%`}
+							baseScale={BASE_SCALE}
+						>
+							{steps.map((step) => (
+								<ScrollStackItem
+									key={step.id}
+									itemClassName={`${step.itemClassName} !h-auto !rounded-3xl !p-8 md:!p-10 shadow-2xl`}
+								>
+									<StepCardBody step={step} />
+								</ScrollStackItem>
+							))}
+						</ScrollStack>
+					</div>
+				)}
 			</div>
 		</section>
+	);
+}
+
+function StepCardBody({ step }: { step: Step }) {
+	return (
+		<div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+			<div className="max-w-xl">
+				<div className="flex items-center gap-3">
+					<span className="font-mono text-2xl font-black text-blue-400/80">
+						{step.number}
+					</span>
+					<span className="rounded-full bg-white/10 px-3 py-0.5 text-xs font-medium text-white/80">
+						{step.badge}
+					</span>
+				</div>
+				<h3 className="mt-4 text-2xl font-bold text-white md:text-3xl">
+					{step.title}
+				</h3>
+				<p className="mt-3 text-base leading-relaxed text-zinc-400">
+					{step.description}
+				</p>
+
+				<div className="mt-6 space-y-2.5">
+					{step.details.map((detail) => (
+						<div
+							key={detail}
+							className="flex items-center gap-2.5 text-sm text-zinc-300"
+						>
+							<div className="flex size-4.5 items-center justify-center rounded-full bg-white/10 text-white">
+								<Check className="size-3" />
+							</div>
+							<span>{detail}</span>
+						</div>
+					))}
+				</div>
+			</div>
+
+			<div className="flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-6 md:size-28">
+				{step.icon}
+			</div>
+		</div>
 	);
 }

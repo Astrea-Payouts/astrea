@@ -8,6 +8,7 @@ Decision log for where [React Bits](https://reactbits.dev) components get used i
 2. **One hero background, nowhere else.** WebGL backgrounds (Prism, Light Pillar, Dark Veil, Light Rays) are expensive relative to plain CSS — confined to the marketing homepage hero only, never the app's functional screens (dashboard, judge panel, event pages), which prioritize fast load and low battery/GPU draw.
 3. **Respect touch.** Astrea is a PWA — most participant and judge traffic is mobile. Any component whose interaction model is mouse-proximity-based (hover, cursor distance) is flagged explicitly below; it either gets a touch-friendly fallback or is scoped to desktop-only surfaces.
 4. **Heaviest dependency, smallest footprint.** `three.js` (Model Viewer) is lazy-loaded on the one page that uses it, never in the shared bundle.
+5. **Reduced motion is a policy, not a per-component afterthought.** Every animated surface answers to the same rule, decided once — see [Reduced-motion policy](#reduced-motion-policy) below. A component that cannot honour it does not ship without a static equivalent.
 
 ## Hero background — decision
 
@@ -58,6 +59,69 @@ Decision log for where [React Bits](https://reactbits.dev) components get used i
 **Tilted Card ships its own admission that it's a desktop pattern** — it has a `showMobileWarning` prop (on by default) that displays an alert about mobile usage, because the 3D tilt is driven by mouse position. Using it anywhere in the actual judge/participant flows (mobile-heavy) would mean most users see a warning label instead of the effect. Scoped to a single decorative use on the desktop marketing homepage only.
 
 **Model Viewer is the heaviest item on this list by a wide margin** — three full Three.js-ecosystem packages, easily the largest JS payload of anything discussed here. There's no current product need for a literal 3D asset (no trophy model, no 3D collectible planned). Not scheduled in the build plan. If a future "trophy reveal" moment on the winner announcement is wanted, it should be its own explicitly-scoped task, dynamically imported (`next/dynamic`, `ssr: false`) so its dependency chain only loads on that one page — never bundled with the rest of the app.
+
+## Reduced-motion policy
+
+Decided 2026-09-02, after finding that the app had exactly one
+`prefers-reduced-motion` check in it — inside `border-glow-in-view.tsx`, on the
+smallest animation on the page — while ScrollStack, CardSwap, Prism and the
+staggered menu all ran unconditionally. That is worse than having no policy: it
+looked handled, and it silently disabled the one effect a reviewer had asked to
+see, on a machine whose OS simply had animations turned off.
+
+The line is **who started the motion**, not how big it looks or which library
+draws it.
+
+### Tier 1 — removed under reduced motion
+
+Motion the visitor did not initiate: ambient, autoplaying, or scroll-driven.
+This is the category that matters for vestibular sensitivity, and the one WCAG
+2.2.2 (Pause, Stop, Hide — level AA) speaks to directly for auto-updating
+content.
+
+| Surface | Reduced-motion behaviour | Where |
+| --- | --- | --- |
+| **Lenis smooth scroll** (installed by ScrollStack) | Not instantiated. This is the highest-priority item: it replaces the browser's own scrolling for the entire page, so it affects every section, not just the one that asked for it. | `how-it-works.tsx` |
+| **ScrollStack** pin + card translation | Replaced by a plain `<ol>` of the same four cards. Not damped — the pin only reads as a stack *because* the cards move, so a slowed version is just a broken one. | `how-it-works.tsx` |
+| **CardSwap** flight, rotation, skew, 4.5s autoplay | Replaced by a `<ul>` of the same three events. A frozen stack was rejected: only the front card's content is readable, so freezing would leave two thirds of the section permanently hidden. The list is arguably the better presentation. | `see-it-in-action.tsx` |
+| **Prism** continuous shader | Frozen to a single painted frame via `timeScale`, not removed — the hero keeps its look. Prism stops its own rAF loop at that point, so there is no idle GPU cost. | `hero-prism.tsx` |
+
+### Tier 2 — kept under reduced motion
+
+| Surface | Why it stays |
+| --- | --- |
+| **BorderGlow** intro sweep | Colour and opacity travelling along a card's border. Nothing is displaced, nothing scrolls, and it ends. Suppressing this while Tier 1 ran unguarded was the original inconsistency. |
+| **Staggered menu** open/close | The visitor pressed the button; the panel sliding in *is* the feedback that it opened. WCAG 2.3.3 (Animation from Interactions) covers user-initiated animation and is level AAA — if we later target AAA, this is the next thing to address, and it needs the component to expose its durations, which it currently does not. |
+
+### Implementation notes
+
+- `useReducedMotion()` (`src/hooks/use-reduced-motion.ts`) is the single source.
+  Its testable core, `watchReducedMotion`, is a plain function so it can be
+  covered in this project's `node` test environment. It **subscribes** rather
+  than reading once at mount: on Windows this is one toggle in Settings >
+  Accessibility > Visual effects, and people flip it with the page already open.
+- The hook starts `false` so the server render and first client render agree,
+  then corrects after mount. Anything branching on it must look the same at rest
+  in both states, or that correction becomes a visible flash. The two swapped
+  sections sit well below the fold, so the swap is not observable in practice.
+- Gating lives at the call sites, not inside the ported components, consistent
+  with how ScrollStack's runway override was handled. `hero-prism.tsx` exists
+  purely so `prism-background.tsx` stays a faithful port.
+- **`timeScale={0}` does not freeze Prism.** It derives `Math.max(0, timeScale || 1)`,
+  and `0` is falsy, so it coalesces to `1` — more than three times faster than
+  the `0.3` default, the exact opposite of the intent. A tiny non-zero value is
+  the only way to reach its `TS < 1e-6` freeze path. Pinned by
+  `hero-prism.test.ts` so nobody "simplifies" it back to zero.
+
+### Not covered
+
+There is no reduced-motion handling on any surface outside the marketing
+homepage, because there are no other animated surfaces yet. When U01's Stepper
+lands it will be the first, and it animates step transitions with `motion` —
+`StepContentWrapper` springs the container height and `SlideTransition` slides
+content horizontally. Both are Tier 1 shaped (the visitor pressed Continue, but
+the content displacement is substantial), so that decision should be made
+explicitly rather than inherited.
 
 ## Pinned component specs
 
