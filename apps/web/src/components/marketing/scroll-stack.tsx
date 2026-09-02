@@ -1,22 +1,8 @@
 "use client";
 
-// Port of React Bits ScrollStack (https://reactbits.dev/components/scroll-stack),
-// TS-TW variant. See docs/ui-motion.md.
-//
-// DIVERGES from the live source — do not treat this as a clean port when
-// diffing against upstream. Deliberate local changes, all tuning, none
-// structural:
-//   1. calculateProgress applies smoothstep instead of returning the raw
-//      linear ratio (upstream cards start/stop scaling abruptly at the
-//      trigger boundaries).
-//   2. Lenis lerp 0.1 -> 0.075.
-//   3. The hasChanged thresholds are tighter (translateY 0.1 -> 0.01,
-//      scale 0.001 -> 0.0002, with scale rounded to 4dp instead of 3) —
-//      upstream's values quantise motion into visible steps.
-//   4. .scroll-stack-inner padding: upstream's pt-[20vh] px-20 pb-[50rem]
-//      left a screen and a half of dead space and broke narrow layouts.
-//
-// Everything else is upstream verbatim. Re-apply these four on any upgrade.
+// Verified live-source port of React Bits ScrollStack
+// (https://reactbits.dev/components/scroll-stack) — TS-TW variant, JS→typed TSX with no logic changes.
+// See docs/ui-motion.md.
 
 import Lenis from "lenis";
 import type React from "react";
@@ -86,12 +72,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 		(scrollTop: number, start: number, end: number) => {
 			if (scrollTop < start) return 0;
 			if (scrollTop > end) return 1;
-			const t = (scrollTop - start) / (end - start);
-			// Smoothstep instead of the raw linear ratio. Linear progress makes
-			// each card start and stop shrinking abruptly at the trigger
-			// boundaries; easing the ends means the scale eases in and settles
-			// instead of snapping, which is most of what reads as "smooth" here.
-			return t * t * (3 - 2 * t);
+			return (scrollTop - start) / (end - start);
 		},
 		[],
 	);
@@ -203,7 +184,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 
 			const newTransform = {
 				translateY: Math.round(translateY * 100) / 100,
-				scale: Math.round(scale * 10000) / 10000,
+				scale: Math.round(scale * 1000) / 1000,
 				rotation: Math.round(rotation * 100) / 100,
 				blur: Math.round(blur * 100) / 100,
 			};
@@ -211,8 +192,8 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 			const lastTransform = lastTransformsRef.current.get(i);
 			const hasChanged =
 				!lastTransform ||
-				Math.abs(lastTransform.translateY - newTransform.translateY) > 0.01 ||
-				Math.abs(lastTransform.scale - newTransform.scale) > 0.0002 ||
+				Math.abs(lastTransform.translateY - newTransform.translateY) > 0.1 ||
+				Math.abs(lastTransform.scale - newTransform.scale) > 0.001 ||
 				Math.abs(lastTransform.rotation - newTransform.rotation) > 0.1 ||
 				Math.abs(lastTransform.blur - newTransform.blur) > 0.1;
 
@@ -268,7 +249,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 				touchMultiplier: 2,
 				infinite: false,
 				wheelMultiplier: 1,
-				lerp: 0.075,
+				lerp: 0.1,
 				syncTouch: true,
 				syncTouchLerp: 0.075,
 			});
@@ -297,7 +278,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 				infinite: false,
 				gestureOrientation: "vertical",
 				wheelMultiplier: 1,
-				lerp: 0.075,
+				lerp: 0.1,
 				syncTouch: true,
 				syncTouchLerp: 0.075,
 			});
@@ -384,13 +365,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 				willChange: "scroll-position",
 			}}
 		>
-			{/* The bottom padding is the scroll runway the pin needs to play out,
-			so it cannot go to zero — but the upstream default (50rem) leaves a
-			screen-and-a-half of dead black after the last card. 18rem is enough
-			runway for the release to still feel unhurried without the void.
-			Horizontal padding is fluid because the upstream px-20 (80px) ate
-			most of the width on a 360px phone. */}
-			<div className="scroll-stack-inner min-h-screen px-4 pt-[12vh] pb-[18rem] sm:px-10 lg:px-20">
+			<div className="scroll-stack-inner pt-[20vh] px-20 pb-[50rem] min-h-screen">
 				{children}
 				{/* Spacer so the last pin can release cleanly */}
 				<div className="scroll-stack-end w-full h-px" />

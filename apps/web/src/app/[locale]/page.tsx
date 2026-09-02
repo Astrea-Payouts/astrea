@@ -1,6 +1,6 @@
 import { ArrowRight, Code2, Sparkles, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
-import BorderGlow from "@/components/marketing/border-glow";
+import { BorderGlowInView } from "@/components/marketing/border-glow-in-view";
 import { HowItWorks } from "@/components/marketing/how-it-works";
 import { SeeItInAction } from "@/components/marketing/see-it-in-action";
 import { SpecularButton } from "@/components/marketing/specular-button";
@@ -69,7 +69,7 @@ export default function Home() {
 			</section>
 
 			{/* Participant vs Organizer Audience Question Section */}
-			<section className="relative z-10 border-y border-white/10 bg-zinc-950/80 px-6 py-16 backdrop-blur-md md:px-12">
+			<section className="relative z-10 border-y border-white/10 bg-zinc-950/80 px-6 py-12 backdrop-blur-md md:px-12 md:py-16">
 				<div className="mx-auto max-w-5xl">
 					<div className="text-center">
 						<p className="text-xs font-semibold tracking-wider text-blue-400 uppercase">
@@ -85,7 +85,7 @@ export default function Home() {
 
 					<div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
 						{/* Participant Option */}
-						<BorderGlow
+						<BorderGlowInView
 							backgroundColor="#09090b"
 							borderRadius={16}
 							glowColor="217 91 60"
@@ -109,10 +109,10 @@ export default function Home() {
 									{t("participantRoleAction")} <ArrowRight className="size-3" />
 								</span>
 							</Link>
-						</BorderGlow>
+						</BorderGlowInView>
 
 						{/* Organizer Option */}
-						<BorderGlow
+						<BorderGlowInView
 							backgroundColor="#09090b"
 							borderRadius={16}
 							glowColor="160 84 55"
@@ -136,7 +136,7 @@ export default function Home() {
 									{t("organizerRoleAction")} <ArrowRight className="size-3" />
 								</span>
 							</Link>
-						</BorderGlow>
+						</BorderGlowInView>
 					</div>
 				</div>
 			</section>
@@ -148,7 +148,7 @@ export default function Home() {
 			<HowItWorks />
 
 			{/* Final CTA Section */}
-			<section className="relative overflow-hidden bg-gradient-to-t from-blue-950/30 via-zinc-950 to-black py-24 text-center px-6">
+			<section className="relative overflow-hidden bg-gradient-to-t from-blue-950/30 via-zinc-950 to-black px-6 py-16 text-center md:py-20">
 				<div className="mx-auto max-w-3xl">
 					<div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-1 text-xs font-semibold text-blue-400">
 						<Sparkles className="size-3.5" />

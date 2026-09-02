@@ -70,7 +70,7 @@ export function SeeItInAction() {
 	];
 
 	return (
-		<section className="relative overflow-hidden bg-zinc-950 py-24 text-white">
+		<section className="relative overflow-hidden bg-zinc-950 py-12 text-white md:py-16">
 			<div className="mx-auto max-w-6xl px-6 md:px-12">
 				<div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
 					<div className="lg:col-span-5">
@@ -111,8 +111,27 @@ export function SeeItInAction() {
 						</div>
 					</div>
 
-					{/* CardSwap needs a positioned parent; height reserves layout space. */}
-					<div className="relative h-[480px] lg:col-span-7">
+					{/* CardSwap needs a positioned parent; the height reserves layout
+					space. Upstream anchors its own container bottom-right and pushes
+					it further out (translate-x-[25%] under 768px) for a deliberate
+					off-canvas bleed — that only works beside the text column on
+					desktop. Below lg it puts the stack off-screen, so the container
+					is re-anchored to the centre and scaled to fit. The overrides live
+					here rather than in card-swap.tsx to keep that file a clean port. */}
+					<div
+						className={[
+							"relative lg:col-span-7",
+							"h-[360px] sm:h-[440px] lg:h-[480px]",
+							"[&>div]:!left-1/2 [&>div]:!right-auto [&>div]:!origin-center",
+							"[&>div]:!translate-x-[-50%] [&>div]:!translate-y-[-50%]",
+							"[&>div]:!top-1/2 [&>div]:!bottom-auto",
+							"[&>div]:!scale-[0.62] sm:[&>div]:!scale-[0.82]",
+							"lg:[&>div]:!top-auto lg:[&>div]:!bottom-0",
+							"lg:[&>div]:!left-auto lg:[&>div]:!right-0",
+							"lg:[&>div]:!origin-bottom-right lg:[&>div]:!scale-100",
+							"lg:[&>div]:!translate-x-[5%] lg:[&>div]:!translate-y-[20%]",
+						].join(" ")}
+					>
 						<CardSwap
 							width={460}
 							height={380}
