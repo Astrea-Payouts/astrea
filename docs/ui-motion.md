@@ -41,7 +41,7 @@ Decision log for where [React Bits](https://reactbits.dev) components get used i
 
 | Component | Dependency | Where it goes | Why |
 | --- | --- | --- | --- |
-| **Stepper** | `motion` | **U01 — Event creation wizard** (details → prizes → judges → review & sign) | Direct match — the wizard was already spec'd as exactly this shape in the build plan. Free upgrade, no redesign needed. |
+| **Stepper** | `motion` | **U01 — Event creation wizard** (details → prizes → judges → review & sign) | Direct match — the wizard was already spec'd as exactly this shape in the build plan. Free upgrade, no redesign needed. **[Pinned spec below](#stepper-u01--event-creation-wizard)** — the source needs real adaptation, it is not a straight copy. |
 | **Border Glow** | none (CSS/JS pointer tracking) | **U03 — Public event page**, wrapping each prize/milestone card | Lightweight (no WebGL lib). The proximity glow doubles as a subtle "this is verified" affordance next to the on-chain badge. Degrades gracefully on touch (just shows static border, no glow chase). |
 | **Card Swap** | `gsap` | **New: marketing homepage**, "see it in action" section cycling through live/past events | Autoplays on a timer — doesn't need a cursor to be interesting, so it's touch-safe by default. |
 | **Scroll Stack** | `lenis` | **New: marketing homepage**, "how it works" section (create → fund → judge → release) | Scroll-driven storytelling fits a landing page, not a functional app screen. `lenis` (smooth-scroll) is a homepage-only dependency — don't let it leak into the app bundle. |
@@ -59,10 +59,86 @@ Decision log for where [React Bits](https://reactbits.dev) components get used i
 
 **Model Viewer is the heaviest item on this list by a wide margin** — three full Three.js-ecosystem packages, easily the largest JS payload of anything discussed here. There's no current product need for a literal 3D asset (no trophy model, no 3D collectible planned). Not scheduled in the build plan. If a future "trophy reveal" moment on the winner announcement is wanted, it should be its own explicitly-scoped task, dynamically imported (`next/dynamic`, `ssr: false`) so its dependency chain only loads on that one page — never bundled with the rest of the app.
 
+## Pinned component specs
+
+Components whose live source has been read and whose integration notes are worth
+recording before anyone starts the task. This is where the "verify against the
+live docs, don't assume from the name" principle gets cashed in — the notes below
+come from reading the actual component source, not its description.
+
+### Stepper (`U01` — event creation wizard)
+
+| | |
+| --- | --- |
+| **Source** | [reactbits.dev/components/stepper](https://reactbits.dev/components/stepper) |
+| **Variant** | TypeScript + Tailwind |
+| **Dependency** | `motion` — **not currently in `apps/web/package.json`**. U01 is the first component that needs it; `gsap`, `lenis` and `ogl` are already in for Card Swap, Scroll Stack and Prism/Specular Button respectively. |
+| **Exports** | `default Stepper`, plus a named `Step` wrapper |
+
+**Props**
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | — | The `Step` components (or any custom content) rendered inside the stepper. |
+| `initialStep` | `number` | `1` | First step displayed when the stepper initialises. |
+| `onStepChange` | `(step: number) => void` | `() => {}` | Fired whenever the step changes. |
+| `onFinalStepCompleted` | `() => void` | `() => {}` | Fired when the stepper completes its final step. |
+| `stepCircleContainerClassName` | `string` | — | Class for the container holding the step indicators. |
+| `stepContainerClassName` | `string` | — | Class for the row holding the circles/connectors. |
+| `contentClassName` | `string` | — | Class for the step's main content container. |
+| `footerClassName` | `string` | — | Class for the footer holding the navigation buttons. |
+| `backButtonProps` | `object` | `{}` | Extra props for the Back button. |
+| `nextButtonProps` | `object` | `{}` | Extra props for the Next/Complete button. |
+| `backButtonText` | `string` | `"Back"` | Back button label. |
+| `nextButtonText` | `string` | `"Continue"` | Next button label when not on the last step. |
+| `disableStepIndicators` | `boolean` | `false` | Disables click interaction on the step indicators. |
+| `renderStepIndicator` | `(props: { step, currentStep, onStepClick }) => ReactNode` | `undefined` | Renders a custom step indicator. |
+
+**Integration notes — read these before porting.** Ported the same way as
+`prism-background.tsx` and `scroll-stack.tsx` (copy-paste source from reactbits.dev,
+JS → typed TSX), but the following need deliberate decisions rather than a
+straight copy:
+
+1. **The demo shell is not a wizard shell.** The root is
+   `sm:aspect-[4/3] md:aspect-[2/1]` with a `max-w-md` card — sized for a
+   showcase tile, not for U01's real forms (a prize table, a judge list). Expect
+   to drop the aspect-ratio constraint and widen the cap, or the Prizes step
+   (#54) will be a scroll trap on desktop.
+2. **Colours are hard-coded, not tokenised.** `#5227FF` (React Bits purple) for
+   the active/complete indicator and the connector fill, `#3b82f6` for complete
+   text, `#222` for inactive circles and the container border, `#120F17` for the
+   active dot, and `bg-green-500/600/700` for the Next button. None of these are
+   Astrea's palette. Map them to our theme tokens during the port and say so in
+   the PR — this is a styling change, so unlike the other ports it is not a
+   "no logic changes" copy.
+3. **Indicator clicks skip validation.** `StepIndicator`'s `onClickStep` calls
+   `updateStep(clicked)` directly, so a user can jump to step 5 without filling
+   steps 1–4. Either pass `disableStepIndicators` or gate it via
+   `renderStepIndicator`; do not assume forward navigation is guarded.
+4. **The indicators are not keyboard accessible.** They are `motion.div`s with an
+   `onClick`, no `button` element, no `aria-current`, no focus handling. That is
+   tolerable in a showcase and not tolerable in the primary organizer flow —
+   budget for making them real buttons.
+5. **`onFinalStepCompleted` collapses the UI.** Completing the last step sets
+   `currentStep > totalSteps`, which animates the content container to
+   `height: 0`. U01's last step signs `create_event` on-chain, and
+   [docs/architecture.md](architecture.md)'s Principle 2 forbids showing a
+   completed state before the transaction confirms. So the signing call must not
+   be driven by `onFinalStepCompleted` alone — keep the step mounted and showing
+   an honest pending state until Horizon confirms, then complete.
+6. **Height is measured, not fluid.** `SlideTransition` reports
+   `containerRef.current.offsetHeight` from a `useLayoutEffect` keyed on
+   `children`, and the parent animates to that height. Content that arrives
+   asynchronously (the `AdminWallet` balance lookup on the Prizes step) will not
+   re-trigger that measurement on its own, so the container height can lag behind
+   the content. Re-measure on the data arriving, or reserve the space.
+7. **Horizontal padding stacks.** `Step` applies `px-8` and the content wrapper
+   applies `px-8` as well — 64px total per side before your own form padding.
+
 ## Build-plan cross-references
 
 - `L00` (minimal shell) — ✅ Prism hero, confined to the right lane per the approved mockup (revised back from a Light Pillar detour), done
-- `U01` (event wizard) — Stepper
+- `U01` (event wizard) — Stepper ([pinned spec](#stepper-u01--event-creation-wizard); needs the `motion` dependency added)
 - `U03` (public event page) — Border Glow
 - New `U08` (marketing homepage) — Card Swap, Scroll Stack, Specular Button (hero background already exists from L00 — U08 adds sections around it, doesn't redo it; also where `SiteHeader`'s non-hero-page variant needs to be designed)
 - Mobile PWA shell (part of `S05`/`U03` navigation work) — Staggered Menu, Dock (shape only)
