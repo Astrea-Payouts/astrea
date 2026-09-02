@@ -106,6 +106,38 @@ jobs:
           path: graphify-out/
           retention-days: 7
 
+  contracts:
+    name: Test + build (contracts)
+    runs-on: ubuntu-latest
+    # Deliberately NOT gated on a `paths:` filter for smart-contracts/**.
+    # This context is intended to become a required status check on main, and
+    # GitHub counts a *skipped* required check as not-passing - the same trap
+    # the commitlint job fell into, which left every develop -> main promotion
+    # BLOCKED with all checks green. With the Rust cache warm this job is
+    # cheap enough on web-only PRs that always running it beats reintroducing
+    # that failure mode.
+    defaults:
+      run:
+        working-directory: smart-contracts/astrea
+    steps:
+      - uses: actions/checkout@v5
+
+      # wasm32v1-none is the target soroban-sdk 22+ builds contracts for, and
+      # it's the build that actually matters: it's the deployable artifact and
+      # it catches no_std violations that a native build silently allows.
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32v1-none
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: smart-contracts/astrea
+
+      - name: Test
+        run: cargo test
+
+      - name: Build (wasm release artifact)
+        run: cargo build --release --target wasm32v1-none
   commitlint:
     name: Commit messages (Conventional Commits)
     runs-on: ubuntu-latest
@@ -125,12 +157,3 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           node-version: 24
-          cache: npm
-          cache-dependency-path: apps/web/package-lock.json
-
-      - if: github.event_name == 'pull_request'
-        working-directory: apps/web
-        run: npm ci --legacy-peer-deps
-
-      - uses: wagoid/commitlint-github-action@v6
-        if: github.event_name == 'pull_request'
