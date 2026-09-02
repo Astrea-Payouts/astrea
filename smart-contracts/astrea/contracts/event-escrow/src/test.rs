@@ -295,9 +295,21 @@ fn test_create_event_deducts_from_reserve_and_returns_the_given_id() {
 
     let id_2 = test_event_id(&env, 2);
 
-    let returned_1 = client.create_event(&admin, &Address::generate(&env), &token_address, &300, &id_1);
+    let returned_1 = client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &id_1,
+    );
 
-    let returned_2 = client.create_event(&admin, &Address::generate(&env), &token_address, &200, &id_2);
+    let returned_2 = client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &200,
+        &id_2,
+    );
 
     assert_eq!(returned_1, id_1);
 
@@ -497,9 +509,21 @@ fn test_get_events_by_admin_returns_all_created_events() {
 
     let id_2 = test_event_id(&env, 2);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &200, &id_1);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &200,
+        &id_1,
+    );
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &id_2);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &id_2,
+    );
 
     let events = client.get_events_by_admin(&admin);
 
@@ -559,9 +583,21 @@ fn test_get_events_by_admin_does_not_mix_different_admins() {
 
     let id_2 = test_event_id(&env, 2);
 
-    client.create_event(&admin_1, &Address::generate(&env), &token_address, &100, &id_1);
+    client.create_event(
+        &admin_1,
+        &Address::generate(&env),
+        &token_address,
+        &100,
+        &id_1,
+    );
 
-    client.create_event(&admin_2, &Address::generate(&env), &token_address, &100, &id_2);
+    client.create_event(
+        &admin_2,
+        &Address::generate(&env),
+        &token_address,
+        &100,
+        &id_2,
+    );
 
     let events_admin_1 = client.get_events_by_admin(&admin_1);
 
@@ -599,7 +635,13 @@ fn test_set_event_waiting_for_start_transitions_from_created() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -630,7 +672,13 @@ fn test_set_event_waiting_for_start_rejects_double_call() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -663,7 +711,13 @@ fn test_set_event_waiting_for_start_rejects_wrong_admin() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     client.set_event_waiting_for_start(&impostor_admin, &event_id);
 }
@@ -807,7 +861,13 @@ fn test_set_event_in_progress_rejects_double_start() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     client.set_event_in_progress(&admin, &event_id);
 
@@ -840,7 +900,13 @@ fn test_set_event_in_progress_rejects_wrong_admin() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     client.set_event_in_progress(&impostor_admin, &event_id);
 }
@@ -887,7 +953,13 @@ fn test_set_event_cancelled_refunds_wallet_from_created_state() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     assert_eq!(client.get_balance(&admin), 200);
 
@@ -919,7 +991,13 @@ fn test_set_event_cancelled_refunds_wallet_from_waiting_for_start_state() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -958,7 +1036,13 @@ fn test_set_event_cancelled_rejects_in_progress_state() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     client.set_event_in_progress(&admin, &event_id);
 
@@ -991,7 +1075,13 @@ fn test_set_event_cancelled_rejects_wrong_admin() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     client.set_event_cancelled(&impostor_admin, &event_id);
 }
@@ -1020,7 +1110,13 @@ fn test_set_event_cancelled_rejects_already_ended_event() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     force_event_state(&env, &contract_id, event_id.clone(), EventState::Ended);
 
@@ -1073,7 +1169,13 @@ fn test_release_compensation_pays_participants_from_admin_wallet() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &500,
+        &event_id,
+    );
 
     client.set_event_cancelled(&admin, &event_id);
 
@@ -1127,7 +1229,13 @@ fn test_release_compensation_allows_amount_different_from_original_reward() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     client.set_event_cancelled(&admin, &event_id);
 
@@ -1173,7 +1281,13 @@ fn test_release_compensation_rejects_event_not_cancelled() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &500,
+        &event_id,
+    );
 
     let participants = soroban_sdk::vec![
         &env,
@@ -1205,7 +1319,13 @@ fn test_release_compensation_rejects_wrong_admin() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &500,
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -1237,7 +1357,13 @@ fn test_release_compensation_rejects_empty_participants() {
 
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &500,
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
     let participants: Vec<Participants> = soroban_sdk::vec![&env];
     client.release_compensation(&admin, &event_id, &participants);
@@ -1261,7 +1387,13 @@ fn test_release_compensation_rejects_zero_amount_participant() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &500,
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -1294,7 +1426,13 @@ fn test_release_compensation_rejects_negative_amount_participant() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &500,
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -1331,7 +1469,13 @@ fn test_release_compensation_rejects_total_over_wallet_balance() {
     client.deposit_funds(&admin, &token_address, &500);
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -1387,7 +1531,13 @@ fn test_release_compensation_rejects_double_release() {
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &500, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &500,
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -1755,7 +1905,13 @@ fn test_get_event_returns_current_state() {
 
     client.deposit_funds(&admin, &token_address, &500);
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
     let event = client.get_event(&event_id);
 
     assert_eq!(event.admin, admin);
@@ -1861,7 +2017,14 @@ fn test_expire_event_refunds_after_deadline() {
     let event_id = test_event_id(&env, 1);
     let deadline = env.ledger().timestamp() + 100;
 
-    client.create_event_with_deadline(&admin, &Address::generate(&env), &token_address, &400, &event_id, &deadline);
+    client.create_event_with_deadline(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &400,
+        &event_id,
+        &deadline,
+    );
     assert_eq!(client.get_balance(&admin), 600);
     env.ledger().with_mut(|li| li.timestamp = deadline + 1);
 
@@ -1890,7 +2053,14 @@ fn test_expire_event_rejects_before_deadline() {
     let event_id = test_event_id(&env, 1);
     let deadline = env.ledger().timestamp() + 1_000;
 
-    client.create_event_with_deadline(&admin, &Address::generate(&env), &token_address, &400, &event_id, &deadline);
+    client.create_event_with_deadline(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &400,
+        &event_id,
+        &deadline,
+    );
     client.expire_event(&event_id);
 }
 
@@ -1912,7 +2082,13 @@ fn test_expire_event_rejects_event_without_deadline() {
     client.deposit_funds(&admin, &token_address, &1_000);
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &400, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &400,
+        &event_id,
+    );
     client.expire_event(&event_id);
 }
 
@@ -1936,7 +2112,14 @@ fn test_create_event_with_deadline_rejects_past_deadline() {
     env.ledger().with_mut(|li| li.timestamp = 1_000);
     let event_id = test_event_id(&env, 1);
     let past_deadline = 500u64;
-    client.create_event_with_deadline(&admin, &Address::generate(&env), &token_address, &400, &event_id, &past_deadline);
+    client.create_event_with_deadline(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &400,
+        &event_id,
+        &past_deadline,
+    );
 }
 
 #[test]
@@ -2007,12 +2190,24 @@ fn test_emergency_pause_blocks_and_unblocks_writes() {
     assert_eq!(client.is_paused(), true);
 
     let event_id = test_event_id(&env, 1);
-    let result = client.try_create_event(&admin, &Address::generate(&env), &token_address, &100, &event_id);
+    let result = client.try_create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &100,
+        &event_id,
+    );
 
     assert!(result.is_err());
     client.set_paused(&emergency_admin, &false);
     assert_eq!(client.is_paused(), false);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &100, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &100,
+        &event_id,
+    );
 }
 
 #[test]
@@ -2074,12 +2269,24 @@ fn test_set_admin_paused_blocks_only_target_admin() {
     assert_eq!(client.is_admin_paused(&admin_a), true);
     assert_eq!(client.is_admin_paused(&admin_b), false);
     let event_id_a = test_event_id(&env, 1);
-    let result = client.try_create_event(&admin_a, &Address::generate(&env), &token_address, &100, &event_id_a);
+    let result = client.try_create_event(
+        &admin_a,
+        &Address::generate(&env),
+        &token_address,
+        &100,
+        &event_id_a,
+    );
 
     assert!(result.is_err());
     let event_id_b = test_event_id(&env, 2);
 
-    client.create_event(&admin_b, &Address::generate(&env), &token_address, &100, &event_id_b);
+    client.create_event(
+        &admin_b,
+        &Address::generate(&env),
+        &token_address,
+        &100,
+        &event_id_b,
+    );
 }
 
 #[test]
@@ -2104,7 +2311,14 @@ fn test_expire_event_works_even_when_globally_paused() {
     let event_id = test_event_id(&env, 1);
     let deadline = env.ledger().timestamp() + 100;
 
-    client.create_event_with_deadline(&admin, &Address::generate(&env), &token_address, &300, &event_id, &deadline);
+    client.create_event_with_deadline(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+        &deadline,
+    );
     client.set_paused(&emergency_admin, &true);
 
     env.ledger().with_mut(|li| li.timestamp = deadline + 1);
@@ -2200,7 +2414,13 @@ fn test_event_created_is_emitted() {
 
     let event_id = test_event_id(&env, 1);
 
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
 
     assert_eq!(
         env.events().all().filter_by_contract(&contract_id),
@@ -2231,7 +2451,14 @@ fn test_event_expired_is_emitted() {
     let event_id = test_event_id(&env, 1);
     let deadline = env.ledger().timestamp() + 100;
 
-    client.create_event_with_deadline(&admin, &Address::generate(&env), &token_address, &300, &event_id, &deadline);
+    client.create_event_with_deadline(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+        &deadline,
+    );
 
     env.ledger().with_mut(|li| li.timestamp = deadline + 1);
     client.expire_event(&event_id);
@@ -2263,7 +2490,13 @@ fn test_event_waiting_for_start_is_emitted() {
     client.deposit_funds(&admin, &token_address, &500);
 
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
     client.set_event_waiting_for_start(&admin, &event_id);
 
     assert_eq!(
@@ -2292,7 +2525,13 @@ fn test_event_started_is_emitted() {
     client.deposit_funds(&admin, &token_address, &500);
 
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
     client.set_event_in_progress(&admin, &event_id);
 
     assert_eq!(
@@ -2321,7 +2560,13 @@ fn test_event_cancelled_is_emitted() {
     client.deposit_funds(&admin, &token_address, &500);
 
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     assert_eq!(
@@ -2352,7 +2597,13 @@ fn test_compensation_released_event_is_emitted() {
     client.deposit_funds(&admin, &token_address, &500);
 
     let event_id = test_event_id(&env, 1);
-    client.create_event(&admin, &Address::generate(&env), &token_address, &300, &event_id);
+    client.create_event(
+        &admin,
+        &Address::generate(&env),
+        &token_address,
+        &300,
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
