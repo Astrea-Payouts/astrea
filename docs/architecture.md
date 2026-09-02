@@ -13,7 +13,9 @@
 - **Frontend** — Next.js App Router (`apps/web`), TypeScript strict, Tailwind + shadcn/ui. Wallet connectivity through Stellar Wallets Kit. Signs XDR client-side. Renders public event pages (SSR for shareability/SEO — see build-plan.md U09/U10).
 - **Backend** — Go service (`services/core-go`). Owns the event/prize state machine, participant registration, real-time tracking, the build-sign-submit transaction pipeline, and reconciliation. The only service that writes transactional state or calls the escrow contract.
 - **Database** — Postgres. Mirror tables for events, prizes, participants, wallets, payouts, and an append-only op log for idempotency/auditability.
-- **Escrow layer** — a single custom Soroban smart contract (`contracts/soroban`) shared across all organizers, not one instance deployed per event (see ADR-006). Each organizer holds a balance inside the contract (`AdminWallet`); they deposit into it, then create events against it. Functions: `deposit_funds`, `withdraw_funds`, `create_event`, `cancel_event`, `close_event` (pays one or more winners in a single call — see ADR-002), `dispute`, `resolve_dispute`. The winner's address is supplied at `close_event` time, not fixed when the event is funded — release pays the winner directly, with no separate forwarding step.
+- **Escrow layer** — a single custom Soroban smart contract (`smart-contracts/astrea/contracts/event-escrow`) shared across all organizers, not one instance deployed per event (see ADR-006). Each organizer holds a balance inside the contract (`AdminWallet`); they deposit into it, then create events against it. Functions: `deposit_funds`, `withdraw_funds`, `create_event`, `cancel_event`, `close_event` (pays one or more winners in a single call — see ADR-002), `dispute`, `resolve_dispute`. The winner's address is supplied at `close_event` time, not fixed when the event is funded — release pays the winner directly, with no separate forwarding step.
+
+  > **Design name → implemented name.** The ADRs below use the conceptual names above; the contract as built uses different ones. Current mapping: `close_event` → `release_reward`, `cancel_event` → `set_event_cancelled` (pre-launch states only — cancelling a live event is rejected, see ADR-006), `dispute`/`resolve_dispute` → **not implemented yet** (issue #22). The contract also has functions the ADRs don't describe: `expire_event` (deadline passed with nothing happening — refund), `release_compensation` (pay participants after a cancellation), the state machine (`set_event_waiting_for_start` / `set_event_in_progress`), event pagination, and a governance layer (emergency pause, per-admin pause, token whitelist).
 
 ## Domain model (Postgres sketch)
 
@@ -61,7 +63,7 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 ### ADR-001 — Custom Soroban escrow contract, no third-party provider
 
-**Decision:** Astrea's escrow is a smart contract Astrea owns and audits (`contracts/soroban`, Rust/Soroban), not a third-party escrow API.
+**Decision:** Astrea's escrow is a smart contract Astrea owns and audits (`smart-contracts/astrea/contracts/event-escrow`, Rust/Soroban), not a third-party escrow API.
 
 **Why:**
 1. The winner's address is supplied at `release` time, not fixed when the escrow is funded — release pays the winner directly, with no separate forwarding transaction and no custody window.
