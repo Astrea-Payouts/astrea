@@ -102,7 +102,6 @@ pub struct AdminPaused {
 
 #[contracttype]
 #[derive(Clone, Debug, PartialEq)]
-
 pub enum EventState {
     Created = 0,
     WaitingForStart = 1,
@@ -114,7 +113,6 @@ pub enum EventState {
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
-
 pub struct AdminWallet {
     pub token: Address,
     pub balance: i128,
@@ -122,7 +120,6 @@ pub struct AdminWallet {
 
 #[contracttype]
 #[derive(Clone, Debug)]
-
 pub struct Event {
     pub admin: Address,
     /// The judge/release-signer for this event — deliberately distinct from
@@ -137,7 +134,6 @@ pub struct Event {
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
-
 pub struct Participants {
     pub address: Address,
     pub amount_compensation: i128,
@@ -145,7 +141,6 @@ pub struct Participants {
 
 #[contracttype]
 #[derive(Clone, Debug)]
-
 pub struct Winner {
     pub place: u32,
     pub amount: i128,
@@ -154,7 +149,6 @@ pub struct Winner {
 
 #[contracttype]
 #[derive(Clone, Debug)]
-
 pub enum DataKey {
     Wallet(Address),
     Event(BytesN<16>),
@@ -344,11 +338,9 @@ fn create_event_internal(
 }
 
 #[contract]
-
 pub struct EventEscrow;
 
 #[contractimpl]
-
 impl EventEscrow {
     pub fn deposit_funds(env: Env, admin: Address, token: Address, amount: i128) {
         admin.require_auth();
@@ -360,7 +352,7 @@ impl EventEscrow {
         assert!(amount > 0, "Amount must be greater than zero");
 
         let token_client = TokenClient::new(&env, &token);
-        token_client.transfer(&admin, &env.current_contract_address(), &amount);
+        token_client.transfer(&admin, env.current_contract_address(), &amount);
 
         let key = DataKey::Wallet(admin.clone());
         let mut wallet: AdminWallet = env.storage().persistent().get(&key).unwrap_or(AdminWallet {

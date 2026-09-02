@@ -128,10 +128,21 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32v1-none
+          components: rustfmt, clippy
 
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: smart-contracts/astrea
+
+      - name: Format
+        run: cargo fmt --all --check
+
+      # -D warnings is safe to enforce: the contract is at zero clippy
+      # warnings as of the cleanup that added this step. Keeping it at zero
+      # is the point - money-path code is where "just a warning" is least
+      # worth ignoring.
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
 
       - name: Test
         run: cargo test
