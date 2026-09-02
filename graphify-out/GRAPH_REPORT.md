@@ -1,7 +1,7 @@
 # Graph Report - astrea  (2026-09-01)
 
 ## Corpus Check
-- 201 files · ~362,239 words
+- 201 files · ~362,262 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ed094cdd`
+- Built from commit: `863ef3fe`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -151,10 +151,10 @@
 10. `Event` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Update docs/ADRs alongside code policy` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
-  CONTRIBUTING.md → .github/workflows/ci.yml
 - `Chain is source of truth; database is a mirror` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
   README.md → .github/workflows/ci.yml
+- `Update docs/ADRs alongside code policy` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
+  CONTRIBUTING.md → .github/workflows/ci.yml
 - `Commit messages (Conventional Commits) job` --implements--> `Conventional Commits`  [INFERRED]
   .github/workflows/ci.yml → README.md
 - `docs/architecture.md` --conceptually_related_to--> `docs/architecture.md`  [INFERRED]
@@ -397,9 +397,9 @@ Nodes (3): Money-path rules, Smart contracts, Working on it
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `devDependencies` to `scripts`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
+  _High betweenness centrality (0.056) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `devDependencies` to `README.md`?**
-  _High betweenness centrality (0.051) - this node is a cross-community bridge._
+  _High betweenness centrality (0.052) - this node is a cross-community bridge._
 - **What connects `$schema`, `root`, `enabled` to the rest of the system?**
   _383 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `trustless-work-adapter.ts` be split into smaller, more focused modules?**
