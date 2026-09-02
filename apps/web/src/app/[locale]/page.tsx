@@ -13,21 +13,24 @@ export default function Home() {
 	return (
 		<main className="relative isolate flex min-h-screen flex-1 flex-col overflow-hidden bg-black">
 			{/* Hero Section */}
-			<section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden">
-				{/* Canvas spans the full hero (no flat black slab on the left) —
-				the shape itself is pushed right via `offset` so it still reads
-				as concentrated on the right side. */}
+			<section className="relative flex min-h-svh flex-col justify-center overflow-hidden">
+				{/* Canvas fills the whole viewport-tall hero. The offset is kept
+				small so the glow still spreads across the full width instead of
+				leaving a flat black slab on the left. */}
 				<div className="pointer-events-none absolute inset-0 z-0">
 					<PrismBackground
 						suspendWhenOffscreen
-						offset={{ x: 260 }}
+						offset={{ x: 90 }}
 						className="h-full w-full"
 					/>
 				</div>
-				{/* Fully transparent by ~60% width, i.e. exactly where the Prism
-				lane starts — the glow must stay undimmed to read like the docs
-				demo; only the text column underneath needs the contrast. */}
-				<div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(115deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.8)_25%,rgba(0,0,0,0.4)_45%,rgba(0,0,0,0)_60%)]" />
+				{/* Readability scrim for the text column only. It has to fade out
+				well before the glow's core, otherwise the left half reads as dead
+				black rather than as part of the same background. */}
+				<div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(105deg,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.65)_22%,rgba(0,0,0,0.25)_40%,rgba(0,0,0,0)_58%)]" />
+				{/* Blends the hero into the section below so the seam isn't a hard
+				edge between the glow and flat black. */}
+				<div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-32 bg-gradient-to-b from-transparent to-black" />
 
 				<div className="relative z-10 flex flex-1 items-center px-6 py-28 md:px-12">
 					<div className="max-w-xl">
@@ -42,9 +45,8 @@ export default function Home() {
 						</p>
 						<div className="flex flex-wrap items-center gap-4">
 							<Link href="/organizer">
-								<SpecularButton size="lg" className="gap-2">
+								<SpecularButton size="lg">
 									<span>{t("createEventCta")}</span>
-									<ArrowRight className="size-4" />
 								</SpecularButton>
 							</Link>
 							<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
@@ -84,21 +86,28 @@ export default function Home() {
 						{/* Participant Option */}
 						<Link
 							href="/participant"
-							className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-8 transition-all duration-300 hover:border-blue-500/40 hover:bg-blue-500/[0.04]"
+							className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-8 shadow-[0_0_0_0_rgba(59,130,246,0)] transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-500/50 hover:bg-blue-500/[0.04] hover:shadow-[0_0_28px_-4px_rgba(59,130,246,0.45)]"
 						>
-							<div className="flex items-center justify-between">
+							{/* Glow that tracks the border itself, so the hover state
+							reads as the edge lighting up rather than the whole card
+							changing tint. */}
+							<span
+								aria-hidden
+								className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 [background:radial-gradient(120%_80%_at_50%_0%,rgba(59,130,246,0.16),transparent_60%)]"
+							/>
+							<div className="relative flex items-center justify-between">
 								<div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-3 text-blue-400">
 									<Code2 className="size-6" />
 								</div>
 								<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-blue-400" />
 							</div>
-							<h3 className="mt-6 text-xl font-bold text-white group-hover:text-blue-300">
+							<h3 className="relative mt-6 text-xl font-bold text-white group-hover:text-blue-300">
 								{t("participantRoleTitle")}
 							</h3>
-							<p className="mt-2 text-sm leading-relaxed text-zinc-400">
+							<p className="relative mt-2 text-sm leading-relaxed text-zinc-400">
 								{t("participantRoleDesc")}
 							</p>
-							<span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400">
+							<span className="relative mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400">
 								{t("participantRoleAction")} <ArrowRight className="size-3" />
 							</span>
 						</Link>
@@ -106,21 +115,25 @@ export default function Home() {
 						{/* Organizer Option */}
 						<Link
 							href="/organizer"
-							className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-8 transition-all duration-300 hover:border-emerald-500/40 hover:bg-emerald-500/[0.04]"
+							className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-8 shadow-[0_0_0_0_rgba(16,185,129,0)] transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-500/50 hover:bg-emerald-500/[0.04] hover:shadow-[0_0_28px_-4px_rgba(16,185,129,0.45)]"
 						>
-							<div className="flex items-center justify-between">
+							<span
+								aria-hidden
+								className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 [background:radial-gradient(120%_80%_at_50%_0%,rgba(16,185,129,0.16),transparent_60%)]"
+							/>
+							<div className="relative flex items-center justify-between">
 								<div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-400">
 									<Users className="size-6" />
 								</div>
 								<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-emerald-400" />
 							</div>
-							<h3 className="mt-6 text-xl font-bold text-white group-hover:text-emerald-300">
+							<h3 className="relative mt-6 text-xl font-bold text-white group-hover:text-emerald-300">
 								{t("organizerRoleTitle")}
 							</h3>
-							<p className="mt-2 text-sm leading-relaxed text-zinc-400">
+							<p className="relative mt-2 text-sm leading-relaxed text-zinc-400">
 								{t("organizerRoleDesc")}
 							</p>
-							<span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
+							<span className="relative mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
 								{t("organizerRoleAction")} <ArrowRight className="size-3" />
 							</span>
 						</Link>
@@ -149,10 +162,9 @@ export default function Home() {
 					</p>
 					<div className="mt-8 flex flex-wrap items-center justify-center gap-4">
 						<Link href="/organizer">
-							<SpecularButton size="lg" className="gap-2">
-								<span>{t("createEventCta")}</span>
-								<ArrowRight className="size-4" />
-							</SpecularButton>
+							<SpecularButton size="lg">
+									<span>{t("createEventCta")}</span>
+								</SpecularButton>
 						</Link>
 						<Link
 							href="/participant"

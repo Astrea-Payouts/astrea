@@ -70,7 +70,7 @@ export function HowItWorks() {
 	];
 
 	return (
-		<section className="relative bg-black py-28 text-white">
+		<section className="relative bg-black pt-20 pb-8 text-white md:pt-24">
 			<div className="mx-auto max-w-5xl px-6 md:px-12">
 				<div className="text-center">
 					<div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1 text-xs font-semibold text-white/70">
@@ -86,7 +86,7 @@ export function HowItWorks() {
 				</div>
 
 				{/* Verified React Bits ScrollStack (window scroll = homepage-only). */}
-				<div className="mt-16">
+				<div className="mt-10">
 					<ScrollStack
 						useWindowScroll
 						itemDistance={80}
