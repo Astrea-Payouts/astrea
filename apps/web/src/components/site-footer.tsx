@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { ReduceMotionToggle } from "@/components/reduce-motion-toggle";
 
 export function SiteFooter() {
 	const t = useTranslations("SiteFooter");
@@ -38,6 +39,7 @@ export function SiteFooter() {
 						</a>
 					))}
 				</nav>
+				<ReduceMotionToggle variant="labelled" />
 			</div>
 		</footer>
 	);

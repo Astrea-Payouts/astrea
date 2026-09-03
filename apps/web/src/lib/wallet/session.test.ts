@@ -32,15 +32,17 @@ const { mockCookieMap, mockDb, nonceRows } = vi.hoisted(() => {
 				create: vi.fn(),
 			},
 			authNonce: {
-				deleteMany: vi.fn(async ({ where }: { where: { expiresAt?: { lte: Date } } }) => {
-					if (where.expiresAt?.lte) {
-						const cutoff = where.expiresAt.lte.getTime();
-						for (const [k, v] of nonceRows.entries()) {
-							if (v.expiresAt.getTime() <= cutoff) nonceRows.delete(k);
+				deleteMany: vi.fn(
+					async ({ where }: { where: { expiresAt?: { lte: Date } } }) => {
+						if (where.expiresAt?.lte) {
+							const cutoff = where.expiresAt.lte.getTime();
+							for (const [k, v] of nonceRows.entries()) {
+								if (v.expiresAt.getTime() <= cutoff) nonceRows.delete(k);
+							}
 						}
-					}
-					return { count: 0 };
-				}),
+						return { count: 0 };
+					},
+				),
 				create: vi.fn(
 					async ({
 						data,
@@ -125,9 +127,7 @@ describe("S07: Stellar challenge-response auth and session management", () => {
 		});
 
 		it("rejects non-existent nonces", async () => {
-			expect(await consumeAuthNonce("non-existent-nonce", address)).toBe(
-				false,
-			);
+			expect(await consumeAuthNonce("non-existent-nonce", address)).toBe(false);
 		});
 	});
 

@@ -6,7 +6,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 
 - **`apps/web`** — Next.js + TypeScript frontend/BFF: event creation, organizer dashboard, public event pages, participant registration, judge panel, real-time tracking UI.
 - **`services/core-go`** — Go backend: owns the event/prize state machine, participant registration, real-time score/progress tracking, the build-sign-submit transaction pipeline, and reconciliation. The only service allowed to write transactional state or call the escrow contract.
-- **`contracts/soroban`** — the escrow contract (Rust/Soroban) — see [docs/contracts-build-plan.md](contracts-build-plan.md).
+- **`smart-contracts/astrea/contracts/event-escrow`** — the escrow contract (Rust/Soroban) — see [docs/contracts-build-plan.md](contracts-build-plan.md).
 - **Postgres** — shared database (mirror tables for events, prizes, participants, wallets, payouts, an append-only op log for idempotency/auditability).
 - Everything lives in a single repository (monorepo), separated by folder/service, not by repo — see S01.
 

@@ -75,6 +75,10 @@ spikes/k01-trustless-work/
 # scratch
 *.bak
 
+# Graphify_out Manifest
+graphify-out/
+/graphify_out/manifest.json
+
 /apps/web/src/generated/prisma
 
 # vendor AI-skill reference docs — `npx prisma init` regenerates these; we

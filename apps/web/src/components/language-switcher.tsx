@@ -9,11 +9,29 @@ const LOCALE_LABELS: Record<string, string> = {
 	es: "ES",
 };
 
-export function LanguageSwitcher({ className }: { className?: string }) {
+export function LanguageSwitcher({
+	className,
+	variant = "dark",
+}: {
+	className?: string;
+	/** "dark" (default) assumes a dark background (white text) — the header over the
+	 *  hero. "light" assumes a light background (dark text) — e.g. inside
+	 *  StaggeredMenu's white panel. */
+	variant?: "dark" | "light";
+}) {
 	const t = useTranslations("LanguageSwitcher");
 	const locale = useLocale();
 	const router = useRouter();
 	const pathname = usePathname();
+
+	const activeClass =
+		variant === "light"
+			? "rounded px-1.5 py-0.5 text-black"
+			: "rounded px-1.5 py-0.5 text-white";
+	const inactiveClass =
+		variant === "light"
+			? "rounded px-1.5 py-0.5 text-black/50 hover:text-black/80"
+			: "rounded px-1.5 py-0.5 text-white/50 hover:text-white/80";
 
 	return (
 		<fieldset
@@ -26,11 +44,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
 					type="button"
 					onClick={() => router.replace(pathname, { locale: l })}
 					aria-current={l === locale}
-					className={
-						l === locale
-							? "rounded px-1.5 py-0.5 text-white"
-							: "rounded px-1.5 py-0.5 text-white/50 hover:text-white/80"
-					}
+					className={l === locale ? activeClass : inactiveClass}
 				>
 					{LOCALE_LABELS[l] ?? l.toUpperCase()}
 				</button>

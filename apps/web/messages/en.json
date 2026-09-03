@@ -7,10 +7,84 @@
 		"eyebrow": "Built on Stellar",
 		"title": "Astrea",
 		"tagline": "Escrow-backed prize payouts for hackathons, bounties, and community challenges — funds locked on-chain before the event starts.",
-		"mvpNotice": "MVP in active development. See the <link>build plan</link> for what's next."
+		"mvpNotice": "MVP in active development. See the <link>build plan</link> for what's next.",
+		"createEventCta": "Create an event",
+		"browseBountiesCta": "Browse bounties",
+		"audienceEyebrow": "Choose Your Path",
+		"audienceTitle": "Are you here as a participant or organizer?",
+		"audienceSubtitle": "Astrea provides dedicated tools and trustless escrows tailored to both sides of every competition.",
+		"participantRoleTitle": "I'm a Participant / Builder",
+		"participantRoleDesc": "Compete with peace of mind. Every prize pool is locked in smart contract escrow before you submit a single line of code.",
+		"participantRoleAction": "Explore builder portal",
+		"organizerRoleTitle": "I'm an Event Organizer / Sponsor",
+		"organizerRoleDesc": "Launch hackathons and bounty tracks with guaranteed credibility. Lock prize funds, assign judges, and release payouts seamlessly.",
+		"organizerRoleAction": "Explore organizer portal",
+		"finalCtaBadge": "Trustless By Default",
+		"finalCtaTitle": "Start running credible prize competitions today",
+		"finalCtaDesc": "Join organizers and builders building the future of transparent, on-chain prize distribution on Stellar."
+	},
+	"SeeItInAction": {
+		"badge": "See It In Action",
+		"title": "Real-time verifiable escrow tracking",
+		"description": "Every event hosted on Astrea features on-chain escrow validation, milestone breakdown, and transparent payout proofs.",
+		"feature1Title": "Smart Contract Backed",
+		"feature1Desc": "Prize funds are committed to Stellar Soroban contracts before hackathons begin.",
+		"feature2Title": "Independent Milestones",
+		"feature2Desc": "Release prizes individually as judges evaluate deliverables without blocking other winners."
+	},
+	"HowItWorks": {
+		"badge": "Escrow Lifecycle",
+		"title": "How Astrea Works",
+		"subtitle": "From creation to payout, every step of the prize lifecycle is secured on the Stellar network.",
+		"step1Title": "Define Event & Milestones",
+		"step1Desc": "Organizers configure prize tracks, award categories, milestones, and assign reputable judges with dispute fallback.",
+		"step2Title": "Lock Funds in Smart Escrow",
+		"step2Desc": "Prize funds are locked into Stellar Soroban smart contracts, immediately granting the event a verified public badge.",
+		"step3Title": "Submit Work & Judge Transparently",
+		"step3Desc": "Builders submit projects while appointed judges score and review submissions against transparent evaluation rubrics.",
+		"step4Title": "Instant Verified Settlement",
+		"step4Desc": "Winners receive instant payouts in USDC with verifiable on-chain transaction receipts and explorer links."
+	},
+	"ParticipantPage": {
+		"badge": "Builder & Participant Portal",
+		"title": "Build with guaranteed payouts",
+		"tagline": "Never worry about unfulfilled prize promises. Every competition on Astrea locks funds in smart escrows before launch.",
+		"card1Title": "Verified Escrow Escrow",
+		"card1Desc": "Check the on-chain contract address and confirmed USDC balances before spending your time.",
+		"card2Title": "Instant Automated Payouts",
+		"card2Desc": "Win and receive funds directly into your Stellar wallet with zero manual invoice delays.",
+		"card3Title": "Dispute Protection",
+		"card3Desc": "Designated resolvers and transparent judge scoring protect your work against unfair dismissals.",
+		"ctaTitle": "Ready to build and earn?",
+		"ctaDesc": "Connect your Stellar wallet to get started with active hackathons and verified bounties.",
+		"backToHome": "Back to overview"
+	},
+	"OrganizerPage": {
+		"badge": "Organizer & Sponsor Portal",
+		"title": "Host trusted prize competitions",
+		"tagline": "Attract top-tier builders by proving your prize pool is real, funded, and locked on Stellar.",
+		"card1Title": "Flexible Prize Structures",
+		"card1Desc": "Configure ranked payouts, category prizes, milestone splits, and sponsor bounties in minutes.",
+		"card2Title": "Collaborative Judge Panels",
+		"card2Desc": "Invite team members and industry experts to review and score submissions with ease.",
+		"card3Title": "One-Click Releases",
+		"card3Desc": "Release milestone payouts to verified recipient wallets with automated trustline validation.",
+		"ctaTitle": "Ready to launch your event?",
+		"ctaDesc": "Create your first escrow-backed hackathon or bounty track on Stellar testnet today.",
+		"backToHome": "Back to overview"
 	},
 	"SiteHeader": {
-		"githubAriaLabel": "Astrea on GitHub"
+		"githubAriaLabel": "Astrea on GitHub",
+		"participantNav": "Participants",
+		"organizerNav": "Organizers",
+		"participantAriaLabel": "Go to participants portal",
+		"organizerAriaLabel": "Go to organizers portal",
+		"openMenu": "Open menu",
+		"closeMenu": "Close menu",
+		"menuLabel": "Menu",
+		"closeLabel": "Close",
+		"homeLabel": "Home",
+		"homeAriaLabel": "Go to homepage"
 	},
 	"SiteFooter": {
 		"copyright": "© {year} Astrea. Built in the open on Stellar.",
@@ -26,5 +100,12 @@
 	},
 	"LanguageSwitcher": {
 		"label": "Language"
+	},
+	"Motion": {
+		"label": "Reduce animations",
+		"reducedState": "Animations reduced",
+		"fullState": "Animations on",
+		"followingSystem": "Following your system setting",
+		"useSystem": "Use my system setting"
 	}
 }

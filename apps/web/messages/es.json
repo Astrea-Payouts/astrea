@@ -7,10 +7,84 @@
 		"eyebrow": "Construido sobre Stellar",
 		"title": "Astrea",
 		"tagline": "Pagos de premios con escrow para hackathons, bounties y desafíos de comunidad — los fondos quedan bloqueados on-chain antes de que empiece el evento.",
-		"mvpNotice": "MVP en desarrollo activo. Mirá el <link>plan de construcción</link> para ver qué sigue."
+		"mvpNotice": "MVP en desarrollo activo. Mirá el <link>plan de construcción</link> para ver qué sigue.",
+		"createEventCta": "Crear un evento",
+		"browseBountiesCta": "Explorar bounties",
+		"audienceEyebrow": "Elegí tu camino",
+		"audienceTitle": "¿Estás acá como participante u organizador?",
+		"audienceSubtitle": "Astrea provee herramientas dedicadas y escrows transparentes adaptados a cada lado de la competencia.",
+		"participantRoleTitle": "Soy Participante / Constructor",
+		"participantRoleDesc": "Competí con tranquilidad. Cada pozo de premios queda bloqueado en contratos inteligentes antes de que envíes tu código.",
+		"participantRoleAction": "Explorar portal de constructores",
+		"organizerRoleTitle": "Soy Organizador / Sponsor",
+		"organizerRoleDesc": "Lanzá hackathons y bounties con credibilidad garantizada. Bloqueá fondos, asigná jueces y liberá pagos sin fricción.",
+		"organizerRoleAction": "Explorar portal de organizadores",
+		"finalCtaBadge": "Seguro por Defecto",
+		"finalCtaTitle": "Empezá a organizar competencias confiables hoy",
+		"finalCtaDesc": "Sumate a organizadores y creadores construyendo el futuro de los premios transparentes on-chain en Stellar."
+	},
+	"SeeItInAction": {
+		"badge": "Miralos en Acción",
+		"title": "Seguimiento de escrow verificable en tiempo real",
+		"description": "Cada evento en Astrea cuenta con validación de contrato inteligente on-chain, desglose por hitos y comprobantes de pago transparentes.",
+		"feature1Title": "Respaldado por Contratos",
+		"feature1Desc": "Los fondos quedan comprometidos en contratos inteligentes Soroban antes del inicio.",
+		"feature2Title": "Hitos Independientes",
+		"feature2Desc": "Liberá premios individualmente a medida que se evalúan entregas sin demorar a otros ganadores."
+	},
+	"HowItWorks": {
+		"badge": "Ciclo del Escrow",
+		"title": "Cómo Funciona Astrea",
+		"subtitle": "Desde la creación hasta la liquidación, cada paso del premio está asegurado en la red Stellar.",
+		"step1Title": "Definir Evento e Hitos",
+		"step1Desc": "Los organizadores configuran categorías de premios, hitos y asignan jueces con mediadores de respaldo.",
+		"step2Title": "Bloquear Fondos en Escrow",
+		"step2Desc": "Los fondos se depositan en el contrato inteligente de Stellar, otorgando de inmediato la insignia verificada.",
+		"step3Title": "Enviar Entregas y Juzgar",
+		"step3Desc": "Los creadores envían sus proyectos mientras los jueces evalúan de manera transparente según las rúbricas.",
+		"step4Title": "Liquidación Inmediata",
+		"step4Desc": "Los ganadores reciben sus fondos al instante en USDC con enlaces directos al explorador de bloques."
+	},
+	"ParticipantPage": {
+		"badge": "Portal de Participantes",
+		"title": "Construí con premios garantizados",
+		"tagline": "Olvidate de premios impagos. Cada competencia en Astrea bloquea fondos en contratos inteligentes antes de comenzar.",
+		"card1Title": "Escrows Verificados",
+		"card1Desc": "Verificá la dirección del contrato on-chain y los balances en USDC antes de invertir tu tiempo.",
+		"card2Title": "Pagos Automáticos al Instante",
+		"card2Desc": "Ganá y recibí los fondos directo en tu billetera Stellar sin demoras administrativas.",
+		"card3Title": "Protección contra Disputas",
+		"card3Desc": "Mediadores designados y evaluaciones transparentes protegen tu trabajo ante desacuerdos.",
+		"ctaTitle": "¿Listo para construir y ganar?",
+		"ctaDesc": "Conectá tu billetera Stellar para comenzar a participar en hackathons y bounties activos.",
+		"backToHome": "Volver al inicio"
+	},
+	"OrganizerPage": {
+		"badge": "Portal de Organizadores",
+		"title": "Organizá competencias confiables",
+		"tagline": "Atraé al mejor talento demostrando que tu pozo de premios es real, está fondeado y asegurado en Stellar.",
+		"card1Title": "Estructuras de Premios Flexibles",
+		"card1Desc": "Configurá premios por puesto, categorías especiales, división por hitos y bounties de sponsors.",
+		"card2Title": "Paneles de Jueces Colaborativos",
+		"card2Desc": "Invitá miembros de equipo y referentes de la industria para evaluar y puntuar proyectos.",
+		"card3Title": "Liberaciones con un Clic",
+		"card3Desc": "Transferí premios a las billeteras de los ganadores con validación automática de trustlines.",
+		"ctaTitle": "¿Listo para lanzar tu evento?",
+		"ctaDesc": "Creá tu primer hackathon o desafío con escrow en la red de pruebas de Stellar hoy mismo.",
+		"backToHome": "Volver al inicio"
 	},
 	"SiteHeader": {
-		"githubAriaLabel": "Astrea en GitHub"
+		"githubAriaLabel": "Astrea en GitHub",
+		"participantNav": "Participantes",
+		"organizerNav": "Organizadores",
+		"participantAriaLabel": "Ir al portal de participantes",
+		"organizerAriaLabel": "Ir al portal de organizadores",
+		"openMenu": "Abrir menú",
+		"closeMenu": "Cerrar menú",
+		"menuLabel": "Menú",
+		"closeLabel": "Cerrar",
+		"homeLabel": "Inicio",
+		"homeAriaLabel": "Ir al inicio"
 	},
 	"SiteFooter": {
 		"copyright": "© {year} Astrea. Construido en abierto sobre Stellar.",
@@ -26,5 +100,12 @@
 	},
 	"LanguageSwitcher": {
 		"label": "Idioma"
+	},
+	"Motion": {
+		"label": "Reducir animaciones",
+		"reducedState": "Animaciones reducidas",
+		"fullState": "Animaciones activadas",
+		"followingSystem": "Siguiendo la configuración de tu sistema",
+		"useSystem": "Usar la configuración de mi sistema"
 	}
 }

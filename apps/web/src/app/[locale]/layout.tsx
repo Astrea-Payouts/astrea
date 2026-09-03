@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { PwaRegister } from "@/components/pwa-register";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { MotionPreferenceProvider } from "@/hooks/use-reduced-motion";
 import { routing } from "@/i18n/routing";
 import { WalletProvider } from "@/lib/wallet/provider";
 import "../globals.css";
@@ -131,11 +132,13 @@ export default async function LocaleLayout({
 		>
 			<body className="relative min-h-full flex flex-col">
 				<NextIntlClientProvider>
-					<WalletProvider>
-						<SiteHeader />
-						{children}
-						<SiteFooter />
-					</WalletProvider>
+					<MotionPreferenceProvider>
+						<WalletProvider>
+							<SiteHeader />
+							{children}
+							<SiteFooter />
+						</WalletProvider>
+					</MotionPreferenceProvider>
 				</NextIntlClientProvider>
 				<PwaRegister />
 			</body>

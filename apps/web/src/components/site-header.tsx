@@ -1,8 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { ReduceMotionToggle } from "@/components/reduce-motion-toggle";
+import { resolveHeaderVariant } from "@/components/resolve-header-variant";
+import { StaggeredMenu } from "@/components/staggered-menu";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
 
 function GithubIcon() {
 	return (
@@ -17,23 +23,27 @@ function GithubIcon() {
 	);
 }
 
-// Absolute + transparent so it floats over the homepage hero's dark
-// background instead of sitting on its own solid bar. This only works
-// because the only page today IS that hero — once Phase 3 adds pages
-// without one (dashboard, event pages), this needs a non-transparent variant
-// for those, or the logo/button here will be invisible against a light page.
-//
-// The source PNG (astrea-sided-logo-light.png) has ~32% vertical fill — a
-// lot of baked-in transparent padding around the mark — so scaling its
-// container height barely grew the visible glyph. astrea-sided-logo-light
-// -trimmed.png is the same mark cropped to its bounding box (+small margin,
-// ~88% fill), so `h-*` here actually controls the visible logo size.
-export function SiteHeader() {
+export interface SiteHeaderProps {
+	variant?: "transparent" | "solid";
+	className?: string;
+}
+
+export function SiteHeader({ variant, className }: SiteHeaderProps) {
 	const t = useTranslations("SiteHeader");
+	const pathname = usePathname();
+
+	const resolvedVariant = resolveHeaderVariant(variant, pathname);
 
 	return (
-		<header className="absolute inset-x-0 top-0 z-20">
-			<div className="flex items-center justify-between gap-4 px-6 py-4 md:px-12">
+		<header
+			className={cn(
+				resolvedVariant === "transparent"
+					? "absolute inset-x-0 top-0 z-20"
+					: "sticky top-0 z-40 border-b border-white/10 bg-zinc-950/95 backdrop-blur-md",
+				className,
+			)}
+		>
+			<div className="hidden items-center justify-between gap-4 px-6 py-4 md:flex md:px-12">
 				<Link href="/" className="flex items-center">
 					<Image
 						src="/astrea-sided-logo-light-trimmed.png"
@@ -44,8 +54,22 @@ export function SiteHeader() {
 						priority
 					/>
 				</Link>
-				<nav className="flex items-center gap-4">
+
+				<nav className="flex items-center gap-6">
+					<Link
+						href="/participant"
+						className="text-sm font-medium text-white/70 transition-colors hover:text-white"
+					>
+						{t("participantNav")}
+					</Link>
+					<Link
+						href="/organizer"
+						className="text-sm font-medium text-white/70 transition-colors hover:text-white"
+					>
+						{t("organizerNav")}
+					</Link>
 					<LanguageSwitcher />
+					<ReduceMotionToggle />
 					<a
 						href="https://github.com/Astrea-Payouts/astrea"
 						className="text-white/70 hover:text-white"
@@ -56,6 +80,52 @@ export function SiteHeader() {
 					<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
 				</nav>
 			</div>
+
+			<StaggeredMenu
+				className="md:hidden"
+				isFixed
+				position="right"
+				items={[
+					{ label: t("homeLabel"), ariaLabel: t("homeAriaLabel"), link: "/" },
+					{
+						label: t("participantNav"),
+						ariaLabel: t("participantAriaLabel"),
+						link: "/participant",
+					},
+					{
+						label: t("organizerNav"),
+						ariaLabel: t("organizerAriaLabel"),
+						link: "/organizer",
+					},
+				]}
+				socialItems={[
+					{
+						label: t("githubAriaLabel"),
+						link: "https://github.com/Astrea-Payouts/astrea",
+					},
+				]}
+				displaySocials
+				displayItemNumbering={false}
+				logoUrl="/astrea-logo-mark.png"
+				colors={["#0a0a0a", "#000000"]}
+				accentColor="#000000"
+				menuButtonColor="#fff"
+				openMenuButtonColor="#000"
+				openAriaLabel={t("openMenu")}
+				closeAriaLabel={t("closeMenu")}
+				menuLabel={t("menuLabel")}
+				closeLabel={t("closeLabel")}
+				panelExtra={
+					<>
+						<LanguageSwitcher variant="light" />
+						<ReduceMotionToggle
+							variant="labelled"
+							className="w-full text-black"
+						/>
+						<WalletConnectButton className="w-full justify-center bg-black text-white hover:bg-black/90" />
+					</>
+				}
+			/>
 		</header>
 	);
 }
