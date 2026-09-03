@@ -7,6 +7,7 @@ import { ReduceMotionToggle } from "@/components/reduce-motion-toggle";
 import { resolveHeaderVariant } from "@/components/resolve-header-variant";
 import { StaggeredMenu } from "@/components/staggered-menu";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
+import { useScrolledPast } from "@/hooks/use-scrolled-past";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,10 @@ function GithubIcon() {
 	);
 }
 
+// Roughly a third of the header height, so the background arrives as soon as
+// content starts sliding underneath rather than after a long transparent gap.
+const OPAQUE_AFTER_PX = 32;
+
 export interface SiteHeaderProps {
 	variant?: "transparent" | "solid";
 	className?: string;
@@ -33,13 +38,34 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 	const pathname = usePathname();
 
 	const resolvedVariant = resolveHeaderVariant(variant, pathname);
+	const scrolled = useScrolledPast(OPAQUE_AFTER_PX);
+
+	// The solid variant is opaque from the start; the transparent one earns its
+	// background once the hero stops being what sits behind it.
+	const opaque = resolvedVariant === "solid" || scrolled;
 
 	return (
 		<header
 			className={cn(
+				"z-40 transition-colors duration-300",
+				// The transparent variant overlays the hero, so it is out of flow and
+				// has to be fixed to survive scrolling. The solid variant stays sticky:
+				// it is the first element in the flow, so top-0 pins it from the very
+				// first pixel — visually identical to fixed, but it keeps reserving its
+				// own height instead of letting the page slide underneath.
 				resolvedVariant === "transparent"
-					? "absolute inset-x-0 top-0 z-20"
-					: "sticky top-0 z-40 border-b border-white/10 bg-zinc-950/95 backdrop-blur-md",
+					? "fixed inset-x-0 top-0"
+					: "sticky top-0",
+				// Chrome only from md up, where the header actually draws a bar.
+				// Below that the row is hidden and StaggeredMenu draws its own UI, so
+				// the element is 1px tall — painting it opaque put a dark strip with a
+				// light border across the top of every phone screen once scrolled.
+				//
+				// The transparent border reserves the same 1px in both states, so
+				// gaining it on scroll does not nudge the header contents down.
+				opaque
+					? "md:border-b md:border-white/10 md:bg-zinc-950/95 md:backdrop-blur-md"
+					: "md:border-b md:border-transparent",
 				className,
 			)}
 		>
