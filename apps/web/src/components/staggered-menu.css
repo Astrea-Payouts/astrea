@@ -277,16 +277,29 @@
 	position: relative;
 	color: #000;
 	font-weight: 600;
-	font-size: 3.5rem;
+	/* Fluid rather than a fixed 3.5rem: at 56px, "PARTICIPANTS" overflowed
+	   the panel on every phone narrower than ~440px and got clipped. The
+	   clamp keeps the display scale on wide screens and shrinks to fit on
+	   small ones. */
+	font-size: clamp(2rem, 11vw, 3.5rem);
 	cursor: pointer;
-	line-height: 1;
-	letter-spacing: -2px;
+	line-height: 1.05;
+	letter-spacing: -0.02em;
 	text-transform: uppercase;
 	transition:
 		background 0.25s,
 		color 0.25s;
 	display: inline-block;
 	text-decoration: none;
+	/* Only reserve the numbering gutter when numbering is actually on —
+	   otherwise this is 1.4em of dead space pushing the label into the
+	   clip on narrow panels. */
+	padding-right: 0;
+	max-width: 100%;
+	overflow-wrap: break-word;
+}
+
+.sm-panel-list[data-numbering] .sm-panel-item {
 	padding-right: 1.4em;
 }
 
@@ -362,6 +375,9 @@
 		width: 100%;
 		left: 0;
 		right: 0;
+		/* The 2em side padding plus a 56px label is what pushed the text off
+		   the panel on a 360px screen. */
+		padding: 5.5em 1.25em 1.5em 1.25em;
 	}
 
 	.staggered-menu-wrapper[data-open] .sm-logo-img {
