@@ -70,7 +70,54 @@ looked handled, and it silently disabled the one effect a reviewer had asked to
 see, on a machine whose OS simply had animations turned off.
 
 The line is **who started the motion**, not how big it looks or which library
-draws it.
+draws it — and the visitor can override the whole thing either way, see below.
+
+### The visitor gets the last word
+
+The OS preference is the **default**, not the verdict. A "Reduce animations"
+switch lets a visitor override it **in both directions**, and that second
+direction is the reason the control exists:
+
+- Someone turns Windows' "Animation effects" off for battery, an old GPU, or
+  plain taste — nothing to do with vestibular sensitivity — and then every site
+  they visit strips itself down. They can switch the page's motion back on.
+- Someone leaves the OS alone but wants *this* page to hold still. They can,
+  without changing a system-wide setting for every other app.
+
+Three states, one stored value (`astrea:motion-preference` in `localStorage`):
+
+| Preference | Behaviour |
+| --- | --- |
+| `system` (default, nothing stored) | Follows `prefers-reduced-motion`. |
+| `reduced` | Reduced, whatever the OS says. |
+| `full` | Full motion, whatever the OS says. |
+
+`resolveReducedMotion()` in `src/lib/motion-preference.ts` is that whole rule,
+as a pure function, so the precedence is covered by tests rather than inferred
+from component code.
+
+**Where the control lives.** Three mount points, one shared context, so they
+stay in sync: the desktop header row (icon-only — that row is already dense),
+the mobile menu panel via StaggeredMenu's `panelExtra`, and the footer, which
+is where people look for accessibility settings. The labelled variant also
+offers "Use my system setting" once a choice has been made, so the override is
+reversible rather than a one-way door.
+
+**Notes for anyone touching this:**
+
+- The provider corrects its state in a **layout** effect, not a passive one, so
+  the right mode is in place before the browser paints. This matters because
+  the Prism hero is above the fold — with `useEffect` a visitor who chose
+  "reduced" would see a frame of animation first.
+- Anything unrecognised in storage parses back to `system`. A stale or
+  hand-edited value must not strand someone in a mode they cannot explain.
+- Every storage access is wrapped: private mode and embedded contexts throw on
+  `localStorage`, and a thrown accessibility control is worse than one that
+  forgets.
+- `document.documentElement` carries `data-motion="reduced" | "full"`, so CSS
+  can key off the resolved decision without having to re-derive the media query
+  and the override separately. Nothing depends on it yet; it is there so the
+  next person does not add a second source of truth.
 
 ### Tier 1 — removed under reduced motion
 
