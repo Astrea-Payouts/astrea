@@ -100,5 +100,12 @@
 	},
 	"LanguageSwitcher": {
 		"label": "Idioma"
+	},
+	"Motion": {
+		"label": "Reducir animaciones",
+		"reducedState": "Animaciones reducidas",
+		"fullState": "Animaciones activadas",
+		"followingSystem": "Siguiendo la configuración de tu sistema",
+		"useSystem": "Usar la configuración de mi sistema"
 	}
 }

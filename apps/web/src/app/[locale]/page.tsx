@@ -1,9 +1,10 @@
 import { ArrowRight, Code2, Sparkles, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { BorderGlowInView } from "@/components/marketing/border-glow-in-view";
+import { HeroPrism } from "@/components/marketing/hero-prism";
 import { HowItWorks } from "@/components/marketing/how-it-works";
 import { SeeItInAction } from "@/components/marketing/see-it-in-action";
 import { SpecularButton } from "@/components/marketing/specular-button";
-import { PrismBackground } from "@/components/prism-background";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 import { Link } from "@/i18n/navigation";
 
@@ -13,21 +14,20 @@ export default function Home() {
 	return (
 		<main className="relative isolate flex min-h-screen flex-1 flex-col overflow-hidden bg-black">
 			{/* Hero Section */}
-			<section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden">
-				{/* Canvas spans the full hero (no flat black slab on the left) —
-				the shape itself is pushed right via `offset` so it still reads
-				as concentrated on the right side. */}
+			<section className="relative flex min-h-svh flex-col justify-center overflow-hidden">
+				{/* Canvas fills the whole viewport-tall hero. The offset is kept
+				small so the glow still spreads across the full width instead of
+				leaving a flat black slab on the left. */}
 				<div className="pointer-events-none absolute inset-0 z-0">
-					<PrismBackground
-						suspendWhenOffscreen
-						offset={{ x: 260 }}
-						className="h-full w-full"
-					/>
+					<HeroPrism />
 				</div>
-				{/* Fully transparent by ~60% width, i.e. exactly where the Prism
-				lane starts — the glow must stay undimmed to read like the docs
-				demo; only the text column underneath needs the contrast. */}
-				<div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(115deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.8)_25%,rgba(0,0,0,0.4)_45%,rgba(0,0,0,0)_60%)]" />
+				{/* Readability scrim for the text column only. It has to fade out
+				well before the glow's core, otherwise the left half reads as dead
+				black rather than as part of the same background. */}
+				<div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(105deg,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.65)_22%,rgba(0,0,0,0.25)_40%,rgba(0,0,0,0)_58%)]" />
+				{/* Blends the hero into the section below so the seam isn't a hard
+				edge between the glow and flat black. */}
+				<div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-32 bg-gradient-to-b from-transparent to-black" />
 
 				<div className="relative z-10 flex flex-1 items-center px-6 py-28 md:px-12">
 					<div className="max-w-xl">
@@ -42,9 +42,8 @@ export default function Home() {
 						</p>
 						<div className="flex flex-wrap items-center gap-4">
 							<Link href="/organizer">
-								<SpecularButton size="lg" className="gap-2">
+								<SpecularButton size="lg" tint="#000000" tintOpacity={1}>
 									<span>{t("createEventCta")}</span>
-									<ArrowRight className="size-4" />
 								</SpecularButton>
 							</Link>
 							<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
@@ -66,7 +65,7 @@ export default function Home() {
 			</section>
 
 			{/* Participant vs Organizer Audience Question Section */}
-			<section className="relative z-10 border-y border-white/10 bg-zinc-950/80 px-6 py-16 backdrop-blur-md md:px-12">
+			<section className="relative z-10 border-y border-white/10 bg-zinc-950/80 px-6 py-12 backdrop-blur-md md:px-12 md:py-16">
 				<div className="mx-auto max-w-5xl">
 					<div className="text-center">
 						<p className="text-xs font-semibold tracking-wider text-blue-400 uppercase">
@@ -82,48 +81,58 @@ export default function Home() {
 
 					<div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
 						{/* Participant Option */}
-						<Link
-							href="/participant"
-							className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-8 transition-all duration-300 hover:border-blue-500/40 hover:bg-blue-500/[0.04]"
+						<BorderGlowInView
+							backgroundColor="#09090b"
+							borderRadius={16}
+							glowColor="217 91 60"
+							colors={["#3b82f6", "#60a5fa", "#38bdf8"]}
+							className="group"
 						>
-							<div className="flex items-center justify-between">
-								<div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-3 text-blue-400">
-									<Code2 className="size-6" />
+							<Link href="/participant" className="block p-8">
+								<div className="flex items-center justify-between">
+									<div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-3 text-blue-400">
+										<Code2 className="size-6" />
+									</div>
+									<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-blue-400" />
 								</div>
-								<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-blue-400" />
-							</div>
-							<h3 className="mt-6 text-xl font-bold text-white group-hover:text-blue-300">
-								{t("participantRoleTitle")}
-							</h3>
-							<p className="mt-2 text-sm leading-relaxed text-zinc-400">
-								{t("participantRoleDesc")}
-							</p>
-							<span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400">
-								{t("participantRoleAction")} <ArrowRight className="size-3" />
-							</span>
-						</Link>
+								<h3 className="mt-6 text-xl font-bold text-white group-hover:text-blue-300">
+									{t("participantRoleTitle")}
+								</h3>
+								<p className="mt-2 text-sm leading-relaxed text-zinc-400">
+									{t("participantRoleDesc")}
+								</p>
+								<span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400">
+									{t("participantRoleAction")} <ArrowRight className="size-3" />
+								</span>
+							</Link>
+						</BorderGlowInView>
 
 						{/* Organizer Option */}
-						<Link
-							href="/organizer"
-							className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-8 transition-all duration-300 hover:border-emerald-500/40 hover:bg-emerald-500/[0.04]"
+						<BorderGlowInView
+							backgroundColor="#09090b"
+							borderRadius={16}
+							glowColor="160 84 55"
+							colors={["#10b981", "#34d399", "#6ee7b7"]}
+							className="group"
 						>
-							<div className="flex items-center justify-between">
-								<div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-400">
-									<Users className="size-6" />
+							<Link href="/organizer" className="block p-8">
+								<div className="flex items-center justify-between">
+									<div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-400">
+										<Users className="size-6" />
+									</div>
+									<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-emerald-400" />
 								</div>
-								<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-emerald-400" />
-							</div>
-							<h3 className="mt-6 text-xl font-bold text-white group-hover:text-emerald-300">
-								{t("organizerRoleTitle")}
-							</h3>
-							<p className="mt-2 text-sm leading-relaxed text-zinc-400">
-								{t("organizerRoleDesc")}
-							</p>
-							<span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
-								{t("organizerRoleAction")} <ArrowRight className="size-3" />
-							</span>
-						</Link>
+								<h3 className="mt-6 text-xl font-bold text-white group-hover:text-emerald-300">
+									{t("organizerRoleTitle")}
+								</h3>
+								<p className="mt-2 text-sm leading-relaxed text-zinc-400">
+									{t("organizerRoleDesc")}
+								</p>
+								<span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
+									{t("organizerRoleAction")} <ArrowRight className="size-3" />
+								</span>
+							</Link>
+						</BorderGlowInView>
 					</div>
 				</div>
 			</section>
@@ -135,7 +144,7 @@ export default function Home() {
 			<HowItWorks />
 
 			{/* Final CTA Section */}
-			<section className="relative overflow-hidden bg-gradient-to-t from-blue-950/30 via-zinc-950 to-black py-24 text-center px-6">
+			<section className="relative overflow-hidden bg-gradient-to-t from-blue-950/30 via-zinc-950 to-black px-6 py-16 text-center md:py-20">
 				<div className="mx-auto max-w-3xl">
 					<div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-1 text-xs font-semibold text-blue-400">
 						<Sparkles className="size-3.5" />
@@ -149,9 +158,8 @@ export default function Home() {
 					</p>
 					<div className="mt-8 flex flex-wrap items-center justify-center gap-4">
 						<Link href="/organizer">
-							<SpecularButton size="lg" className="gap-2">
+							<SpecularButton size="lg" tint="#000000" tintOpacity={1}>
 								<span>{t("createEventCta")}</span>
-								<ArrowRight className="size-4" />
 							</SpecularButton>
 						</Link>
 						<Link

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Card, CardSwap } from "@/components/marketing/card-swap";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface SampleEvent {
 	id: string;
@@ -23,6 +24,7 @@ interface SampleEvent {
 
 export function SeeItInAction() {
 	const t = useTranslations("SeeItInAction");
+	const reduced = useReducedMotion();
 
 	const events: SampleEvent[] = [
 		{
@@ -70,7 +72,7 @@ export function SeeItInAction() {
 	];
 
 	return (
-		<section className="relative overflow-hidden bg-zinc-950 py-24 text-white">
+		<section className="relative overflow-hidden bg-zinc-950 py-12 text-white md:py-16">
 			<div className="mx-auto max-w-6xl px-6 md:px-12">
 				<div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
 					<div className="lg:col-span-5">
@@ -111,78 +113,126 @@ export function SeeItInAction() {
 						</div>
 					</div>
 
-					{/* CardSwap needs a positioned parent; height reserves layout space. */}
-					<div className="relative h-[480px] lg:col-span-7">
-						<CardSwap
-							width={460}
-							height={380}
-							cardDistance={55}
-							verticalDistance={65}
-							delay={4500}
-							pauseOnHover
-							skewAmount={5}
-						>
+					{reduced ? (
+						/* Reduced motion: the same three events, listed. CardSwap is
+						Tier 1 twice over under docs/ui-motion.md's policy — it moves
+						cards across the viewport with rotation and skew, and it does so
+						on a 4.5s setInterval the visitor never asked for, which is the
+						auto-updating-content case WCAG 2.2.2 covers at AA.
+
+						It is a static list rather than a frozen stack because the stack
+						only shows one card's content; the other two are decorative
+						edges behind it. Freezing it would leave two thirds of the
+						section permanently unreadable. */
+						<ul className="space-y-4 lg:col-span-7">
 							{events.map((evt) => (
-								<Card
+								<li
 									key={evt.id}
-									customClass="border-white/10 bg-zinc-900/95 p-6 shadow-2xl backdrop-blur-xl"
+									className="rounded-xl border border-white/10 bg-zinc-900/95 p-6 shadow-2xl"
 								>
-									<div className="flex h-full flex-col text-left text-white">
-										<div className="flex items-center justify-between border-b border-white/10 pb-4">
-											<div className="flex items-center gap-2">
-												<span className="rounded-md bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-400">
-													{evt.category}
-												</span>
-												<span className="flex items-center gap-1 text-xs text-emerald-400">
-													<CheckCircle2 className="size-3.5" />
-													{evt.escrowStatus}
-												</span>
-											</div>
-											<span className="font-mono text-sm font-bold">
-												{evt.prizePool}
-											</span>
-										</div>
-
-										<div className="mt-4">
-											<h3 className="text-xl font-bold">{evt.title}</h3>
-											<p className="mt-1 text-xs text-zinc-400">
-												{evt.participants} verified builders registered
-											</p>
-										</div>
-
-										<div className="mt-5 space-y-2 rounded-xl border border-white/5 bg-black/40 p-3.5 font-mono text-xs">
-											<p className="font-sans text-[10px] tracking-wider text-zinc-400 uppercase">
-												Escrow Milestones
-											</p>
-											{evt.milestones.map((m) => (
-												<div
-													key={m}
-													className="flex items-center justify-between text-zinc-300"
-												>
-													<span>{m}</span>
-												</div>
-											))}
-										</div>
-
-										<div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4 text-xs text-zinc-400">
-											<div className="flex flex-col gap-0.5">
-												<span className="font-sans text-[10px] tracking-wider text-amber-400/90 uppercase">
-													Illustrative example (not a live tx)
-												</span>
-												<span className="font-mono">Tx: {evt.txHash}</span>
-											</div>
-											<span className="flex items-center gap-1 text-blue-400">
-												View on Stellar Explorer{" "}
-												<ExternalLink className="size-3" />
-											</span>
-										</div>
-									</div>
-								</Card>
+									<EventCardBody evt={evt} />
+								</li>
 							))}
-						</CardSwap>
-					</div>
+						</ul>
+					) : (
+						<>
+							{/* CardSwap needs a positioned parent; the height reserves
+							layout space. Upstream anchors its own container bottom-right
+							and pushes it further out (translate-x-[25%] under 768px) for a
+							deliberate off-canvas bleed — that only works beside the text
+							column on desktop. Below lg it puts the stack off-screen, so
+							the container is re-anchored to the centre and scaled to fit.
+							The overrides live here rather than in card-swap.tsx to keep
+							that file a clean port. */}
+							<div
+								className={[
+									"relative lg:col-span-7",
+									"h-[360px] sm:h-[440px] lg:h-[480px]",
+									"[&>div]:!left-1/2 [&>div]:!right-auto [&>div]:!origin-center",
+									"[&>div]:!translate-x-[-50%] [&>div]:!translate-y-[-50%]",
+									"[&>div]:!top-1/2 [&>div]:!bottom-auto",
+									"[&>div]:!scale-[0.62] sm:[&>div]:!scale-[0.82]",
+									"lg:[&>div]:!top-auto lg:[&>div]:!bottom-0",
+									"lg:[&>div]:!left-auto lg:[&>div]:!right-0",
+									"lg:[&>div]:!origin-bottom-right lg:[&>div]:!scale-100",
+									"lg:[&>div]:!translate-x-[5%] lg:[&>div]:!translate-y-[20%]",
+								].join(" ")}
+							>
+								<CardSwap
+									width={460}
+									height={380}
+									cardDistance={55}
+									verticalDistance={65}
+									delay={4500}
+									pauseOnHover
+									skewAmount={5}
+								>
+									{events.map((evt) => (
+										<Card
+											key={evt.id}
+											customClass="border-white/10 bg-zinc-900/95 p-6 shadow-2xl backdrop-blur-xl"
+										>
+											<EventCardBody evt={evt} />
+										</Card>
+									))}
+								</CardSwap>
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 		</section>
+	);
+}
+
+function EventCardBody({ evt }: { evt: SampleEvent }) {
+	return (
+		<div className="flex h-full flex-col text-left text-white">
+			<div className="flex items-center justify-between border-b border-white/10 pb-4">
+				<div className="flex items-center gap-2">
+					<span className="rounded-md bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-400">
+						{evt.category}
+					</span>
+					<span className="flex items-center gap-1 text-xs text-emerald-400">
+						<CheckCircle2 className="size-3.5" />
+						{evt.escrowStatus}
+					</span>
+				</div>
+				<span className="font-mono text-sm font-bold">{evt.prizePool}</span>
+			</div>
+
+			<div className="mt-4">
+				<h3 className="text-xl font-bold">{evt.title}</h3>
+				<p className="mt-1 text-xs text-zinc-400">
+					{evt.participants} verified builders registered
+				</p>
+			</div>
+
+			<div className="mt-5 space-y-2 rounded-xl border border-white/5 bg-black/40 p-3.5 font-mono text-xs">
+				<p className="font-sans text-[10px] tracking-wider text-zinc-400 uppercase">
+					Escrow Milestones
+				</p>
+				{evt.milestones.map((m) => (
+					<div
+						key={m}
+						className="flex items-center justify-between text-zinc-300"
+					>
+						<span>{m}</span>
+					</div>
+				))}
+			</div>
+
+			<div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4 text-xs text-zinc-400">
+				<div className="flex flex-col gap-0.5">
+					<span className="font-sans text-[10px] tracking-wider text-amber-400/90 uppercase">
+						Illustrative example (not a live tx)
+					</span>
+					<span className="font-mono">Tx: {evt.txHash}</span>
+				</div>
+				<span className="flex items-center gap-1 text-blue-400">
+					View on Stellar Explorer <ExternalLink className="size-3" />
+				</span>
+			</div>
+		</div>
 	);
 }

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { ReduceMotionToggle } from "@/components/reduce-motion-toggle";
 import { resolveHeaderVariant } from "@/components/resolve-header-variant";
 import { StaggeredMenu } from "@/components/staggered-menu";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
@@ -68,6 +69,7 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 						{t("organizerNav")}
 					</Link>
 					<LanguageSwitcher />
+					<ReduceMotionToggle />
 					<a
 						href="https://github.com/Astrea-Payouts/astrea"
 						className="text-white/70 hover:text-white"
@@ -116,6 +118,10 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 				panelExtra={
 					<>
 						<LanguageSwitcher variant="light" />
+						<ReduceMotionToggle
+							variant="labelled"
+							className="w-full text-black"
+						/>
 						<WalletConnectButton className="w-full justify-center bg-black text-white hover:bg-black/90" />
 					</>
 				}
