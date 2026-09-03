@@ -95,7 +95,7 @@ export default function Home() {
 									</div>
 									<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-blue-400" />
 								</div>
-								<h3 className="mt-6 text-xl font-bold text-white group-hover:text-blue-300">
+								<h3 className="mt-6 text-xl font-bold text-white">
 									{t("participantRoleTitle")}
 								</h3>
 								<p className="mt-2 text-sm leading-relaxed text-zinc-400">
@@ -122,7 +122,7 @@ export default function Home() {
 									</div>
 									<ArrowRight className="size-5 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-emerald-400" />
 								</div>
-								<h3 className="mt-6 text-xl font-bold text-white group-hover:text-emerald-300">
+								<h3 className="mt-6 text-xl font-bold text-white">
 									{t("organizerRoleTitle")}
 								</h3>
 								<p className="mt-2 text-sm leading-relaxed text-zinc-400">
