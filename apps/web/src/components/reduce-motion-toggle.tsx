@@ -10,11 +10,13 @@ import { cn } from "@/lib/utils";
 
 export interface ReduceMotionToggleProps {
 	/**
-	 * "icon" is for the desktop header row, which is already dense. "labelled"
-	 * is for the mobile menu panel and the footer, where there is room to say
-	 * what the control does.
+	 * "compact" is the desktop header row: icon plus a short text label, because
+	 * a lone lightning bolt does not tell anyone what it does. "labelled" is the
+	 * full switch for the mobile menu panel and the footer, where there is room
+	 * for the state and a reset. "icon" is the bare icon, kept for anywhere too
+	 * tight for words.
 	 */
-	variant?: "icon" | "labelled";
+	variant?: "icon" | "compact" | "labelled";
 	className?: string;
 }
 
@@ -27,7 +29,7 @@ export interface ReduceMotionToggleProps {
  * while still wanting a marketing page to hold still. See docs/ui-motion.md.
  */
 export function ReduceMotionToggle({
-	variant = "icon",
+	variant = "compact",
 	className,
 }: ReduceMotionToggleProps) {
 	const t = useTranslations("Motion");
@@ -36,6 +38,36 @@ export function ReduceMotionToggle({
 	const toggle = () => setPreference(preferenceForToggle(!reduced));
 	const Icon = reduced ? ZapOff : Zap;
 	const stateLabel = reduced ? t("reducedState") : t("fullState");
+
+	if (variant === "compact") {
+		return (
+			<button
+				type="button"
+				role="switch"
+				aria-checked={reduced}
+				title={`${t("label")} — ${stateLabel}`}
+				onClick={toggle}
+				className={cn(
+					"flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-white",
+					reduced ? "text-white" : "text-white/70",
+					className,
+				)}
+			>
+				<Icon className="size-4 shrink-0" aria-hidden="true" />
+				{/* The label is the whole point of this variant, but it is the first
+				thing worth dropping when the row runs out of room, so below lg the
+				button falls back to the icon plus its title.
+
+				sr-only rather than hidden, so the text stays in the accessibility
+				tree at every width, and one element rather than a visible one plus a
+				screen-reader copy — two copies risk the name being announced twice
+				if their visibility classes ever drift apart. */}
+				<span className="sr-only lg:not-sr-only lg:whitespace-nowrap">
+					{t("label")}
+				</span>
+			</button>
+		);
+	}
 
 	if (variant === "icon") {
 		return (
