@@ -247,6 +247,32 @@
       "norm_label": "resolvemilestonedisputeparams"
     },
     {
+      "label": "SubmittedTx",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L28",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_types_submittedtx",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "submittedtx"
+    },
+    {
+      "label": "UnsignedTx",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L24",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_types_unsignedtx",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "unsignedtx"
+    },
+    {
       "label": "Keys",
       "file_type": "code",
       "source_file": "apps/web/scripts/seed-demo-event.ts",
@@ -258,6 +284,19 @@
       "community": 107,
       "community_name": "seed-demo-event.ts",
       "norm_label": "keys"
+    },
+    {
+      "label": "TransitionPrizeExtra",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/state-machines/apply.ts",
+      "source_location": "L29",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_state_machines_apply_transitionprizeextra",
+      "community": 107,
+      "community_name": "seed-demo-event.ts",
+      "norm_label": "transitionprizeextra"
     },
     {
       "label": "OpRecord",
@@ -406,13 +445,13 @@
       "label": "WalletContextValue",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L18",
+      "source_location": "L14",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider_walletcontextvalue",
       "community": 128,
-      "community_name": "session.ts",
+      "community_name": "provider.tsx",
       "norm_label": "walletcontextvalue"
     },
     {
@@ -533,19 +572,6 @@
       "norm_label": "staggeredmenusocialitem"
     },
     {
-      "label": "TransitionPrizeExtra",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/state-machines/apply.ts",
-      "source_location": "L29",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_state_machines_apply_transitionprizeextra",
-      "community": 20,
-      "community_name": "apply.ts",
-      "norm_label": "transitionprizeextra"
-    },
-    {
       "label": "InvalidTransitionError",
       "file_type": "code",
       "source_file": "apps/web/src/lib/state-machines/errors.ts",
@@ -555,7 +581,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_errors_invalidtransitionerror",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "invalidtransitionerror"
     },
     {
@@ -570,32 +596,6 @@
       "community": 22,
       "community_name": "stellar-network.ts",
       "norm_label": "forwardpaymentparams"
-    },
-    {
-      "label": "SubmittedTx",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L28",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_submittedtx",
-      "community": 22,
-      "community_name": "stellar-network.ts",
-      "norm_label": "submittedtx"
-    },
-    {
-      "label": "UnsignedTx",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L24",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_unsignedtx",
-      "community": 22,
-      "community_name": "stellar-network.ts",
-      "norm_label": "unsignedtx"
     },
     {
       "label": "StellarNetworkName",
@@ -915,18 +915,6 @@
       "norm_label": "submitforwardpayment()"
     },
     {
-      "label": "findStalledForwardsInDb()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/run.ts",
-      "source_location": "L12",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_run_findstalledforwardsindb",
-      "community": 0,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "findstalledforwardsindb()"
-    },
-    {
       "label": "isNotFoundError()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
@@ -961,18 +949,6 @@
       "community": 0,
       "community_name": "e06-vertical-slice.ts",
       "norm_label": "mocktransactioncall()"
-    },
-    {
-      "label": "transitionEvent()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/state-machines/apply.ts",
-      "source_location": "L12",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_state_machines_apply_transitionevent",
-      "community": 0,
-      "community_name": "e06-vertical-slice.ts",
-      "norm_label": "transitionevent()"
     },
     {
       "label": "transitionPrize()",
@@ -1203,6 +1179,18 @@
       "norm_label": "prepareoperation()"
     },
     {
+      "label": "transitionEvent()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/state-machines/apply.ts",
+      "source_location": "L12",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_state_machines_apply_transitionevent",
+      "community": 107,
+      "community_name": "seed-demo-event.ts",
+      "norm_label": "transitionevent()"
+    },
+    {
       "label": "verifyAndRecordTrustline()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/trustline/verify-and-record.ts",
@@ -1237,18 +1225,6 @@
       "community": 107,
       "community_name": "seed-demo-event.ts",
       "norm_label": "isnotfounderror()"
-    },
-    {
-      "label": "mockLoadAccount()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/trustline/verify-trustline.test.ts",
-      "source_location": "L7",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_trustline_verify_trustline_test_mockloadaccount",
-      "community": 107,
-      "community_name": "seed-demo-event.ts",
-      "norm_label": "mockloadaccount()"
     },
     {
       "label": "decidePrepare()",
@@ -1321,6 +1297,18 @@
       "community": 109,
       "community_name": "manifest.ts",
       "norm_label": "manifest()"
+    },
+    {
+      "label": "findStalledForwardsInDb()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/reconciliation/run.ts",
+      "source_location": "L12",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_reconciliation_run_findstalledforwardsindb",
+      "community": 113,
+      "community_name": "run.ts",
+      "norm_label": "findstalledforwardsindb()"
     },
     {
       "label": "findStalledForwards()",
@@ -1407,66 +1395,6 @@
       "norm_label": "sitefooter()"
     },
     {
-      "label": "GET()",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/api/auth/nonce/route.ts",
-      "source_location": "L6",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_app_api_auth_nonce_route_get",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "get()"
-    },
-    {
-      "label": "consumeAuthNonce()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L49",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_auth_utils_consumeauthnonce",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "consumeauthnonce()"
-    },
-    {
-      "label": "formatAuthMessage()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L10",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_auth_utils_formatauthmessage",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "formatauthmessage()"
-    },
-    {
-      "label": "issueAuthNonce()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L14",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_auth_utils_issueauthnonce",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "issueauthnonce()"
-    },
-    {
-      "label": "verifyStellarSignature()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L65",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_auth_utils_verifystellarsignature",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "verifystellarsignature()"
-    },
-    {
       "label": "initWalletKit()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/kit.ts",
@@ -1475,80 +1403,56 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_kit_initwalletkit",
       "community": 128,
-      "community_name": "session.ts",
+      "community_name": "provider.tsx",
       "norm_label": "initwalletkit()"
     },
     {
       "label": "WalletProvider()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L27",
+      "source_location": "L23",
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider_walletprovider",
       "community": 128,
-      "community_name": "session.ts",
+      "community_name": "provider.tsx",
       "norm_label": "walletprovider()"
     },
     {
-      "label": "associateVerifiedWallet()",
+      "label": "associateWallet()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L30",
+      "source_location": "L17",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_session_associateverifiedwallet",
+      "id": "apps_web_src_lib_wallet_session_associatewallet",
       "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "associateverifiedwallet()"
+      "community_name": "provider.tsx",
+      "norm_label": "associatewallet()"
     },
     {
       "label": "clearWalletSession()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L110",
+      "source_location": "L44",
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_clearwalletsession",
       "community": 128,
-      "community_name": "session.ts",
+      "community_name": "provider.tsx",
       "norm_label": "clearwalletsession()"
-    },
-    {
-      "label": "getAuthNonce()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L26",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_session_getauthnonce",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "getauthnonce()"
     },
     {
       "label": "getSessionWallet()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L115",
+      "source_location": "L49",
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_getsessionwallet",
       "community": 128,
-      "community_name": "session.ts",
+      "community_name": "provider.tsx",
       "norm_label": "getsessionwallet()"
-    },
-    {
-      "label": "updateWalletEmail()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L93",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_session_updatewalletemail",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "updatewalletemail()"
     },
     {
       "label": "sitemap()",
@@ -1758,7 +1662,7 @@
       "label": "useWallet()",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L87",
+      "source_location": "L76",
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider_usewallet",
@@ -1847,7 +1751,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_errors_invalidtransitionerror_constructor",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": ".constructor()"
     },
     {
@@ -1859,7 +1763,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_event_asserteventtransition",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "asserteventtransition()"
     },
     {
@@ -1871,7 +1775,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_event_cantransitionevent",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "cantransitionevent()"
     },
     {
@@ -1883,7 +1787,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize_assertprizetransition",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "assertprizetransition()"
     },
     {
@@ -1895,7 +1799,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize_cantransitionprize",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "cantransitionprize()"
     },
     {
@@ -1921,6 +1825,18 @@
       "community": 22,
       "community_name": "stellar-network.ts",
       "norm_label": "loadenvwith()"
+    },
+    {
+      "label": "mockLoadAccount()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/trustline/verify-trustline.test.ts",
+      "source_location": "L7",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_trustline_verify_trustline_test_mockloadaccount",
+      "community": 22,
+      "community_name": "stellar-network.ts",
+      "norm_label": "mockloadaccount()"
     },
     {
       "label": "Home()",
@@ -3273,7 +3189,7 @@
       "label": "db",
       "file_type": "code",
       "source_file": "apps/web/src/lib/db.ts",
-      "source_location": "L23",
+      "source_location": "L19",
       "_origin": "ast",
       "id": "apps_web_src_lib_db_db",
       "community": 107,
@@ -3292,15 +3208,15 @@
       "norm_label": "globalforprisma"
     },
     {
-      "label": "env",
+      "label": "apply.ts",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/env.ts",
-      "source_location": "L72",
+      "source_file": "apps/web/src/lib/state-machines/apply.ts",
+      "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_lib_env_env",
+      "id": "apps_web_src_lib_state_machines_apply",
       "community": 107,
       "community_name": "seed-demo-event.ts",
-      "norm_label": "env"
+      "norm_label": "apply.ts"
     },
     {
       "label": "verify-and-record.ts",
@@ -3314,26 +3230,15 @@
       "norm_label": "verify-and-record.ts"
     },
     {
-      "label": "verify-trustline.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/trustline/verify-trustline.ts",
-      "source_location": "L1",
+      "label": "ADR-0007",
+      "file_type": "concept",
+      "source_file": "apps/web/src/lib/state-machines/apply.ts",
+      "source_location": "L37",
       "_origin": "ast",
-      "id": "apps_web_src_lib_trustline_verify_trustline",
+      "id": "apps_web_src_lib_state_machines_apply_ts_docref_adr_0007",
       "community": 107,
       "community_name": "seed-demo-event.ts",
-      "norm_label": "verify-trustline.ts"
-    },
-    {
-      "label": "verify-trustline.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/trustline/verify-trustline.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_trustline_verify_trustline_test",
-      "community": 107,
-      "community_name": "seed-demo-event.ts",
-      "norm_label": "verify-trustline.test.ts"
+      "norm_label": "adr-0007"
     },
     {
       "label": "ADR-0004",
@@ -3342,17 +3247,6 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "apps_web_src_lib_trustline_verify_and_record_ts_docref_adr_0004",
-      "community": 107,
-      "community_name": "seed-demo-event.ts",
-      "norm_label": "adr-0004"
-    },
-    {
-      "label": "ADR-0004",
-      "file_type": "concept",
-      "source_file": "apps/web/src/lib/trustline/verify-trustline.ts",
-      "source_location": "L5",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_trustline_verify_trustline_ts_docref_adr_0004",
       "community": 107,
       "community_name": "seed-demo-event.ts",
       "norm_label": "adr-0004"
@@ -3675,6 +3569,50 @@
       "community": 110,
       "community_name": "sw.js",
       "norm_label": "precache_assets"
+    },
+    {
+      "label": "Environment Variables",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L131",
+      "_origin": "ast",
+      "community": 111,
+      "norm_label": "environment variables",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_environment_variables"
+    },
+    {
+      "label": "\ud83c\udfc1 Getting Started",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L102",
+      "_origin": "ast",
+      "community": 111,
+      "norm_label": "\ud83c\udfc1 getting started",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_getting_started"
+    },
+    {
+      "label": "Prerequisites",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L106",
+      "_origin": "ast",
+      "community": 111,
+      "norm_label": "prerequisites",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_prerequisites"
+    },
+    {
+      "label": "Setup",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L113",
+      "_origin": "ast",
+      "community": 111,
+      "norm_label": "setup",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_setup"
     },
     {
       "label": "CODE_OF_CONDUCT.md",
@@ -4205,6 +4143,61 @@
       "id": "contributing"
     },
     {
+      "label": "Findings folded into ADR-008",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 120,
+      "norm_label": "findings folded into adr-008",
+      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "id": "spikes_k01_soroban_escrow_readme_findings_folded_into_adr_008"
+    },
+    {
+      "label": "How to run",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 120,
+      "norm_label": "how to run",
+      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "id": "spikes_k01_soroban_escrow_readme_how_to_run"
+    },
+    {
+      "label": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 120,
+      "norm_label": "k01 (server-build-plan.md) \u2014 custom soroban escrow spike",
+      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "id": "spikes_k01_soroban_escrow_readme_k01_server_build_plan_md_custom_soroban_escrow_spike"
+    },
+    {
+      "label": "Next step",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L44",
+      "_origin": "ast",
+      "community": 120,
+      "norm_label": "next step",
+      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "id": "spikes_k01_soroban_escrow_readme_next_step"
+    },
+    {
+      "label": "What it verifies \u2014 results",
+      "file_type": "document",
+      "source_file": "spikes/k01-soroban-escrow/README.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 120,
+      "norm_label": "what it verifies \u2014 results",
+      "community_name": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
+      "id": "spikes_k01_soroban_escrow_readme_what_it_verifies_results"
+    },
+    {
       "label": "event-escrow",
       "file_type": "code",
       "type": "package",
@@ -4524,70 +4517,26 @@
       "id": "docs_contracts_build_plan_sequencing_rules"
     },
     {
-      "label": "route.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/api/auth/nonce/route.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_app_api_auth_nonce_route",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "route.ts"
-    },
-    {
-      "label": "dynamic",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/api/auth/nonce/route.ts",
-      "source_location": "L4",
-      "_origin": "ast",
-      "id": "apps_web_src_app_api_auth_nonce_route_dynamic",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "dynamic"
-    },
-    {
-      "label": "STELLAR_ACCOUNT_ID",
+      "label": "STELLAR_NETWORK",
       "file_type": "code",
       "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L10",
+      "source_location": "L14",
       "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network_stellar_account_id",
+      "id": "apps_web_src_lib_stellar_network_stellar_network",
       "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "stellar_account_id"
+      "community_name": "provider.tsx",
+      "norm_label": "stellar_network"
     },
     {
-      "label": "auth-utils.ts",
+      "label": "kit.ts",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
+      "source_file": "apps/web/src/lib/wallet/kit.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_auth_utils",
+      "id": "apps_web_src_lib_wallet_kit",
       "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "auth-utils.ts"
-    },
-    {
-      "label": "AUTH_MESSAGE_PREFIX",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_auth_utils_auth_message_prefix",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "auth_message_prefix"
-    },
-    {
-      "label": "NONCE_TTL_MS",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_auth_utils_nonce_ttl_ms",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "nonce_ttl_ms"
+      "community_name": "provider.tsx",
+      "norm_label": "kit.ts"
     },
     {
       "label": "provider.tsx",
@@ -4597,18 +4546,18 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider",
       "community": 128,
-      "community_name": "session.ts",
+      "community_name": "provider.tsx",
       "norm_label": "provider.tsx"
     },
     {
       "label": "WalletContext",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L25",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider_walletcontext",
       "community": 128,
-      "community_name": "session.ts",
+      "community_name": "provider.tsx",
       "norm_label": "walletcontext"
     },
     {
@@ -4619,41 +4568,8 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session",
       "community": 128,
-      "community_name": "session.ts",
+      "community_name": "provider.tsx",
       "norm_label": "session.ts"
-    },
-    {
-      "label": "session.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_session_test",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "session.test.ts"
-    },
-    {
-      "label": "{ mockCookieMap, mockDb, nonceRows }",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L17",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_session_test_mockcookiemap_mockdb_noncerows",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "{ mockcookiemap, mockdb, noncerows }"
-    },
-    {
-      "label": "NOTE: No money-moving action ever trusts this session alone. Every escrow",
-      "file_type": "rationale",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L20",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_session_rationale_20",
-      "community": 128,
-      "community_name": "session.ts",
-      "norm_label": "note: no money-moving action ever trusts this session alone. every escrow"
     },
     {
       "label": "sitemap.ts",
@@ -5006,6 +4922,39 @@
       "community": 13,
       "community_name": "EscrowContract",
       "norm_label": "option"
+    },
+    {
+      "label": "Money-path rules",
+      "file_type": "document",
+      "source_file": "smart-contracts/README.md",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "smart_contracts_readme_money_path_rules",
+      "community": 130,
+      "community_name": "Smart contracts",
+      "norm_label": "money-path rules"
+    },
+    {
+      "label": "Smart contracts",
+      "file_type": "document",
+      "source_file": "smart-contracts/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "smart_contracts_readme_smart_contracts",
+      "community": 130,
+      "community_name": "Smart contracts",
+      "norm_label": "smart contracts"
+    },
+    {
+      "label": "Working on it",
+      "file_type": "document",
+      "source_file": "smart-contracts/README.md",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "smart_contracts_readme_working_on_it",
+      "community": 130,
+      "community_name": "Smart contracts",
+      "norm_label": "working on it"
     },
     {
       "label": "tx-hash-link.tsx",
@@ -5668,17 +5617,6 @@
       "id": "readme"
     },
     {
-      "label": "Prerequisites",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L106",
-      "_origin": "ast",
-      "community": 16,
-      "norm_label": "prerequisites",
-      "community_name": "README.md",
-      "id": "readme_prerequisites"
-    },
-    {
       "label": "product-flows.md",
       "file_type": "document",
       "source_file": "docs/product-flows.md",
@@ -6229,39 +6167,6 @@
       "norm_label": "smart-contracts/readme.md"
     },
     {
-      "label": "Money-path rules",
-      "file_type": "document",
-      "source_file": "smart-contracts/README.md",
-      "source_location": "L26",
-      "_origin": "ast",
-      "id": "smart_contracts_readme_money_path_rules",
-      "community": 2,
-      "community_name": "build-plan.md",
-      "norm_label": "money-path rules"
-    },
-    {
-      "label": "Smart contracts",
-      "file_type": "document",
-      "source_file": "smart-contracts/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "smart_contracts_readme_smart_contracts",
-      "community": 2,
-      "community_name": "build-plan.md",
-      "norm_label": "smart contracts"
-    },
-    {
-      "label": "Working on it",
-      "file_type": "document",
-      "source_file": "smart-contracts/README.md",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "smart_contracts_readme_working_on_it",
-      "community": 2,
-      "community_name": "build-plan.md",
-      "norm_label": "working on it"
-    },
-    {
       "label": "k01-soroban-escrow/README.md",
       "file_type": "document",
       "source_file": "spikes/k01-soroban-escrow/README.md",
@@ -6271,61 +6176,6 @@
       "norm_label": "k01-soroban-escrow/readme.md",
       "community_name": "build-plan.md",
       "id": "spikes_k01_soroban_escrow_readme"
-    },
-    {
-      "label": "Findings folded into ADR-008",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L20",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "findings folded into adr-008",
-      "community_name": "build-plan.md",
-      "id": "spikes_k01_soroban_escrow_readme_findings_folded_into_adr_008"
-    },
-    {
-      "label": "How to run",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L28",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "how to run",
-      "community_name": "build-plan.md",
-      "id": "spikes_k01_soroban_escrow_readme_how_to_run"
-    },
-    {
-      "label": "K01 (server-build-plan.md) \u2014 custom Soroban escrow spike",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "k01 (server-build-plan.md) \u2014 custom soroban escrow spike",
-      "community_name": "build-plan.md",
-      "id": "spikes_k01_soroban_escrow_readme_k01_server_build_plan_md_custom_soroban_escrow_spike"
-    },
-    {
-      "label": "Next step",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L44",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "next step",
-      "community_name": "build-plan.md",
-      "id": "spikes_k01_soroban_escrow_readme_next_step"
-    },
-    {
-      "label": "What it verifies \u2014 results",
-      "file_type": "document",
-      "source_file": "spikes/k01-soroban-escrow/README.md",
-      "source_location": "L7",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "what it verifies \u2014 results",
-      "community_name": "build-plan.md",
-      "id": "spikes_k01_soroban_escrow_readme_what_it_verifies_results"
     },
     {
       "label": "k02-go-soroban/README.md",
@@ -6339,17 +6189,6 @@
       "id": "spikes_k02_go_soroban_readme"
     },
     {
-      "label": "apply.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/state-machines/apply.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_state_machines_apply",
-      "community": 20,
-      "community_name": "apply.ts",
-      "norm_label": "apply.ts"
-    },
-    {
       "label": "errors.ts",
       "file_type": "code",
       "source_file": "apps/web/src/lib/state-machines/errors.ts",
@@ -6357,7 +6196,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_errors",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "errors.ts"
     },
     {
@@ -6368,7 +6207,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_event",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "event.ts"
     },
     {
@@ -6379,7 +6218,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_event_event_transitions",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "event_transitions"
     },
     {
@@ -6390,7 +6229,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_event_test",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "event.test.ts"
     },
     {
@@ -6401,7 +6240,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "prize.ts"
     },
     {
@@ -6412,7 +6251,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize_prize_transitions",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "prize_transitions"
     },
     {
@@ -6423,19 +6262,8 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize_test",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "prize.test.ts"
-    },
-    {
-      "label": "ADR-0007",
-      "file_type": "concept",
-      "source_file": "apps/web/src/lib/state-machines/apply.ts",
-      "source_location": "L37",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_state_machines_apply_ts_docref_adr_0007",
-      "community": 20,
-      "community_name": "apply.ts",
-      "norm_label": "adr-0007"
     },
     {
       "label": "ADR-0007",
@@ -6445,7 +6273,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize_ts_docref_adr_0007",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "adr-0007"
     },
     {
@@ -6603,6 +6431,17 @@
       "norm_label": "env.ts"
     },
     {
+      "label": "env",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/env.ts",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_env_env",
+      "community": 22,
+      "community_name": "stellar-network.ts",
+      "norm_label": "env"
+    },
+    {
       "label": "serverSchema",
       "file_type": "code",
       "source_file": "apps/web/src/lib/env.ts",
@@ -6713,15 +6552,15 @@
       "norm_label": "network_config"
     },
     {
-      "label": "STELLAR_NETWORK",
+      "label": "STELLAR_ACCOUNT_ID",
       "file_type": "code",
       "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L14",
+      "source_location": "L10",
       "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network_stellar_network",
+      "id": "apps_web_src_lib_stellar_network_stellar_account_id",
       "community": 22,
       "community_name": "stellar-network.ts",
-      "norm_label": "stellar_network"
+      "norm_label": "stellar_account_id"
     },
     {
       "label": "STELLAR_NETWORK_PASSPHRASE",
@@ -6735,15 +6574,26 @@
       "norm_label": "stellar_network_passphrase"
     },
     {
-      "label": "kit.ts",
+      "label": "verify-trustline.ts",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/wallet/kit.ts",
+      "source_file": "apps/web/src/lib/trustline/verify-trustline.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_lib_wallet_kit",
+      "id": "apps_web_src_lib_trustline_verify_trustline",
       "community": 22,
       "community_name": "stellar-network.ts",
-      "norm_label": "kit.ts"
+      "norm_label": "verify-trustline.ts"
+    },
+    {
+      "label": "verify-trustline.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/trustline/verify-trustline.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_trustline_verify_trustline_test",
+      "community": 22,
+      "community_name": "stellar-network.ts",
+      "norm_label": "verify-trustline.test.ts"
     },
     {
       "label": "ADR-0007",
@@ -6755,6 +6605,17 @@
       "community": 22,
       "community_name": "stellar-network.ts",
       "norm_label": "adr-0007"
+    },
+    {
+      "label": "ADR-0004",
+      "file_type": "concept",
+      "source_file": "apps/web/src/lib/trustline/verify-trustline.ts",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_trustline_verify_trustline_ts_docref_adr_0004",
+      "community": 22,
+      "community_name": "stellar-network.ts",
+      "norm_label": "adr-0004"
     },
     {
       "label": "[locale]/page.tsx",
@@ -6966,28 +6827,6 @@
       "id": "readme_documentation"
     },
     {
-      "label": "Environment Variables",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L131",
-      "_origin": "ast",
-      "community": 24,
-      "norm_label": "environment variables",
-      "community_name": "\ud83c\udf20 Astrea",
-      "id": "readme_environment_variables"
-    },
-    {
-      "label": "\ud83c\udfc1 Getting Started",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L102",
-      "_origin": "ast",
-      "community": 24,
-      "norm_label": "\ud83c\udfc1 getting started",
-      "community_name": "\ud83c\udf20 Astrea",
-      "id": "readme_getting_started"
-    },
-    {
       "label": "\ud83d\ude80 How It Works",
       "file_type": "document",
       "source_file": "README.md",
@@ -7030,17 +6869,6 @@
       "norm_label": "our solution",
       "community_name": "\ud83c\udf20 Astrea",
       "id": "readme_our_solution"
-    },
-    {
-      "label": "Setup",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L113",
-      "_origin": "ast",
-      "community": 24,
-      "norm_label": "setup",
-      "community_name": "\ud83c\udf20 Astrea",
-      "id": "readme_setup"
     },
     {
       "label": "\ud83d\udee0\ufe0f Technology Stack",
@@ -10867,64 +10695,124 @@
       "id": "spikes_k02_go_soroban_readme_contract"
     },
     {
-      "label": "coded GitHub issue tasks (e.g. [E02], [U01])",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 9",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 111,
-      "norm_label": "coded github issue tasks (e.g. [e02], [u01])",
-      "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "contributing_issue_task_codes"
-    },
-    {
-      "label": "Task S01 (project scaffold)",
+      "label": "EscrowClient interface",
       "file_type": "concept",
       "source_file": "README.md",
-      "source_location": "line 104",
+      "source_location": "line 68",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 111,
-      "norm_label": "task s01 (project scaffold)",
+      "norm_label": "escrowclient interface",
       "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "readme_task_s01"
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_escrowclient_interface"
     },
     {
-      "label": "docs/build-plan.md",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 9",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 111,
-      "norm_label": "docs/build-plan.md",
-      "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "contributing_build_plan"
-    },
-    {
-      "label": "docs/build-plan.md",
-      "file_type": "document",
+      "label": "Go backend (services/core-go)",
+      "file_type": "concept",
       "source_file": "README.md",
-      "source_location": "lines 104, 174, 182",
+      "source_location": "lines 67, 91, 109",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 111,
-      "norm_label": "docs/build-plan.md",
+      "norm_label": "go backend (services/core-go)",
       "_origin": "semantic",
-      "community_name": "docs/build-plan.md",
-      "id": "readme_build_plan_doc"
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_go_backend"
+    },
+    {
+      "label": "Stellar Horizon",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 77",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 111,
+      "norm_label": "stellar horizon",
+      "_origin": "semantic",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_horizon"
+    },
+    {
+      "label": "Postgres",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 74",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 111,
+      "norm_label": "postgres",
+      "_origin": "semantic",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_postgres"
+    },
+    {
+      "label": "Prisma ORM",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 74, 95, 116",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 111,
+      "norm_label": "prisma orm",
+      "_origin": "semantic",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_prisma"
+    },
+    {
+      "label": "Supabase",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 74, 96, 110",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 111,
+      "norm_label": "supabase",
+      "_origin": "semantic",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_supabase"
+    },
+    {
+      "label": "Chain is source of truth; database is a mirror",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "line 82",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 111,
+      "norm_label": "chain is source of truth; database is a mirror",
+      "_origin": "semantic",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_chain_source_of_truth"
+    },
+    {
+      "label": "Reconciliation job (DB mirrors chain)",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "lines 77, 82",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 111,
+      "norm_label": "reconciliation job (db mirrors chain)",
+      "_origin": "semantic",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_reconciliation_job"
     },
     {
       "label": "/graphify --update command",
@@ -11137,21 +11025,6 @@
       "id": "contributing_graph_html"
     },
     {
-      "label": "graphify-out/GRAPH_REPORT.md",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 62",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "graphify-out/graph_report.md",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_graph_report"
-    },
-    {
       "label": "README.md (referenced from CONTRIBUTING)",
       "file_type": "document",
       "source_file": "CONTRIBUTING.md",
@@ -11180,21 +11053,6 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "readme_contributing_doc"
-    },
-    {
-      "label": "graphify-out/GRAPH_REPORT.md",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "line 176",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "graphify-out/graph_report.md",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_graph_report_doc"
     },
     {
       "label": "CI enforcement of code-graph sync",
@@ -11240,6 +11098,141 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_security_reporting"
+    },
+    {
+      "label": "graphify-out-rebuilt uploaded artifact",
+      "file_type": "code",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 101-107",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 122,
+      "norm_label": "graphify-out-rebuilt uploaded artifact",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "github_workflows_ci_graphify_out_rebuilt_artifact"
+    },
+    {
+      "label": "Fail if graphify-out/ is stale step",
+      "file_type": "code",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 91-99",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 122,
+      "norm_label": "fail if graphify-out/ is stale step",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "github_workflows_ci_graphify_out_staleness_check"
+    },
+    {
+      "label": "Fork-then-clone local setup workflow",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 13-22",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 122,
+      "norm_label": "fork-then-clone local setup workflow",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_fork_workflow"
+    },
+    {
+      "label": "Opening a PR workflow",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 74-80",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 122,
+      "norm_label": "opening a pr workflow",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_pr_workflow"
+    },
+    {
+      "label": "`security` label (extra review)",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 79",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 122,
+      "norm_label": "`security` label (extra review)",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_security_label"
+    },
+    {
+      "label": "upstream git remote",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 24-30",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 122,
+      "norm_label": "upstream git remote",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_upstream_remote"
+    },
+    {
+      "label": "Update docs/ADRs alongside code policy",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 80",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 122,
+      "norm_label": "update docs/adrs alongside code policy",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_adr_update_policy"
+    },
+    {
+      "label": "Money-movement change review requirement (E0*, escrow calls, signing, reconciliation job)",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 79",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 122,
+      "norm_label": "money-movement change review requirement (e0*, escrow calls, signing, reconciliation job)",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "contributing_money_movement_review"
+    },
+    {
+      "label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
+      "file_type": "rationale",
+      "source_file": ".github/workflows/ci.yml",
+      "source_location": "lines 85-90",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 122,
+      "norm_label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
+      "_origin": "semantic",
+      "community_name": "Fail if graphify-out/ is stale step",
+      "id": "github_workflows_ci_manifest_cache_exclusion"
     },
     {
       "label": ".env.example",
@@ -11332,6 +11325,21 @@
       "id": "contributing_adr_003"
     },
     {
+      "label": "coded GitHub issue tasks (e.g. [E02], [U01])",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 15,
+      "norm_label": "coded github issue tasks (e.g. [e02], [u01])",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "contributing_issue_task_codes"
+    },
+    {
       "label": "Supabase (free project for DATABASE_URL/DIRECT_URL)",
       "file_type": "concept",
       "source_file": "CONTRIBUTING.md",
@@ -11362,49 +11370,19 @@
       "id": "contributing_trustless_work"
     },
     {
-      "label": "EscrowClient interface",
+      "label": "Task S01 (project scaffold)",
       "file_type": "concept",
       "source_file": "README.md",
-      "source_location": "line 68",
+      "source_location": "line 104",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 15,
-      "norm_label": "escrowclient interface",
+      "norm_label": "task s01 (project scaffold)",
       "_origin": "semantic",
       "community_name": "docs/architecture.md",
-      "id": "readme_escrowclient_interface"
-    },
-    {
-      "label": "Custom Soroban escrow smart contract (contracts/soroban)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 68, 76, 94, 153",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "custom soroban escrow smart contract (contracts/soroban)",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "readme_soroban_contract"
-    },
-    {
-      "label": "Stellar network",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 3",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "stellar network",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "readme_stellar"
+      "id": "readme_task_s01"
     },
     {
       "label": "Trustless Work (current server-side integration)",
@@ -11437,6 +11415,21 @@
       "id": "contributing_architecture_doc"
     },
     {
+      "label": "docs/build-plan.md",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 15,
+      "norm_label": "docs/build-plan.md",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "contributing_build_plan"
+    },
+    {
       "label": "apps/web/prisma/README.md",
       "file_type": "document",
       "source_file": "CONTRIBUTING.md",
@@ -11450,6 +11443,21 @@
       "_origin": "semantic",
       "community_name": "docs/architecture.md",
       "id": "contributing_prisma_readme"
+    },
+    {
+      "label": "docs/build-plan.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "lines 104, 174, 182",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 15,
+      "norm_label": "docs/build-plan.md",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "readme_build_plan_doc"
     },
     {
       "label": "ALLOW_MAINNET=false gate",
@@ -11542,36 +11550,6 @@
       "id": "readme_astrea_project"
     },
     {
-      "label": "Go backend (services/core-go)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 67, 91, 109",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "go backend (services/core-go)",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_go_backend"
-    },
-    {
-      "label": "Stellar Horizon",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 77",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "stellar horizon",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_horizon"
-    },
-    {
       "label": "Christopher Lamberti (Maintainer)",
       "file_type": "concept",
       "source_file": "README.md",
@@ -11585,36 +11563,6 @@
       "_origin": "semantic",
       "community_name": "README.md",
       "id": "readme_maintainer_christopher_lamberti"
-    },
-    {
-      "label": "Postgres",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 74",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "postgres",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_postgres"
-    },
-    {
-      "label": "Prisma ORM",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 74, 95, 116",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "prisma orm",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_prisma"
     },
     {
       "label": "shadcn/ui",
@@ -11632,21 +11580,6 @@
       "id": "readme_shadcnui"
     },
     {
-      "label": "Supabase",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 74, 96, 110",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "supabase",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_supabase"
-    },
-    {
       "label": "Vercel (CI/CD)",
       "file_type": "concept",
       "source_file": "README.md",
@@ -11660,6 +11593,21 @@
       "_origin": "semantic",
       "community_name": "README.md",
       "id": "readme_vercel"
+    },
+    {
+      "label": "graphify-out/GRAPH_REPORT.md",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 62",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 16,
+      "norm_label": "graphify-out/graph_report.md",
+      "_origin": "semantic",
+      "community_name": "README.md",
+      "id": "contributing_graph_report"
     },
     {
       "label": "docs/architecture.md",
@@ -11692,6 +11640,21 @@
       "id": "readme_contracts_build_plan_doc"
     },
     {
+      "label": "graphify-out/GRAPH_REPORT.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "line 176",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 16,
+      "norm_label": "graphify-out/graph_report.md",
+      "_origin": "semantic",
+      "community_name": "README.md",
+      "id": "readme_graph_report_doc"
+    },
+    {
       "label": "docs/product-flows.md",
       "file_type": "document",
       "source_file": "README.md",
@@ -11707,21 +11670,6 @@
       "id": "readme_product_flows_doc"
     },
     {
-      "label": "Chain is source of truth; database is a mirror",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "line 82",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "chain is source of truth; database is a mirror",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_chain_source_of_truth"
-    },
-    {
       "label": "The Problem We Solve (broken hackathon-payout promises)",
       "file_type": "rationale",
       "source_file": "README.md",
@@ -11735,21 +11683,6 @@
       "_origin": "semantic",
       "community_name": "README.md",
       "id": "readme_problem_statement"
-    },
-    {
-      "label": "Reconciliation job (DB mirrors chain)",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "lines 77, 82",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "reconciliation job (db mirrors chain)",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_reconciliation_job"
     },
     {
       "label": "Fully auditable guarantee",
@@ -12277,6 +12210,36 @@
       "id": "readme_smart_escrow"
     },
     {
+      "label": "Custom Soroban escrow smart contract (contracts/soroban)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 68, 76, 94, 153",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 54,
+      "norm_label": "custom soroban escrow smart contract (contracts/soroban)",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_soroban_contract"
+    },
+    {
+      "label": "Stellar network",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 54,
+      "norm_label": "stellar network",
+      "_origin": "semantic",
+      "community_name": "How It Works (5-step flow)",
+      "id": "readme_stellar"
+    },
+    {
       "label": "TypeScript (strict)",
       "file_type": "concept",
       "source_file": "README.md",
@@ -12532,36 +12495,6 @@
       "id": "github_workflows_ci_graphify_drift_check_job"
     },
     {
-      "label": "graphify-out-rebuilt uploaded artifact",
-      "file_type": "code",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 101-107",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "graphify-out-rebuilt uploaded artifact",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "github_workflows_ci_graphify_out_rebuilt_artifact"
-    },
-    {
-      "label": "Fail if graphify-out/ is stale step",
-      "file_type": "code",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 91-99",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "fail if graphify-out/ is stale step",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "github_workflows_ci_graphify_out_staleness_check"
-    },
-    {
       "label": "npm ci --legacy-peer-deps step",
       "file_type": "code",
       "source_file": ".github/workflows/ci.yml",
@@ -12622,66 +12555,6 @@
       "id": "github_workflows_ci_wagoid_commitlint_action"
     },
     {
-      "label": "Fork-then-clone local setup workflow",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 13-22",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "fork-then-clone local setup workflow",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_fork_workflow"
-    },
-    {
-      "label": "Opening a PR workflow",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 74-80",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "opening a pr workflow",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_pr_workflow"
-    },
-    {
-      "label": "`security` label (extra review)",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 79",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "`security` label (extra review)",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_security_label"
-    },
-    {
-      "label": "upstream git remote",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 24-30",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "upstream git remote",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_upstream_remote"
-    },
-    {
       "label": "GitHub Actions (CI/CD)",
       "file_type": "concept",
       "source_file": "README.md",
@@ -12695,36 +12568,6 @@
       "_origin": "semantic",
       "community_name": "Knowledge graph in sync (code) job",
       "id": "readme_github_actions"
-    },
-    {
-      "label": "Update docs/ADRs alongside code policy",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 80",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "update docs/adrs alongside code policy",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_adr_update_policy"
-    },
-    {
-      "label": "Money-movement change review requirement (E0*, escrow calls, signing, reconciliation job)",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 79",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "money-movement change review requirement (e0*, escrow calls, signing, reconciliation job)",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_money_movement_review"
     },
     {
       "label": "GRAPHIFY_MAX_WORKERS=1 env var",
@@ -12755,21 +12598,6 @@
       "_origin": "semantic",
       "community_name": "Knowledge graph in sync (code) job",
       "id": "github_workflows_ci_graphifyy_package"
-    },
-    {
-      "label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
-      "file_type": "rationale",
-      "source_file": ".github/workflows/ci.yml",
-      "source_location": "lines 85-90",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "manifest.json/stat-index.json mtime exclusion from staleness diff",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "github_workflows_ci_manifest_cache_exclusion"
     },
     {
       "label": "postinstall `prisma generate` producing apps/web/src/generated/prisma",
@@ -13615,18 +13443,6 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "apps/web/src/app/api/auth/nonce/route.ts",
-      "source_location": "L18",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_app_api_auth_nonce_route_get",
-      "target": "apps_web_src_lib_wallet_auth_utils_issueauthnonce"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "apps/web/src/app/offline/page.tsx",
       "source_location": "L40",
       "weight": 1.0,
@@ -14190,21 +14006,9 @@
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L44",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils_issueauthnonce",
-      "target": "apps_web_src_lib_wallet_auth_utils_formatauthmessage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L32",
+      "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_provider_walletprovider",
@@ -14220,7 +14024,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_provider_walletprovider",
-      "target": "apps_web_src_lib_wallet_session_getauthnonce"
+      "target": "apps_web_src_lib_wallet_session_associatewallet"
     },
     {
       "relation": "calls",
@@ -14228,83 +14032,11 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L56",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_provider_walletprovider",
-      "target": "apps_web_src_lib_wallet_session_associateverifiedwallet"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L75",
+      "source_location": "L64",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_provider_walletprovider",
       "target": "apps_web_src_lib_wallet_session_clearwalletsession"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L48",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_associateverifiedwallet",
-      "target": "apps_web_src_lib_wallet_auth_utils_consumeauthnonce"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L53",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_associateverifiedwallet",
-      "target": "apps_web_src_lib_wallet_auth_utils_formatauthmessage"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L54",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_associateverifiedwallet",
-      "target": "apps_web_src_lib_wallet_auth_utils_verifystellarsignature"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L27",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_getauthnonce",
-      "target": "apps_web_src_lib_wallet_auth_utils_issueauthnonce"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L94",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_updatewalletemail",
-      "target": "apps_web_src_lib_wallet_session_getsessionwallet",
-      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -18403,18 +18135,6 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/app/api/auth/nonce/route.ts",
-      "source_location": "L2",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_app_api_auth_nonce_route",
-      "target": "apps_web_src_lib_wallet_auth_utils_issueauthnonce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
       "source_location": "L10",
       "weight": 1.0,
@@ -19891,30 +19611,6 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils",
-      "target": "apps_web_src_lib_db_db",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils",
-      "target": "apps_web_src_lib_stellar_network_stellar_account_id",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/kit.ts",
       "source_location": "L12",
       "weight": 1.0,
@@ -19944,7 +19640,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_provider",
-      "target": "apps_web_src_lib_wallet_session_associateverifiedwallet",
+      "target": "apps_web_src_lib_wallet_session_associatewallet",
       "confidence_score": 1.0
     },
     {
@@ -19963,20 +19659,8 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_provider",
-      "target": "apps_web_src_lib_wallet_session_getauthnonce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L5",
+      "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_session",
@@ -19988,167 +19672,11 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L6",
+      "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_session",
       "target": "apps_web_src_lib_stellar_network_stellar_account_id",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L7",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session",
-      "target": "apps_web_src_lib_wallet_auth_utils_consumeauthnonce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L7",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session",
-      "target": "apps_web_src_lib_wallet_auth_utils_formatauthmessage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L7",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session",
-      "target": "apps_web_src_lib_wallet_auth_utils_issueauthnonce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L7",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session",
-      "target": "apps_web_src_lib_wallet_auth_utils_verifystellarsignature",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_auth_utils_consumeauthnonce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_auth_utils_formatauthmessage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_auth_utils_issueauthnonce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_auth_utils_verifystellarsignature",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L9",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_session_associateverifiedwallet",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L9",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_session_clearwalletsession",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L9",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_session_getauthnonce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L9",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_session_getsessionwallet",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L9",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_session_updatewalletemail",
       "confidence_score": 1.0
     },
     {
@@ -20449,18 +19977,6 @@
       "_origin": "ast",
       "source": "apps_web_scripts_seed_demo_event",
       "target": "apps_web_src_lib_db",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/app/api/auth/nonce/route.ts",
-      "source_location": "L2",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_app_api_auth_nonce_route",
-      "target": "apps_web_src_lib_wallet_auth_utils",
       "confidence_score": 1.0
     },
     {
@@ -21511,30 +21027,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils",
-      "target": "apps_web_src_lib_db",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils",
-      "target": "apps_web_src_lib_stellar_network",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/kit.ts",
       "source_location": "L12",
       "weight": 1.0,
@@ -21572,7 +21064,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L5",
+      "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_session",
@@ -21584,47 +21076,11 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L6",
+      "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_session",
       "target": "apps_web_src_lib_stellar_network",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L7",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session",
-      "target": "apps_web_src_lib_wallet_auth_utils",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_auth_utils",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L9",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_session",
       "confidence_score": 1.0
     },
     {
@@ -24894,28 +24350,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/app/api/auth/nonce/route.ts",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_app_api_auth_nonce_route",
-      "target": "apps_web_src_app_api_auth_nonce_route_dynamic",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/app/api/auth/nonce/route.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_app_api_auth_nonce_route",
-      "target": "apps_web_src_app_api_auth_nonce_route_get",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
       "source_location": "L109",
       "weight": 1.0,
@@ -25852,7 +25286,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/db.ts",
-      "source_location": "L23",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_db",
@@ -26929,72 +26363,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L10",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils",
-      "target": "apps_web_src_lib_wallet_auth_utils_formatauthmessage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L14",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils",
-      "target": "apps_web_src_lib_wallet_auth_utils_issueauthnonce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L49",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils",
-      "target": "apps_web_src_lib_wallet_auth_utils_consumeauthnonce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L65",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils",
-      "target": "apps_web_src_lib_wallet_auth_utils_verifystellarsignature",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L7",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils",
-      "target": "apps_web_src_lib_wallet_auth_utils_auth_message_prefix",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/auth-utils.ts",
-      "source_location": "L8",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_auth_utils",
-      "target": "apps_web_src_lib_wallet_auth_utils_nonce_ttl_ms",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/kit.ts",
       "source_location": "L23",
       "weight": 1.0,
@@ -27007,7 +26375,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L18",
+      "source_location": "L14",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_provider",
@@ -27018,7 +26386,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L25",
+      "source_location": "L21",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_provider",
@@ -27029,7 +26397,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L27",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_provider",
@@ -27040,7 +26408,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/provider.tsx",
-      "source_location": "L87",
+      "source_location": "L76",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_provider",
@@ -27051,7 +26419,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L110",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_wallet_session",
+      "target": "apps_web_src_lib_wallet_session_associatewallet",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/wallet/session.ts",
+      "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_session",
@@ -27062,55 +26441,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L115",
+      "source_location": "L49",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_web_src_lib_wallet_session",
       "target": "apps_web_src_lib_wallet_session_getsessionwallet",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L26",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session",
-      "target": "apps_web_src_lib_wallet_session_getauthnonce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L30",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session",
-      "target": "apps_web_src_lib_wallet_session_associateverifiedwallet",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L93",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session",
-      "target": "apps_web_src_lib_wallet_session_updatewalletemail",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.test.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_test",
-      "target": "apps_web_src_lib_wallet_session_test_mockcookiemap_mockdb_noncerows",
       "confidence_score": 1.0
     },
     {
@@ -31380,17 +30715,6 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/lib/wallet/session.ts",
-      "source_location": "L20",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "apps_web_src_lib_wallet_session_rationale_20",
-      "target": "apps_web_src_lib_wallet_session",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "CONTRIBUTING.md",
@@ -33565,5 +32889,5 @@
       "source_file": "CONTRIBUTING.md"
     }
   ],
-  "built_at_commit": "b4691f68793a9991652a7eabdda4362b64f2a297"
+  "built_at_commit": "f9500801c69902b04d7a08573a802a8b173cb3cd"
 }

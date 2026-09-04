@@ -70,6 +70,7 @@ model Wallet {
   id                      String    @id @default(uuid())
   userId                  String
   address                 String    @unique
+  email                   String?
   usdcTrustlineVerifiedAt DateTime?
   createdAt               DateTime  @default(now())
 
@@ -199,4 +200,17 @@ model OpLog {
 
   @@index([status])
   @@map("op_log")
+}
+
+/// Short-lived SEP-0043 challenge nonces. Must live in Postgres (not process
+/// memory) because Vercel serverless invocations do not share a Map.
+model AuthNonce {
+  nonce     String   @id
+  address   String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+  @@index([address])
+  @@map("auth_nonces")
 }
