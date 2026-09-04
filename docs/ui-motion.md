@@ -38,6 +38,8 @@ Decision log for where [React Bits](https://reactbits.dev) components get used i
 
 **Header logo size, root-caused (2026-07-26).** Three rounds of bumping the logo's container height (`h-8` → `h-12` → `h-16`) barely changed how big it looked. Measured the source PNG's actual visible-pixel bounding box (`sharp`, alpha-channel scan) instead of guessing again: `astrea-sided-logo-light.png` is a 1536×1024 canvas but the mark only occupies 1005×334 px inside it — **32.6% vertical fill**. A `h-*` utility sizes the whole transparent canvas, so the visible glyph was always rendering at roughly a third of the height it looked like it should. Fixed by cropping to the bounding box plus a small margin (`sharp().trim().extend()`) into a new asset, `public/astrea-sided-logo-light-trimmed.png` (1053×381, ~88% vertical fill) — `SiteHeader` now points at that file with `h-14 md:h-20`, which finally scales the visible mark, not mostly padding. Lesson for any future logo-sizing complaint: measure the asset's real content bounds before touching CSS.
 
+**The same trap, again (2026-09-03).** The mobile menu's mark had it too, which is why the lesson above is worth keeping: `astrea-logo-mark.png` is a 1024×1024 canvas holding a 415×397 drawing — **38.8% vertical fill** — so `.sm-logo-img`'s `height: 32px` was rendering a mark roughly 12px tall. Trimmed the same way (`sharp().trim().extend()`, ~6% margin) into `public/astrea-logo-mark-trimmed.png` (465×447, 88.8% fill), and the box raised to 44px. Effective glyph height went 12px → 39px. The file also dropped from 646KB to 283KB, since most of what it stored was transparent padding.
+
 ## Component placement
 
 | Component | Dependency | Where it goes | Why |
