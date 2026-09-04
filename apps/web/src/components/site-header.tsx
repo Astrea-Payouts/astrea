@@ -24,9 +24,10 @@ function GithubIcon() {
 	);
 }
 
-// Roughly a third of the header height, so the background arrives as soon as
-// content starts sliding underneath rather than after a long transparent gap.
-const OPAQUE_AFTER_PX = 32;
+// Just past the header's own height (113px at md), so the background arrives
+// when content actually starts passing behind it rather than on the first flick
+// of the wheel.
+const OPAQUE_AFTER_PX = 130;
 
 export interface SiteHeaderProps {
 	variant?: "transparent" | "solid";
