@@ -71,7 +71,7 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 3. Real-time tracking and other product-specific logic are built directly against the contract via an owned backend service, not constrained by a generic escrow API's feature set.
 4. No dependency on a third party's uptime, pricing, or API stability for the money-critical path.
 
-**Trade-off:** owning the contract means owning its audit burden — there's no third-party liability backstop. Mitigated by validating the design on testnet before building production code on top of it, and a dedicated security review before mainnet (see [docs/contracts-build-plan.md](contracts-build-plan.md)).
+**Trade-off:** owning the contract means owning its audit burden — there's no third-party liability backstop. Mitigated three ways: validating the design on testnet before building production code on top of it; a dedicated security review before mainnet (L01); and the Stellar ecosystem absorbing most of the audit cost through the **Soroban Audit Bank**, which funds security audits for SCF-awarded Soroban projects. That last one materially changes the economics of owning the contract — the audit burden is real but it is not ours to pay alone, provided we secure an SCF award first. Sequencing and conditions in [docs/contracts-build-plan.md](contracts-build-plan.md).
 
 **Verified (K01, 2026-08-06, testnet):** judge as both `approver` and `release_signer` works; the organizer has no function that moves escrowed funds anywhere (confirmed by a rejected direct-release attempt); the winner's address is supplied at `release` time. Contract `CBFPD4YFURBDQ3MQ7EMT3HPP2K34W5H6QCVWGCEP43MPHFO5XG5ONCUG` — see [spikes/k01-soroban-escrow](../spikes/k01-soroban-escrow/README.md).
 

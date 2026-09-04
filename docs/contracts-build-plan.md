@@ -23,8 +23,22 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
-| L01 | Security pass: contract review (ideally an external audit, or at minimum a careful internal review against known Soroban contract pitfalls — reentrancy, integer overflow, auth bypass), treasury/signer key custody review | M | **Not optional to skip** — a homegrown contract handling real funds has no third-party liability backstop the way a third-party escrow provider would. This gates any mainnet deployment |
-| L02 | Formal verification or fuzz testing of the release/dispute paths, if the team has the resources for it | M | Stretch goal — proportionate to how much value the contract will hold at mainnet |
+| L01 | Security pass: contract review (ideally an external audit, or at minimum a careful internal review against known Soroban contract pitfalls — reentrancy, integer overflow, auth bypass), treasury/signer key custody review | M | **Not optional to skip** — a homegrown contract handling real funds has no third-party liability backstop the way a third-party escrow provider would. This gates any mainnet deployment. **Funding path: the Soroban Audit Bank — see below** |
+| L02 | Formal verification or fuzz testing of the release/dispute paths, if the team has the resources for it | M | Stretch goal — proportionate to how much value the contract will hold at mainnet. The Audit Bank also offers formal verification at later traction milestones, so this may not have to be self-funded either |
+
+### Funding L01: the Soroban Audit Bank
+
+The Stellar Development Foundation funds security audits for Soroban contracts through the **Soroban Audit Bank**, which changes L01 from a cost we absorb to a cost the ecosystem covers. It is **not** open to any Soroban project, so the sequencing matters:
+
+1. **The project must first receive a Stellar Community Fund award.** The Audit Bank is only open to SCF-awarded projects; SCF's Build Award goes up to $150,000 in XLM for projects moving toward launch. This makes an SCF application a prerequisite of L01, not a parallel nice-to-have.
+2. **The target profile fits us.** The program is aimed at financial protocols, high-dependency data services and high-traction dApps — an escrow contract holding prize funds is squarely in the first category.
+3. **There is a 5% co-payment, refundable.** The project pays 5% of the audit cost upfront and gets it back in full if critical, high and medium findings are remediated **within 20 business days** of the initial report. Budget the 5% as a real cost and treat the 20-day window as a scheduling constraint: L01 needs a stretch of team availability booked immediately after the audit lands, not whenever we get to it.
+4. **Intake takes 1–4 weeks.** SCF emails an intake form to eligible funded projects, and eligibility/readiness assessment runs one to four weeks before the audit itself starts. Start counting from the SCF award, not from when the contract feels finished.
+5. **Follow-up audits are complimentary at traction milestones** (e.g. $10M and $100M TVL), including deeper work such as formal verification or competitive audits — which is the L02 escape hatch noted above.
+
+Sources: [Soroban Audit Bank](https://stellar.org/grants-and-funding/soroban-audit-bank) · [Official Rules](https://stellar.gitbook.io/scf-handbook/supporting-programs/audit-bank/official-rules) · [Stellar Community Fund](https://communityfund.stellar.org/)
+
+**Practical consequence for sequencing:** the running findings log below stays the way we work day to day — fixing issues as they are found rather than saving them for one audit. The Audit Bank is the external check on top of that, and the cheapest way to reach it is to keep the contract in a state where an SCF application is credible.
 
 **L01 running findings log** (fixed as found, not deferred to a single audit pass at the end):
 - **Fixed (2026-09-01):** `create_event` didn't reject a negative `reward` — `AdminWallet.balance -= reward` with a negative value inflated the caller's balance with no deposit, drainable via `withdraw_funds`. Same class of missing guard added to `withdraw_funds` (`amount > 0`, matching `deposit_funds`'s existing check). `release_reward` now caps `winners.len()` at 25 (K06's validated bound) to prevent a malformed winners list from blowing the transaction's resource budget mid-release.
