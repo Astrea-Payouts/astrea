@@ -24,7 +24,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | Code | Task | Size | Notes |
 | --- | --- | --- | --- |
 | L01 | Security pass: contract review (ideally an external audit, or at minimum a careful internal review against known Soroban contract pitfalls — reentrancy, integer overflow, auth bypass), treasury/signer key custody review | M | **Not optional to skip** — a homegrown contract handling real funds has no third-party liability backstop the way a third-party escrow provider would. This gates any mainnet deployment. **Funding path: the Soroban Audit Bank — see below**. Cannot be picked up until L01a and L01b are both done — the Audit Bank won't accept the project without them |
-| L01a | Write the threat model: assets, actors, trust boundaries, attack scenarios and mitigations | M | Named as a readiness gap the day this doc was written — the Audit Bank's readiness assessment checks for one explicitly, and ADRs plus the test suite are not a substitute |
+| L01a | ✅ **Done** — Write the threat model: assets, actors, trust boundaries, attack scenarios and mitigations | M | See [docs/threat-model.md](threat-model.md) — ready for Soroban Audit Bank and SCF #46 readiness review |
 | L01b | Apply for an SCF Build Award | M | **Gates L01 entirely** — the Audit Bank only accepts projects that already hold an SCF award; there is no way to apply for the Bank while an SCF application is under review. This is the longest-lead task in either build plan, so it should start as early as the contract is testnet-functional, not when the team feels "ready." **The current round has real, public dates** (checked 2026-09-06): [SCF #46](https://communityfund.stellar.org/awards/recxrSMYwAl8vcglg) closes Build Submission 2026-11-08, Panel Review Nov 11–18, Community Vote Nov 23–Dec 3. An earlier "interest form" step has no fixed date but should be submitted once real testnet proof exists |
 | L02 | Formal verification or fuzz testing of the release/dispute paths, if the team has the resources for it | M | Stretch goal — proportionate to how much value the contract will hold at mainnet. The Audit Bank also offers formal verification at later traction milestones, so this may not have to be self-funded either |
 
@@ -36,7 +36,7 @@ The Stellar Development Foundation funds security audits for Soroban contracts t
 
 **What the Audit Bank checks before it accepts you (the "readiness" assessment):** eligibility, **threat modeling**, documentation completeness, and codebase maturity. The bar is explicit — the code is expected to be *nearly mainnet-ready*, with extensive tests and a testnet deployment already in place. Two consequences:
 
-- **We do not have a threat model document.** ADRs, the findings log below and the test suite are not the same thing as a written threat model. This is a concrete, currently-missing L01 deliverable — see the checklist below.
+- **Threat model document completed.** See [docs/threat-model.md](threat-model.md) documenting assets, actors, trust boundaries, STRIDE analysis, and mitigations.
 - E03 (testnet vertical-slice demo) stops being a nice-to-have and becomes an entry requirement.
 
 **Cost:** 5% of the initial audit cost, paid upfront, fully refunded if critical, high and medium findings are remediated within **20 business days** counted from the audit firm's or SDF's verification following the report. No extension is defined in the rules, though they ask to be notified before the window expires. Treat that window as a hard scheduling constraint: team availability has to be booked for the period right after the audit lands, not fitted in afterwards.
@@ -48,7 +48,7 @@ The Stellar Development Foundation funds security audits for Soroban contracts t
 #### L01 readiness checklist (derived from the Audit Bank criteria)
 
 - [ ] SCF Build Award applied for (L01b) — everything else is downstream of this
-- [ ] **Threat model written down** (L01a) — assets, actors, trust boundaries, attack scenarios and mitigations
+- [x] **Threat model written down** (L01a) — see [docs/threat-model.md](threat-model.md)
 - [ ] Testnet deployment live (E03)
 - [ ] Test suite covering the money paths and their negative cases (largely done — see the findings log)
 - [ ] Contract documentation complete enough for an external reader with no context
