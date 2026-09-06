@@ -1,0 +1,177 @@
+# Astrea — Sprint Plan
+
+[build-plan.md](build-plan.md) says *what* gets built and in what order. This document says *when*, *by whom*, and *how we know it is finished* — the operating layer between that plan and the GrantFox campaign cycle.
+
+Read [build-plan.md](build-plan.md) first; every task code below (`E01a`, `U03`, …) is defined there or in [contracts-build-plan.md](contracts-build-plan.md).
+
+## The team, honestly
+
+Scrum needs the Scrum Team named, and getting this wrong is what makes campaign planning feel impossible.
+
+| Who | Accountability | Evidence |
+| --- | --- | --- |
+| Christopher | Product Owner **and** Developer | 119 commits in the last 30 days |
+| Dereck | Developer | 14 commits in the last 30 days |
+| GrantFox contributors | **Not Scrum Team members** | 6 commits in the last 30 days, across 3 people who came and went |
+
+**Contributors are a supply of variable capacity, not Developers committed to a Sprint Goal.** They claim an issue, may finish it, may not, and owe the Sprint nothing. Every planning decision below follows from that: a Sprint Goal must be achievable by the two maintainers alone, and contributor output is upside rather than plan.
+
+The Product Owner and a Developer being the same person is a real risk, not a technicality — the person deciding what is most valuable is the person who has to build it. Watch for the Backlog quietly reordering itself toward what is pleasant to build.
+
+## Cadence: one Sprint per campaign
+
+**Sprint length: 15 days, aligned to the GrantFox campaign.** This is valid Scrum — the Guide requires a fixed length of one month or less, and shorter Sprints generate more learning cycles and limit risk to a smaller time frame.
+
+Why align rather than run an independent cadence:
+
+- The campaign close is already a real inspection point with money attached. A second, unrelated Sprint boundary would mean two review rhythms and two sets of "are we done?" conversations.
+- The Sprint Review lands exactly when payment decisions are being made, which is when stakeholder attention is highest and cheapest to get.
+
+**The trade being accepted, stated plainly:** the Sprint boundary is now set by an external commercial calendar we do not control. Scrum says Sprint length is fixed, and only the Product Owner may cancel a Sprint — and only when the Sprint Goal becomes obsolete.
+
+**So: if a campaign moves, the Sprint does not.** Sprint length stays 15 days and the campaign slate slips to the next Sprint. Breaking that once turns Sprint length into a negotiable variable and destroys any ability to compare one Sprint to the next.
+
+## Two lanes inside one Sprint
+
+| Lane | Owner | Commitment level |
+| --- | --- | --- |
+| **Maintainer lane** | Christopher + Dereck | The Sprint Goal. Achievable without any contributor. |
+| **Campaign slate** | GrantFox contributors | A published offer. Forecast, never a commitment. |
+
+The Sprint Goal is only ever drawn from the maintainer lane. Contributor work that lands is added to the Increment; contributor work that does not land costs the Sprint nothing.
+
+## Capacity: count size, not issues
+
+"How many issues per campaign" is the wrong unit — six `S` issues and six `M` issues are not the same amount of work. Budget in **S-equivalents**, using the size labels the repo already has:
+
+| Label | Definition (from build-plan.md) | S-equivalents |
+| --- | --- | --- |
+| `size: S` | ≤ half a day | 1 |
+| `size: M` | 1–2 days | 3 |
+| `size: L` | 3+ days | **Never published.** Split first. |
+
+### What one campaign actually absorbed
+
+The window 2026-08-21 → 2026-09-02 (≈12 days, roughly one campaign) is the only real evidence we have:
+
+| Contributor | Delivered | S-equivalents |
+| --- | --- | --- |
+| `ghzhost` | #16 (U07, S), #17 (U09, S), #32 (U15, M) | 5 |
+| `meridianmindx` | #68 (U08, M) — stalled, needed maintainer intervention to land | 3 |
+| **Total completed** | **4 issues** | **8** |
+
+Also in flight during that window and *not* completed: #79 (S07) sat in `CHANGES_REQUESTED` for over a week, and #28 was claimed but is blocked (see below). Roughly **4 of 7 started items converted**.
+
+### The slate size that follows
+
+- **Publish 10–14 S-equivalents per campaign** — typically 6–8 issues.
+- **Expect 6–9 S-equivalents to complete.** Anything more is a pleasant surprise, not a plan.
+- **Cap concurrent open contributor PRs at 4.**
+
+The cap matters more than the slate size. The binding constraint is not contributor supply — it is **one maintainer's review capacity**, and both contributor PRs that reached `main` in the last campaign needed substantial maintainer work to get there. An unreviewed PR is worse than an unpublished issue: the contributor cannot be paid, and the delay is visible on their GrantFox record.
+
+Treat every number here as a hypothesis to inspect at Sprint Review. Two campaigns of real data beats any of them.
+
+## Definition of Done
+
+Moved to its own document: **[definition-of-done.md](definition-of-done.md)**. It is the exact checklist a contributor's PR is checked against — separated out here because a DoD buried inside a planning doc is a DoD nobody links to from a PR description.
+
+The one thing worth repeating in this document: it now requires **a desktop screenshot and a mobile (375px) screenshot** for every UI item, not one screenshot at an arbitrary width. That requirement has been added to the issue template, the PR template, and commented onto every currently-open UI issue.
+
+> **Still open:** GrantFox's own criteria for paying out an issue have not been read yet and are not reflected in the DoD. Whatever they require must be folded in *before* the next campaign opens — a contributor should never discover a payment condition at review time.
+
+## Campaign slate rules
+
+Rules that exist because each one has already cost something:
+
+1. **No `size: L` on a slate.** L means 3+ days and "should be split before assignment". This was already true of #52 (U01), correctly split into #62/#54/#57 before this document's first draft claimed otherwise — that claim was wrong and is corrected here. #70 (T01) genuinely *was* unsplit and has now been split into #109/#110/#111/#112.
+2. **No issue whose dependency is unbuilt.** #28 (U11, QR code) has been assigned since 2026-08-21 and claimed with `/attempt` on 2026-08-28. It depends on #64 (U03), which is open and unassigned. A contributor has been holding an unbuildable issue for longer than a full campaign.
+3. **Every slate item names its prerequisites and states they are met.** The issue template already has the field; the gate is that someone checks it before publishing.
+4. **Keep the slate varied.** The four genuinely-ready good-first-issues today (#18, #37, #38, #39) are all near-identical wallet-compatibility tests. That is a slate one person can take in a day, not a campaign for four people.
+5. **A claimed issue that is silent for 5 days gets a comment; at 8 days it is unassigned** — stated on the issue when it is published, so it is a known rule rather than a surprise.
+
+## The Product Goal
+
+> **An organizer can run a real prize payout end to end on testnet, and the contract is ready to enter the SCF → Audit Bank chain.**
+
+One Product Goal at a time, per the Guide. Everything below serves this one; it is fulfilled at E07 plus a submitted SCF application.
+
+**Why this and not the UI:** [contracts-build-plan.md](contracts-build-plan.md) establishes that mainnet is gated on an audit, the audit is gated on an SCF award, and SCF Build takes **3–6 months** with Audit Bank intake and remediation on top — on the order of half a year. It is the longest-lead item in the entire plan, it has no issue, and nothing about it gets faster by starting later. Meanwhile the Phase 3 UI backlog cannot advance far regardless: U02 needs E03, and U03/U04/U05/U06 all need a backend that does not exist yet.
+
+## Sprint sequence
+
+Dates are campaign-relative; fill them in when campaign dates are known.
+
+### Sprint 1 — the contract stops being the unknown
+
+**Sprint Goal:** *The escrow contract has no open money-path gaps and can be handed to an external reviewer.*
+
+| Lane | Work | S-eq |
+| --- | --- | --- |
+| Maintainer | #20 (E01b contract: `cancel_event` + pre-launch withdraw) | 1 |
+| Maintainer | #22 (E01d contract: dispute / resolve-dispute) | 1 |
+| Maintainer | #4 (E02 contract test suite) | 3 |
+| Maintainer | #107 (L01a, threat model) | 3 |
+| Maintainer | #108 (L01b, SCF Build Award application) | 3 |
+| Campaign | #18 (K03), #37, #38, #39 (K05a–c), #44 (U16 i18n), #106 (K04, fold K03 into ADR-005 — pick up after K03 closes) | 5 |
+
+Both `blocks: real funds` issues live here. #107 and #108 gate everything downstream of mainnet — the Audit Bank readiness assessment checks for a written threat model, and will not accept a project without an SCF award — and #108 in particular should start immediately given its 3–6 month lead time.
+
+### Sprint 2 — the Go service exists
+
+**Sprint Goal:** *The Go service is deployed and can read the contract's state on testnet.*
+
+| Lane | Work | S-eq |
+| --- | --- | --- |
+| Maintainer | #104 (S01 monorepo scaffold — `services/core-go`) | 3 |
+| Maintainer | #6 (S02 Go CI), #8 (S04 env config) | 4 |
+| Maintainer | #23 (E01a core tx pipeline), #24 (E01b balance + event creation) | 2 |
+| Campaign | #40 (K05d hardware wallets), #41 (K05e WalletConnect), plus newly-sliced frontend work | 4+ |
+
+**Sliced frontend work is required here or the contributor pipeline starves.** Every remaining UI issue depends on a backend that will not exist for weeks. Slice U03/U04 so their first increment renders against fixed sample data with no backend call — by interface, then by data. That is honest work, demonstrable, and it unblocks #28's contributor.
+
+### Sprint 3 — state and money move
+
+**Sprint Goal:** *An event can be created, funded and started through the Go service, with every transition guarded.*
+
+| Lane | Work | S-eq |
+| --- | --- | --- |
+| Maintainer | #11 (E03 state machine, manual-start rule) | 3 |
+| Maintainer | #10 (E02 build-sign-submit pipeline, OpLog) | 3 |
+| Maintainer | #25 (E01c), #26 (E01d), #14 (E06 trustline) | 3 |
+| Campaign | U03/U04 second slices; #64, #65 once their backend exists | ~10 |
+
+### Sprint 4 — the promise is proven
+
+**Sprint Goal:** *E07 runs green: create → fund → register → start → judge → release → reconcile, on testnet.*
+
+| Lane | Work | S-eq |
+| --- | --- | --- |
+| Maintainer | #15 (E07 vertical slice) | 3 |
+| Maintainer | #13 (E05 reconciliation — ships with the first real money operation, never later) | 3 |
+| Maintainer | #105 (L01 deploy + seed a standing demo event) | 1 |
+| Campaign | #63 (U02), #67 (U06), #69 (U10) | ~7 |
+
+## Backlog gaps found while writing this, now filed
+
+Build-plan tasks that had no GitHub issue when this document was first drafted — all five now filed:
+
+- **S01** (monorepo scaffold / `services/core-go`, everything in Phase 2 depends on it) → [#104](https://github.com/Astrea-Payouts/astrea/issues/104)
+- **L01** (deploy both apps, seed a demo event; also an Audit Bank readiness requirement) → [#105](https://github.com/Astrea-Payouts/astrea/issues/105)
+- **K04** (fold K03's results into ADR-005) → [#106](https://github.com/Astrea-Payouts/astrea/issues/106)
+- **L01a**, the threat model named as missing in contracts-build-plan.md → [#107](https://github.com/Astrea-Payouts/astrea/issues/107)
+- **L01b**, the SCF Build Award application — the 3–6 month item gating mainnet that had no task anywhere → [#108](https://github.com/Astrea-Payouts/astrea/issues/108)
+
+Also worth noting: **the code `L01` means different things in the two build-plan docs**, and `L02` does too. build-plan.md's L01 is "deploy + seed a demo" (Milestone phase, #105); build-plan.md's L02/L03 are "security pass on the Go service" and "observability" (Phase 5 Hardening, `phase: launch`, #74/#75). contracts-build-plan.md's L01/L02 are "security audit of the *contract*" and "formal verification" (Phase 2 Hardening). This collision predates this document and was not renamed here to avoid touching the titles of already-filed issues — but anyone searching issues by a bare `L01`/`L02` code should check which build plan they mean. `L01a`/`L01b` (#107, #108) only exist in the contracts plan, so those two are unambiguous.
+
+And #70 (T01) is no longer unsplit — see the Campaign slate rules section above.
+
+## What to inspect at each Sprint Review
+
+Two numbers and one question. Resist adding more.
+
+1. **S-equivalents published vs. completed** on the campaign slate. After two campaigns this replaces every estimate in this document.
+2. **Time from PR opened to first maintainer review.** This is the constraint; if it grows, cut the slate rather than asking contributors to wait.
+3. **Did the Sprint Goal hold without contributor delivery?** If a missed Sprint Goal traces back to a contributor who did not finish, the Goal was drawn from the wrong lane.
+
+Velocity is a forecasting aid for the team that produced it. It is not a target, and the moment it becomes one the honest response is to inflate it.

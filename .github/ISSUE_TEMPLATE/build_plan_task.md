@@ -14,7 +14,7 @@ labels: []
 | **Size** | S / M / L |
 | **Depends on** | other issue numbers/codes, or — |
 | **Money path** | Yes/No — Yes needs the `security` label and extra review |
-| **Screenshot required** | Yes/No — Yes for any `phase: product-ui` task; the PR isn't mergeable without one (see PR template) |
+| **Screenshot required** | Yes/No — Yes for any `phase: product-ui` task; the PR isn't mergeable without **both a desktop and a mobile (375px) screenshot** (see PR template). One viewport only isn't enough to catch a responsive regression |
 | **I18n required** | Yes/No — Yes for any `phase: product-ui` task; new user-facing strings go through `useTranslations`/`t()` with a key added to **both** `apps/web/messages/en.json` and `es.json` (so nothing crashes or falls back to a raw key on `/es`). Don't hand-translate the Spanish yourself unless you're fluent — copy the English text into `es.json` as a placeholder value; a fluent bilingual pass (U16) sweeps and fixes it later |
 
 **Executive summary**
@@ -49,7 +49,7 @@ Relevant ADR(s) from docs/architecture.md, and any pattern this should follow.
 
 **Test plan**
 - **Unit:** what's covered by automated tests.
-- **Manual:** what a human verifies by hand (e.g. a real testnet transaction). For UI tasks, include a screenshot of the rendered result — attach it to the PR (see PR template), not just described in words.
+- **Manual:** what a human verifies by hand (e.g. a real testnet transaction). For UI tasks, include a screenshot of the rendered result at **both desktop and mobile (375px) width** — attach both to the PR (see PR template), not just described in words. One width doesn't show whether the change is actually responsive.
 
 **Risks & pitfalls**
 - Known sharp edges, past mistakes in this area, non-obvious failure modes.
