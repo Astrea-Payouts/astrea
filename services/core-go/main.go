@@ -9,6 +9,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/realtime"
 )
 
 func main() {
@@ -17,11 +19,17 @@ func main() {
 		port = "8080"
 	}
 
+	realtimeBroker := realtime.NewBroker()
+	defer realtimeBroker.Close()
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
 	})
+
+	// Real-time tracking SSE stream (E04)
+	mux.HandleFunc("GET /events/{id}/live", realtime.SSEHandler(realtimeBroker, realtime.DefaultHandlerConfig()))
 
 	srv := &http.Server{
 		Addr:    ":" + port,
