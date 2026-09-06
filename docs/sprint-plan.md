@@ -104,7 +104,9 @@ One Product Goal at a time, per the Guide. Everything below serves this one; it 
 
 Configured live in the GitHub Project ([Astrea Build Plan](https://github.com/orgs/Astrea-Payouts/projects/2)) as a **Sprint** iteration field with two increments, rather than left as prose only — a plan that only exists in a doc is exactly the kind of drift this document has already caught twice (S01, the Audit Bank docs). Assignments below were made by verified context (git history), not by asking preference: Dereck authored `ad9717c`, the commit that added the contract's pause/whitelist/expire/compensation surface, so contract-adjacent work is his; Christopher ran the original K02 Go↔contract spike, so the Go tx-pipeline core is his. Christopher deliberately carries more items — Dereck is at capacity elsewhere this month.
 
-**Sprint Goal:** *Prove the MVP's happy-path payout loop end-to-end on testnet, open the 2026-09-15 campaign on top of it, and submit the SCF Build Award application by month's end.*
+**Sprint Goal:** *Prove the MVP's happy-path payout loop end-to-end on testnet, and open the 2026-09-15 campaign on top of it.*
+
+**Revised 2026-09-06:** the Sprint Goal originally also named "submit the SCF Build Award application by month's end." That deadline was an estimate made from campaign timing pressure before checking the actual round page. Having now checked it directly ([SCF #46](https://communityfund.stellar.org/awards/recxrSMYwAl8vcglg)), Build Submission closes 2026-11-08 — real breathing room, not something needing to be forced into September. The Product Owner's call: relax the full application to that real margin rather than hold an invented internal deadline. See Increment 2 below for what replaced it.
 
 ### Increment 1 — MVP proven (2026-09-06 → 2026-09-13)
 
@@ -131,18 +133,20 @@ Dereck: 6 items. Christopher: 8 items, weighted up per his own request since Der
 
 **Honest feasibility note:** even with the scope cut, this is 14 items across 8 calendar days for two people, several of them size-M contract/backend work. Treat 2026-09-13 as the date to *inspect* progress against, not a guarantee — if it slips, the campaign can still open on the 15th on whatever is real by then; do not quietly redefine "MVP proven" to match whatever happened to land.
 
-### Increment 2 — Campaign window + SCF application (2026-09-14 → 2026-09-30)
+### Increment 2 — Campaign window (2026-09-14 → 2026-09-30)
 
 | Issue | Task | Status |
 | --- | --- | --- |
-| [#108](https://github.com/Astrea-Payouts/astrea/issues/108) | L01b — submit the SCF Build Award application | Christopher — the actual point of this whole Sprint; uses Increment 1's proof as evidence |
+| [#121](https://github.com/Astrea-Payouts/astrea/issues/121) | Submit the SCF interest form (Round #46) | Christopher — the lighter first step, waits for Increment 1's MVP as evidence rather than going out unprepared |
 | [#22](https://github.com/Astrea-Payouts/astrea/issues/22) | E01d contract — dispute / resolve-dispute | Deferred from Increment 1, unassigned — pick up if capacity allows once Increment 1 lands |
 | [#26](https://github.com/Astrea-Payouts/astrea/issues/26) | Go EscrowClient — dispute wrapper + emergency withdraw | Deferred, unassigned — blocked on #22 regardless |
 | [#12](https://github.com/Astrea-Payouts/astrea/issues/12) | E04 — real-time tracking (full push, beyond Increment 1's polling) | Deferred, unassigned |
 
 Plus whatever the campaign slate (#118) actually publishes — that work belongs to contributors, not a named maintainer, per this document's own two-lane model.
 
-**Not scheduled into this Sprint, deliberately:** #107 (L01a, threat model) — it gates the Audit Bank stage *after* an SCF award, not the application itself, so it doesn't block 2026-09-30 and both maintainers are already fully committed. #105 (deploy `services/core-go` + seed a demo event) is a strong candidate for evidence in the SCF application if capacity opens up, but isn't assigned to anyone yet — don't assume it'll happen without naming an owner.
+**#108 (the full SCF Build Award application) has been deliberately pulled out of this Sprint entirely** — see the 2026-09-06 revision note above. It now targets a later Sprint, well ahead of the 2026-11-08 real deadline, once the interest form (#121) has actually been invited to submit and the campaign's results give the application more to point at.
+
+**Not scheduled into this Sprint, deliberately:** #107 (L01a, threat model) — it gates the Audit Bank stage *after* an SCF award, not the application itself. #105 (deploy `services/core-go` + seed a demo event) is a strong candidate for evidence in a future SCF submission if capacity opens up, but isn't assigned to anyone yet — don't assume it'll happen without naming an owner.
 
 ## Beyond Sprint 1
 
