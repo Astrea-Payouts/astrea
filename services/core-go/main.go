@@ -9,6 +9,9 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/api"
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/eventstate"
 )
 
 func main() {
@@ -17,11 +20,16 @@ func main() {
 		port = "8080"
 	}
 
+	store := eventstate.NewMemoryEventStore()
+	sm := eventstate.NewStateMachine(store)
+	eventsHandler := api.NewEventsHandler(sm)
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
 	})
+	eventsHandler.RegisterRoutes(mux)
 
 	srv := &http.Server{
 		Addr:    ":" + port,
