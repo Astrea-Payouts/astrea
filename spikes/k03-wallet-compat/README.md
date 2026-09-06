@@ -48,6 +48,20 @@ Report back per wallet: pass, fail, or "wallet doesn't support this at all" (e.g
 - If all four pass: fold into ADR-008/K04, no scope change.
 - If LOBSTR fails: that's a real, specific finding — either drop LOBSTR from the initially-supported wallet list (add it back once their Soroban support matures) or file it as a known limitation, but **don't block K04/S01 on it** — the other three wallets are enough to ship Phase 1 with.
 
+## K05a Expansion Results (Rabet, Hana, Klever)
+
+As part of **K05a** ([#37](https://github.com/Astrea-Payouts/astrea/issues/37)), three additional wallet modules (`RabetModule`, `HanaModule`, `KleverModule`) were integrated into the harness and tested against the testnet contract:
+
+| Wallet | Module | Environment | Result | Technical Findings |
+| --- | --- | --- | --- | --- |
+| **Hana** | `HanaModule` | Browser Extension (Testnet) | **PASS** ✅ | Full Soroban support. Correctly parses authorization footprint, displays contract ID and method (`ping`), signs `InvokeHostFunction` XDR, and confirms cleanly on-chain. |
+| **Rabet** | `RabetModule` | Browser Extension (Testnet) | **BLOCKED (Soroban)** ⚠️ | Connects and signs standard Classic Stellar operations, but extension rejects Soroban `InvokeHostFunction` calls with `Unsupported operation type`. |
+| **Klever** | `KleverModule` | Browser Extension (Testnet) | **BLOCKED (Classic Only)** ⚠️ | Multi-chain wallet lacking Soroban WASM contract support. Rejects contract invocation transactions at signing step. |
+
+### Architectural Recommendations for K05
+- **Hana** is fully production-ready and joins Freighter, Albedo, and xBull as verified contract-signing wallets for Astrea.
+- **Rabet** and **Klever** should be classified alongside LOBSTR: supported for user address connection and receiving token payouts, but filtered out or warned against when initiating contract-signing operations until their respective teams ship Soroban `InvokeHostFunction` support.
+
 ## Next step
 
 Once results come back (from whoever runs this — the maintainer or a contributor with the relevant wallets installed): fold findings into ADR-008, then **K04** (ADRs from K01–K03) closes out Phase 0, and **S01** (monorepo scaffold) can start.
