@@ -107,5 +107,18 @@
 		"fullState": "Animaciones activadas",
 		"followingSystem": "Siguiendo la configuración de tu sistema",
 		"useSystem": "Usar la configuración de mi sistema"
+	},
+	"EventWizard": {
+		"title": "Crear Evento con Custodia",
+		"subtitle": "Configure detalles, firmantes y requisitos de registro.",
+		"stepDetails": "Detalles",
+		"stepPrizes": "Premios",
+		"stepJudges": "Jueces y Árbitro",
+		"stepParticipants": "Participantes",
+		"stepReview": "Revisar y Firmar",
+		"saveDraft": "Guardar Borrador",
+		"draftSaved": "Borrador Guardado",
+		"prevStep": "Paso Anterior",
+		"continue": "Continuar"
 	}
 }

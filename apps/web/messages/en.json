@@ -107,5 +107,18 @@
 		"fullState": "Animations on",
 		"followingSystem": "Following your system setting",
 		"useSystem": "Use my system setting"
+	},
+	"EventWizard": {
+		"title": "Create Escrow-Backed Event",
+		"subtitle": "Configure details, signers, and registration requirements.",
+		"stepDetails": "Details",
+		"stepPrizes": "Prizes",
+		"stepJudges": "Judges & Resolver",
+		"stepParticipants": "Participants",
+		"stepReview": "Review & Sign",
+		"saveDraft": "Save Draft",
+		"draftSaved": "Draft Saved",
+		"prevStep": "Previous Step",
+		"continue": "Continue"
 	}
 }
