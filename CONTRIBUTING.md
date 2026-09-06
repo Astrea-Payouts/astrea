@@ -8,6 +8,7 @@ Thanks for considering contributing — this project is built in the open specif
 - All participation in this project is covered by the [Code of Conduct](CODE_OF_CONDUCT.md). Found a security issue instead of a bug? See [SECURITY.md](SECURITY.md) — please don't open a public issue for it.
 - Read [docs/architecture.md](docs/architecture.md) for how the pieces fit together, and the ADRs behind key decisions — several of them (ADR-001, ADR-003) are backed by real testnet spikes in [spikes/](spikes), not just a plan on paper, which is worth knowing before you build on top of them.
 - Check [docs/build-plan.md](docs/build-plan.md) for the current phase and task list. Every GitHub issue traces back to a coded task there (e.g. `[E02]`, `[U01]`) — the code in an issue title tells you which phase it belongs to and what depends on it.
+- Read [docs/definition-of-done.md](docs/definition-of-done.md) before you open a PR, not after — it's the exact checklist a reviewer checks your work against, and for money-path or UI work it includes requirements (a real testnet transaction, screenshots at both desktop and mobile width) that are much cheaper to build in from the start than to add once asked.
 
 ## Local setup
 

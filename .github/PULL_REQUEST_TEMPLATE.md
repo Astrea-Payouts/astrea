@@ -11,9 +11,11 @@
 
 ## Screenshots
 
-<!-- Required for any UI change (new component, layout, or visual behavior). Before/after if it's a visual fix. Drag images directly into this box. -->
+<!-- Required for any UI change (new component, layout, or visual behavior). Before/after if it's a visual fix. Drag images directly into this box.
+BOTH a desktop and a mobile (375px) screenshot are required, not just one — a single width doesn't show whether the change is actually responsive. -->
 
-- [ ] Included below
+- [ ] Desktop screenshot included below
+- [ ] Mobile (375px) screenshot included below
 - [ ] N/A — no UI change
 
 ## Money-path change?
