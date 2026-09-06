@@ -31,6 +31,8 @@ Why align rather than run an independent cadence:
 
 **So: if a campaign moves, the Sprint does not.** Sprint length stays 15 days and the campaign slate slips to the next Sprint. Breaking that once turns Sprint length into a negotiable variable and destroys any ability to compare one Sprint to the next.
 
+**Sprint 1 is a stated, one-time exception to that rule**, decided by the Product Owner on 2026-09-06: it runs the full month of September rather than 15 days, because the next campaign (2026-09-15) and the SCF Build Award application (targeted for 2026-09-30) both land inside it, and splitting them into two separate 15-day Sprints would have meant planning the SCF application before knowing whether the campaign's own results were worth citing as evidence. A full-month Sprint is still valid Scrum — the Guide's limit is "one month or less." The 15-day-per-campaign cadence resumes at Sprint 2.
+
 ## Two lanes inside one Sprint
 
 | Lane | Owner | Commitment level |
@@ -98,58 +100,53 @@ One Product Goal at a time, per the Guide. Everything below serves this one; it 
 
 **Why this and not the UI:** [contracts-build-plan.md](contracts-build-plan.md) establishes that mainnet is gated on an audit, the audit is gated on an SCF award, and SCF Build takes **3–6 months** with Audit Bank intake and remediation on top — on the order of half a year. It is the longest-lead item in the entire plan, it has no issue, and nothing about it gets faster by starting later. Meanwhile the Phase 3 UI backlog cannot advance far regardless: U02 needs E03, and U03/U04/U05/U06 all need a backend that does not exist yet.
 
-## Sprint sequence
+## Sprint 1 — 2026-09-06 to 2026-09-30
 
-Dates are campaign-relative; fill them in when campaign dates are known.
+Configured live in the GitHub Project ([Astrea Build Plan](https://github.com/orgs/Astrea-Payouts/projects/2)) as a **Sprint** iteration field with two increments, rather than left as prose only — a plan that only exists in a doc is exactly the kind of drift this document has already caught twice (S01, the Audit Bank docs). Assignments below were made by verified context (git history), not by asking preference: Dereck authored `ad9717c`, the commit that added the contract's pause/whitelist/expire/compensation surface, so contract-adjacent work is his; Christopher ran the original K02 Go↔contract spike, so the Go tx-pipeline core is his. Christopher deliberately carries more items — Dereck is at capacity elsewhere this month.
 
-### Sprint 1 — the contract stops being the unknown
+**Sprint Goal:** *Prove the MVP's happy-path payout loop end-to-end on testnet, open the 2026-09-15 campaign on top of it, and submit the SCF Build Award application by month's end.*
 
-**Sprint Goal:** *The escrow contract has no open money-path gaps and can be handed to an external reviewer.*
+### Increment 1 — MVP proven (2026-09-06 → 2026-09-13)
 
-| Lane | Work | S-eq |
+Scope was deliberately cut on 2026-09-06 to make this deadline realistic: **happy path only** — create → fund → register → admin starts → track → assign winner → release → confirm on Horizon. Full real-time push (E04) and the entire dispute flow (#22, #26, #109–#112) are explicitly **out** of this increment; they don't block a payout from working, only the edge cases around it.
+
+| Issue | Task | Assignee |
 | --- | --- | --- |
-| Maintainer | #20 (E01b contract: `cancel_event` + pre-launch withdraw) | 1 |
-| Maintainer | #22 (E01d contract: dispute / resolve-dispute) | 1 |
-| Maintainer | #4 (E02 contract test suite) | 3 |
-| Maintainer | #107 (L01a, threat model) | 3 |
-| Maintainer | #108 (L01b, SCF Build Award application) | 3 |
-| Campaign | #18 (K03), #37, #38, #39 (K05a–c), #44 (U16 i18n), #106 (K04, fold K03 into ADR-005 — pick up after K03 closes) | 5 |
+| [#6](https://github.com/Astrea-Payouts/astrea/issues/6) | S02 — Go CI (build/vet/test) | Dereck |
+| [#20](https://github.com/Astrea-Payouts/astrea/issues/20) | E01b contract — `cancel_event` + pre-launch withdraw | Dereck — **likely already satisfied by `set_event_cancelled`, flagged on the issue; verify before building** |
+| [#4](https://github.com/Astrea-Payouts/astrea/issues/4) | E02 — contract test suite | Dereck — 78 tests already exist; only the milestone-independence criterion is unconfirmed, flagged on the issue |
+| [#5](https://github.com/Astrea-Payouts/astrea/issues/5) | E03 — contract-only testnet vertical-slice demo | Dereck |
+| [#25](https://github.com/Astrea-Payouts/astrea/issues/25) | Go EscrowClient — `cancel_event` + `close_event` wrapper | Dereck — wraps functions he just built |
+| [#14](https://github.com/Astrea-Payouts/astrea/issues/14) | E06 — trustline verification | Dereck |
+| [#8](https://github.com/Astrea-Payouts/astrea/issues/8) | S04 — env config (network, contract ID, treasury signer) | Christopher |
+| [#23](https://github.com/Astrea-Payouts/astrea/issues/23) | Go EscrowClient — core tx pipeline (simulate→sign→submit→poll) | Christopher — foundational, everything else in `core-go` depends on it |
+| [#24](https://github.com/Astrea-Payouts/astrea/issues/24) | Go EscrowClient — wallet balance + event creation | Christopher |
+| [#10](https://github.com/Astrea-Payouts/astrea/issues/10) | E02 — build-sign-submit pipeline, OpLog | Christopher |
+| [#11](https://github.com/Astrea-Payouts/astrea/issues/11) | E03 — event/prize state machine (manual-start rule) | Christopher |
+| [#13](https://github.com/Astrea-Payouts/astrea/issues/13) | E05 — reconciliation | Christopher |
+| [#15](https://github.com/Astrea-Payouts/astrea/issues/15) | E07 — vertical slice demo (the integration finale) | Christopher |
+| [#118](https://github.com/Astrea-Payouts/astrea/issues/118) | Prepare + publish the 2026-09-15 GrantFox campaign slate | Christopher — administrative, needs GrantFox account access |
 
-Both `blocks: real funds` issues live here. #107 and #108 gate everything downstream of mainnet — the Audit Bank readiness assessment checks for a written threat model, and will not accept a project without an SCF award — and #108 in particular should start immediately given its 3–6 month lead time.
+Dereck: 6 items. Christopher: 8 items, weighted up per his own request since Dereck is loaded elsewhere this month.
 
-### Sprint 2 — the Go service exists
+**Honest feasibility note:** even with the scope cut, this is 14 items across 8 calendar days for two people, several of them size-M contract/backend work. Treat 2026-09-13 as the date to *inspect* progress against, not a guarantee — if it slips, the campaign can still open on the 15th on whatever is real by then; do not quietly redefine "MVP proven" to match whatever happened to land.
 
-**Sprint Goal:** *The Go service is deployed and can read the contract's state on testnet.*
+### Increment 2 — Campaign window + SCF application (2026-09-14 → 2026-09-30)
 
-| Lane | Work | S-eq |
+| Issue | Task | Status |
 | --- | --- | --- |
-| Maintainer | #6 (S02 Go CI), #8 (S04 env config) | 4 |
-| Maintainer | #23 (E01a core tx pipeline), #24 (E01b balance + event creation) | 2 |
-| Campaign | #40 (K05d hardware wallets), #41 (K05e WalletConnect), plus newly-sliced frontend work | 4+ |
+| [#108](https://github.com/Astrea-Payouts/astrea/issues/108) | L01b — submit the SCF Build Award application | Christopher — the actual point of this whole Sprint; uses Increment 1's proof as evidence |
+| [#22](https://github.com/Astrea-Payouts/astrea/issues/22) | E01d contract — dispute / resolve-dispute | Deferred from Increment 1, unassigned — pick up if capacity allows once Increment 1 lands |
+| [#26](https://github.com/Astrea-Payouts/astrea/issues/26) | Go EscrowClient — dispute wrapper + emergency withdraw | Deferred, unassigned — blocked on #22 regardless |
+| [#12](https://github.com/Astrea-Payouts/astrea/issues/12) | E04 — real-time tracking (full push, beyond Increment 1's polling) | Deferred, unassigned |
 
-**Sliced frontend work is required here or the contributor pipeline starves.** Every remaining UI issue depends on a backend that will not exist for weeks. Slice U03/U04 so their first increment renders against fixed sample data with no backend call — by interface, then by data. That is honest work, demonstrable, and it unblocks #28's contributor.
+Plus whatever the campaign slate (#118) actually publishes — that work belongs to contributors, not a named maintainer, per this document's own two-lane model.
 
-### Sprint 3 — state and money move
+**Not scheduled into this Sprint, deliberately:** #107 (L01a, threat model) — it gates the Audit Bank stage *after* an SCF award, not the application itself, so it doesn't block 2026-09-30 and both maintainers are already fully committed. #105 (deploy `services/core-go` + seed a demo event) is a strong candidate for evidence in the SCF application if capacity opens up, but isn't assigned to anyone yet — don't assume it'll happen without naming an owner.
 
-**Sprint Goal:** *An event can be created, funded and started through the Go service, with every transition guarded.*
+## Beyond Sprint 1
 
-| Lane | Work | S-eq |
-| --- | --- | --- |
-| Maintainer | #11 (E03 state machine, manual-start rule) | 3 |
-| Maintainer | #10 (E02 build-sign-submit pipeline, OpLog) | 3 |
-| Maintainer | #25 (E01c), #26 (E01d), #14 (E06 trustline) | 3 |
-| Campaign | U03/U04 second slices; #64, #65 once their backend exists | ~10 |
-
-### Sprint 4 — the promise is proven
-
-**Sprint Goal:** *E07 runs green: create → fund → register → start → judge → release → reconcile, on testnet.*
-
-| Lane | Work | S-eq |
-| --- | --- | --- |
-| Maintainer | #15 (E07 vertical slice) | 3 |
-| Maintainer | #13 (E05 reconciliation — ships with the first real money operation, never later) | 3 |
-| Maintainer | #105 (L01 — `services/core-go` deployment + seed a standing demo event; `apps/web` is already live at `astrea-payouts.vercel.app`) | 1 |
-| Campaign | #63 (U02), #67 (U06), #69 (U10) | ~7 |
+Not planned in detail yet, on purpose — per the Guide, only the next Sprint gets planned in detail, at the Sprint Review of the one before it. What's already known to be waiting: the deferred items above, U02/U06/U10/U03/U04 contributor-facing UI work once a real backend exists, and K05d/e wallet work. Sprint 2 resumes the normal 15-day-per-campaign cadence.
 
 ## Backlog gaps found while writing this, now filed
 
