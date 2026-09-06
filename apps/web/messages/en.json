@@ -107,5 +107,24 @@
 		"fullState": "Animations on",
 		"followingSystem": "Following your system setting",
 		"useSystem": "Use my system setting"
+	},
+	"TransactionProgress": {
+		"title": "On-Chain Transaction",
+		"stepBuilding": "Building",
+		"stepSignature": "Signature",
+		"stepConsensus": "Stellar Consensus",
+		"stepConfirmed": "Confirmed",
+		"phaseBuildingTitle": "Preparing Transaction",
+		"phaseBuildingDesc": "Constructing Soroban smart contract call and validating parameters...",
+		"phaseAwaitingSignatureTitle": "Awaiting Wallet Signature",
+		"phaseAwaitingSignatureDesc": "Please confirm the transaction request in your connected Stellar wallet.",
+		"phasePendingTitle": "Waiting for Ledger Consensus",
+		"phasePendingDesc": "Transaction broadcasted to Stellar network. Verifying on-chain state...",
+		"phaseConfirmedTitle": "Transaction Confirmed",
+		"phaseConfirmedDesc": "The transaction has been successfully confirmed and reconciled on Stellar.",
+		"phaseFailedTitle": "Transaction Failed",
+		"phaseFailedDesc": "The transaction could not be processed on-chain.",
+		"retryCta": "Retry Transaction",
+		"explorerLabel": "View Transaction"
 	}
 }

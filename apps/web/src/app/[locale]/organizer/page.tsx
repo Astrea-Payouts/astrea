@@ -1,5 +1,6 @@
 import { ArrowRight, CheckCircle2, Coins, Layers, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { PayoutFlowDemo } from "@/components/shared/payout-flow-demo";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 import { Link } from "@/i18n/navigation";
 
@@ -43,6 +44,20 @@ export default function OrganizerPage() {
 						<h3 className="mt-4 text-lg font-bold">{t("card3Title")}</h3>
 						<p className="mt-2 text-sm text-zinc-400">{t("card3Desc")}</p>
 					</div>
+				</div>
+
+				<div className="mt-12 rounded-2xl border border-white/10 bg-zinc-900/40 p-6 backdrop-blur md:p-8">
+					<div className="mb-6 flex flex-col gap-1">
+						<h2 className="text-xl font-bold">
+							On-Chain Payout Status Preview
+						</h2>
+						<p className="text-sm text-zinc-400">
+							Simulate the honest non-optimistic transaction lifecycle:
+							preparation, wallet signature, ledger consensus race, and on-chain
+							reconciliation.
+						</p>
+					</div>
+					<PayoutFlowDemo />
 				</div>
 
 				<div className="mt-12 rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/40 via-zinc-900/40 to-black p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">

@@ -107,5 +107,24 @@
 		"fullState": "Animaciones activadas",
 		"followingSystem": "Siguiendo la configuración de tu sistema",
 		"useSystem": "Usar la configuración de mi sistema"
+	},
+	"TransactionProgress": {
+		"title": "Transacción On-Chain",
+		"stepBuilding": "Preparación",
+		"stepSignature": "Firma",
+		"stepConsensus": "Consenso Stellar",
+		"stepConfirmed": "Confirmada",
+		"phaseBuildingTitle": "Preparando Transacción",
+		"phaseBuildingDesc": "Construyendo llamada al contrato inteligente Soroban y validando parámetros...",
+		"phaseAwaitingSignatureTitle": "Esperando Firma de Billetera",
+		"phaseAwaitingSignatureDesc": "Por favor confirmá la solicitud en tu billetera Stellar conectada.",
+		"phasePendingTitle": "Esperando Consenso del Ledger",
+		"phasePendingDesc": "Transacción emitida a la red Stellar. Verificando estado on-chain...",
+		"phaseConfirmedTitle": "Transacción Confirmada",
+		"phaseConfirmedDesc": "La transacción fue confirmada y reconciliada exitosamente en Stellar.",
+		"phaseFailedTitle": "Transacción Fallida",
+		"phaseFailedDesc": "No se pudo procesar la transacción on-chain.",
+		"retryCta": "Reintentar Transacción",
+		"explorerLabel": "Ver Transacción"
 	}
 }
