@@ -115,7 +115,19 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 **Triggered (S07):** participant-facing features that persist across sessions and devices — earnings history, a persistent "my events" list, notification email — need a verified identity, not just a client-asserted address. Sign-In With Stellar (SEP-0043 `signMessage`) replaces the unverified cookie with a signed challenge-response, with an optional email field attached to the verified `Wallet` for notifications (T03). This is additive, not a reversal: money-moving actions still never trust this session — every escrow operation still requires its own on-chain signature, verified by the contract.
 
-**Verified:** wallet kit initializes client-side only (guarded against SSR execution); connect modal renders all four target wallets (Freighter, Albedo, xBull, LOBSTR) with no console errors. Signing against the escrow contract itself is verified per-wallet in K03 ([docs/build-plan.md](build-plan.md)) — Freighter and Albedo confirmed so far.
+**Verified (K03/K04 — Wallet Compatibility Matrix):**
+Signing against Soroban contracts from browser wallets was verified end-to-end using a minimal `ping(caller)` contract deployed on testnet (`CDIWLY6ARVUGEJPUMWK5CZBEN4ENVAMY5NV2EGDF2EPKRGSVQTUAOIH3`) via Stellar Wallets Kit (`@creit.tech/stellar-wallets-kit` v2.5.0) — see [spikes/k03-wallet-compat/README.md](../spikes/k03-wallet-compat/README.md). Status across all four target wallets:
+
+| Wallet | Tested Version / Support | Testnet Result | Notes & Quirks |
+| --- | --- | --- | --- |
+| **Freighter** | SDF reference wallet | **PASS ✅** | Native Soroban reference wallet; seamless `InvokeHostFunction` signing and RPC confirmation. |
+| **Albedo** | Web & extension popup | **PASS ✅** | Web/extension signer; successfully signs Soroban contract calls end-to-end. |
+| **xBull** | v1.15.0+ | **PASS ✅** | Maintained by Creit Technologies (authors of Stellar Wallets Kit); full Soroban support verified. |
+| **LOBSTR** | Mobile / Extension | **Partial / Known Limitation ⚠️** | LOBSTR supports classic Stellar payments and pre-recognized operations, but arbitrary custom Soroban contract invocations (`InvokeHostFunction`) have partial/in-progress parsing support as of mid-2026. Custom contract transactions either fail to parse or are rejected in the extension UI. Included in the UI modal for basic connection and balance read, but transaction signing for escrow operations requires Freighter, Albedo, or xBull until LOBSTR's custom Soroban parsing lands. |
+
+**Library Architecture Gotchas (S05 Static Class Surprise & SSR Guarding):**
+1. **Static Class API:** `@creit.tech/stellar-wallets-kit` v2.5.0 implements a static/global class pattern (`StellarWalletsKit.init({ ... })`, `StellarWalletsKit.authModal()`, `StellarWalletsKit.signTransaction(...)`), not an instantiated class (`new StellarWalletsKit(...)`) as described in older tutorials or unreleased JSR packages.
+2. **Guarded SSR Execution:** Next.js executes top-level module code of `"use client"` components during server-side pre-rendering. Calling `StellarWalletsKit.init()` at module load time triggers fatal SSR errors in Node.js. Initialization must be strictly guarded against `typeof window === "undefined"` and executed once inside client lifecycle hooks (`useEffect` in the wallet provider).
 
 ### ADR-006 — Shared per-organizer ledger, not one contract instance per event
 
