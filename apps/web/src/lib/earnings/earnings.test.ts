@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getSampleEarnings } from "./query";
+import { getParticipantEarnings, getSampleEarnings } from "./query";
 import {
 	calculateEarningsSummary,
 	filterAndSortEarnings,
@@ -96,12 +96,22 @@ describe("formatPayoutDate", () => {
 	});
 });
 
-describe("getSampleEarnings data integrity", () => {
-	it("provides valid 64-character hex transaction hashes for every payout", () => {
-		const items = getSampleEarnings("GBXYZ");
-		for (const item of items) {
-			expect(item.txHash).toHaveLength(64);
-			expect(/^[0-9a-fA-F]{64}$/.test(item.txHash)).toBe(true);
-		}
+describe("getParticipantEarnings", () => {
+	it("returns an empty array when wallet is undefined or null", async () => {
+		const resultNull = await getParticipantEarnings(null);
+		const resultUndefined = await getParticipantEarnings(undefined);
+
+		expect(resultNull).toEqual([]);
+		expect(resultUndefined).toEqual([]);
+	});
+
+	it("returns an empty array when database is unconfigured", async () => {
+		const prevEnv = process.env.DATABASE_URL;
+		delete process.env.DATABASE_URL;
+
+		const result = await getParticipantEarnings("wallet-123");
+		expect(result).toEqual([]);
+
+		if (prevEnv) process.env.DATABASE_URL = prevEnv;
 	});
 });

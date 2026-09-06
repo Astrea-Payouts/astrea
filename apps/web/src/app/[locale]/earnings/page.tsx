@@ -25,15 +25,14 @@ export async function generateMetadata({
 export default async function EarningsPage() {
 	const t = await getTranslations("Earnings");
 	const sessionWallet = await getSessionWallet();
-	const walletAddress =
-		sessionWallet?.address ??
-		"GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5";
+	const walletId = sessionWallet?.id ?? null;
+	const walletAddress = sessionWallet?.address ?? null;
 
-	// Fetch confirmed on-chain payouts for this wallet
-	const earnings = await getParticipantEarnings(walletAddress);
+	// Fetch confirmed on-chain payouts for this verified wallet (empty array if no active session)
+	const earnings = walletId ? await getParticipantEarnings(walletId) : [];
 
 	return (
-		<main className="min-h-screen bg-black text-white py-12 px-6 md:px-12">
+		<main className="min-h-screen bg-black text-white pt-28 pb-16 px-6 md:py-12 md:px-12">
 			<div className="mx-auto max-w-6xl">
 				{/* Breadcrumb Navigation */}
 				<nav

@@ -62,14 +62,15 @@ export function getSampleEarnings(_walletAddress: string): EarningsItem[] {
 }
 
 /**
- * Queries confirmed payout rows joined on the verified participant's wallet address.
- * Strictly scoped to the specified wallet to eliminate cross-user data leakage.
+ * Queries confirmed payout rows for the verified participant's wallet.
+ * Filtered by Prize.winnerWalletId to guarantee wallet-scoped privacy.
+ * Returns an empty array if unauthenticated, database unavailable, or no payouts exist.
  */
 export async function getParticipantEarnings(
-	walletAddress: string,
+	walletIdOrAddress?: string | null,
 ): Promise<EarningsItem[]> {
-	if (!walletAddress || !process.env.DATABASE_URL) {
-		return getSampleEarnings(walletAddress);
+	if (!walletIdOrAddress || !process.env.DATABASE_URL) {
+		return [];
 	}
 
 	try {
@@ -78,9 +79,10 @@ export async function getParticipantEarnings(
 		const payouts = await db.payout.findMany({
 			where: {
 				prize: {
-					winnerWallet: {
-						address: walletAddress,
-					},
+					OR: [
+						{ winnerWalletId: walletIdOrAddress },
+						{ winnerWallet: { address: walletIdOrAddress } },
+					],
 				},
 			},
 			include: {
@@ -95,8 +97,8 @@ export async function getParticipantEarnings(
 			},
 		});
 
-		if (payouts.length === 0) {
-			return getSampleEarnings(walletAddress);
+		if (!payouts || payouts.length === 0) {
+			return [];
 		}
 
 		return payouts.map((p) => {
@@ -119,7 +121,10 @@ export async function getParticipantEarnings(
 			};
 		});
 	} catch (err) {
-		console.warn("Prisma query failed, serving seeded earnings data:", err);
-		return getSampleEarnings(walletAddress);
+		console.warn(
+			"Failed to query participant earnings, returning empty array:",
+			err,
+		);
+		return [];
 	}
 }
