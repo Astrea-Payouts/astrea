@@ -30,7 +30,12 @@
 		"feature1Title": "Smart Contract Backed",
 		"feature1Desc": "Prize funds are committed to Stellar Soroban contracts before hackathons begin.",
 		"feature2Title": "Independent Milestones",
-		"feature2Desc": "Release prizes individually as judges evaluate deliverables without blocking other winners."
+		"feature2Desc": "Release prizes individually as judges evaluate deliverables without blocking other winners.",
+		"verifiedBuilders": "{count} verified builders registered",
+		"escrowMilestones": "Escrow Milestones",
+		"illustrativeExample": "Illustrative example (not a live tx)",
+		"viewExplorer": "View on Stellar Explorer",
+		"statusLocked": "100% Locked in Escrow"
 	},
 	"HowItWorks": {
 		"badge": "Escrow Lifecycle",
@@ -49,7 +54,7 @@
 		"badge": "Builder & Participant Portal",
 		"title": "Build with guaranteed payouts",
 		"tagline": "Never worry about unfulfilled prize promises. Every competition on Astrea locks funds in smart escrows before launch.",
-		"card1Title": "Verified Escrow Escrow",
+		"card1Title": "Verified Escrows",
 		"card1Desc": "Check the on-chain contract address and confirmed USDC balances before spending your time.",
 		"card2Title": "Instant Automated Payouts",
 		"card2Desc": "Win and receive funds directly into your Stellar wallet with zero manual invoice delays.",

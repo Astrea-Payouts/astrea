@@ -186,6 +186,8 @@ export function SeeItInAction() {
 }
 
 function EventCardBody({ evt }: { evt: SampleEvent }) {
+	const t = useTranslations("SeeItInAction");
+
 	return (
 		<div className="flex h-full flex-col text-left text-white">
 			<div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -204,13 +206,13 @@ function EventCardBody({ evt }: { evt: SampleEvent }) {
 			<div className="mt-4">
 				<h3 className="text-xl font-bold">{evt.title}</h3>
 				<p className="mt-1 text-xs text-zinc-400">
-					{evt.participants} verified builders registered
+					{t("verifiedBuilders", { count: evt.participants })}
 				</p>
 			</div>
 
 			<div className="mt-5 space-y-2 rounded-xl border border-white/5 bg-black/40 p-3.5 font-mono text-xs">
 				<p className="font-sans text-[10px] tracking-wider text-zinc-400 uppercase">
-					Escrow Milestones
+					{t("escrowMilestones")}
 				</p>
 				{evt.milestones.map((m) => (
 					<div
@@ -225,12 +227,12 @@ function EventCardBody({ evt }: { evt: SampleEvent }) {
 			<div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4 text-xs text-zinc-400">
 				<div className="flex flex-col gap-0.5">
 					<span className="font-sans text-[10px] tracking-wider text-amber-400/90 uppercase">
-						Illustrative example (not a live tx)
+						{t("illustrativeExample")}
 					</span>
 					<span className="font-mono">Tx: {evt.txHash}</span>
 				</div>
 				<span className="flex items-center gap-1 text-blue-400">
-					View on Stellar Explorer <ExternalLink className="size-3" />
+					{t("viewExplorer")} <ExternalLink className="size-3" />
 				</span>
 			</div>
 		</div>
