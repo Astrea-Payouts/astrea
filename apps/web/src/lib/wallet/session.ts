@@ -10,6 +10,7 @@ import {
 	issueAuthNonce,
 	verifyStellarSignature,
 } from "./auth-utils";
+import { validateOptionalEmail } from "./validation";
 
 // S07 — Sign-In With Stellar (SEP-0043):
 // Upgrades the session cookie from an unverified client-asserted address to
@@ -45,6 +46,8 @@ export async function associateVerifiedWallet({
 		throw new Error("Invalid Stellar address");
 	}
 
+	const cleanEmail = validateOptionalEmail(email);
+
 	const nonceValid = await consumeAuthNonce(nonce, address);
 	if (!nonceValid) {
 		throw new Error("Invalid or expired authentication nonce");
@@ -63,13 +66,13 @@ export async function associateVerifiedWallet({
 			data: {
 				address,
 				userId: user.id,
-				email: email?.trim() || null,
+				email: cleanEmail,
 			},
 		});
 	} else if (email !== undefined) {
 		wallet = await db.wallet.update({
 			where: { id: wallet.id },
-			data: { email: email?.trim() || null },
+			data: { email: cleanEmail },
 		});
 	}
 
@@ -96,9 +99,11 @@ export async function updateWalletEmail(email: string | null) {
 		throw new Error("Not authenticated");
 	}
 
+	const cleanEmail = validateOptionalEmail(email);
+
 	const updated = await db.wallet.update({
 		where: { id: sessionWallet.id },
-		data: { email: email?.trim() || null },
+		data: { email: cleanEmail },
 	});
 
 	return {

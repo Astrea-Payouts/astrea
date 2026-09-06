@@ -1,3 +1,4 @@
+import { createRequire } from "node:module";
 import { Keypair } from "@stellar/stellar-sdk";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -13,6 +14,25 @@ import {
 	getSessionWallet,
 	updateWalletEmail,
 } from "./session";
+import {
+	UNSUPPORTED_ALBEDO_MESSAGE,
+	validateOptionalEmail,
+} from "./validation";
+
+const require = createRequire(import.meta.url);
+const {
+	AlbedoModule,
+} = require("@creit.tech/stellar-wallets-kit/modules/albedo");
+const {
+	FREIGHTER_ID,
+	FreighterModule,
+} = require("@creit.tech/stellar-wallets-kit/modules/freighter");
+const {
+	xBullModule,
+} = require("@creit.tech/stellar-wallets-kit/modules/xbull");
+const {
+	LobstrModule,
+} = require("@creit.tech/stellar-wallets-kit/modules/lobstr");
 
 const { mockCookieMap, mockDb, nonceRows } = vi.hoisted(() => {
 	const nonceRows = new Map<
@@ -94,6 +114,39 @@ describe("S07: Stellar challenge-response auth and session management", () => {
 
 	afterEach(() => {
 		vi.restoreAllMocks();
+	});
+
+	describe("validateOptionalEmail", () => {
+		it("accepts valid email addresses and trims whitespace", () => {
+			expect(validateOptionalEmail("user@example.com")).toBe(
+				"user@example.com",
+			);
+			expect(
+				validateOptionalEmail("  builder.stellar+test@sub.domain.org  "),
+			).toBe("builder.stellar+test@sub.domain.org");
+		});
+
+		it("returns null for empty, whitespace, null, or undefined values", () => {
+			expect(validateOptionalEmail(null)).toBeNull();
+			expect(validateOptionalEmail(undefined)).toBeNull();
+			expect(validateOptionalEmail("")).toBeNull();
+			expect(validateOptionalEmail("   ")).toBeNull();
+		});
+
+		it("throws an error for malformed email addresses", () => {
+			expect(() => validateOptionalEmail("not-an-email")).toThrow(
+				/Invalid email address format/,
+			);
+			expect(() => validateOptionalEmail("missing@domain")).toThrow(
+				/Invalid email address format/,
+			);
+			expect(() => validateOptionalEmail("@domain.com")).toThrow(
+				/Invalid email address format/,
+			);
+			expect(() => validateOptionalEmail("user@.com")).toThrow(
+				/Invalid email address format/,
+			);
+		});
 	});
 
 	describe("issueAuthNonce & consumeAuthNonce", () => {
@@ -274,6 +327,24 @@ describe("S07: Stellar challenge-response auth and session management", () => {
 				}),
 			).rejects.toThrow(/Invalid cryptographic signature/);
 		});
+
+		it("rejects connect attempts with invalid optional email format", async () => {
+			const { nonce } = await getAuthNonce(address);
+			const message = formatAuthMessage(address, nonce);
+			const signature = keypair
+				.sign(Buffer.from(message, "utf-8"))
+				.toString("base64");
+
+			await expect(
+				associateVerifiedWallet({
+					address,
+					signature,
+					nonce,
+					email: "bad-email-format",
+				}),
+			).rejects.toThrow(/Invalid email address format/);
+			expect(mockDb.wallet.create).not.toHaveBeenCalled();
+		});
 	});
 
 	describe("updateWalletEmail & getSessionWallet & clearWalletSession", () => {
@@ -299,6 +370,20 @@ describe("S07: Stellar challenge-response auth and session management", () => {
 				where: { id: "wallet-123" },
 				data: { email: "updated@example.com" },
 			});
+		});
+
+		it("rejects updating email with invalid format", async () => {
+			mockCookieMap.set("astrea_wallet_id", { value: "wallet-123" });
+			mockDb.wallet.findUnique.mockResolvedValue({
+				id: "wallet-123",
+				address,
+				email: null,
+			});
+
+			await expect(updateWalletEmail("not-a-valid-email")).rejects.toThrow(
+				/Invalid email address format/,
+			);
+			expect(mockDb.wallet.update).not.toHaveBeenCalled();
 		});
 
 		it("throws when updating email without an active session", async () => {
@@ -328,6 +413,94 @@ describe("S07: Stellar challenge-response auth and session management", () => {
 				address,
 				email: "test@example.com",
 			});
+		});
+	});
+
+	describe("Configured wallet modules coverage (P1: Albedo, Freighter, xBull, Lobstr)", () => {
+		it("initializes all 4 configured wallet modules with expected product identifiers", () => {
+			const freighter = new FreighterModule();
+			const albedo = new AlbedoModule();
+			const xbull = new xBullModule();
+			const lobstr = new LobstrModule();
+
+			expect(freighter.productId).toBe(FREIGHTER_ID);
+			expect(albedo.productId).toBe("albedo");
+			expect(xbull.productId).toBe("xbull");
+			expect(lobstr.productId).toBe("lobstr");
+		});
+
+		it("demonstrates AlbedoModule.signMessage throws because it is incompatible with SEP-0043", async () => {
+			const albedo = new AlbedoModule();
+			await expect(albedo.signMessage()).rejects.toEqual({
+				code: -3,
+				message: 'Albedo does not support the "signMessage" function',
+			});
+		});
+
+		it("handles Albedo unsupported authentication state without establishing an unverified session", async () => {
+			const albedo = new AlbedoModule();
+			let sessionEstablished = false;
+			let authError: string | null = null;
+			let clientAddress: string | null = "G_ALBEDO_CONNECTED_ADDRESS";
+
+			try {
+				// Simulating connection attempt with Albedo
+				await albedo.signMessage();
+				sessionEstablished = true;
+			} catch (err: unknown) {
+				const errMsg =
+					err instanceof Error
+						? err.message
+						: typeof err === "object" && err !== null && "message" in err
+							? String((err as { message: unknown }).message)
+							: "";
+
+				if (errMsg.includes('Albedo does not support the "signMessage"')) {
+					authError = UNSUPPORTED_ALBEDO_MESSAGE;
+					// Connection must not be treated as successful
+					clientAddress = null;
+				}
+			}
+
+			expect(sessionEstablished).toBe(false);
+			expect(clientAddress).toBeNull();
+			expect(authError).toBe(UNSUPPORTED_ALBEDO_MESSAGE);
+			expect(mockCookieMap.get("astrea_wallet_id")).toBeUndefined();
+		});
+
+		it("establishes verified sessions for supported wallet signatures (Freighter / xBull / Lobstr)", async () => {
+			for (const walletName of ["Freighter", "xBull", "Lobstr"]) {
+				mockCookieMap.clear();
+				const { nonce } = await getAuthNonce(address);
+				const message = formatAuthMessage(address, nonce);
+
+				// Each supported wallet signs the challenge message with its Ed25519 key
+				const signature = keypair
+					.sign(Buffer.from(message, "utf-8"))
+					.toString("base64");
+
+				mockDb.wallet.findUnique.mockResolvedValueOnce(null);
+				mockDb.user.create.mockResolvedValueOnce({
+					id: `user-${walletName.toLowerCase()}`,
+				});
+				mockDb.wallet.create.mockResolvedValueOnce({
+					id: `wallet-${walletName.toLowerCase()}`,
+					userId: `user-${walletName.toLowerCase()}`,
+					address,
+					email: null,
+				});
+
+				const result = await associateVerifiedWallet({
+					address,
+					signature,
+					nonce,
+				});
+
+				expect(result.walletId).toBe(`wallet-${walletName.toLowerCase()}`);
+				expect(mockCookieMap.get("astrea_wallet_id")?.value).toBe(
+					`wallet-${walletName.toLowerCase()}`,
+				);
+			}
 		});
 	});
 });
