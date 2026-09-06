@@ -107,5 +107,16 @@
 		"fullState": "Animaciones activadas",
 		"followingSystem": "Siguiendo la configuración de tu sistema",
 		"useSystem": "Usar la configuración de mi sistema"
+	},
+	"RegistrationQuestions": {
+		"builderTitle": "Preguntas de Registro Personalizadas",
+		"builderDesc": "Haga a los participantes un par de preguntas durante el registro. Desactivado por defecto para registro con 1 clic.",
+		"enabledLabel": "Activado",
+		"disabledLabel": "Desactivado (Por defecto)",
+		"formTitle": "Información Adicional",
+		"selectPlaceholder": "-- Seleccione una opción --",
+		"yes": "Sí",
+		"no": "No",
+		"required": "Obligatorio"
 	}
 }

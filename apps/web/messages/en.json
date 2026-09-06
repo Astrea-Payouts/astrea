@@ -107,5 +107,16 @@
 		"fullState": "Animations on",
 		"followingSystem": "Following your system setting",
 		"useSystem": "Use my system setting"
+	},
+	"RegistrationQuestions": {
+		"builderTitle": "Custom Registration Questions",
+		"builderDesc": "Ask participants a question or two upon registration. Off by default for 1-click registration.",
+		"enabledLabel": "Enabled",
+		"disabledLabel": "Disabled (Default)",
+		"formTitle": "Additional Information",
+		"selectPlaceholder": "-- Select an option --",
+		"yes": "Yes",
+		"no": "No",
+		"required": "Required"
 	}
 }
