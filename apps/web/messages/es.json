@@ -107,5 +107,29 @@
 		"fullState": "Animaciones activadas",
 		"followingSystem": "Siguiendo la configuración de tu sistema",
 		"useSystem": "Usar la configuración de mi sistema"
+	},
+	"EventWizardReview": {
+		"stepBadge": "Paso 5 de 5: Revisar y Firmar",
+		"title": "Revisar Competencia y Firmar Depósito en Garantía",
+		"description": "Verifica todos los parámetros de la competencia antes de firmar. Los fondos se bloquean de manera verificable en la cadena en un depósito inteligente de Stellar.",
+		"eventDetailsTitle": "Detalles del Evento",
+		"prizesTitle": "Premios y Asignaciones",
+		"judgesTitle": "Jueces y Resolutor",
+		"registrationTitle": "Configuración de Registro",
+		"walletBalanceTitle": "Financiamiento de Depósito y Saldo de Billetera",
+		"freeBalanceLabel": "Saldo Libre Actual",
+		"requiredEscrowLabel": "Depósito en Garantía Requerido",
+		"fundingPathLabel": "Ruta de Financiamiento",
+		"twoStepNotice": "Firma Explícita de 2 Pasos Requerida (Déficit: {deficit})",
+		"twoStepDesc": "El saldo actual de tu billetera ({balance}) es menor que el total de premios. Conforme a los principios de seguridad de Astrea, firmarás primero una transacción de depósito explícita (\"1 de 2: depositar fondos\"), esperarás la confirmación del libro mayor y luego firmarás \"2 de 2: crear evento\".",
+		"signingDeposit": "Esperando Firma en la Billetera: Depósito",
+		"pendingDeposit": "Confirmando Depósito en el Libro Mayor de Stellar…",
+		"depositConfirmed": "¡Depósito Confirmado! Preparando create_event…",
+		"signingCreateEvent": "Esperando Firma en la Billetera: create_event",
+		"pendingCreateEvent": "Confirmando Inicialización del Evento en el Libro Mayor…",
+		"successTitle": "¡Evento Creado Exitosamente y Depósito Bloqueado!",
+		"successDesc": "El contrato inteligente de depósito en garantía está inicializado en Stellar testnet. Todos los fondos de premios ({total}) están bloqueados de forma verificable.",
+		"goToDashboard": "Ir al Panel del Organizador",
+		"back": "Atrás"
 	}
 }

@@ -107,5 +107,29 @@
 		"fullState": "Animations on",
 		"followingSystem": "Following your system setting",
 		"useSystem": "Use my system setting"
+	},
+	"EventWizardReview": {
+		"stepBadge": "Step 5 of 5: Review & Sign",
+		"title": "Review Competition & Sign Escrow",
+		"description": "Verify all competition parameters before signing. Funds are locked verifiably on-chain into a Stellar smart escrow.",
+		"eventDetailsTitle": "Event Details",
+		"prizesTitle": "Prizes & Allocations",
+		"judgesTitle": "Judges & Resolver",
+		"registrationTitle": "Registration Configuration",
+		"walletBalanceTitle": "Escrow Funding & Wallet Balance",
+		"freeBalanceLabel": "Current Free Balance",
+		"requiredEscrowLabel": "Required Prize Escrow",
+		"fundingPathLabel": "Funding Path",
+		"twoStepNotice": "Explicit 2-Step Signing Required (Deficit: {deficit})",
+		"twoStepDesc": "Your current wallet balance ({balance}) is less than the prize total. Per Astrea's security principles, you will sign an explicit deposit transaction first (\"1 of 2: deposit funds\"), wait for ledger confirmation, and then sign \"2 of 2: create event.\"",
+		"signingDeposit": "Awaiting Wallet Signature: Deposit",
+		"pendingDeposit": "Confirming Deposit on Stellar Ledger…",
+		"depositConfirmed": "Deposit Confirmed! Preparing create_event…",
+		"signingCreateEvent": "Awaiting Wallet Signature: create_event",
+		"pendingCreateEvent": "Confirming Event Initialization on Ledger…",
+		"successTitle": "Event Successfully Created & Escrow Locked!",
+		"successDesc": "Smart contract escrow is initialized on Stellar testnet. All prize funds ({total}) are verifiably locked.",
+		"goToDashboard": "Go to Organizer Dashboard",
+		"back": "Back"
 	}
 }
