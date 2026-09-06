@@ -1,6 +1,9 @@
 import { AlbedoModule } from "@creit.tech/stellar-wallets-kit/modules/albedo";
+import { DcentModule } from "@creit.tech/stellar-wallets-kit/modules/dcent";
 import { FreighterModule } from "@creit.tech/stellar-wallets-kit/modules/freighter";
+import { HotWalletModule } from "@creit.tech/stellar-wallets-kit/modules/hotwallet";
 import { LobstrModule } from "@creit.tech/stellar-wallets-kit/modules/lobstr";
+import { OneKeyModule } from "@creit.tech/stellar-wallets-kit/modules/onekey";
 import { xBullModule } from "@creit.tech/stellar-wallets-kit/modules/xbull";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit/sdk";
 import { Networks } from "@creit.tech/stellar-wallets-kit/types";
@@ -22,6 +25,9 @@ StellarWalletsKit.init({
 		new AlbedoModule(),
 		new xBullModule(),
 		new LobstrModule(),
+		new DcentModule(),
+		new OneKeyModule(),
+		new HotWalletModule(),
 	],
 });
 

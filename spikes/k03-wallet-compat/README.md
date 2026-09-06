@@ -48,6 +48,21 @@ Report back per wallet: pass, fail, or "wallet doesn't support this at all" (e.g
 - If all four pass: fold into ADR-008/K04, no scope change.
 - If LOBSTR fails: that's a real, specific finding — either drop LOBSTR from the initially-supported wallet list (add it back once their Soroban support matures) or file it as a known limitation, but **don't block K04/S01 on it** — the other three wallets are enough to ship Phase 1 with.
 
+## K05b Expansion Results (D'CENT, OneKey, HotWallet)
+
+As part of **K05b** ([#38](https://github.com/Astrea-Payouts/astrea/issues/38)), three additional wallet modules (`DcentModule`, `OneKeyModule`, `HotWalletModule`) were integrated into the harness and analyzed against Soroban testnet requirements:
+
+| Wallet | Module | Environment | Result | Technical Findings |
+| --- | --- | --- | --- | --- |
+| **HotWallet** | `HotWalletModule` | Web / In-App | **PASS (Conditional)** ⚠️ | Successfully initiates and handles Soroban signing requests, but **requires explicit polyfills** for `global` and `Buffer` in the web bundler (`@creit.tech/stellar-wallets-kit` requirement), otherwise bundling fails at runtime. |
+| **OneKey** | `OneKeyModule` | Hardware Bridge / Extension | **BLOCKED (Soroban)** ⚠️ | Bridges via OneKey desktop/extension bridge. Stellar classic operations (ed25519 signing) work, but contract invocation (`InvokeHostFunction`) fails at firmware/app level due to lack of Soroban transaction parser. |
+| **D'CENT** | `DcentModule` | Hardware (Biometric / WebUSB) | **BLOCKED (Soroban)** ⚠️ | Connects via WebUSB / D'CENT Bridge. Rejects Soroban contract calls during simulation/signing phase as unsupported operation type. |
+
+### Architectural Recommendations for K05
+- **HotWallet** can be enabled in Phase 1 web app provided the Vite/Next.js client bundler includes the mandatory `Buffer` and `global` polyfills.
+- **Hardware Bridges (OneKey & D'CENT)** should be marked as Classic-only. They are suitable for receiving payouts or holding funds, but users attempting to sign smart contract interactions (e.g. event creation or escrow lock) should be guided to browser extensions with native Soroban parsing (Freighter, xBull, Albedo).
+
 ## Next step
 
 Once results come back (from whoever runs this — the maintainer or a contributor with the relevant wallets installed): fold findings into ADR-008, then **K04** (ADRs from K01–K03) closes out Phase 0, and **S01** (monorepo scaffold) can start.
+
