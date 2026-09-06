@@ -107,5 +107,56 @@
 		"fullState": "Animaciones activadas",
 		"followingSystem": "Siguiendo la configuración de tu sistema",
 		"useSystem": "Usar la configuración de mi sistema"
+	},
+	"JudgeSubmissionReview": {
+		"noPrizesFound": "No se encontraron premios para este evento.",
+		"prizesTabLabel": "Categoría de Premio",
+		"submissionsHeader": "Entregas ({count})",
+		"winnerAssignedStatus": "Ganador: {winner}",
+		"winnerPendingStatus": "Selección de ganador pendiente",
+		"emptySubmissions": "Aún no se han enviado proyectos para esta categoría de premio.",
+		"winnerBadge": "Ganador Seleccionado",
+		"author": "Autor",
+		"viewProject": "Ver Repositorio / Demo",
+		"unrated": "Sin calificar",
+		"selectedAsWinner": "Seleccionado como Ganador",
+		"chooseWinnerButton": "Elegir Ganador"
+	},
+	"JudgeWinnerAssignment": {
+		"badge": "Asignación de Ganador",
+		"prizeAllocationSubtitle": "Revisa y asegura el ganador para el pago de {amount} {currency}.",
+		"winnerWalletLabel": "Clave Pública Stellar del Ganador (G...)",
+		"verifyButton": "Reverificar",
+		"trustlineVerifiedTitle": "Línea de Confianza USDC Activa",
+		"trustlineVerifiedDesc": "Cuenta verificada en Horizon. Lista para recibir la liberación de fondos en Stellar.",
+		"trustlineMissingTitle": "Línea de Confianza Faltante (ADR-004 Bloqueado)",
+		"trustlineMissingDesc": "La billetera ganadora no puede recibir USDC. Debe activarla antes de poder firmar Approve/Release.",
+		"trustlineErrorText": "Error al consultar el servidor Horizon.",
+		"winnerConfirmedLabel": "Ganador Asegurado ({wallet})",
+		"confirmAssignmentButton": "Confirmar Asignación de Ganador"
+	},
+	"JudgeSigning": {
+		"panelTitle": "Liquidación de Pago en Cadena",
+		"panelSubtitle": "Liquidación firmada en dos pasos para {prize} ({amount} {currency}).",
+		"multisigLabel": "Panel Multifirma Stellar",
+		"singleSignerLabel": "Juez Firmante Único",
+		"addCoSignButton": "Simular Cofirma",
+		"nonOptimisticNotice": "Interfaz no optimista: El progreso refleja el consenso real del ledger de Stellar.",
+		"step1Title": "Aprobar Pago en Escrow",
+		"step1Desc": "Valida la calificación del juez y pasa el premio a APROBADO en cadena.",
+		"approvedOnChainBadge": "Aprobado en Ledger",
+		"signApproveButton": "Firmar Tx Approve (Paso 1)",
+		"step2Title": "Liberar Fondos al Ganador",
+		"step2Desc": "Transfiere a {winner} el activo del premio desde el contrato de escrow.",
+		"unassigned": "billetera del ganador",
+		"releasedBadge": "Liberado y Pagado",
+		"signReleaseButton": "Firmar Tx Release (Paso 2)",
+		"txConfirmedNotice": "Confirmado en Ledger Stellar"
+	},
+	"JudgePage": {
+		"backToEvent": "Volver al resumen del evento",
+		"badge": "Panel de Evaluación del Juez",
+		"pageTitle": "Evaluación y Liquidación de Pagos",
+		"pageDescription": "Evalúa entregas de participantes, verifica líneas de confianza y ejecuta pagos multifirma en 2 pasos."
 	}
 }

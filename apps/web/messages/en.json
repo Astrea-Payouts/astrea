@@ -107,5 +107,56 @@
 		"fullState": "Animations on",
 		"followingSystem": "Following your system setting",
 		"useSystem": "Use my system setting"
+	},
+	"JudgeSubmissionReview": {
+		"noPrizesFound": "No prize allocations found for this event.",
+		"prizesTabLabel": "Prize Category",
+		"submissionsHeader": "Submissions ({count})",
+		"winnerAssignedStatus": "Winner: {winner}",
+		"winnerPendingStatus": "Winner Pending Selection",
+		"emptySubmissions": "No participant projects submitted for this prize category yet.",
+		"winnerBadge": "Selected Winner",
+		"author": "Author",
+		"viewProject": "View Project Repo / Demo",
+		"unrated": "Unrated",
+		"selectedAsWinner": "Selected as Winner",
+		"chooseWinnerButton": "Select Winner"
+	},
+	"JudgeWinnerAssignment": {
+		"badge": "Winner Selection",
+		"prizeAllocationSubtitle": "Review and lock winner for {amount} {currency} payout.",
+		"winnerWalletLabel": "Winner Stellar Public Key (G...)",
+		"verifyButton": "Re-verify",
+		"trustlineVerifiedTitle": "Winner USDC Trustline Active",
+		"trustlineVerifiedDesc": "Account verified on Horizon. Eligible to receive payout release on Stellar.",
+		"trustlineMissingTitle": "Missing USDC Trustline (ADR-004 Gated)",
+		"trustlineMissingDesc": "Winner wallet cannot accept USDC. Trustline must be created before Approve/Release can be built.",
+		"trustlineErrorText": "Error checking Horizon server for trustline.",
+		"winnerConfirmedLabel": "Winner Locked ({wallet})",
+		"confirmAssignmentButton": "Confirm Winner Assignment"
+	},
+	"JudgeSigning": {
+		"panelTitle": "On-Chain Payout Execution",
+		"panelSubtitle": "Two-step signed settlement for {prize} ({amount} {currency}).",
+		"multisigLabel": "Stellar Multisig Panel",
+		"singleSignerLabel": "Single Judge Signer",
+		"addCoSignButton": "Simulate Co-Sign",
+		"nonOptimisticNotice": "Non-optimistic UI: Progress indicator reflects real-time Stellar ledger consensus.",
+		"step1Title": "Approve Escrow Payout",
+		"step1Desc": "Validates judge milestone scoring and transitions prize to APPROVED on-chain.",
+		"approvedOnChainBadge": "Approved on Ledger",
+		"signApproveButton": "Sign Approve Tx (Step 1)",
+		"step2Title": "Release Funds to Winner",
+		"step2Desc": "Transfers {winner} their prize asset from the escrow contract.",
+		"unassigned": "winner wallet",
+		"releasedBadge": "Released & Paid Out",
+		"signReleaseButton": "Sign Release Tx (Step 2)",
+		"txConfirmedNotice": "Confirmed on Stellar Ledger"
+	},
+	"JudgePage": {
+		"backToEvent": "Back to Event Overview",
+		"badge": "Judge Evaluation Panel",
+		"pageTitle": "Review & Payout Settlement",
+		"pageDescription": "Evaluate participant project submissions, verify winner trustlines, and execute 2-step multisig payouts."
 	}
 }
