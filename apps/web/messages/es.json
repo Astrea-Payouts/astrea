@@ -107,5 +107,19 @@
 		"fullState": "Animaciones activadas",
 		"followingSystem": "Siguiendo la configuración de tu sistema",
 		"useSystem": "Usar la configuración de mi sistema"
+	},
+	"OrganizerDashboard": {
+		"title": "Panel del Organizador",
+		"backToOverview": "Volver al resumen del organizador",
+		"readyToStartBadge": "Condiciones Cumplidas",
+		"readyToStartTitle": "El evento está listo para comenzar",
+		"readyToStartDesc": "Saldo de depósito en garantía verificado y criterios de participantes cumplidos. Haz clic para publicar explícitamente este evento.",
+		"publishEventCta": "Publicar Evento",
+		"publishing": "Publicando evento...",
+		"fundingStatusTitle": "Estado de Fondos en Custodia",
+		"participantsTitle": "Participantes Registrados",
+		"exitActionsTitle": "Rutas de Salida Previas a LIVE",
+		"cancelEventTitle": "Cancelar Evento",
+		"emergencyWithdrawTitle": "Solicitud de Retiro de Emergencia"
 	}
 }

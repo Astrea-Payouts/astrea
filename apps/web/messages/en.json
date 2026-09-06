@@ -107,5 +107,19 @@
 		"fullState": "Animations on",
 		"followingSystem": "Following your system setting",
 		"useSystem": "Use my system setting"
+	},
+	"OrganizerDashboard": {
+		"title": "Organizer Dashboard",
+		"backToOverview": "Back to Organizer Overview",
+		"readyToStartBadge": "Conditions Met",
+		"readyToStartTitle": "Event is Ready to Start",
+		"readyToStartDesc": "Escrow balance verified and participant criteria fulfilled. Click to explicitly publish this event.",
+		"publishEventCta": "Publish Event",
+		"publishing": "Publishing Event...",
+		"fundingStatusTitle": "Escrow Funding Status",
+		"participantsTitle": "Registered Participants",
+		"exitActionsTitle": "Pre-LIVE Exit Paths",
+		"cancelEventTitle": "Cancel Event",
+		"emergencyWithdrawTitle": "Emergency Withdraw Request"
 	}
 }
