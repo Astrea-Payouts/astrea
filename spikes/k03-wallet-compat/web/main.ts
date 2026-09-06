@@ -1,4 +1,7 @@
 import { AlbedoModule } from "@creit.tech/stellar-wallets-kit/modules/albedo";
+import { BitgetModule } from "@creit.tech/stellar-wallets-kit/modules/bitget";
+import { CactusLinkModule } from "@creit.tech/stellar-wallets-kit/modules/cactuslink";
+import { FordefiModule } from "@creit.tech/stellar-wallets-kit/modules/fordefi";
 import { FreighterModule } from "@creit.tech/stellar-wallets-kit/modules/freighter";
 import { LobstrModule } from "@creit.tech/stellar-wallets-kit/modules/lobstr";
 import { xBullModule } from "@creit.tech/stellar-wallets-kit/modules/xbull";
@@ -22,6 +25,9 @@ StellarWalletsKit.init({
 		new AlbedoModule(),
 		new xBullModule(),
 		new LobstrModule(),
+		new BitgetModule(),
+		new CactusLinkModule(),
+		new FordefiModule(),
 	],
 });
 

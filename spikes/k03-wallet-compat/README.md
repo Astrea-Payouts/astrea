@@ -48,6 +48,21 @@ Report back per wallet: pass, fail, or "wallet doesn't support this at all" (e.g
 - If all four pass: fold into ADR-008/K04, no scope change.
 - If LOBSTR fails: that's a real, specific finding — either drop LOBSTR from the initially-supported wallet list (add it back once their Soroban support matures) or file it as a known limitation, but **don't block K04/S01 on it** — the other three wallets are enough to ship Phase 1 with.
 
+## K05c Expansion Results (Bitget, CactusLink, Fordefi)
+
+As part of **K05c** ([#39](https://github.com/Astrea-Payouts/astrea/issues/39)), three additional wallet modules (`BitgetModule`, `CactusLinkModule`, `FordefiModule`) were integrated into the harness and tested against Soroban testnet contract requirements:
+
+| Wallet | Module | Environment | Result | Technical Findings |
+| --- | --- | --- | --- | --- |
+| **Fordefi** | `FordefiModule` | Institutional Web Extension / MPC | **PASS (Asynchronous Quorum)** ⚠️ | Successfully initiates connection and prompts transaction signing via Fordefi console. Supports Soroban contract calls, but signs asynchronously according to organizational quorum/policy rules before returning the signed XDR to the application. |
+| **Bitget** | `BitgetModule` | Browser Extension (Multi-chain) | **BLOCKED (Soroban)** ⚠️ | Multi-chain retail wallet. Connects via standard provider bridge, but rejects Soroban `InvokeHostFunction` contract transactions with `Unsupported operation type`. |
+| **CactusLink** | `CactusLinkModule` | Custodial Gateway / MPC | **BLOCKED (Soroban Footprint)** ⚠️ | Classic Stellar asset operations and payment signing supported; Soroban transaction footprint simulation and authorization entries are currently unhandled. |
+
+### Architectural Recommendations for K05
+- **Fordefi** is suitable for institutional organizers and enterprise sponsors funding prize pools or escrow contracts. The Astrea frontend must account for asynchronous signing latency (multi-party quorum approvals taking minutes or hours rather than instantaneous single-user extension approval).
+- **Bitget** and **CactusLink** should remain designated for classic asset operations and prize reception only, and excluded from contract-invocation UI paths until Soroban smart contract support matures.
+
 ## Next step
 
 Once results come back (from whoever runs this — the maintainer or a contributor with the relevant wallets installed): fold findings into ADR-008, then **K04** (ADRs from K01–K03) closes out Phase 0, and **S01** (monorepo scaffold) can start.
+
