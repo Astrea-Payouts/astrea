@@ -9197,7 +9197,7 @@
       "label": "Backlog gaps found while writing this, now filed",
       "file_type": "document",
       "source_file": "docs/sprint-plan.md",
-      "source_location": "L151",
+      "source_location": "L155",
       "_origin": "ast",
       "id": "docs_sprint_plan_backlog_gaps_found_while_writing_this_now_filed",
       "community": 5,
@@ -9208,7 +9208,7 @@
       "label": "Beyond Sprint 1",
       "file_type": "document",
       "source_file": "docs/sprint-plan.md",
-      "source_location": "L147",
+      "source_location": "L151",
       "_origin": "ast",
       "id": "docs_sprint_plan_beyond_sprint_1",
       "community": 5,
@@ -9263,7 +9263,7 @@
       "label": "Increment 1 \u2014 MVP proven (2026-09-06 \u2192 2026-09-13)",
       "file_type": "document",
       "source_file": "docs/sprint-plan.md",
-      "source_location": "L109",
+      "source_location": "L111",
       "_origin": "ast",
       "id": "docs_sprint_plan_increment_1_mvp_proven_2026_09_06_2026_09_13",
       "community": 5,
@@ -9271,15 +9271,15 @@
       "norm_label": "increment 1 \u2014 mvp proven (2026-09-06 \u2192 2026-09-13)"
     },
     {
-      "label": "Increment 2 \u2014 Campaign window + SCF application (2026-09-14 \u2192 2026-09-30)",
+      "label": "Increment 2 \u2014 Campaign window (2026-09-14 \u2192 2026-09-30)",
       "file_type": "document",
       "source_file": "docs/sprint-plan.md",
-      "source_location": "L134",
+      "source_location": "L136",
       "_origin": "ast",
-      "id": "docs_sprint_plan_increment_2_campaign_window_scf_application_2026_09_14_2026_09_30",
+      "id": "docs_sprint_plan_increment_2_campaign_window_2026_09_14_2026_09_30",
       "community": 5,
       "community_name": "Astrea \u2014 Sprint Plan",
-      "norm_label": "increment 2 \u2014 campaign window + scf application (2026-09-14 \u2192 2026-09-30)"
+      "norm_label": "increment 2 \u2014 campaign window (2026-09-14 \u2192 2026-09-30)"
     },
     {
       "label": "Sprint 1 \u2014 2026-09-06 to 2026-09-30",
@@ -9351,7 +9351,7 @@
       "label": "What to inspect at each Sprint Review",
       "file_type": "document",
       "source_file": "docs/sprint-plan.md",
-      "source_location": "L167",
+      "source_location": "L171",
       "_origin": "ast",
       "id": "docs_sprint_plan_what_to_inspect_at_each_sprint_review",
       "community": 5,
@@ -27981,7 +27981,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/sprint-plan.md",
-      "source_location": "L147",
+      "source_location": "L151",
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_sprint_plan_astrea_sprint_plan",
@@ -27992,7 +27992,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/sprint-plan.md",
-      "source_location": "L151",
+      "source_location": "L155",
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_sprint_plan_astrea_sprint_plan",
@@ -28003,7 +28003,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/sprint-plan.md",
-      "source_location": "L167",
+      "source_location": "L171",
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_sprint_plan_astrea_sprint_plan",
@@ -28113,7 +28113,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/sprint-plan.md",
-      "source_location": "L109",
+      "source_location": "L111",
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_sprint_plan_sprint_1_2026_09_06_to_2026_09_30",
@@ -28124,11 +28124,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/sprint-plan.md",
-      "source_location": "L134",
+      "source_location": "L136",
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_sprint_plan_sprint_1_2026_09_06_to_2026_09_30",
-      "target": "docs_sprint_plan_increment_2_campaign_window_scf_application_2026_09_14_2026_09_30",
+      "target": "docs_sprint_plan_increment_2_campaign_window_2026_09_14_2026_09_30",
       "confidence_score": 1.0
     },
     {
@@ -33439,5 +33439,5 @@
       "source_file": "CONTRIBUTING.md"
     }
   ],
-  "built_at_commit": "ed868cf6c78dc6454967493e4f66bbaa2016c619"
+  "built_at_commit": "c1df776b63a69f15fa28e24eaa5f0b794013b81e"
 }
