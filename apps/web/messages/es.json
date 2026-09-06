@@ -84,7 +84,9 @@
 		"menuLabel": "Menú",
 		"closeLabel": "Cerrar",
 		"homeLabel": "Inicio",
-		"homeAriaLabel": "Ir al inicio"
+		"homeAriaLabel": "Ir al inicio",
+		"earningsNav": "Ganancias",
+		"earningsAriaLabel": "Ir a la vista de ganancias de participantes"
 	},
 	"SiteFooter": {
 		"copyright": "© {year} Astrea. Construido en abierto sobre Stellar.",
@@ -107,5 +109,37 @@
 		"fullState": "Animaciones activadas",
 		"followingSystem": "Siguiendo la configuración de tu sistema",
 		"useSystem": "Usar la configuración de mi sistema"
+	},
+	"Earnings": {
+		"portalBadge": "Pagos Verificados",
+		"pageTitle": "Ganancias y Pagos del Participante",
+		"pageSubtitle": "Registro verificable on-chain de cada premio de hackatón y recompensa acreditado en su billetera Stellar, con pruebas directas de transacción en Stellar Expert.",
+		"breadcrumbHome": "Inicio",
+		"breadcrumbEarnings": "Ganancias",
+		"connectWalletTitle": "Conecte su Billetera Stellar",
+		"connectWalletDesc": "Astrea verifica los pagos de premios on-chain y transfiere los fondos directamente a su cuenta Stellar. Conecte su billetera para ver sus pagos confirmados.",
+		"noEarningsTitle": "Sin Pagos Confirmados",
+		"noEarningsDesc": "Esta billetera aún no ha ganado premios en hitos completados. Siga construyendo y enviando entregables en competencias activas.",
+		"exploreCompetitionsAction": "Explorar Competencias",
+		"viewMyEventsAction": "Mis Eventos",
+		"metricTotalEarnings": "Total Ganado",
+		"metricTotalDesc": "Confirmado on-chain",
+		"metricEventsWon": "Competencias Ganadas",
+		"metricEventsDesc": "Pistas de premios únicas",
+		"metricPrizesWon": "Premios Otorgados",
+		"metricPrizesDesc": "Total de hitos pagados",
+		"metricAveragePayout": "Pago Promedio",
+		"metricAvgDesc": "Por premio obtenido",
+		"searchPlaceholder": "Buscar por competencia o hash de transacción…",
+		"payoutsCount": "{count} Pagos",
+		"sortNewest": "Fecha: Más Reciente",
+		"sortOldest": "Fecha: Más Antiguo",
+		"sortHighest": "Monto: Mayor Primero",
+		"sortLowest": "Monto: Menor Primero",
+		"milestoneTag": "Hito #{index}",
+		"confirmedStatus": "Confirmado On-Chain",
+		"txProof": "Prueba",
+		"guaranteeTitle": "Liquidación Directa No Custodial",
+		"guaranteeDesc": "Todos los pagos se ejecutan directamente desde los contratos inteligentes Soroban de Stellar hacia la dirección del ganador. Astrea nunca retiene ni demora los fondos de los participantes."
 	}
 }
