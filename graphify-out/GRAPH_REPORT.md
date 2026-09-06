@@ -1,7 +1,7 @@
 # Graph Report - astrea  (2026-09-06)
 
 ## Corpus Check
-- 221 files · ~464,144 words
+- 221 files · ~464,346 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9cd2b318`
+- Built from commit: `16177ac6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -163,8 +163,8 @@
 5. `main()` - 15 edges
 6. `EscrowContract` - 15 edges
 7. `force_event_state()` - 14 edges
-8. `scripts` - 13 edges
-9. `create_event_internal()` - 13 edges
+8. `create_event_internal()` - 13 edges
+9. `scripts` - 13 edges
 10. `cn()` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -442,7 +442,7 @@ Cohesion: 0.29
 Nodes (6): Astrea — Definition of Done, Every item, Money-path items additionally, UI items additionally, What "not Done" looks like, Where this comes from, and where it doesn't
 
 ## Knowledge Gaps
-- **428 isolated node(s):** `$schema`, `root`, `enabled`, `clientKind`, `useIgnoreFile` (+423 more)
+- **428 isolated node(s):** `The team, honestly`, `Cadence: one Sprint per campaign`, `Two lanes inside one Sprint`, `What one campaign actually absorbed`, `The slate size that follows` (+423 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **76 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -450,12 +450,12 @@ Nodes (6): Astrea — Definition of Done, Every item, Money-path items additiona
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `devDependencies` to `@commitlint/cli`, `@commitlint/config-conventional`, `husky`, `tailwindcss`, `@tailwindcss/postcss`, `@types/react-dom`, `vitest`, `apps/web/package.json`?**
-  _High betweenness centrality (0.045) - this node is a cross-community bridge._
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `tailwindcss` to `README.md`?**
-  _High betweenness centrality (0.040) - this node is a cross-community bridge._
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `tailwindcss` to `devDependencies`?**
-  _High betweenness centrality (0.040) - this node is a cross-community bridge._
-- **What connects `$schema`, `root`, `enabled` to the rest of the system?**
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **What connects `The team, honestly`, `Cadence: one Sprint per campaign`, `Two lanes inside one Sprint` to the rest of the system?**
   _428 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `trustless-work-adapter.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.12333333333333334 - nodes in this community are weakly interconnected._
