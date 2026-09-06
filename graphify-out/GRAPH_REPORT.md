@@ -1,16 +1,16 @@
 # Graph Report - astrea  (2026-09-06)
 
 ## Corpus Check
-- 221 files · ~464,346 words
+- 221 files · ~464,726 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1130 nodes · 1741 edges · 146 communities (70 shown, 76 thin omitted)
+- 1129 nodes · 1740 edges · 147 communities (71 shown, 76 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 15 edges (avg confidence: 0.76)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `16177ac6`
+- Built from commit: `ed868cf6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -154,6 +154,7 @@
 - vitest
 - EscrowProvider
 - Astrea — Definition of Done
+- layout.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `create_test_token()` - 70 edges
@@ -163,8 +164,8 @@
 5. `main()` - 15 edges
 6. `EscrowContract` - 15 edges
 7. `force_event_state()` - 14 edges
-8. `create_event_internal()` - 13 edges
-9. `scripts` - 13 edges
+8. `scripts` - 13 edges
+9. `create_event_internal()` - 13 edges
 10. `cn()` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -187,7 +188,7 @@
 - **Supported Stellar wallet ecosystem (Freighter, Albedo, xBull, LOBSTR via Stellar Wallets Kit)** — readme_freighter, readme_albedo, readme_xbull, readme_lobstr, readme_stellar_wallets_kit, contributing_wallet_testing [EXTRACTED 1.00]
 - **Knowledge graph maintenance workflow (code auto-rebuild + doc manual /graphify + CI enforcement)** — contributing_graphify, contributing_post_commit_hook, contributing_graphify_update_command, contributing_ci_graphify_check, github_workflows_ci_graphify_drift_check_job [INFERRED 0.85]
 
-## Communities (146 total, 76 thin omitted)
+## Communities (147 total, 76 thin omitted)
 
 ### Community 0 - "e06-vertical-slice.ts"
 Cohesion: 0.19
@@ -207,7 +208,7 @@ Nodes (17): devDependencies, @biomejs/biome, lint-staged, tsx, @types/gsap, @typ
 
 ### Community 5 - "Astrea — Sprint Plan"
 Cohesion: 0.12
-Nodes (17): Astrea — Sprint Plan, Backlog gaps found while writing this, now filed, Cadence: one Sprint per campaign, Campaign slate rules, Capacity: count size, not issues, Definition of Done, Sprint 1 — the contract stops being the unknown, Sprint 2 — the Go service exists (+9 more)
+Nodes (16): Astrea — Sprint Plan, Backlog gaps found while writing this, now filed, Beyond Sprint 1, Cadence: one Sprint per campaign, Campaign slate rules, Capacity: count size, not issues, Definition of Done, Increment 1 — MVP proven (2026-09-06 → 2026-09-13) (+8 more)
 
 ### Community 6 - "Knowledge graph in sync (code) job"
 Cohesion: 0.14
@@ -366,8 +367,8 @@ Cohesion: 0.29
 Nodes (6): How to run, K03 (server-build-plan.md) — wallet compatibility check, Next step, Research finding (before touching any code), The test contract, What happens with the results
 
 ### Community 116 - "card-swap.tsx"
-Cohesion: 0.23
-Nodes (9): Card, CardProps, CardRef, CardSwap(), CardSwapProps, makeSlot(), placeNow(), Slot (+1 more)
+Cohesion: 0.21
+Nodes (10): Card, CardProps, CardRef, CardSwap(), CardSwapProps, makeSlot(), placeNow(), Slot (+2 more)
 
 ### Community 117 - "Database setup"
 Cohesion: 0.33
@@ -406,8 +407,8 @@ Cohesion: 0.36
 Nodes (6): initWalletKit(), WalletContext, WalletContextValue, WalletProvider(), associateWallet(), clearWalletSession()
 
 ### Community 129 - "how-it-works.tsx"
-Cohesion: 0.21
-Nodes (9): HeroPrism(), HowItWorks(), Step, ScrollStack(), ScrollStackItem(), ScrollStackItemProps, ScrollStackProps, SeeItInAction() (+1 more)
+Cohesion: 0.27
+Nodes (7): HowItWorks(), Step, ScrollStack(), ScrollStackItem(), ScrollStackItemProps, ScrollStackProps, useReducedMotion()
 
 ### Community 130 - "Smart contracts"
 Cohesion: 0.67
@@ -419,30 +420,34 @@ Nodes (7): BorderGlowInView(), BorderGlowProps, ButtonSize, ShaderProps, SIZES, 
 
 ### Community 132 - "use-reduced-motion.tsx"
 Cohesion: 0.21
-Nodes (15): MotionPreferenceContext, MotionPreferenceProvider(), MotionPreferenceValue, isMotionPreference(), Matcher, MOTION_PREFERENCE_STORAGE_KEY, MotionPreference, parseMotionPreference() (+7 more)
+Nodes (14): MotionPreferenceContext, MotionPreferenceProvider(), MotionPreferenceValue, isMotionPreference(), Matcher, MOTION_PREFERENCE_STORAGE_KEY, MotionPreference, parseMotionPreference() (+6 more)
 
 ### Community 133 - "docs/build-plan.md"
 Cohesion: 0.20
 Nodes (10): docs/build-plan.md, coded GitHub issue tasks (e.g. [E02], [U01]), docs/build-plan.md, Organizer funds the escrow step, Multi-release smart escrow, Custom Soroban escrow smart contract (contracts/soroban), E01 task: migration from Trustless Work to custom Soroban contract, Stellar network (+2 more)
 
 ### Community 134 - "hero-prism.tsx"
-Cohesion: 0.33
-Nodes (6): DEFAULT_TIME_SCALE, FROZEN_TIME_SCALE, freezes(), prismTimeScale(), PrismBackground(), PrismBackgroundProps
+Cohesion: 0.29
+Nodes (7): DEFAULT_TIME_SCALE, FROZEN_TIME_SCALE, HeroPrism(), freezes(), prismTimeScale(), PrismBackground(), PrismBackgroundProps
 
 ### Community 135 - "overrides"
 Cohesion: 0.40
 Nodes (5): overrides, axios, elliptic, protobufjs, uuid
 
 ### Community 136 - "site-header.tsx"
-Cohesion: 0.06
-Nodes (33): geistMono, geistSans, viewport, OfflinePage(), LanguageSwitcher(), LOCALE_LABELS, PwaRegister(), ReduceMotionToggle() (+25 more)
+Cohesion: 0.08
+Nodes (25): OfflinePage(), LanguageSwitcher(), LOCALE_LABELS, resolveHeaderVariant(), SiteHeader(), SiteHeaderProps, StaggeredMenu(), StaggeredMenuItem (+17 more)
 
 ### Community 145 - "Astrea — Definition of Done"
 Cohesion: 0.29
 Nodes (6): Astrea — Definition of Done, Every item, Money-path items additionally, UI items additionally, What "not Done" looks like, Where this comes from, and where it doesn't
 
+### Community 146 - "layout.tsx"
+Cohesion: 0.17
+Nodes (9): geistMono, geistSans, viewport, PwaRegister(), ReduceMotionToggle(), ReduceMotionToggleProps, SiteFooter(), useMotionPreference() (+1 more)
+
 ## Knowledge Gaps
-- **428 isolated node(s):** `The team, honestly`, `Cadence: one Sprint per campaign`, `Two lanes inside one Sprint`, `What one campaign actually absorbed`, `The slate size that follows` (+423 more)
+- **427 isolated node(s):** `$schema`, `root`, `enabled`, `clientKind`, `useIgnoreFile` (+422 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **76 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -450,13 +455,13 @@ Nodes (6): Astrea — Definition of Done, Every item, Money-path items additiona
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `devDependencies` to `@commitlint/cli`, `@commitlint/config-conventional`, `husky`, `tailwindcss`, `@tailwindcss/postcss`, `@types/react-dom`, `vitest`, `apps/web/package.json`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.045) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `tailwindcss` to `README.md`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `tailwindcss` to `devDependencies`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
-- **What connects `The team, honestly`, `Cadence: one Sprint per campaign`, `Two lanes inside one Sprint` to the rest of the system?**
-  _428 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
+- **What connects `$schema`, `root`, `enabled` to the rest of the system?**
+  _427 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `trustless-work-adapter.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.12333333333333334 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
