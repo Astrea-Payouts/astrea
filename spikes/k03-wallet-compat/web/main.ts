@@ -1,6 +1,8 @@
 import { AlbedoModule } from "@creit.tech/stellar-wallets-kit/modules/albedo";
 import { FreighterModule } from "@creit.tech/stellar-wallets-kit/modules/freighter";
+import { LedgerModule } from "@creit.tech/stellar-wallets-kit/modules/ledger";
 import { LobstrModule } from "@creit.tech/stellar-wallets-kit/modules/lobstr";
+import { TrezorModule } from "@creit.tech/stellar-wallets-kit/modules/trezor";
 import { xBullModule } from "@creit.tech/stellar-wallets-kit/modules/xbull";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit/sdk";
 import { Networks } from "@creit.tech/stellar-wallets-kit/types";
@@ -22,6 +24,12 @@ StellarWalletsKit.init({
 		new AlbedoModule(),
 		new xBullModule(),
 		new LobstrModule(),
+		new LedgerModule(),
+		new TrezorModule({
+			appUrl: "https://astrea.payouts",
+			appName: "Astrea Payouts",
+			email: "support@astrea.payouts",
+		}),
 	],
 });
 

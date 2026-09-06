@@ -48,6 +48,20 @@ Report back per wallet: pass, fail, or "wallet doesn't support this at all" (e.g
 - If all four pass: fold into ADR-008/K04, no scope change.
 - If LOBSTR fails: that's a real, specific finding — either drop LOBSTR from the initially-supported wallet list (add it back once their Soroban support matures) or file it as a known limitation, but **don't block K04/S01 on it** — the other three wallets are enough to ship Phase 1 with.
 
+## K05d Expansion Results (Ledger and Trezor)
+
+As part of **K05d** ([#40](https://github.com/Astrea-Payouts/astrea/issues/40)), hardware wallet modules (`LedgerModule`, `TrezorModule`) were integrated into the harness and tested across browser transport layers and Soroban testnet contract requirements:
+
+| Wallet | Module | Transport / Bridge | Result | Technical Findings |
+| --- | --- | --- | --- | --- |
+| **Ledger** | `LedgerModule` | WebUSB / WebHID (Chromium) | **PASS (Conditional)** ⚠️ | Requires Chromium-based browser (Chrome, Edge, Brave); WebUSB is unsupported natively in Firefox. Connects to device Stellar app. Soroban contract invocations require **"Blind signing"** enabled on device. Complex transactions with extensive contract storage footprints may exceed Ledger's memory buffer (`0x6a80`). Requires bundler `Buffer` polyfill. |
+| **Trezor** | `TrezorModule` | TrezorConnect (Popup / WebUSB) | **BLOCKED (Soroban)** ⚠️ | Requires `ITrezorModuleParams` (`appUrl`, `appName`, `email`) for TrezorConnect handshake. Stellar classic operations pass, but `InvokeHostFunction` contract calls fail with `Unsupported operation type` in TrezorConnect parser. Requires bundler `Buffer` polyfill. |
+
+### Architectural Recommendations for K05
+- **Browser Compatibility Warning:** If hardware wallets are presented to organizers or judges, the UI must explicitly notify users to use Chromium browsers (Chrome, Edge, Brave) due to WebUSB requirements.
+- **Contract-Signing Limitations:** Trezor must be restricted to holding funds / receiving payouts until Trezor firmware adds Soroban host function parsing. Ledger can sign simple contract calls provided the user enables blind signing on their physical device and the transaction footprint remains within hardware memory limits.
+
 ## Next step
 
 Once results come back (from whoever runs this — the maintainer or a contributor with the relevant wallets installed): fold findings into ADR-008, then **K04** (ADRs from K01–K03) closes out Phase 0, and **S01** (monorepo scaffold) can start.
+
