@@ -17,7 +17,9 @@
 		"prepare": "husky",
 		"postinstall": "prisma generate",
 		"demo:e06": "tsx scripts/e06-vertical-slice.ts",
-		"demo:seed": "tsx scripts/seed-demo-event.ts"
+		"demo:seed": "tsx scripts/seed-demo-event.ts",
+		"slate:validate": "tsx scripts/grantfox-slate.ts",
+		"slate:publish": "tsx scripts/grantfox-slate.ts publish"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.6.0",

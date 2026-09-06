@@ -80,7 +80,7 @@ Moved to its own document: **[definition-of-done.md](definition-of-done.md)**. I
 
 The one thing worth repeating in this document: it now requires **a desktop screenshot and a mobile (375px) screenshot** for every UI item, not one screenshot at an arbitrary width. That requirement has been added to the issue template, the PR template, and commented onto every currently-open UI issue.
 
-> **Still open:** GrantFox's own criteria for paying out an issue have not been read yet and are not reflected in the DoD. Whatever they require must be folded in *before* the next campaign opens — a contributor should never discover a payment condition at review time.
+> **Resolved (Issue #118):** GrantFox's criteria for paying out an issue have been audited and folded directly into [definition-of-done.md](definition-of-done.md) under "GrantFox Campaign & Payout Criteria additionally". See [campaign-slate-2026-09-15.md](campaign-slate-2026-09-15.md) for the active September 15 campaign slate.
 
 ## Campaign slate rules
 
@@ -127,7 +127,7 @@ Scope was deliberately cut on 2026-09-06 to make this deadline realistic: **happ
 | [#11](https://github.com/Astrea-Payouts/astrea/issues/11) | E03 — event/prize state machine (manual-start rule) | Christopher |
 | [#13](https://github.com/Astrea-Payouts/astrea/issues/13) | E05 — reconciliation | Christopher |
 | [#15](https://github.com/Astrea-Payouts/astrea/issues/15) | E07 — vertical slice demo (the integration finale) | Christopher |
-| [#118](https://github.com/Astrea-Payouts/astrea/issues/118) | Prepare + publish the 2026-09-15 GrantFox campaign slate | Christopher — administrative, needs GrantFox account access |
+| [#118](https://github.com/Astrea-Payouts/astrea/issues/118) | Prepare + publish the 2026-09-15 GrantFox campaign slate | Prepared & verified — see [campaign-slate-2026-09-15.md](campaign-slate-2026-09-15.md) |
 
 Dereck: 6 items. Christopher: 8 items, weighted up per his own request since Dereck is loaded elsewhere this month.
 
@@ -142,7 +142,7 @@ Dereck: 6 items. Christopher: 8 items, weighted up per his own request since Der
 | [#26](https://github.com/Astrea-Payouts/astrea/issues/26) | Go EscrowClient — dispute wrapper + emergency withdraw | Deferred, unassigned — blocked on #22 regardless |
 | [#12](https://github.com/Astrea-Payouts/astrea/issues/12) | E04 — real-time tracking (full push, beyond Increment 1's polling) | Deferred, unassigned |
 
-Plus whatever the campaign slate (#118) actually publishes — that work belongs to contributors, not a named maintainer, per this document's own two-lane model.
+Plus whatever the campaign slate (#118) actually publishes — see [campaign-slate-2026-09-15.md](campaign-slate-2026-09-15.md) for the active September 15 slate (7 issues, 11 S-equivalents). That work belongs to contributors, not a named maintainer, per this document's own two-lane model.
 
 **#108 (the full SCF Build Award application) has been deliberately pulled out of this Sprint entirely** — see the 2026-09-06 revision note above. It now targets a later Sprint, well ahead of the 2026-11-08 real deadline, once the interest form (#121) has actually been invited to submit and the campaign's results give the application more to point at.
 

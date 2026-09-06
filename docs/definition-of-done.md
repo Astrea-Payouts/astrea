@@ -26,11 +26,28 @@ An item is **Done** only when every applicable box below is true. If a Product B
 - [ ] The `security` label is applied to the PR
 - [ ] At least one negative path is exercised, not only the happy path (unauthorized action, double-submit, race on a state transition — whatever applies)
 
+## GrantFox Campaign & Payout Criteria additionally
+
+*(all issues published under an active GrantFox campaign slate)*
+
+- [ ] **Campaign Slate Enrollment**: The issue was officially prepared and published under the active campaign slate (see [docs/campaign-slate-2026-09-15.md](campaign-slate-2026-09-15.md)).
+- [ ] **PR Target and Issue Linking**: The PR description targets `develop` and references `Closes #<issue_number>`.
+- [ ] **Full DoD Satisfaction**: Standard general, UI (desktop 1280px+ and mobile 375px screenshots), and money-path criteria above are fully satisfied.
+- [ ] **Payout Routing Block**: Contributor includes payout destination addresses in the PR description:
+  ```markdown
+  ## Payout Routing
+  - **EVM (Base/Arbitrum/Polygon/ETH):** <address>
+  - **Stellar:** <public_key>
+  ```
+- [ ] **Inactivity Policy Compliance**: Work proceeds without uncommunicated stalls (5 days silent triggers inquiry comment; 8 days silent unassigns and returns issue to pool).
+- [ ] **Maintainer Approval and Merge Gate**: Payout escrow settlement releases upon formal maintainer code approval and squash-merge into `develop`.
+
 ## What "not Done" looks like
 
 - CI is green but the PR describes no manual verification beyond "it builds"
 - A UI change with one screenshot, or a screenshot at only one width
 - A money-path PR with no tx hash and no `security` label
+- A GrantFox campaign PR missing payout routing addresses or issue linkage
 - Scope has quietly grown to include a second, unrelated fix
 - A doc that now contradicts the code, left as it was
 
@@ -38,8 +55,6 @@ Any of these sends the item back to the Product Backlog for rework — it is nev
 
 ## Where this comes from, and where it doesn't
 
-This DoD is derived from CI configuration, the PR template, and CONTRIBUTING.md as they already exist — it does not invent new requirements, it collects the ones already enforced and states them in one place a contributor can check against *before* asking for review, not discover during it.
+This DoD is derived from CI configuration, the PR template, CONTRIBUTING.md, and GrantFox campaign settlement rules as folded in for Issue #118 — it does not invent new requirements, it collects the ones already enforced and states them in one place a contributor can check against *before* asking for review, not discover during it.
 
-**What it deliberately does not yet include:** GrantFox's own payout criteria for an issue. Those have not been reviewed against this document. Before the next campaign opens, whatever GrantFox requires for payment must be folded in here — a contributor should never discover a payment condition for the first time at review.
-
-See [sprint-plan.md](sprint-plan.md) for how this DoD fits into the campaign/Sprint cadence, and [CONTRIBUTING.md](../CONTRIBUTING.md) for local setup and how to open a PR.
+See [sprint-plan.md](sprint-plan.md) for how this DoD fits into the campaign/Sprint cadence, [docs/campaign-slate-2026-09-15.md](campaign-slate-2026-09-15.md) for the active campaign slate, and [CONTRIBUTING.md](../CONTRIBUTING.md) for local setup and how to open a PR.
