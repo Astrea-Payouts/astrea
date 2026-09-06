@@ -10,7 +10,7 @@ function truncate(address: string) {
 
 export function WalletConnectButton({ className }: { className?: string }) {
 	const t = useTranslations("WalletConnect");
-	const { address, isConnecting, connect, disconnect } = useWallet();
+	const { address, isConnecting, authError, connect, disconnect } = useWallet();
 
 	if (address) {
 		return (
@@ -21,7 +21,12 @@ export function WalletConnectButton({ className }: { className?: string }) {
 	}
 
 	return (
-		<Button onClick={connect} disabled={isConnecting} className={className}>
+		<Button
+			onClick={connect}
+			disabled={isConnecting}
+			className={className}
+			title={authError ?? undefined}
+		>
 			{isConnecting ? t("connecting") : t("connect")}
 		</Button>
 	);
