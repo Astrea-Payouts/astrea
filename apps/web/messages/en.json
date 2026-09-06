@@ -107,5 +107,28 @@
 		"fullState": "Animations on",
 		"followingSystem": "Following your system setting",
 		"useSystem": "Use my system setting"
+	},
+	"EventWizardPrizes": {
+		"stepBadge": "Step 2 of 5: Prize Allocation",
+		"title": "Configure Prizes & Payouts",
+		"description": "Define the distribution of awards. Both ranked awards and category tracks are settled through atomic smart contract escrows.",
+		"adminBalanceLabel": "Admin Wallet Free Balance",
+		"prizePoolLabel": "Total Configured Prize Pool",
+		"statusLabel": "Budget Status",
+		"withinBalance": "Within Balance",
+		"exceedsBalance": "Exceeds Balance",
+		"overBudgetWarningTitle": "Prize Pool Exceeds Available Wallet Balance",
+		"overBudgetWarningDesc": "Your prize pool ({total}) exceeds your free balance ({balance}) by {deficit}. Please lower the prize amounts or fund your organizer wallet before publishing.",
+		"presetsTitle": "Quick Presets:",
+		"presetTop3": "Top 3 (50 / 30 / 20)",
+		"presetTop5": "Top 5 (40 / 25 / 15 / 10 / 10)",
+		"presetEqual": "Equal Split (3 Ways)",
+		"presetSingle": "Single Winner (100%)",
+		"rowsHeader": "Prizes & Category Tracks ({count} / {max})",
+		"sorobanCeilingNotice": "Max 25 safe winners per Soroban transaction",
+		"addPrizeRow": "Add Prize Row",
+		"labelPlaceholder": "e.g., 1st Place, Best UX, Community Choice",
+		"back": "Back",
+		"continue": "Continue to Judges"
 	}
 }

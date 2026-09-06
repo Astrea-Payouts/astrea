@@ -107,5 +107,28 @@
 		"fullState": "Animaciones activadas",
 		"followingSystem": "Siguiendo la configuración de tu sistema",
 		"useSystem": "Usar la configuración de mi sistema"
+	},
+	"EventWizardPrizes": {
+		"stepBadge": "Paso 2 de 5: Asignación de Premios",
+		"title": "Configurar Premios y Pagos",
+		"description": "Define la distribución de premios. Tanto los premios por clasificación como las pistas por categoría se liquidan mediante contratos inteligentes de depósito en garantía.",
+		"adminBalanceLabel": "Saldo Libre de la Billetera del Administrador",
+		"prizePoolLabel": "Fondo Total de Premios Configurado",
+		"statusLabel": "Estado del Presupuesto",
+		"withinBalance": "Dentro del Saldo",
+		"exceedsBalance": "Excede el Saldo",
+		"overBudgetWarningTitle": "El Fondo de Premios Excede el Saldo Disponible de la Billetera",
+		"overBudgetWarningDesc": "Tu fondo de premios ({total}) excede tu saldo libre ({balance}) por {deficit}. Por favor reduce los montos de los premios o deposita fondos en tu billetera de organizador antes de publicar.",
+		"presetsTitle": "Plantillas Rápidas:",
+		"presetTop3": "Top 3 (50 / 30 / 20)",
+		"presetTop5": "Top 5 (40 / 25 / 15 / 10 / 10)",
+		"presetEqual": "División Equitativa (3 Partes)",
+		"presetSingle": "Ganador Único (100%)",
+		"rowsHeader": "Premios y Categorías ({count} / {max})",
+		"sorobanCeilingNotice": "Máximo 25 ganadores seguros por transacción de Soroban",
+		"addPrizeRow": "Agregar Fila de Premio",
+		"labelPlaceholder": "ej., 1er Lugar, Mejor UX, Elección de la Comunidad",
+		"back": "Atrás",
+		"continue": "Continuar a Jueces"
 	}
 }
