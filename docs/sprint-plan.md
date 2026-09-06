@@ -123,7 +123,6 @@ Both `blocks: real funds` issues live here. #107 and #108 gate everything downst
 
 | Lane | Work | S-eq |
 | --- | --- | --- |
-| Maintainer | #104 (S01 monorepo scaffold — `services/core-go`) | 3 |
 | Maintainer | #6 (S02 Go CI), #8 (S04 env config) | 4 |
 | Maintainer | #23 (E01a core tx pipeline), #24 (E01b balance + event creation) | 2 |
 | Campaign | #40 (K05d hardware wallets), #41 (K05e WalletConnect), plus newly-sliced frontend work | 4+ |
@@ -149,18 +148,20 @@ Both `blocks: real funds` issues live here. #107 and #108 gate everything downst
 | --- | --- | --- |
 | Maintainer | #15 (E07 vertical slice) | 3 |
 | Maintainer | #13 (E05 reconciliation — ships with the first real money operation, never later) | 3 |
-| Maintainer | #105 (L01 deploy + seed a standing demo event) | 1 |
+| Maintainer | #105 (L01 — `services/core-go` deployment + seed a standing demo event; `apps/web` is already live at `astrea-payouts.vercel.app`) | 1 |
 | Campaign | #63 (U02), #67 (U06), #69 (U10) | ~7 |
 
 ## Backlog gaps found while writing this, now filed
 
-Build-plan tasks that had no GitHub issue when this document was first drafted — all five now filed:
+Build-plan tasks that had no GitHub issue when this document was first drafted:
 
-- **S01** (monorepo scaffold / `services/core-go`, everything in Phase 2 depends on it) → [#104](https://github.com/Astrea-Payouts/astrea/issues/104)
-- **L01** (deploy both apps, seed a demo event; also an Audit Bank readiness requirement) → [#105](https://github.com/Astrea-Payouts/astrea/issues/105)
-- **K04** (fold K03's results into ADR-005) → [#106](https://github.com/Astrea-Payouts/astrea/issues/106)
-- **L01a**, the threat model named as missing in contracts-build-plan.md → [#107](https://github.com/Astrea-Payouts/astrea/issues/107)
-- **L01b**, the SCF Build Award application — the 3–6 month item gating mainnet that had no task anywhere → [#108](https://github.com/Astrea-Payouts/astrea/issues/108)
+- ~~**S01** (monorepo scaffold / `services/core-go`)~~ → filed as #104, then **closed as a duplicate**. `services/core-go` was already scaffolded in commit `98ec2f7` on 2026-08-18, three weeks before this issue was checked for. The error: I verified there was no *open GitHub issue* for S01 and treated that as "not done" — I should have checked the actual filesystem/git history for the deliverable first. Left here as a record of the mistake, not just silently fixed.
+- **L01** (deploy + seed a demo event) → [#105](https://github.com/Astrea-Payouts/astrea/issues/105), **narrowed** on the same discovery: `apps/web` is already deployed (`astrea-payouts.vercel.app`, referenced in ADR-007). Only `services/core-go`'s deployment and the seeded demo event remain open.
+- **K04** (fold K03's results into ADR-005) → [#106](https://github.com/Astrea-Payouts/astrea/issues/106) — verified still needed; ADR-005 already has a preliminary note ("Freighter and Albedo confirmed so far") waiting on K03's remaining two wallets.
+- **L01a**, the threat model named as missing in contracts-build-plan.md → [#107](https://github.com/Astrea-Payouts/astrea/issues/107) — verified `docs/threat-model.md` does not exist.
+- **L01b**, the SCF Build Award application — the 3–6 month item gating mainnet that had no task anywhere → [#108](https://github.com/Astrea-Payouts/astrea/issues/108) — no evidence of a submission found in the repo, but this one can only be confirmed by asking directly, not by grepping files.
+
+**The general lesson, not just about S01:** everything in this document was checked against *GitHub issues and PRs*, not against the actual state of the code and deployments. Those can and did drift apart — contracts-build-plan.md's own Audit Bank sections (#100–#103) landed on `develop` while this document was being written, and `services/core-go` existed in the tree for three weeks with no issue ever tracking it. Before trusting any "gap" this document identifies, check the filesystem and `git log`, not just the issue tracker.
 
 Also worth noting: **the code `L01` means different things in the two build-plan docs**, and `L02` does too. build-plan.md's L01 is "deploy + seed a demo" (Milestone phase, #105); build-plan.md's L02/L03 are "security pass on the Go service" and "observability" (Phase 5 Hardening, `phase: launch`, #74/#75). contracts-build-plan.md's L01/L02 are "security audit of the *contract*" and "formal verification" (Phase 2 Hardening). This collision predates this document and was not renamed here to avoid touching the titles of already-filed issues — but anyone searching issues by a bare `L01`/`L02` code should check which build plan they mean. `L01a`/`L01b` (#107, #108) only exist in the contracts plan, so those two are unambiguous.
 
