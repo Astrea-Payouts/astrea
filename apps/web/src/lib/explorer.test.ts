@@ -1,9 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { getExplorerTxUrl, truncateHash } from "./explorer";
+import {
+	getExplorerContractUrl,
+	getExplorerTxUrl,
+	truncateHash,
+} from "./explorer";
 
 describe("explorer utils", () => {
 	const sampleHash =
 		"6b041eb9bb62939316d9a04ad53cf5db3ce2bb9cf7bcfe21609101ad4043b27b";
+	const sampleContract =
+		"CDIWLY6ARVUGEJPUMWK5CZBEN4ENVAMY5NV2EGDF2EPKRGSVQTUAOIH3";
 
 	describe("getExplorerTxUrl", () => {
 		it("builds correct testnet URL", () => {
@@ -27,6 +33,26 @@ describe("explorer utils", () => {
 		it("defaults to testnet if network is omitted", () => {
 			expect(getExplorerTxUrl(sampleHash)).toBe(
 				`https://stellar.expert/explorer/testnet/tx/${sampleHash}`,
+			);
+		});
+	});
+
+	describe("getExplorerContractUrl", () => {
+		it("builds correct testnet contract URL", () => {
+			expect(getExplorerContractUrl(sampleContract, "testnet")).toBe(
+				`https://stellar.expert/explorer/testnet/contract/${sampleContract}`,
+			);
+		});
+
+		it("builds correct mainnet contract URL", () => {
+			expect(getExplorerContractUrl(sampleContract, "mainnet")).toBe(
+				`https://stellar.expert/explorer/public/contract/${sampleContract}`,
+			);
+		});
+
+		it("defaults to testnet if network is omitted", () => {
+			expect(getExplorerContractUrl(sampleContract)).toBe(
+				`https://stellar.expert/explorer/testnet/contract/${sampleContract}`,
 			);
 		});
 	});
