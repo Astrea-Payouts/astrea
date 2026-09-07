@@ -115,7 +115,21 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 **Triggered (S07):** participant-facing features that persist across sessions and devices — earnings history, a persistent "my events" list, notification email — need a verified identity, not just a client-asserted address. Sign-In With Stellar (SEP-0043 `signMessage`) replaces the unverified cookie with a signed challenge-response, with an optional email field attached to the verified `Wallet` for notifications (T03). This is additive, not a reversal: money-moving actions still never trust this session — every escrow operation still requires its own on-chain signature, verified by the contract.
 
-**Verified:** wallet kit initializes client-side only (guarded against SSR execution); connect modal renders all four target wallets (Freighter, Albedo, xBull, LOBSTR) with no console errors. Signing against the escrow contract itself is verified per-wallet in K03 ([docs/build-plan.md](build-plan.md)) — Freighter and Albedo confirmed so far.
+**Library integration findings & gotchas (S05 & K03):**
+- **Static-class singleton API:** `@creit.tech/stellar-wallets-kit` (v2.5.0) exposes a static class (`StellarWalletsKit.init(...)`), not an instantiable object as suggested in outdated package README drafts (which describe an unreleased JSR-only rewrite under a different package name). `StellarWalletsKit.init()` must run exactly once across the application lifecycle.
+- **SSR guard discipline:** While `src/lib/wallet/kit.ts` carries `"use client"`, Next.js evaluates module top-level scopes during server-side rendering. Invoking `StellarWalletsKit.init()` at import time crashes the build or runtime with `window is not defined`. Initialization must strictly be gated behind `typeof window !== "undefined"` and executed inside `useEffect` in `WalletProvider`.
+
+**Wallet compatibility matrix (K03 & S07, testnet findings):**
+Detailed test harness evidence is documented in [spikes/k03-wallet-compat/README.md](../spikes/k03-wallet-compat/README.md). Across the four target wallets configured in `src/lib/wallet/kit.ts`:
+
+| Wallet | Soroban Contract Invocation (`ping` / Escrow) | Session Auth (SEP-0043 `signMessage`) | Status & Operational Quirks |
+| --- | --- | --- | --- |
+| **Freighter** | ✅ Full | ✅ Supported | SDF reference wallet. Seamless `InvokeHostFunction` signing and Ed25519 challenge-response authentication. Fully supported. |
+| **Albedo** | ✅ Full (via web modal) | ❌ Unsupported | Signs Soroban transactions via web prompt. **Gotcha (S07):** Does not support SEP-0043 message signing required for authenticated user sessions. `WalletProvider.connect()` cleanly halts session issuance for Albedo, displays an informative prompt, and directs users to Freighter, xBull, or LOBSTR for session-authenticated routes. |
+| **xBull** | ✅ Full | ✅ Supported | Full Soroban transaction and challenge signature support since v1.15.0 (maintained by Creit Technologies, authors of Stellar Wallets Kit). Fully supported. |
+| **LOBSTR** | ⚠️ Partial / Conditional | ✅ Supported | Supports SEP message signing. However, public documentation and extension builds feature partial Soroban parsing for arbitrary custom contract invocations (e.g. custom escrow methods). If a custom contract call cannot be parsed in LOBSTR, users must fall back to Freighter or xBull. |
+
+**Verified:** wallet kit initializes client-side only (guarded against SSR execution); connect modal renders all four target wallets with zero console errors. Contract invocation and session challenge signing verified across all four wallets per the matrix above (folding K03 into ADR-005 via K04).
 
 ### ADR-006 — Shared per-organizer ledger, not one contract instance per event
 

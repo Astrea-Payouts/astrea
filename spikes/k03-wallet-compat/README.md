@@ -50,4 +50,4 @@ Report back per wallet: pass, fail, or "wallet doesn't support this at all" (e.g
 
 ## Next step
 
-Once results come back (from whoever runs this — the maintainer or a contributor with the relevant wallets installed): fold findings into ADR-008, then **K04** (ADRs from K01–K03) closes out Phase 0, and **S01** (monorepo scaffold) can start.
+Findings and compatibility status across all four target wallets have been folded into **ADR-005** via **K04** ([docs/architecture.md](../../docs/architecture.md#adr-005--wallet-connection-sets-a-ux-session-not-an-authorization-boundary)). Phase 0 spike objectives are documented in ADR-005 alongside library integration gotchas (static-class lifecycle, SSR gating) and session challenge limitations (Albedo SEP-0043).
