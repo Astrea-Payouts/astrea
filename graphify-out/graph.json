@@ -6503,6 +6503,17 @@
       "norm_label": "vitest"
     },
     {
+      "label": "schema-s03.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/schema-s03.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_schema_s03_test",
+      "community": 144,
+      "community_name": "schema-s03.test.ts",
+      "norm_label": "schema-s03.test.ts"
+    },
+    {
       "label": "definition-of-done.md",
       "file_type": "document",
       "source_file": "docs/definition-of-done.md",
@@ -35793,5 +35804,5 @@
       "source_file": "CONTRIBUTING.md"
     }
   ],
-  "built_at_commit": "99a7bfee8a8bc487b075ef7fd6518e9bd6f093bb"
+  "built_at_commit": "ce92df83d49d54526782d435f41bf027ebacec68"
 }

@@ -1,16 +1,16 @@
 # Graph Report - astrea  (2026-09-08)
 
 ## Corpus Check
-- 237 files · ~481,233 words
+- 239 files · ~481,496 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1189 nodes · 1882 edges · 145 communities (69 shown, 76 thin omitted)
+- 1190 nodes · 1882 edges · 146 communities (70 shown, 76 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 15 edges (avg confidence: 0.76)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `99a7bfee`
+- Built from commit: `ce92df83`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -171,11 +171,11 @@
   CONTRIBUTING.md → .github/workflows/ci.yml
 - `Chain is source of truth; database is a mirror` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
   README.md → .github/workflows/ci.yml
-- `Commit messages (Conventional Commits) job` --implements--> `Conventional Commits`  [INFERRED]
-  .github/workflows/ci.yml → README.md
 - `docs/architecture.md` --conceptually_related_to--> `docs/architecture.md`  [INFERRED]
   README.md → CONTRIBUTING.md
-- `Biome` --conceptually_related_to--> `Biome (lint/format)`  [INFERRED]
+- `Commit messages (Conventional Commits) job` --implements--> `Conventional Commits`  [INFERRED]
+  .github/workflows/ci.yml → README.md
+- `graphify-out/GRAPH_REPORT.md` --conceptually_related_to--> `graphify-out/GRAPH_REPORT.md`  [INFERRED]
   README.md → CONTRIBUTING.md
 
 ## Import Cycles
@@ -186,7 +186,7 @@
 - **Supported Stellar wallet ecosystem (Freighter, Albedo, xBull, LOBSTR via Stellar Wallets Kit)** — readme_freighter, readme_albedo, readme_xbull, readme_lobstr, readme_stellar_wallets_kit, contributing_wallet_testing [EXTRACTED 1.00]
 - **Knowledge graph maintenance workflow (code auto-rebuild + doc manual /graphify + CI enforcement)** — contributing_graphify, contributing_post_commit_hook, contributing_graphify_update_command, contributing_ci_graphify_check, github_workflows_ci_graphify_drift_check_job [INFERRED 0.85]
 
-## Communities (145 total, 76 thin omitted)
+## Communities (146 total, 76 thin omitted)
 
 ### Community 0 - "e06-vertical-slice.ts"
 Cohesion: 0.19
@@ -445,7 +445,7 @@ Nodes (6): Astrea — Definition of Done, Every item, Money-path items additiona
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `devDependencies` to `@commitlint/cli`, `@commitlint/config-conventional`, `husky`, `tailwindcss`, `@tailwindcss/postcss`, `@types/react-dom`, `vitest`, `apps/web/package.json`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `tailwindcss` to `README.md`?**
   _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `tailwindcss` to `devDependencies`?**
