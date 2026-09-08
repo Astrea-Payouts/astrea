@@ -1919,6 +1919,55 @@ fn test_release_reward_rejects_mismatched_total() {
 }
 
 #[test]
+fn test_release_reward_reverts_atomically_on_invalid_winner() {
+    // Proves release_reward is all-or-nothing: with a valid winner ahead of
+    // an invalid one in the vec, a naive per-winner "validate then pay"
+    // implementation would already have paid the valid winner before
+    // rejecting the invalid one. This asserts nothing was paid at all.
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+    let client = EventEscrowClient::new(&env, &contract_id);
+    let admin = Address::generate(&env);
+    let judge = Address::generate(&env);
+    let token_admin = Address::generate(&env);
+    let (token_address, token_client, asset_client) = create_test_token(&env, &token_admin);
+    let first_place = Address::generate(&env);
+    let second_place = Address::generate(&env);
+
+    asset_client.mint(&admin, &1_000);
+    client.deposit_funds(&admin, &token_address, &1_000);
+    let event_id = test_event_id(&env, 1);
+    client.create_event(&admin, &judge, &token_address, &500, &event_id);
+    force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
+
+    let winners = soroban_sdk::vec![
+        &env,
+        Winner {
+            place: 1,
+            amount: 300,
+            address: first_place.clone()
+        },
+        Winner {
+            place: 2,
+            amount: 0,
+            address: second_place.clone()
+        },
+    ];
+
+    let result = client.try_release_reward(&judge, &event_id, &winners);
+    assert!(result.is_err());
+
+    assert_eq!(token_client.balance(&first_place), 0);
+    assert_eq!(token_client.balance(&second_place), 0);
+    assert_eq!(token_client.balance(&contract_id), 1_000);
+    assert_eq!(client.get_balance(&admin), 500);
+    assert_eq!(client.get_event(&event_id).state, EventState::InProgress);
+}
+
+#[test]
 fn test_has_wallet_distinguishes_no_wallet_from_zero_balance() {
     let env = Env::default();
 
