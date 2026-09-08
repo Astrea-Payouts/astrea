@@ -62,14 +62,30 @@ export function getSampleEarnings(_walletAddress: string): EarningsItem[] {
 }
 
 /**
+ * Wallet reference guard: only non-empty, reasonably-sized strings may reach
+ * the database layer. Anything else (null, undefined, blank, oversized) is
+ * treated as unauthenticated and resolves to an empty array — never to data.
+ */
+const MAX_WALLET_REF_LENGTH = 128;
+
+export function isValidWalletRef(value: unknown): value is string {
+	return (
+		typeof value === "string" &&
+		value.trim().length > 0 &&
+		value.length <= MAX_WALLET_REF_LENGTH
+	);
+}
+
+/**
  * Queries confirmed payout rows for the verified participant's wallet.
  * Filtered by Prize.winnerWalletId to guarantee wallet-scoped privacy.
  * Returns an empty array if unauthenticated, database unavailable, or no payouts exist.
+ * Sample/demo data is NEVER returned here — only the empty state downstream.
  */
 export async function getParticipantEarnings(
 	walletIdOrAddress?: string | null,
 ): Promise<EarningsItem[]> {
-	if (!walletIdOrAddress || !process.env.DATABASE_URL) {
+	if (!isValidWalletRef(walletIdOrAddress) || !process.env.DATABASE_URL) {
 		return [];
 	}
 
@@ -121,8 +137,11 @@ export async function getParticipantEarnings(
 			};
 		});
 	} catch (err) {
+		// Verification/query failure: log for observability, resolve empty.
+		// Deliberately never falls back to sample data — an unverified or
+		// erroring read must render the empty state, not another wallet's shape.
 		console.warn(
-			"Failed to query participant earnings, returning empty array:",
+			"[earnings] verification/query failure, returning empty array:",
 			err,
 		);
 		return [];

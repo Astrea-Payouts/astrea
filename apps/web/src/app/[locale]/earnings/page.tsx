@@ -28,8 +28,19 @@ export default async function EarningsPage() {
 	const walletId = sessionWallet?.id ?? null;
 	const walletAddress = sessionWallet?.address ?? null;
 
-	// Fetch confirmed on-chain payouts for this verified wallet (empty array if no active session)
-	const earnings = walletId ? await getParticipantEarnings(walletId) : [];
+	// Fetch confirmed on-chain payouts for this verified wallet.
+	// Unauthenticated sessions resolve []. The query itself never throws for
+	// auth/db failures, but the belt-and-suspenders catch below guarantees a
+	// mid-request session failure renders the empty state — never sample data.
+	let earnings: Awaited<ReturnType<typeof getParticipantEarnings>> = [];
+	if (walletId) {
+		try {
+			earnings = await getParticipantEarnings(walletId);
+		} catch (err) {
+			console.warn("[earnings] page-level query failure, rendering empty state:", err);
+			earnings = [];
+		}
+	}
 
 	return (
 		<main className="min-h-screen bg-black text-white pt-28 pb-16 px-6 md:py-12 md:px-12">

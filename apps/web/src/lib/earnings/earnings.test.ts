@@ -1,10 +1,19 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { db as mockDb } from "@/lib/db";
 import { getParticipantEarnings, getSampleEarnings } from "./query";
 import {
 	calculateEarningsSummary,
 	filterAndSortEarnings,
 	formatPayoutDate,
 } from "./summary";
+
+vi.mock("@/lib/db", () => ({
+	db: {
+		payout: {
+			findMany: vi.fn(),
+		},
+	},
+}));
 
 describe("calculateEarningsSummary", () => {
 	it("aggregates total amount, prize count, event count, and average cleanly", () => {
@@ -105,6 +114,12 @@ describe("getParticipantEarnings", () => {
 		expect(resultUndefined).toEqual([]);
 	});
 
+	it("returns an empty array for blank or oversized wallet references", async () => {
+		expect(await getParticipantEarnings("")).toEqual([]);
+		expect(await getParticipantEarnings("   ")).toEqual([]);
+		expect(await getParticipantEarnings("x".repeat(129))).toEqual([]);
+	});
+
 	it("returns an empty array when database is unconfigured", async () => {
 		const prevEnv = process.env.DATABASE_URL;
 		delete process.env.DATABASE_URL;
@@ -113,5 +128,23 @@ describe("getParticipantEarnings", () => {
 		expect(result).toEqual([]);
 
 		if (prevEnv) process.env.DATABASE_URL = prevEnv;
+	});
+});
+
+describe("getParticipantEarnings failure modes", () => {
+	const findManyMock = () =>
+		mockDb.payout.findMany as unknown as ReturnType<typeof vi.fn>;
+
+	it("returns empty (never sample data) when the database query throws", async () => {
+		findManyMock().mockRejectedValueOnce(new Error("connection refused"));
+		const result = await getParticipantEarnings("wallet-verified-1");
+		expect(result).toEqual([]);
+		expect(JSON.stringify(result)).not.toContain("pay_");
+	});
+
+	it("returns empty for a verified wallet with zero payouts", async () => {
+		findManyMock().mockResolvedValueOnce([]);
+		const result = await getParticipantEarnings("wallet-verified-2");
+		expect(result).toEqual([]);
 	});
 });
