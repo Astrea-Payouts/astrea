@@ -37,7 +37,10 @@ export default async function EarningsPage() {
 		try {
 			earnings = await getParticipantEarnings(walletId);
 		} catch (err) {
-			console.warn("[earnings] page-level query failure, rendering empty state:", err);
+			console.warn(
+				"[earnings] page-level query failure, rendering empty state:",
+				err,
+			);
 			earnings = [];
 		}
 	}
