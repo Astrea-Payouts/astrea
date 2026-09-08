@@ -1,7 +1,7 @@
 # Graph Report - astrea  (2026-09-08)
 
 ## Corpus Check
-- 244 files · ~484,701 words
+- 243 files · ~484,981 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e00bf026`
+- Built from commit: `b1e9ddc7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -172,11 +172,11 @@
   CONTRIBUTING.md → .github/workflows/ci.yml
 - `Chain is source of truth; database is a mirror` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
   README.md → .github/workflows/ci.yml
-- `docs/architecture.md` --conceptually_related_to--> `docs/architecture.md`  [INFERRED]
-  README.md → CONTRIBUTING.md
 - `Commit messages (Conventional Commits) job` --implements--> `Conventional Commits`  [INFERRED]
   .github/workflows/ci.yml → README.md
-- `graphify-out/GRAPH_REPORT.md` --conceptually_related_to--> `graphify-out/GRAPH_REPORT.md`  [INFERRED]
+- `docs/architecture.md` --conceptually_related_to--> `docs/architecture.md`  [INFERRED]
+  README.md → CONTRIBUTING.md
+- `Biome` --conceptually_related_to--> `Biome (lint/format)`  [INFERRED]
   README.md → CONTRIBUTING.md
 
 ## Import Cycles
