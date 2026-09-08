@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e00bf026`
+- Built from commit: `9eeb9fcd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -37,11 +37,11 @@
 - k01-soroban-escrow/src/test.rs
 - prize.ts
 - compilerOptions
-- [locale]/page.tsx
+- earnings-dashboard.tsx
 - border-glow.tsx
 - 🌠 Astrea
 - run
-- card-swap.tsx
+- [locale]/page.tsx
 - github.com/Astrea-Payouts/astrea/services/core-go
 - post-commit
 - .ping
@@ -124,11 +124,11 @@
 - Contributor Covenant Code of Conduct
 - run.ts
 - K03 (server-build-plan.md) — wallet compatibility check
-- wallet-connect-button.tsx
+- card-swap.tsx
 - Database setup
 - Soroban Project
 - Security Policy
-- earnings-dashboard.tsx
+- wallet-connect-button.tsx
 - event-escrow
 - EscrowProvider
 - earnings/page.tsx
@@ -172,11 +172,11 @@
   CONTRIBUTING.md → .github/workflows/ci.yml
 - `Chain is source of truth; database is a mirror` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
   README.md → .github/workflows/ci.yml
-- `docs/architecture.md` --conceptually_related_to--> `docs/architecture.md`  [INFERRED]
-  README.md → CONTRIBUTING.md
 - `Commit messages (Conventional Commits) job` --implements--> `Conventional Commits`  [INFERRED]
   .github/workflows/ci.yml → README.md
-- `graphify-out/GRAPH_REPORT.md` --conceptually_related_to--> `graphify-out/GRAPH_REPORT.md`  [INFERRED]
+- `docs/architecture.md` --conceptually_related_to--> `docs/architecture.md`  [INFERRED]
+  README.md → CONTRIBUTING.md
+- `Biome` --conceptually_related_to--> `Biome (lint/format)`  [INFERRED]
   README.md → CONTRIBUTING.md
 
 ## Import Cycles
@@ -277,9 +277,9 @@ Nodes (8): InvalidTransitionError, assertEventTransition(), canTransitionEvent()
 Cohesion: 0.15
 Nodes (12): ES2022, main.ts, compilerOptions, lib, module, moduleResolution, noEmit, skipLibCheck (+4 more)
 
-### Community 22 - "[locale]/page.tsx"
-Cohesion: 0.21
-Nodes (9): HeroPrism(), HowItWorks(), SeeItInAction(), ButtonSize, ShaderProps, SIZES, SpecularButton(), SpecularButtonProps (+1 more)
+### Community 22 - "earnings-dashboard.tsx"
+Cohesion: 0.23
+Nodes (12): EarningsDashboard(), EarningsDashboardProps, PayoutRow(), NoEarningsFoundState(), WalletNotConnectedEarningsState(), calculateEarningsSummary(), filterAndSortEarnings(), formatPayoutDate() (+4 more)
 
 ### Community 23 - "border-glow.tsx"
 Cohesion: 0.18
@@ -293,9 +293,9 @@ Nodes (12): 🌠 Astrea, 📖 Documentation, Environment Variables, 🏁 Getting
 Cohesion: 0.36
 Nodes (7): MultiReleaseSpikeClient, budget_report_across_winner_counts(), budget_report_beyond_mainnet_limits_disabled(), report(), Address, Env, run()
 
-### Community 26 - "card-swap.tsx"
-Cohesion: 0.23
-Nodes (9): Card, CardProps, CardRef, CardSwap(), CardSwapProps, makeSlot(), placeNow(), Slot (+1 more)
+### Community 26 - "[locale]/page.tsx"
+Cohesion: 0.21
+Nodes (9): HeroPrism(), HowItWorks(), SeeItInAction(), ButtonSize, ShaderProps, SIZES, SpecularButton(), SpecularButtonProps (+1 more)
 
 ### Community 29 - "post-commit"
 Cohesion: 0.40
@@ -369,9 +369,9 @@ Nodes (7): findStalledForwardsInDb(), ADR-0007, findStalledForwards(), ReleasedP
 Cohesion: 0.29
 Nodes (6): How to run, K03 (server-build-plan.md) — wallet compatibility check, Next step, Research finding (before touching any code), The test contract, What happens with the results
 
-### Community 116 - "wallet-connect-button.tsx"
-Cohesion: 0.31
-Nodes (4): truncate(), WalletConnectButton(), { Link, redirect, usePathname, useRouter, getPathname }, useWallet()
+### Community 116 - "card-swap.tsx"
+Cohesion: 0.23
+Nodes (9): Card, CardProps, CardRef, CardSwap(), CardSwapProps, makeSlot(), placeNow(), Slot (+1 more)
 
 ### Community 117 - "Database setup"
 Cohesion: 0.33
@@ -381,9 +381,9 @@ Nodes (5): Database setup, Environment variables, Everyday commands, ⚠️ Migr
 Cohesion: 0.40
 Nodes (4): Reporting a Vulnerability, Scope, Security Policy, Supported Versions
 
-### Community 120 - "earnings-dashboard.tsx"
-Cohesion: 0.23
-Nodes (12): EarningsDashboard(), EarningsDashboardProps, PayoutRow(), NoEarningsFoundState(), WalletNotConnectedEarningsState(), calculateEarningsSummary(), filterAndSortEarnings(), formatPayoutDate() (+4 more)
+### Community 120 - "wallet-connect-button.tsx"
+Cohesion: 0.31
+Nodes (4): truncate(), WalletConnectButton(), { Link, redirect, usePathname, useRouter, getPathname }, useWallet()
 
 ### Community 123 - "earnings/page.tsx"
 Cohesion: 0.36
@@ -450,7 +450,7 @@ Nodes (6): Astrea — UI motion & React Bits components, Build-plan cross-refere
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `devDependencies` to `@commitlint/cli`, `@commitlint/config-conventional`, `husky`, `tailwindcss`, `@tailwindcss/postcss`, `@types/react-dom`, `vitest`, `apps/web/package.json`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `tailwindcss` to `README.md`?**
   _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `tailwindcss` to `devDependencies`?**

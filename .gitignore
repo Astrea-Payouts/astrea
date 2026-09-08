@@ -75,9 +75,31 @@ spikes/k01-trustless-work/
 # scratch
 *.bak
 
-# Graphify_out Manifest
-graphify-out/
-/graphify_out/manifest.json
+# graphify machine-local state.
+#
+# This must NOT blanket-ignore graphify-out/. The graph itself (graph.json,
+# graph.html, GRAPH_REPORT.md, cache/) is deliberately versioned - see
+# CONTRIBUTING.md - and CI compares it on every PR. It used to be ignored
+# wholesale here, with the real files force-added past their own ignore rule,
+# which is why the `git add graphify-out/` that .husky/pre-push tells you to
+# run after a rebuild failed outright ("paths are ignored by .gitignore").
+# Every contributor hit that on their first push and had to guess the fix.
+#
+# Only the parts that cannot be shared between machines belong below.
+#
+# manifest.json and cache/stat-index.json store wall-clock mtimes for the local
+# incremental-update cache: they never match between any two checkouts, which is
+# why the drift-check job already excludes both from its comparison. Tracking
+# them just guaranteed a permanently dirty working tree and merge conflicts on
+# generated files (that was 2 of the 4 conflicting paths in #153).
+graphify-out/manifest.json
+graphify-out/cache/stat-index.json
+#
+# Absolute path to whichever Python has graphify installed, recorded at hook
+# install time. Machine-specific by definition - the hooks fall back to PATH
+# detection when it is absent.
+graphify-out/.graphify_python
+graphify-out/.graphify_root
 
 /apps/web/src/generated/prisma
 

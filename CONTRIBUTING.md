@@ -73,6 +73,8 @@ from a Claude Code session at the repo root (or any agent host that can run the 
 
 **CI enforces this for code.** The `graphify-out/` files in your PR must match a fresh `graphify update .` run against your code changes — if they don't, the `Knowledge graph in sync (code)` job fails and tells you what to run. It only checks code, not docs, since it has no LLM available; a stale doc-driven graph won't fail CI, so don't rely on green CI as proof the graph reflects your doc changes.
 
+**What's versioned and what isn't.** The graph itself — `graph.json`, `graph.html`, `GRAPH_REPORT.md`, `.graphify_labels.json` and the `cache/ast` + `cache/semantic` directories — is committed, so you can read it without installing graphify, and so CI can diff it. Everything else graphify writes to `graphify-out/` is machine-local and gitignored: `manifest.json` and `cache/stat-index.json` hold wall-clock mtimes that never match between two checkouts, `.graphify_python` is an absolute path to one machine's interpreter, and the dated `graphify-out/YYYY-MM-DD/` directories are graphify's own pre-rebuild backups (git history is the real backup). You don't need to think about any of this — after a rebuild, the `git add graphify-out/` that the pre-push hook prints stages exactly the right files and nothing else.
+
 ## Opening a PR
 
 1. **Branch off your fork's `main`**, push it to your fork, then open the PR from there against `Astrea-Payouts/astrea:main` — GitHub does this automatically when you push a branch to your fork and click "Compare & pull request."
