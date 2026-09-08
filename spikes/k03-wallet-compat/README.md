@@ -48,6 +48,44 @@ Report back per wallet: pass, fail, or "wallet doesn't support this at all" (e.g
 - If all four pass: fold into ADR-008/K04, no scope change.
 - If LOBSTR fails: that's a real, specific finding — either drop LOBSTR from the initially-supported wallet list (add it back once their Soroban support matures) or file it as a known limitation, but **don't block K04/S01 on it** — the other three wallets are enough to ship Phase 1 with.
 
+## K05e — WalletConnect added to the harness (not yet run)
+
+As part of **K05e** ([#41](https://github.com/Astrea-Payouts/astrea/issues/41)), the `WalletConnectModule` from
+`@creit.tech/stellar-wallets-kit/modules/wallet-connect` is now registered alongside Freighter, Albedo, xBull and
+LOBSTR, so mobile QR pairing can be exercised from the same page as the other four wallets.
+
+**What is wired up**
+
+- `WalletConnectModule` registered in `StellarWalletsKit.init()` with `allowedChains: [WalletConnectTargetChain.TESTNET]`.
+- Project ID read from `VITE_WALLETCONNECT_PROJECT_ID` (see `.env.example`), with app metadata for the pairing prompt.
+- Type-checks clean (`tsc --noEmit`).
+
+**What has not been checked yet**
+
+This section deliberately carries no pass/fail rows. Running it needs a real Reown project ID and a phone with a
+WalletConnect-capable wallet installed; the placeholder ID the code falls back to will be rejected by the relay, so
+nothing can be concluded without that setup. Specifically still unverified:
+
+| Check | Status |
+| --- | --- |
+| QR pairing with Freighter Mobile / LOBSTR Mobile on testnet | not run |
+| `stellar_signXDR` / `stellar_signAndSubmitXDR` round-trip for a Soroban `InvokeHostFunction` | not run |
+| Session persistence across a browser reload | not run |
+
+Whoever has the wallets installed (maintainer or contributor) can fill these in the same way the other four wallets
+are reported above: pass, fail, or "wallet doesn't support this at all".
+
+### Setup guide
+
+1. **Register a Project ID**: Go to [Reown Cloud](https://cloud.reown.com) (formerly WalletConnect Cloud), sign up, and create a project.
+2. **Environment configuration**: Copy `spikes/k03-wallet-compat/.env.example` to `.env` and set:
+   ```bash
+   VITE_WALLETCONNECT_PROJECT_ID=your_reown_project_id_here
+   ```
+3. **Chains & RPC methods**: Configured for `stellar:testnet` (`WalletConnectTargetChain.TESTNET`); the kit requests `stellar_signXDR`, `stellar_signAndSubmitXDR`, and `stellar_signAuthEntry`.
+4. **Before production**: bind the project ID's allowed origin domains in Reown Cloud to the deployed domain, so the relay quota can't be used from anywhere else.
+
 ## Next step
 
 Once results come back (from whoever runs this — the maintainer or a contributor with the relevant wallets installed): fold findings into ADR-008, then **K04** (ADRs from K01–K03) closes out Phase 0, and **S01** (monorepo scaffold) can start.
+
