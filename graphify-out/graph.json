@@ -4767,7 +4767,7 @@
       "norm_label": "session.test.ts"
     },
     {
-      "label": "{\r\n\tAlbedoModule,\r\n}",
+      "label": "{\n\tAlbedoModule,\n}",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/session.test.ts",
       "source_location": "L23",
@@ -4775,10 +4775,10 @@
       "id": "apps_web_src_lib_wallet_session_test_albedomodule",
       "community": 128,
       "community_name": "session.test.ts",
-      "norm_label": "{\r\n\talbedomodule,\r\n}"
+      "norm_label": "{\n\talbedomodule,\n}"
     },
     {
-      "label": "{\r\n\tFREIGHTER_ID,\r\n\tFreighterModule,\r\n}",
+      "label": "{\n\tFREIGHTER_ID,\n\tFreighterModule,\n}",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/session.test.ts",
       "source_location": "L26",
@@ -4786,10 +4786,10 @@
       "id": "apps_web_src_lib_wallet_session_test_freighter_id_freightermodule",
       "community": 128,
       "community_name": "session.test.ts",
-      "norm_label": "{\r\n\tfreighter_id,\r\n\tfreightermodule,\r\n}"
+      "norm_label": "{\n\tfreighter_id,\n\tfreightermodule,\n}"
     },
     {
-      "label": "{\r\n\tLobstrModule,\r\n}",
+      "label": "{\n\tLobstrModule,\n}",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/session.test.ts",
       "source_location": "L33",
@@ -4797,7 +4797,7 @@
       "id": "apps_web_src_lib_wallet_session_test_lobstrmodule",
       "community": 128,
       "community_name": "session.test.ts",
-      "norm_label": "{\r\n\tlobstrmodule,\r\n}"
+      "norm_label": "{\n\tlobstrmodule,\n}"
     },
     {
       "label": "{ mockCookieMap, mockDb, nonceRows }",
@@ -4822,7 +4822,7 @@
       "norm_label": "require"
     },
     {
-      "label": "{\r\n\txBullModule,\r\n}",
+      "label": "{\n\txBullModule,\n}",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/session.test.ts",
       "source_location": "L30",
@@ -4830,7 +4830,7 @@
       "id": "apps_web_src_lib_wallet_session_test_xbullmodule",
       "community": 128,
       "community_name": "session.test.ts",
-      "norm_label": "{\r\n\txbullmodule,\r\n}"
+      "norm_label": "{\n\txbullmodule,\n}"
     },
     {
       "label": "validation.ts",
@@ -34435,5 +34435,5 @@
       "source_file": "CONTRIBUTING.md"
     }
   ],
-  "built_at_commit": "5983b35e22bb9afbb203817d65fdc47da8db4c83"
+  "built_at_commit": "afce0c677aea6f23165786a545f7fd0b6aaebc70"
 }
