@@ -9,11 +9,20 @@ import {
 	useState,
 } from "react";
 import { initWalletKit, StellarWalletsKit } from "./kit";
-import { associateWallet, clearWalletSession } from "./session";
+import {
+	associateVerifiedWallet,
+	clearWalletSession,
+	getAuthNonce,
+	getSessionWallet,
+} from "./session";
+import { UNSUPPORTED_ALBEDO_MESSAGE } from "./validation";
 
-type WalletContextValue = {
+export { UNSUPPORTED_ALBEDO_MESSAGE };
+
+export type WalletContextValue = {
 	address: string | null;
 	isConnecting: boolean;
+	authError: string | null;
 	connect: () => Promise<void>;
 	disconnect: () => Promise<void>;
 };
@@ -23,35 +32,91 @@ const WalletContext = createContext<WalletContextValue | null>(null);
 export function WalletProvider({ children }: { children: React.ReactNode }) {
 	const [address, setAddress] = useState<string | null>(null);
 	const [isConnecting, setIsConnecting] = useState(false);
+	const [authError, setAuthError] = useState<string | null>(null);
 
 	useEffect(() => {
 		initWalletKit();
-		// Fires once at launch with whatever address the kit already knows
-		// about (e.g. a wallet extension that stayed authorized), and again
-		// on every subsequent change.
+
+		// Rehydrate verified session if cookie exists on the server
+		getSessionWallet()
+			.then((wallet) => {
+				if (wallet?.address) {
+					setAddress(wallet.address);
+				}
+			})
+			.catch(() => {});
+
+		// Sync when wallet extension signals a disconnect
 		return StellarWalletsKit.on(KitEventType.STATE_UPDATED, (event) => {
-			setAddress(event.payload.address ?? null);
+			if (!event.payload.address) {
+				setAddress(null);
+			}
 		});
 	}, []);
 
 	const connect = useCallback(async () => {
 		setIsConnecting(true);
+		setAuthError(null);
 		try {
-			// The wallet connection itself (talking to the extension) is the
-			// part that must not fail silently — surface errors from this.
+			// The wallet connection itself (talking to the extension)
 			const { address: connected } = await StellarWalletsKit.authModal();
-			setAddress(connected);
 
-			// Server-side "who's browsing as which wallet" association — a UX
-			// convenience session, not a security boundary (see docs/architecture.md:
-			// every money-moving action is independently authorized by the actual
-			// on-chain signature, regardless of what this session claims). If the
-			// backend/DB hiccups here, the user is still genuinely connected to
-			// their wallet — don't undo that over an association failure.
+			// Check if active wallet is Albedo (does not support SEP-0043 signMessage)
+			let selectedId: string | null = null;
 			try {
-				await associateWallet(connected);
-			} catch (err) {
-				console.error("Wallet connected, but session association failed:", err);
+				selectedId = StellarWalletsKit.selectedModule?.productId ?? null;
+			} catch {
+				// No active module
+			}
+
+			if (selectedId === "albedo") {
+				await StellarWalletsKit.disconnect().catch(() => {});
+				setAddress(null);
+				setAuthError(UNSUPPORTED_ALBEDO_MESSAGE);
+				throw new Error(UNSUPPORTED_ALBEDO_MESSAGE);
+			}
+
+			// Server-side signed challenge-response session (S07 / SEP-0043):
+			// The wallet signs a server-issued challenge nonce to prove control of the address.
+			try {
+				const { nonce, message } = await getAuthNonce(connected);
+				const { signedMessage } = await StellarWalletsKit.signMessage(message, {
+					address: connected,
+				});
+				await associateVerifiedWallet({
+					address: connected,
+					signature: signedMessage,
+					nonce,
+				});
+
+				// Only treat the connection as fully successful once session verification completes
+				setAddress(connected);
+			} catch (err: unknown) {
+				console.error(
+					"Wallet connected, but session verification failed:",
+					err,
+				);
+				await StellarWalletsKit.disconnect().catch(() => {});
+				await clearWalletSession().catch(() => {});
+				setAddress(null);
+
+				const errMsg =
+					err instanceof Error
+						? err.message
+						: typeof err === "object" && err !== null && "message" in err
+							? String((err as { message: unknown }).message)
+							: "Session verification failed";
+
+				if (
+					errMsg.includes('Albedo does not support the "signMessage"') ||
+					errMsg.includes("signMessage")
+				) {
+					setAuthError(UNSUPPORTED_ALBEDO_MESSAGE);
+					throw new Error(UNSUPPORTED_ALBEDO_MESSAGE);
+				}
+
+				setAuthError(errMsg);
+				throw err;
 			}
 		} finally {
 			setIsConnecting(false);
@@ -59,14 +124,15 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 	}, []);
 
 	const disconnect = useCallback(async () => {
-		await StellarWalletsKit.disconnect();
+		await StellarWalletsKit.disconnect().catch(() => {});
 		setAddress(null);
-		await clearWalletSession();
+		setAuthError(null);
+		await clearWalletSession().catch(() => {});
 	}, []);
 
 	return (
 		<WalletContext.Provider
-			value={{ address, isConnecting, connect, disconnect }}
+			value={{ address, isConnecting, authError, connect, disconnect }}
 		>
 			{children}
 		</WalletContext.Provider>

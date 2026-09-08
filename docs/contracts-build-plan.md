@@ -17,7 +17,7 @@ Phased plan with coded tasks. Each task becomes one GitHub issue with its code i
 | --- | --- | --- | --- |
 | E01 | Multi-milestone escrow contract: a single shared contract holding a per-organizer balance (`AdminWallet`, ADR-006) instead of K01's one-contract-per-event shape. Organizer deposits/withdraws against their own balance; `create_event` reserves a list of N independently payable prizes from it (ADR-002); `cancel_event` (pre-launch only) and `close_event` (pays 1..N winners, validated by K06) plus dispute/resolve-dispute round it out | L → split | Lives in `smart-contracts/astrea/contracts/event-escrow`. K01 proved the role model; this POC (deposit/withdraw/create_event already working) is the production shape's actual starting point, not K01's contract-per-event design |
 | E02 | Contract unit + integration test suite: role-model checks (organizer cannot move funds, judge as approver+release_signer), every negative path (unauthorized release, double release, release-before-approve, dispute blocks release), multi-milestone independence (one prize's dispute doesn't block another's release) | M | `soroban-sdk` testutils, in-process — fast, no network. Expand K01's 8 tests to cover multi-milestone paths |
-| E03 | Testnet vertical-slice demo for the contract alone: deploy → fund N milestones → approve/release/dispute a mix across them → confirm independence | S | Mirrors K01's driver script, scoped to the multi-milestone contract |
+| E03 | Testnet vertical-slice demo for the contract alone: deploy → `deposit_funds` → `create_event` (one reward) → state machine → `release_reward` splitting that reward atomically across N winners in one call, plus a second terminal path (cancel + refund) | S | **Done** — script and tx trail in [contracts/event-escrow/README.md](../smart-contracts/astrea/contracts/event-escrow/README.md). Mirrors K01's driver script, but scoped to what the contract actually implements: one reward per event, split atomically, not independently payable milestones (ADR-002, corrected 2026-09-06) |
 
 ## Phase 2 — Hardening (before mainnet)
 
@@ -49,7 +49,7 @@ The Stellar Development Foundation funds security audits for Soroban contracts t
 
 - [ ] SCF Build Award applied for (L01b) — everything else is downstream of this
 - [ ] **Threat model written down** (L01a) — assets, actors, trust boundaries, attack scenarios and mitigations
-- [ ] Testnet deployment live (E03)
+- [x] Testnet deployment live (E03) — contract `CAD5IOA2FFSUTRIHEK6YQ2BPO2JVDPXYRXBVMPBBWFQEWRWKFRG36TQH`, full tx trail in [contracts/event-escrow/README.md](../smart-contracts/astrea/contracts/event-escrow/README.md)
 - [ ] Test suite covering the money paths and their negative cases (largely done — see the findings log)
 - [ ] Contract documentation complete enough for an external reader with no context
 - [ ] Open money-path gaps closed: #20 and #22

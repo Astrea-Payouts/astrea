@@ -79,9 +79,14 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 ### ADR-002 — Multi-release escrow, one milestone per prize
 
-**Decision:** each event can carry more than one prize (a list of milestones on the `Event`, not a single fixed amount), and each prize is independently payable — a single-winner event is simply the N=1 case of this list, not a separate code path.
+**Original decision:** each event can carry more than one prize (a list of milestones on the `Event`, not a single fixed amount), and each prize is independently payable — a single-winner event is simply the N=1 case of this list, not a separate code path.
 **Why:** prizes resolve at different times or in different shapes (judging per category, a dispute on one prize must not block another). A list-of-prizes model maps 1:1 to this reality without a special case for "just one winner."
-**Status:** target design for the production contract (`E01`, [docs/contracts-build-plan.md](contracts-build-plan.md)), implemented as a list of prizes on a single `Event` record inside the shared contract (ADR-006), not as a separate contract per multi-winner event. K01 validated the role model on a single-milestone contract.
+
+**Status — superseded by what was actually built (corrected 2026-09-06).** The shipped contract does **not** implement independently payable milestones. `Event` carries a single `reward: i128` (one lump sum), and `release_reward` takes a `Vec<Winner>` whose amounts must sum exactly to that reward, paying every winner in one atomic call and then flipping the whole event to `Ended`. Cancel, expiry and (eventually) dispute act on the whole event, never on one prize.
+
+So the multi-recipient goal survived, but the *independence* property did not: winners are **shares of one payout released together**, not milestones that resolve separately. A dispute on one prize blocking another is not a scenario the current data model can express — there is only ever one payout event to block.
+
+This is recorded rather than quietly rewritten because the gap was live for a while: issue #4's acceptance criteria asked for "multi-milestone independence" tests that could never pass, since they described a model the code never had. If independent milestones are wanted later, that is a real contract redesign (a list of prize entries with per-entry state), not a test to add — and it would ripple into the dispute design (#22), which currently assumes one dispute per event.
 
 **Verified (K06, 2026-08, in-process test):** a single `close_event()` call paying multiple winners scales linearly at ~168k CPU instructions per additional winner — ~1.2% of Stellar Mainnet's per-invocation instruction budget even at 25 winners in one call, far more than any realistic event needs. No separate contract is warranted for the multi-winner case. See [spikes/k06-multi-release-budget](../spikes/k06-multi-release-budget/README.md).
 

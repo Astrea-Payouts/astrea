@@ -70,13 +70,14 @@ model Wallet {
   id                      String    @id @default(uuid())
   userId                  String
   address                 String    @unique
+  email                   String?
   usdcTrustlineVerifiedAt DateTime?
   createdAt               DateTime  @default(now())
 
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organizedEvents Event[]      @relation("EventOrganizerWallet")
-  wonPrizes       Prize[]      @relation("PrizeWinner")
-  submissions     Submission[]
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizedEvents Event[]       @relation("EventOrganizerWallet")
+  wonPrizes       Prize[]       @relation("PrizeWinner")
+  participants    Participant[]
 
   @@index([userId])
   @@map("wallets")
@@ -91,16 +92,17 @@ model Event {
   startsAt          DateTime?
   endsAt            DateTime?
   status            EventStatus    @default(DRAFT)
+  conditionsMetAt   DateTime?
   network           StellarNetwork @default(TESTNET)
   escrowContractId  String?        @unique
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 
-  organizer       User         @relation("EventOrganizer", fields: [organizerId], references: [id])
-  organizerWallet Wallet       @relation("EventOrganizerWallet", fields: [organizerWalletId], references: [id])
+  organizer       User          @relation("EventOrganizer", fields: [organizerId], references: [id])
+  organizerWallet Wallet        @relation("EventOrganizerWallet", fields: [organizerWalletId], references: [id])
   prizes          Prize[]
   judges          Judge[]
-  submissions     Submission[]
+  participants    Participant[]
 
   @@index([organizerId])
   @@index([organizerWalletId])
@@ -154,19 +156,19 @@ model Judge {
   @@map("judges")
 }
 
-model Submission {
-  id                  String   @id @default(uuid())
-  eventId             String
-  participantWalletId String
-  url                 String
-  submittedAt         DateTime @default(now())
+model Participant {
+  id            String   @id @default(uuid())
+  eventId       String
+  walletId      String
+  submissionUrl String
+  registeredAt  DateTime @default(now())
 
-  event             Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  participantWallet Wallet @relation(fields: [participantWalletId], references: [id])
+  event  Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  wallet Wallet @relation(fields: [walletId], references: [id])
 
   @@index([eventId])
-  @@index([participantWalletId])
-  @@map("submissions")
+  @@index([walletId])
+  @@map("participants")
 }
 
 /// Append-only audit log. amountUsdc here is the NET amount actually
@@ -199,4 +201,17 @@ model OpLog {
 
   @@index([status])
   @@map("op_log")
+}
+
+/// Short-lived SEP-0043 challenge nonces. Must live in Postgres (not process
+/// memory) because Vercel serverless invocations do not share a Map.
+model AuthNonce {
+  nonce     String   @id
+  address   String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+  @@index([address])
+  @@map("auth_nonces")
 }

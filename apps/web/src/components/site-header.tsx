@@ -84,6 +84,12 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 
 				<nav className="flex items-center gap-6">
 					<Link
+						href="/earnings"
+						className="text-sm font-medium text-white/70 transition-colors hover:text-white"
+					>
+						{t("earningsNav")}
+					</Link>
+					<Link
 						href="/participant"
 						className="text-sm font-medium text-white/70 transition-colors hover:text-white"
 					>
@@ -114,6 +120,11 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 				position="right"
 				items={[
 					{ label: t("homeLabel"), ariaLabel: t("homeAriaLabel"), link: "/" },
+					{
+						label: t("earningsNav"),
+						ariaLabel: t("earningsAriaLabel"),
+						link: "/earnings",
+					},
 					{
 						label: t("participantNav"),
 						ariaLabel: t("participantAriaLabel"),

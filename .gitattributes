@@ -1,0 +1,41 @@
+# Line-ending policy: LF everywhere — in the repository AND in the working tree.
+#
+# Without this file, a Windows checkout (core.autocrlf=true) gets a CRLF
+# working tree while the repository itself stores LF. Every generator in this
+# repo writes LF, so the two disagree the moment one of them runs:
+# `cargo test` rewrites all 79 JSON files under
+# smart-contracts/astrea/contracts/event-escrow/test_snapshots/ and `git status`
+# then lists every one of them as modified — even though `git diff` is empty
+# and the blob hash still matches the index. What went stale is the cached stat
+# size, not the content. The danger is a `git add -A` that sweeps all 79 into a
+# PR and buries the real change.
+#
+# graphify-out/ sits on the same trap from the other side: the drift check in
+# .github/workflows/ci.yml and the pre-push hook both diff tool output that CI
+# regenerates on ubuntu-latest, where it is always LF.
+#
+# `eol=lf` — not `text=auto` on its own — is the half that actually fixes this.
+# `text=auto` normalizes what gets committed but still hands Windows a CRLF
+# working tree, which is precisely where the mismatch is created.
+* text=auto eol=lf
+
+# Files that break outright with CRLF. Marked `text` (unconditional) rather
+# than `text=auto` so they normalize even if content sniffing misjudges them.
+# The husky hooks and the contract Makefile all run under sh on Windows, where
+# a trailing CR is parsed as part of the command and the failure is opaque.
+*.sh     text eol=lf
+Makefile text eol=lf
+.husky/* text eol=lf
+
+# The one exception to the rule: cmd.exe genuinely requires CRLF. None are
+# tracked today — this is here so the first one added doesn't silently break.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary — never normalize, never diff as text. `text=auto` already detects
+# these by content; declaring them is cheaper than trusting the sniffer and
+# states the intent. *.wasm is the deployable contract artifact (built, not
+# committed today) and must never be touched by a text filter.
+*.png  binary
+*.ico  binary
+*.wasm binary

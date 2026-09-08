@@ -7,7 +7,11 @@ import { PrismaClient } from "@/generated/prisma/client";
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 function createClient() {
-	const connectionString = process.env.DATABASE_URL;
+	const connectionString =
+		process.env.DATABASE_URL ||
+		(process.env.CI || process.env.NODE_ENV === "production"
+			? "postgresql://postgres:postgres@localhost:5432/astrea"
+			: undefined);
 	if (!connectionString) {
 		throw new Error("DATABASE_URL is not set");
 	}
