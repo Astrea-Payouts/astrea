@@ -149,6 +149,39 @@ jobs:
 
       - name: Build (wasm release artifact)
         run: cargo build --release --target wasm32v1-none
+
+  core-go:
+    name: Build, vet, test (core-go)
+    runs-on: ubuntu-latest
+    # Deliberately NOT gated on a `paths:` filter for services/core-go/**.
+    # This context is intended to become a required status check on main, and
+    # GitHub counts a *skipped* required check as not-passing - the same trap
+    # the commitlint job fell into, which left every develop -> main promotion
+    # BLOCKED with all checks green. See the `contracts` job above for the
+    # same reasoning. Don't "optimize" this back to a paths filter.
+    defaults:
+      run:
+        working-directory: services/core-go
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.26.5"
+          # No go.sum yet (no external deps) - hashing go.sum here would make
+          # actions/setup-go's cache step fail outright (it errors when the
+          # glob matches nothing), so key the cache on go.mod instead.
+          cache-dependency-path: services/core-go/go.mod
+
+      - name: Build
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test ./...
+
   commitlint:
     name: Commit messages (Conventional Commits)
     runs-on: ubuntu-latest
