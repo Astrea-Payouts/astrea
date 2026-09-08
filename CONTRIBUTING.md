@@ -23,12 +23,12 @@ npm install
 cp .env.example .env
 ```
 
-The `upstream` remote is so you can pull in new work before starting a task:
+The `upstream` remote is so you can pull in new work before starting a task. Note that `develop` is the branch everything is built on — `main` only receives promoted releases, so branching off it will put you behind:
 
 ```bash
 git fetch upstream
-git checkout main
-git merge upstream/main
+git checkout develop
+git merge upstream/develop
 ```
 
 Fill in `.env` following the comments in `.env.example` and [apps/web/prisma/README.md](apps/web/prisma/README.md):
@@ -77,7 +77,7 @@ from a Claude Code session at the repo root (or any agent host that can run the 
 
 ## Opening a PR
 
-1. **Branch off your fork's `main`**, push it to your fork, then open the PR from there against `Astrea-Payouts/astrea:main` — GitHub does this automatically when you push a branch to your fork and click "Compare & pull request."
+1. **Branch off your fork's `develop`**, push it to your fork, then open the PR from there against `Astrea-Payouts/astrea:develop` — GitHub targets `develop` by default when you push a branch to your fork and click "Compare & pull request," since it is this repo's default branch. Don't retarget it at `main`: that branch only receives promoted releases, and a PR opened against it will show unrelated commits in the diff.
 2. **Reference the issue** you're working on in the PR description (`Closes #123`).
 3. **Keep it scoped** to the linked task — if you find something else worth fixing along the way, open a separate issue rather than bundling it in.
 4. **If your change touches money movement** (anything under `E0*`, escrow calls, signing, the reconciliation job) — say so explicitly in the PR description and how you verified it on testnet. These get extra review; see the `security` label.

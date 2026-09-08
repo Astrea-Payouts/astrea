@@ -1,6 +1,10 @@
 import { AlbedoModule } from "@creit.tech/stellar-wallets-kit/modules/albedo";
 import { FreighterModule } from "@creit.tech/stellar-wallets-kit/modules/freighter";
 import { LobstrModule } from "@creit.tech/stellar-wallets-kit/modules/lobstr";
+import {
+	WalletConnectModule,
+	WalletConnectTargetChain,
+} from "@creit.tech/stellar-wallets-kit/modules/wallet-connect";
 import { xBullModule } from "@creit.tech/stellar-wallets-kit/modules/xbull";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit/sdk";
 import { Networks } from "@creit.tech/stellar-wallets-kit/types";
@@ -15,6 +19,10 @@ const CONTRACT_ID = "CDIWLY6ARVUGEJPUMWK5CZBEN4ENVAMY5NV2EGDF2EPKRGSVQTUAOIH3";
 const RPC_URL = "https://soroban-testnet.stellar.org";
 const NETWORK_PASSPHRASE = Networks.TESTNET;
 
+const walletConnectProjectId =
+	(import.meta as { env?: { VITE_WALLETCONNECT_PROJECT_ID?: string } }).env
+		?.VITE_WALLETCONNECT_PROJECT_ID || "demo_astrea_walletconnect_project_id";
+
 StellarWalletsKit.init({
 	network: Networks.TESTNET,
 	modules: [
@@ -22,6 +30,16 @@ StellarWalletsKit.init({
 		new AlbedoModule(),
 		new xBullModule(),
 		new LobstrModule(),
+		new WalletConnectModule({
+			projectId: walletConnectProjectId,
+			metadata: {
+				name: "Astrea Payouts",
+				description: "Multi-party bounty and milestone payouts on Stellar",
+				url: "https://astrea.payouts",
+				icons: ["https://astrea.payouts/icon.png"],
+			},
+			allowedChains: [WalletConnectTargetChain.TESTNET],
+		}),
 	],
 });
 
