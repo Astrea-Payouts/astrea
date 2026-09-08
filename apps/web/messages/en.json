@@ -84,7 +84,9 @@
 		"menuLabel": "Menu",
 		"closeLabel": "Close",
 		"homeLabel": "Home",
-		"homeAriaLabel": "Go to homepage"
+		"homeAriaLabel": "Go to homepage",
+		"earningsNav": "Earnings",
+		"earningsAriaLabel": "Go to participant earnings view"
 	},
 	"SiteFooter": {
 		"copyright": "© {year} Astrea. Built in the open on Stellar.",
@@ -107,5 +109,37 @@
 		"fullState": "Animations on",
 		"followingSystem": "Following your system setting",
 		"useSystem": "Use my system setting"
+	},
+	"Earnings": {
+		"portalBadge": "Verified Payouts",
+		"pageTitle": "Participant Earnings & Payouts",
+		"pageSubtitle": "Verifiable on-chain record of every hackathon, bounty, and prize payout credited to your Stellar wallet — backed by direct Stellar Expert transaction proofs.",
+		"breadcrumbHome": "Home",
+		"breadcrumbEarnings": "Earnings",
+		"connectWalletTitle": "Connect Your Stellar Wallet",
+		"connectWalletDesc": "Astrea verifies prize payouts on-chain and routes funds directly to your Stellar account. Connect your wallet to view your confirmed payouts.",
+		"noEarningsTitle": "No Confirmed Payouts Found",
+		"noEarningsDesc": "This wallet has not won any completed prize milestones yet. Keep building and submitting deliverables to active competitions.",
+		"exploreCompetitionsAction": "Explore Competitions",
+		"viewMyEventsAction": "My Events",
+		"metricTotalEarnings": "Total Won",
+		"metricTotalDesc": "Confirmed on-chain",
+		"metricEventsWon": "Competitions Won",
+		"metricEventsDesc": "Unique prize tracks",
+		"metricPrizesWon": "Prizes Awarded",
+		"metricPrizesDesc": "Total milestones paid",
+		"metricAveragePayout": "Average Payout",
+		"metricAvgDesc": "Per awarded prize",
+		"searchPlaceholder": "Search by competition or transaction hash…",
+		"payoutsCount": "{count} Payouts",
+		"sortNewest": "Date: Newest First",
+		"sortOldest": "Date: Oldest First",
+		"sortHighest": "Amount: Highest First",
+		"sortLowest": "Amount: Lowest First",
+		"milestoneTag": "Milestone #{index}",
+		"confirmedStatus": "Confirmed On-Chain",
+		"txProof": "Proof",
+		"guaranteeTitle": "Non-Custodial Direct Settlement",
+		"guaranteeDesc": "All payouts are executed directly from Stellar Soroban smart contract escrows into the winner's wallet address. Astrea never holds, pools, or delays participant prize funds."
 	}
 }

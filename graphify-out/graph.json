@@ -65,6 +65,19 @@
       "norm_label": "keys"
     },
     {
+      "label": "ForwardPaymentParams",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "source_location": "L16",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment_forwardpaymentparams",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "forwardpaymentparams"
+    },
+    {
       "label": "ApproveMilestoneParams",
       "file_type": "code",
       "source_file": "apps/web/src/lib/escrow/types.ts",
@@ -234,6 +247,32 @@
       "norm_label": "resolvemilestonedisputeparams"
     },
     {
+      "label": "SubmittedTx",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L28",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_types_submittedtx",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "submittedtx"
+    },
+    {
+      "label": "UnsignedTx",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/types.ts",
+      "source_location": "L24",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_types_unsignedtx",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "unsignedtx"
+    },
+    {
       "label": "Keys",
       "file_type": "code",
       "source_file": "apps/web/scripts/seed-demo-event.ts",
@@ -245,6 +284,19 @@
       "community": 107,
       "community_name": "seed-demo-event.ts",
       "norm_label": "keys"
+    },
+    {
+      "label": "TransitionPrizeExtra",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/state-machines/apply.ts",
+      "source_location": "L29",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_state_machines_apply_transitionprizeextra",
+      "community": 107,
+      "community_name": "seed-demo-event.ts",
+      "norm_label": "transitionprizeextra"
     },
     {
       "label": "OpRecord",
@@ -364,45 +416,6 @@
       "norm_label": "submitoperationresult"
     },
     {
-      "label": "ForwardPaymentParams",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
-      "source_location": "L16",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_forwardpaymentparams",
-      "community": 111,
-      "community_name": "stellar-network.ts",
-      "norm_label": "forwardpaymentparams"
-    },
-    {
-      "label": "SubmittedTx",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L28",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_submittedtx",
-      "community": 111,
-      "community_name": "stellar-network.ts",
-      "norm_label": "submittedtx"
-    },
-    {
-      "label": "UnsignedTx",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/types.ts",
-      "source_location": "L24",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_types_unsignedtx",
-      "community": 111,
-      "community_name": "stellar-network.ts",
-      "norm_label": "unsignedtx"
-    },
-    {
       "label": "StellarNetworkName",
       "file_type": "code",
       "source_file": "apps/web/src/lib/stellar-network.ts",
@@ -425,7 +438,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_reconciliation_stalled_forwards_releasedprize",
       "community": 113,
-      "community_name": "db.ts",
+      "community_name": "run.ts",
       "norm_label": "releasedprize"
     },
     {
@@ -438,34 +451,73 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_reconciliation_stalled_forwards_stalledforwardalert",
       "community": 113,
-      "community_name": "db.ts",
+      "community_name": "run.ts",
       "norm_label": "stalledforwardalert"
     },
     {
-      "label": "TxHashLinkProps",
+      "label": "EarningsDashboardProps",
       "file_type": "code",
-      "source_file": "apps/web/src/components/tx-hash-link.tsx",
-      "source_location": "L12",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L30",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "apps_web_src_components_tx_hash_link_txhashlinkprops",
-      "community": 119,
-      "community_name": "tx-hash-link.tsx",
-      "norm_label": "txhashlinkprops"
+      "id": "apps_web_src_components_earnings_earnings_dashboard_earningsdashboardprops",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earningsdashboardprops"
     },
     {
-      "label": "StellarNetwork",
+      "label": "EarningsFilter",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/explorer.ts",
+      "source_file": "apps/web/src/lib/earnings/types.ts",
+      "source_location": "L29",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_types_earningsfilter",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earningsfilter"
+    },
+    {
+      "label": "EarningsItem",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/types.ts",
       "source_location": "L1",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_explorer_stellarnetwork",
-      "community": 119,
-      "community_name": "tx-hash-link.tsx",
-      "norm_label": "stellarnetwork"
+      "id": "apps_web_src_lib_earnings_types_earningsitem",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earningsitem"
+    },
+    {
+      "label": "EarningsSortOption",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/types.ts",
+      "source_location": "L23",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_types_earningssortoption",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earningssortoption"
+    },
+    {
+      "label": "EarningsSummary",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/types.ts",
+      "source_location": "L14",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_types_earningssummary",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earningssummary"
     },
     {
       "label": "EscrowProvider",
@@ -490,47 +542,21 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider_walletcontextvalue",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "walletcontextvalue"
     },
     {
-      "label": "MotionPreferenceValue",
+      "label": "ReduceMotionToggleProps",
       "file_type": "code",
-      "source_file": "apps/web/src/hooks/use-reduced-motion.tsx",
-      "source_location": "L22",
+      "source_file": "apps/web/src/components/reduce-motion-toggle.tsx",
+      "source_location": "L11",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "apps_web_src_hooks_use_reduced_motion_motionpreferencevalue",
+      "id": "apps_web_src_components_reduce_motion_toggle_reducemotiontoggleprops",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "motionpreferencevalue"
-    },
-    {
-      "label": "Matcher",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.ts",
-      "source_location": "L45",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_matcher",
-      "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "matcher"
-    },
-    {
-      "label": "MotionPreference",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.ts",
-      "source_location": "L1",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_motionpreference",
-      "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "motionpreference"
+      "community_name": "site-header.tsx",
+      "norm_label": "reducemotiontoggleprops"
     },
     {
       "label": "SiteHeaderProps",
@@ -541,7 +567,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "apps_web_src_components_site_header_siteheaderprops",
-      "community": 136,
+      "community": 132,
       "community_name": "site-header.tsx",
       "norm_label": "siteheaderprops"
     },
@@ -554,7 +580,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "apps_web_src_components_staggered_menu_staggeredmenuitem",
-      "community": 136,
+      "community": 132,
       "community_name": "site-header.tsx",
       "norm_label": "staggeredmenuitem"
     },
@@ -567,7 +593,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "apps_web_src_components_staggered_menu_staggeredmenuprops",
-      "community": 136,
+      "community": 132,
       "community_name": "site-header.tsx",
       "norm_label": "staggeredmenuprops"
     },
@@ -580,22 +606,74 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "apps_web_src_components_staggered_menu_staggeredmenusocialitem",
-      "community": 136,
+      "community": 132,
       "community_name": "site-header.tsx",
       "norm_label": "staggeredmenusocialitem"
     },
     {
-      "label": "TransitionPrizeExtra",
+      "label": "TxHashLinkProps",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/state-machines/apply.ts",
-      "source_location": "L29",
+      "source_file": "apps/web/src/components/tx-hash-link.tsx",
+      "source_location": "L12",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_state_machines_apply_transitionprizeextra",
-      "community": 20,
-      "community_name": "apply.ts",
-      "norm_label": "transitionprizeextra"
+      "id": "apps_web_src_components_tx_hash_link_txhashlinkprops",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "txhashlinkprops"
+    },
+    {
+      "label": "MotionPreferenceValue",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/use-reduced-motion.tsx",
+      "source_location": "L22",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_hooks_use_reduced_motion_motionpreferencevalue",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "motionpreferencevalue"
+    },
+    {
+      "label": "StellarNetwork",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/explorer.ts",
+      "source_location": "L1",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_explorer_stellarnetwork",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "stellarnetwork"
+    },
+    {
+      "label": "Matcher",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_location": "L45",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_matcher",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "matcher"
+    },
+    {
+      "label": "MotionPreference",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_location": "L1",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_motionpreference",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "motionpreference"
     },
     {
       "label": "InvalidTransitionError",
@@ -607,21 +685,8 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_errors_invalidtransitionerror",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "invalidtransitionerror"
-    },
-    {
-      "label": "ReduceMotionToggleProps",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/reduce-motion-toggle.tsx",
-      "source_location": "L11",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "apps_web_src_components_reduce_motion_toggle_reducemotiontoggleprops",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "reducemotiontoggleprops"
     },
     {
       "label": "AnimateOpts",
@@ -915,16 +980,16 @@
       "norm_label": "submitforwardpayment()"
     },
     {
-      "label": "findStalledForwardsInDb()",
+      "label": "transitionPrize()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/reconciliation/run.ts",
-      "source_location": "L12",
+      "source_file": "apps/web/src/lib/state-machines/apply.ts",
+      "source_location": "L38",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_reconciliation_run_findstalledforwardsindb",
+      "id": "apps_web_src_lib_state_machines_apply_transitionprize",
       "community": 0,
       "community_name": "e06-vertical-slice.ts",
-      "norm_label": "findstalledforwardsindb()"
+      "norm_label": "transitionprize()"
     },
     {
       "label": "jsonResponse()",
@@ -1021,6 +1086,18 @@
       "community": 107,
       "community_name": "seed-demo-event.ts",
       "norm_label": "step()"
+    },
+    {
+      "label": "createClient()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/db.ts",
+      "source_location": "L9",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_db_createclient",
+      "community": 107,
+      "community_name": "seed-demo-event.ts",
+      "norm_label": "createclient()"
     },
     {
       "label": "transitionEvent()",
@@ -1227,16 +1304,16 @@
       "norm_label": "mocktransactioncall()"
     },
     {
-      "label": "createClient()",
+      "label": "findStalledForwardsInDb()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/db.ts",
-      "source_location": "L9",
+      "source_file": "apps/web/src/lib/reconciliation/run.ts",
+      "source_location": "L12",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_db_createclient",
+      "id": "apps_web_src_lib_reconciliation_run_findstalledforwardsindb",
       "community": 113,
-      "community_name": "db.ts",
-      "norm_label": "createclient()"
+      "community_name": "run.ts",
+      "norm_label": "findstalledforwardsindb()"
     },
     {
       "label": "findStalledForwards()",
@@ -1247,7 +1324,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_reconciliation_stalled_forwards_findstalledforwards",
       "community": 113,
-      "community_name": "db.ts",
+      "community_name": "run.ts",
       "norm_label": "findstalledforwards()"
     },
     {
@@ -1263,52 +1340,28 @@
       "norm_label": "robots()"
     },
     {
-      "label": "sitemap()",
+      "label": "EarningsPage()",
       "file_type": "code",
-      "source_file": "apps/web/src/app/sitemap.ts",
-      "source_location": "L4",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L25",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_app_sitemap_sitemap",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "sitemap()"
+      "id": "apps_web_src_app_locale_earnings_page_earningspage",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earningspage()"
     },
     {
-      "label": "TxHashLink()",
+      "label": "generateMetadata()",
       "file_type": "code",
-      "source_file": "apps/web/src/components/tx-hash-link.tsx",
-      "source_location": "L22",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L11",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_components_tx_hash_link_txhashlink",
-      "community": 119,
-      "community_name": "tx-hash-link.tsx",
-      "norm_label": "txhashlink()"
-    },
-    {
-      "label": "getExplorerTxUrl()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/explorer.ts",
-      "source_location": "L3",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_explorer_getexplorertxurl",
-      "community": 119,
-      "community_name": "tx-hash-link.tsx",
-      "norm_label": "getexplorertxurl()"
-    },
-    {
-      "label": "truncateHash()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/explorer.ts",
-      "source_location": "L12",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_explorer_truncatehash",
-      "community": 119,
-      "community_name": "tx-hash-link.tsx",
-      "norm_label": "truncatehash()"
+      "id": "apps_web_src_app_locale_earnings_page_generatemetadata",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "generatemetadata()"
     },
     {
       "label": "OrganizerPage()",
@@ -1319,7 +1372,7 @@
       "_origin": "ast",
       "id": "apps_web_src_app_locale_organizer_page_organizerpage",
       "community": 120,
-      "community_name": "wallet-connect-button.tsx",
+      "community_name": "earnings-dashboard.tsx",
       "norm_label": "organizerpage()"
     },
     {
@@ -1331,8 +1384,68 @@
       "_origin": "ast",
       "id": "apps_web_src_app_locale_participant_page_participantpage",
       "community": 120,
-      "community_name": "wallet-connect-button.tsx",
+      "community_name": "earnings-dashboard.tsx",
       "norm_label": "participantpage()"
+    },
+    {
+      "label": "EarningsDashboard()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L35",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_earnings_earnings_dashboard_earningsdashboard",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earningsdashboard()"
+    },
+    {
+      "label": "PayoutRow()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L182",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_earnings_earnings_dashboard_payoutrow",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "payoutrow()"
+    },
+    {
+      "label": "RankBadge()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L243",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_earnings_earnings_dashboard_rankbadge",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "rankbadge()"
+    },
+    {
+      "label": "NoEarningsFoundState()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/earnings/empty-state.tsx",
+      "source_location": "L31",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_earnings_empty_state_noearningsfoundstate",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "noearningsfoundstate()"
+    },
+    {
+      "label": "WalletNotConnectedEarningsState()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/earnings/empty-state.tsx",
+      "source_location": "L8",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_earnings_empty_state_walletnotconnectedearningsstate",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "walletnotconnectedearningsstate()"
     },
     {
       "label": "truncate()",
@@ -1343,7 +1456,7 @@
       "_origin": "ast",
       "id": "apps_web_src_components_wallet_connect_button_truncate",
       "community": 120,
-      "community_name": "wallet-connect-button.tsx",
+      "community_name": "earnings-dashboard.tsx",
       "norm_label": "truncate()"
     },
     {
@@ -1355,8 +1468,80 @@
       "_origin": "ast",
       "id": "apps_web_src_components_wallet_connect_button_walletconnectbutton",
       "community": 120,
-      "community_name": "wallet-connect-button.tsx",
+      "community_name": "earnings-dashboard.tsx",
       "norm_label": "walletconnectbutton()"
+    },
+    {
+      "label": "getParticipantEarnings()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L85",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_query_getparticipantearnings",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "getparticipantearnings()"
+    },
+    {
+      "label": "getSampleEarnings()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L7",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_query_getsampleearnings",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "getsampleearnings()"
+    },
+    {
+      "label": "isValidWalletRef()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L71",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_query_isvalidwalletref",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "isvalidwalletref()"
+    },
+    {
+      "label": "calculateEarningsSummary()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L7",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_summary_calculateearningssummary",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "calculateearningssummary()"
+    },
+    {
+      "label": "filterAndSortEarnings()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L52",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_summary_filterandsortearnings",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "filterandsortearnings()"
+    },
+    {
+      "label": "formatPayoutDate()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L97",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_summary_formatpayoutdate",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "formatpayoutdate()"
     },
     {
       "label": "useWallet()",
@@ -1367,7 +1552,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider_usewallet",
       "community": 120,
-      "community_name": "wallet-connect-button.tsx",
+      "community_name": "earnings-dashboard.tsx",
       "norm_label": "usewallet()"
     },
     {
@@ -1475,7 +1660,7 @@
       "_origin": "ast",
       "id": "apps_web_src_app_api_auth_nonce_route_get",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "get()"
     },
     {
@@ -1487,7 +1672,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_auth_utils_consumeauthnonce",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "consumeauthnonce()"
     },
     {
@@ -1499,7 +1684,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_auth_utils_formatauthmessage",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "formatauthmessage()"
     },
     {
@@ -1511,7 +1696,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_auth_utils_issueauthnonce",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "issueauthnonce()"
     },
     {
@@ -1523,7 +1708,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_auth_utils_verifystellarsignature",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "verifystellarsignature()"
     },
     {
@@ -1535,7 +1720,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_kit_initwalletkit",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "initwalletkit()"
     },
     {
@@ -1547,7 +1732,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider_walletprovider",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "walletprovider()"
     },
     {
@@ -1559,7 +1744,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_associateverifiedwallet",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "associateverifiedwallet()"
     },
     {
@@ -1571,7 +1756,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_clearwalletsession",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "clearwalletsession()"
     },
     {
@@ -1583,7 +1768,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_getauthnonce",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "getauthnonce()"
     },
     {
@@ -1595,7 +1780,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_getsessionwallet",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "getsessionwallet()"
     },
     {
@@ -1607,7 +1792,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_updatewalletemail",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "updatewalletemail()"
     },
     {
@@ -1619,116 +1804,68 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_validation_validateoptionalemail",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "validateoptionalemail()"
     },
     {
-      "label": "MotionPreferenceProvider()",
+      "label": "generateMetadata()",
       "file_type": "code",
-      "source_file": "apps/web/src/hooks/use-reduced-motion.tsx",
-      "source_location": "L40",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L30",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_hooks_use_reduced_motion_motionpreferenceprovider",
+      "id": "apps_web_src_app_locale_layout_generatemetadata",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "motionpreferenceprovider()"
+      "community_name": "site-header.tsx",
+      "norm_label": "generatemetadata()"
     },
     {
-      "label": "defaultMatcher()",
+      "label": "generateStaticParams()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.ts",
-      "source_location": "L47",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L26",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_defaultmatcher",
+      "id": "apps_web_src_app_locale_layout_generatestaticparams",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "defaultmatcher()"
+      "community_name": "site-header.tsx",
+      "norm_label": "generatestaticparams()"
     },
     {
-      "label": "isMotionPreference()",
+      "label": "LocaleLayout()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L116",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_app_locale_layout_localelayout",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "localelayout()"
+    },
+    {
+      "label": "OfflinePage()",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/offline/page.tsx",
       "source_location": "L8",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_ismotionpreference",
+      "id": "apps_web_src_app_offline_page_offlinepage",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "ismotionpreference()"
+      "community_name": "site-header.tsx",
+      "norm_label": "offlinepage()"
     },
     {
-      "label": "parseMotionPreference()",
+      "label": "sitemap()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.ts",
-      "source_location": "L18",
+      "source_file": "apps/web/src/app/sitemap.ts",
+      "source_location": "L4",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_parsemotionpreference",
+      "id": "apps_web_src_app_sitemap_sitemap",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "parsemotionpreference()"
-    },
-    {
-      "label": "readStoredMotionPreference()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.ts",
-      "source_location": "L77",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_readstoredmotionpreference",
-      "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "readstoredmotionpreference()"
-    },
-    {
-      "label": "resolveReducedMotion()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.ts",
-      "source_location": "L31",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_resolvereducedmotion",
-      "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "resolvereducedmotion()"
-    },
-    {
-      "label": "fakeMediaQueryList()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.test.ts",
-      "source_location": "L65",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_test_fakemediaquerylist",
-      "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "fakemediaquerylist()"
-    },
-    {
-      "label": "watchReducedMotion()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.ts",
-      "source_location": "L61",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_watchreducedmotion",
-      "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "watchreducedmotion()"
-    },
-    {
-      "label": "writeStoredMotionPreference()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.ts",
-      "source_location": "L88",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_writestoredmotionpreference",
-      "community": 132,
-      "community_name": "use-reduced-motion.tsx",
-      "norm_label": "writestoredmotionpreference()"
+      "community_name": "site-header.tsx",
+      "norm_label": "sitemap()"
     },
     {
       "label": "LanguageSwitcher()",
@@ -1738,9 +1875,33 @@
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_components_language_switcher_languageswitcher",
-      "community": 136,
+      "community": 132,
       "community_name": "site-header.tsx",
       "norm_label": "languageswitcher()"
+    },
+    {
+      "label": "PwaRegister()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/pwa-register.tsx",
+      "source_location": "L5",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_pwa_register_pwaregister",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "pwaregister()"
+    },
+    {
+      "label": "ReduceMotionToggle()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/reduce-motion-toggle.tsx",
+      "source_location": "L31",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_reduce_motion_toggle_reducemotiontoggle",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "reducemotiontoggle()"
     },
     {
       "label": "resolveHeaderVariant()",
@@ -1750,9 +1911,21 @@
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_components_resolve_header_variant_resolveheadervariant",
-      "community": 136,
+      "community": 132,
       "community_name": "site-header.tsx",
       "norm_label": "resolveheadervariant()"
+    },
+    {
+      "label": "SiteFooter()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/site-footer.tsx",
+      "source_location": "L4",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_site_footer_sitefooter",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "sitefooter()"
     },
     {
       "label": "GithubIcon()",
@@ -1762,7 +1935,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_components_site_header_githubicon",
-      "community": 136,
+      "community": 132,
       "community_name": "site-header.tsx",
       "norm_label": "githubicon()"
     },
@@ -1774,7 +1947,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_components_site_header_siteheader",
-      "community": 136,
+      "community": 132,
       "community_name": "site-header.tsx",
       "norm_label": "siteheader()"
     },
@@ -1786,9 +1959,57 @@
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_components_staggered_menu_staggeredmenu",
-      "community": 136,
+      "community": 132,
       "community_name": "site-header.tsx",
       "norm_label": "staggeredmenu()"
+    },
+    {
+      "label": "TxHashLink()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/tx-hash-link.tsx",
+      "source_location": "L22",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_tx_hash_link_txhashlink",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "txhashlink()"
+    },
+    {
+      "label": "Button()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/button.tsx",
+      "source_location": "L43",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_components_ui_button_button",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "button()"
+    },
+    {
+      "label": "MotionPreferenceProvider()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/use-reduced-motion.tsx",
+      "source_location": "L40",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_hooks_use_reduced_motion_motionpreferenceprovider",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "motionpreferenceprovider()"
+    },
+    {
+      "label": "useMotionPreference()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/use-reduced-motion.tsx",
+      "source_location": "L88",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_hooks_use_reduced_motion_usemotionpreference",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "usemotionpreference()"
     },
     {
       "label": "useScrolledPast()",
@@ -1798,21 +2019,153 @@
       "_callable": true,
       "_origin": "ast",
       "id": "apps_web_src_hooks_use_scrolled_past_usescrolledpast",
-      "community": 136,
+      "community": 132,
       "community_name": "site-header.tsx",
       "norm_label": "usescrolledpast()"
     },
     {
-      "label": "transitionPrize()",
+      "label": "getExplorerTxUrl()",
       "file_type": "code",
-      "source_file": "apps/web/src/lib/state-machines/apply.ts",
-      "source_location": "L38",
+      "source_file": "apps/web/src/lib/explorer.ts",
+      "source_location": "L3",
       "_callable": true,
       "_origin": "ast",
-      "id": "apps_web_src_lib_state_machines_apply_transitionprize",
-      "community": 20,
-      "community_name": "apply.ts",
-      "norm_label": "transitionprize()"
+      "id": "apps_web_src_lib_explorer_getexplorertxurl",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "getexplorertxurl()"
+    },
+    {
+      "label": "truncateHash()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/explorer.ts",
+      "source_location": "L12",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_explorer_truncatehash",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "truncatehash()"
+    },
+    {
+      "label": "defaultMatcher()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_location": "L47",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_defaultmatcher",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "defaultmatcher()"
+    },
+    {
+      "label": "isMotionPreference()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_location": "L8",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_ismotionpreference",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "ismotionpreference()"
+    },
+    {
+      "label": "parseMotionPreference()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_location": "L18",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_parsemotionpreference",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "parsemotionpreference()"
+    },
+    {
+      "label": "preferenceForToggle()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_location": "L41",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_preferencefortoggle",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "preferencefortoggle()"
+    },
+    {
+      "label": "readStoredMotionPreference()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_location": "L77",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_readstoredmotionpreference",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "readstoredmotionpreference()"
+    },
+    {
+      "label": "resolveReducedMotion()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_location": "L31",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_resolvereducedmotion",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "resolvereducedmotion()"
+    },
+    {
+      "label": "fakeMediaQueryList()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.test.ts",
+      "source_location": "L65",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_test_fakemediaquerylist",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "fakemediaquerylist()"
+    },
+    {
+      "label": "watchReducedMotion()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_location": "L61",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_watchreducedmotion",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "watchreducedmotion()"
+    },
+    {
+      "label": "writeStoredMotionPreference()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/motion-preference.ts",
+      "source_location": "L88",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_motion_preference_writestoredmotionpreference",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "writestoredmotionpreference()"
+    },
+    {
+      "label": "cn()",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/utils.ts",
+      "source_location": "L4",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "apps_web_src_lib_utils_cn",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "cn()"
     },
     {
       "label": ".constructor()",
@@ -1823,7 +2176,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_errors_invalidtransitionerror_constructor",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": ".constructor()"
     },
     {
@@ -1835,7 +2188,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_event_asserteventtransition",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "asserteventtransition()"
     },
     {
@@ -1847,7 +2200,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_event_cantransitionevent",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "cantransitionevent()"
     },
     {
@@ -1859,7 +2212,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize_assertprizetransition",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "assertprizetransition()"
     },
     {
@@ -1871,80 +2224,8 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize_cantransitionprize",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "cantransitionprize()"
-    },
-    {
-      "label": "OfflinePage()",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/offline/page.tsx",
-      "source_location": "L8",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_app_offline_page_offlinepage",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "offlinepage()"
-    },
-    {
-      "label": "ReduceMotionToggle()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/reduce-motion-toggle.tsx",
-      "source_location": "L31",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_components_reduce_motion_toggle_reducemotiontoggle",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "reducemotiontoggle()"
-    },
-    {
-      "label": "Button()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/button.tsx",
-      "source_location": "L43",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_components_ui_button_button",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "button()"
-    },
-    {
-      "label": "useMotionPreference()",
-      "file_type": "code",
-      "source_file": "apps/web/src/hooks/use-reduced-motion.tsx",
-      "source_location": "L88",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_hooks_use_reduced_motion_usemotionpreference",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "usemotionpreference()"
-    },
-    {
-      "label": "preferenceForToggle()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/motion-preference.ts",
-      "source_location": "L41",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_motion_preference_preferencefortoggle",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "preferencefortoggle()"
-    },
-    {
-      "label": "cn()",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/utils.ts",
-      "source_location": "L4",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_lib_utils_cn",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "cn()"
     },
     {
       "label": "Home()",
@@ -2259,66 +2540,6 @@
       "norm_label": "usereducedmotion()"
     },
     {
-      "label": "generateMetadata()",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L30",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_app_locale_layout_generatemetadata",
-      "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "generatemetadata()"
-    },
-    {
-      "label": "generateStaticParams()",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L26",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_app_locale_layout_generatestaticparams",
-      "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "generatestaticparams()"
-    },
-    {
-      "label": "LocaleLayout()",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L116",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_app_locale_layout_localelayout",
-      "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "localelayout()"
-    },
-    {
-      "label": "PwaRegister()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/pwa-register.tsx",
-      "source_location": "L5",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_components_pwa_register_pwaregister",
-      "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "pwaregister()"
-    },
-    {
-      "label": "SiteFooter()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/site-footer.tsx",
-      "source_location": "L4",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "apps_web_src_components_site_footer_sitefooter",
-      "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "sitefooter()"
-    },
-    {
       "label": "log()",
       "file_type": "code",
       "source_file": "spikes/k03-wallet-compat/web/main.ts",
@@ -2432,6 +2653,50 @@
       "norm_label": "adr-0005"
     },
     {
+      "label": "stellar-payment.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "stellar-payment.ts"
+    },
+    {
+      "label": "stellar-payment.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment_test",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "stellar-payment.test.ts"
+    },
+    {
+      "label": "FROM",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment_test_from",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "from"
+    },
+    {
+      "label": "TO",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment_test_to",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "to"
+    },
+    {
       "label": "trustless-work-adapter.ts",
       "file_type": "code",
       "source_file": "apps/web/src/lib/escrow/trustless-work-adapter.ts",
@@ -2476,7 +2741,7 @@
       "norm_label": "trustlessworkadapter"
     },
     {
-      "label": "types.ts",
+      "label": "escrow/types.ts",
       "file_type": "code",
       "source_file": "apps/web/src/lib/escrow/types.ts",
       "source_location": "L1",
@@ -2484,7 +2749,29 @@
       "id": "apps_web_src_lib_escrow_types",
       "community": 1,
       "community_name": "trustless-work-adapter.ts",
-      "norm_label": "types.ts"
+      "norm_label": "escrow/types.ts"
+    },
+    {
+      "label": "STELLAR_NETWORK_PASSPHRASE",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_stellar_network_stellar_network_passphrase",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "stellar_network_passphrase"
+    },
+    {
+      "label": "ADR-0007",
+      "file_type": "concept",
+      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_escrow_stellar_payment_ts_docref_adr_0007",
+      "community": 1,
+      "community_name": "trustless-work-adapter.ts",
+      "norm_label": "adr-0007"
     },
     {
       "label": "ADR-0001",
@@ -3249,6 +3536,50 @@
       "norm_label": "accounts"
     },
     {
+      "label": "db.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/db.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_db",
+      "community": 107,
+      "community_name": "seed-demo-event.ts",
+      "norm_label": "db.ts"
+    },
+    {
+      "label": "db",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/db.ts",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_db_db",
+      "community": 107,
+      "community_name": "seed-demo-event.ts",
+      "norm_label": "db"
+    },
+    {
+      "label": "globalForPrisma",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/db.ts",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_db_globalforprisma",
+      "community": 107,
+      "community_name": "seed-demo-event.ts",
+      "norm_label": "globalforprisma"
+    },
+    {
+      "label": "apply.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/state-machines/apply.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_state_machines_apply",
+      "community": 107,
+      "community_name": "seed-demo-event.ts",
+      "norm_label": "apply.ts"
+    },
+    {
       "label": "verify-and-record.ts",
       "file_type": "code",
       "source_file": "apps/web/src/lib/trustline/verify-and-record.ts",
@@ -3280,6 +3611,17 @@
       "community": 107,
       "community_name": "seed-demo-event.ts",
       "norm_label": "verify-trustline.test.ts"
+    },
+    {
+      "label": "ADR-0007",
+      "file_type": "concept",
+      "source_file": "apps/web/src/lib/state-machines/apply.ts",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_state_machines_apply_ts_docref_adr_0007",
+      "community": 107,
+      "community_name": "seed-demo-event.ts",
+      "norm_label": "adr-0007"
     },
     {
       "label": "ADR-0004",
@@ -3678,50 +4020,6 @@
       "norm_label": "baseenv"
     },
     {
-      "label": "stellar-payment.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment",
-      "community": 111,
-      "community_name": "stellar-network.ts",
-      "norm_label": "stellar-payment.ts"
-    },
-    {
-      "label": "stellar-payment.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_test",
-      "community": 111,
-      "community_name": "stellar-network.ts",
-      "norm_label": "stellar-payment.test.ts"
-    },
-    {
-      "label": "FROM",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
-      "source_location": "L11",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_test_from",
-      "community": 111,
-      "community_name": "stellar-network.ts",
-      "norm_label": "from"
-    },
-    {
-      "label": "TO",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.test.ts",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_test_to",
-      "community": 111,
-      "community_name": "stellar-network.ts",
-      "norm_label": "to"
-    },
-    {
       "label": "transaction-confirmation.ts",
       "file_type": "code",
       "source_file": "apps/web/src/lib/reconciliation/transaction-confirmation.ts",
@@ -3777,6 +4075,17 @@
       "norm_label": "network_config"
     },
     {
+      "label": "STELLAR_ACCOUNT_ID",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/stellar-network.ts",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_stellar_network_stellar_account_id",
+      "community": 111,
+      "community_name": "stellar-network.ts",
+      "norm_label": "stellar_account_id"
+    },
+    {
       "label": "STELLAR_NETWORK",
       "file_type": "code",
       "source_file": "apps/web/src/lib/stellar-network.ts",
@@ -3788,17 +4097,6 @@
       "norm_label": "stellar_network"
     },
     {
-      "label": "STELLAR_NETWORK_PASSPHRASE",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network_stellar_network_passphrase",
-      "community": 111,
-      "community_name": "stellar-network.ts",
-      "norm_label": "stellar_network_passphrase"
-    },
-    {
       "label": "kit.ts",
       "file_type": "code",
       "source_file": "apps/web/src/lib/wallet/kit.ts",
@@ -3808,17 +4106,6 @@
       "community": 111,
       "community_name": "stellar-network.ts",
       "norm_label": "kit.ts"
-    },
-    {
-      "label": "ADR-0007",
-      "file_type": "concept",
-      "source_file": "apps/web/src/lib/escrow/stellar-payment.ts",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_escrow_stellar_payment_ts_docref_adr_0007",
-      "community": 111,
-      "community_name": "stellar-network.ts",
-      "norm_label": "adr-0007"
     },
     {
       "label": "CODE_OF_CONDUCT.md",
@@ -3964,39 +4251,6 @@
       "norm_label": "scope"
     },
     {
-      "label": "db.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/db.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_db",
-      "community": 113,
-      "community_name": "db.ts",
-      "norm_label": "db.ts"
-    },
-    {
-      "label": "db",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/db.ts",
-      "source_location": "L23",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_db_db",
-      "community": 113,
-      "community_name": "db.ts",
-      "norm_label": "db"
-    },
-    {
-      "label": "globalForPrisma",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/db.ts",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_db_globalforprisma",
-      "community": 113,
-      "community_name": "db.ts",
-      "norm_label": "globalforprisma"
-    },
-    {
       "label": "run.ts",
       "file_type": "code",
       "source_file": "apps/web/src/lib/reconciliation/run.ts",
@@ -4004,7 +4258,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_reconciliation_run",
       "community": 113,
-      "community_name": "db.ts",
+      "community_name": "run.ts",
       "norm_label": "run.ts"
     },
     {
@@ -4015,7 +4269,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_reconciliation_stalled_forwards",
       "community": 113,
-      "community_name": "db.ts",
+      "community_name": "run.ts",
       "norm_label": "stalled-forwards.ts"
     },
     {
@@ -4026,7 +4280,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_reconciliation_stalled_forwards_test",
       "community": 113,
-      "community_name": "db.ts",
+      "community_name": "run.ts",
       "norm_label": "stalled-forwards.test.ts"
     },
     {
@@ -4037,7 +4291,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_reconciliation_stalled_forwards_test_now",
       "community": 113,
-      "community_name": "db.ts",
+      "community_name": "run.ts",
       "norm_label": "now"
     },
     {
@@ -4048,7 +4302,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_reconciliation_run_ts_docref_adr_0007",
       "community": 113,
-      "community_name": "db.ts",
+      "community_name": "run.ts",
       "norm_label": "adr-0007"
     },
     {
@@ -4059,7 +4313,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_reconciliation_stalled_forwards_ts_docref_adr_0007",
       "community": 113,
-      "community_name": "db.ts",
+      "community_name": "run.ts",
       "norm_label": "adr-0007"
     },
     {
@@ -4149,116 +4403,6 @@
       "norm_label": "what happens with the results",
       "community_name": "K03 (server-build-plan.md) \u2014 wallet compatibility check",
       "id": "spikes_k03_wallet_compat_readme_what_happens_with_the_results"
-    },
-    {
-      "label": "sitemap.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/sitemap.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_app_sitemap",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "sitemap.ts"
-    },
-    {
-      "label": "language-switcher.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/language-switcher.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_language_switcher",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "language-switcher.tsx"
-    },
-    {
-      "label": "LOCALE_LABELS",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/language-switcher.tsx",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "apps_web_src_components_language_switcher_locale_labels",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "locale_labels"
-    },
-    {
-      "label": "navigation.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/i18n/navigation.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_i18n_navigation",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "navigation.ts"
-    },
-    {
-      "label": "{ Link, redirect, usePathname, useRouter, getPathname }",
-      "file_type": "code",
-      "source_file": "apps/web/src/i18n/navigation.ts",
-      "source_location": "L4",
-      "_origin": "ast",
-      "id": "apps_web_src_i18n_navigation_link_redirect_usepathname_userouter_getpathname",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "{ link, redirect, usepathname, userouter, getpathname }"
-    },
-    {
-      "label": "request.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/i18n/request.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_i18n_request",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "request.ts"
-    },
-    {
-      "label": "routing.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/i18n/routing.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_i18n_routing",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "routing.ts"
-    },
-    {
-      "label": "routing",
-      "file_type": "code",
-      "source_file": "apps/web/src/i18n/routing.ts",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "apps_web_src_i18n_routing_routing",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "routing"
-    },
-    {
-      "label": "proxy.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/proxy.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_proxy",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "proxy.ts"
-    },
-    {
-      "label": "config",
-      "file_type": "code",
-      "source_file": "apps/web/src/proxy.ts",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "apps_web_src_proxy_config",
-      "community": 116,
-      "community_name": "navigation.ts",
-      "norm_label": "config"
     },
     {
       "label": "prisma/README.md",
@@ -4360,48 +4504,59 @@
       "norm_label": "soroban project"
     },
     {
-      "label": "tx-hash-link.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/tx-hash-link.tsx",
+      "label": "SECURITY.md",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_components_tx_hash_link",
+      "id": "security",
       "community": 119,
-      "community_name": "tx-hash-link.tsx",
-      "norm_label": "tx-hash-link.tsx"
+      "community_name": "Security Policy",
+      "norm_label": "security.md"
     },
     {
-      "label": "tx-hash-link.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/tx-hash-link.test.ts",
-      "source_location": "L1",
+      "label": "Reporting a Vulnerability",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
+      "source_location": "L7",
       "_origin": "ast",
-      "id": "apps_web_src_components_tx_hash_link_test",
+      "id": "security_reporting_a_vulnerability",
       "community": 119,
-      "community_name": "tx-hash-link.tsx",
-      "norm_label": "tx-hash-link.test.ts"
+      "community_name": "Security Policy",
+      "norm_label": "reporting a vulnerability"
     },
     {
-      "label": "explorer.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/explorer.ts",
-      "source_location": "L1",
+      "label": "Scope",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
+      "source_location": "L30",
       "_origin": "ast",
-      "id": "apps_web_src_lib_explorer",
+      "id": "security_scope",
       "community": 119,
-      "community_name": "tx-hash-link.tsx",
-      "norm_label": "explorer.ts"
+      "community_name": "Security Policy",
+      "norm_label": "scope"
     },
     {
-      "label": "explorer.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/explorer.test.ts",
+      "label": "Security Policy",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_web_src_lib_explorer_test",
+      "id": "security_security_policy",
       "community": 119,
-      "community_name": "tx-hash-link.tsx",
-      "norm_label": "explorer.test.ts"
+      "community_name": "Security Policy",
+      "norm_label": "security policy"
+    },
+    {
+      "label": "Supported Versions",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "security_supported_versions",
+      "community": 119,
+      "community_name": "Security Policy",
+      "norm_label": "supported versions"
     },
     {
       "label": "CONTRIBUTING.md",
@@ -4415,6 +4570,28 @@
       "id": "contributing"
     },
     {
+      "label": "earnings/page.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_app_locale_earnings_page",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earnings/page.tsx"
+    },
+    {
+      "label": "dynamic",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "apps_web_src_app_locale_earnings_page_dynamic",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "dynamic"
+    },
+    {
       "label": "organizer/page.tsx",
       "file_type": "code",
       "source_file": "apps/web/src/app/[locale]/organizer/page.tsx",
@@ -4422,7 +4599,7 @@
       "_origin": "ast",
       "id": "apps_web_src_app_locale_organizer_page",
       "community": 120,
-      "community_name": "wallet-connect-button.tsx",
+      "community_name": "earnings-dashboard.tsx",
       "norm_label": "organizer/page.tsx"
     },
     {
@@ -4433,8 +4610,30 @@
       "_origin": "ast",
       "id": "apps_web_src_app_locale_participant_page",
       "community": 120,
-      "community_name": "wallet-connect-button.tsx",
+      "community_name": "earnings-dashboard.tsx",
       "norm_label": "participant/page.tsx"
+    },
+    {
+      "label": "earnings-dashboard.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_earnings_earnings_dashboard",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earnings-dashboard.tsx"
+    },
+    {
+      "label": "empty-state.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/earnings/empty-state.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_earnings_empty_state",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "empty-state.tsx"
     },
     {
       "label": "wallet-connect-button.tsx",
@@ -4444,8 +4643,52 @@
       "_origin": "ast",
       "id": "apps_web_src_components_wallet_connect_button",
       "community": 120,
-      "community_name": "wallet-connect-button.tsx",
+      "community_name": "earnings-dashboard.tsx",
       "norm_label": "wallet-connect-button.tsx"
+    },
+    {
+      "label": "earnings.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/earnings.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_earnings_test",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earnings.test.ts"
+    },
+    {
+      "label": "query.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_query",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "query.ts"
+    },
+    {
+      "label": "summary.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_summary",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "summary.ts"
+    },
+    {
+      "label": "earnings/types.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/earnings/types.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_earnings_types",
+      "community": 120,
+      "community_name": "earnings-dashboard.tsx",
+      "norm_label": "earnings/types.ts"
     },
     {
       "label": "event-escrow",
@@ -4524,7 +4767,7 @@
       "_origin": "ast",
       "id": "github_pull_request_template",
       "community": 124,
-      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "community_name": "layout.tsx",
       "norm_label": "pull_request_template.md"
     },
     {
@@ -4535,7 +4778,7 @@
       "_origin": "ast",
       "id": "github_pull_request_template_docs",
       "community": 124,
-      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "community_name": "layout.tsx",
       "norm_label": "docs"
     },
     {
@@ -4546,7 +4789,7 @@
       "_origin": "ast",
       "id": "github_pull_request_template_how_i_verified_it",
       "community": 124,
-      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "community_name": "layout.tsx",
       "norm_label": "how i verified it"
     },
     {
@@ -4557,7 +4800,7 @@
       "_origin": "ast",
       "id": "github_pull_request_template_money_path_change",
       "community": 124,
-      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "community_name": "layout.tsx",
       "norm_label": "money-path change?"
     },
     {
@@ -4568,7 +4811,7 @@
       "_origin": "ast",
       "id": "github_pull_request_template_screenshots",
       "community": 124,
-      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "community_name": "layout.tsx",
       "norm_label": "screenshots"
     },
     {
@@ -4579,7 +4822,7 @@
       "_origin": "ast",
       "id": "github_pull_request_template_what_this_does",
       "community": 124,
-      "community_name": "PULL_REQUEST_TEMPLATE.md",
+      "community_name": "layout.tsx",
       "norm_label": "what this does"
     },
     {
@@ -4774,7 +5017,7 @@
       "_origin": "ast",
       "id": "apps_web_src_app_api_auth_nonce_route",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "route.ts"
     },
     {
@@ -4785,19 +5028,8 @@
       "_origin": "ast",
       "id": "apps_web_src_app_api_auth_nonce_route_dynamic",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "dynamic"
-    },
-    {
-      "label": "STELLAR_ACCOUNT_ID",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/stellar-network.ts",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_stellar_network_stellar_account_id",
-      "community": 128,
-      "community_name": "session.test.ts",
-      "norm_label": "stellar_account_id"
     },
     {
       "label": "auth-utils.ts",
@@ -4807,7 +5039,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_auth_utils",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "auth-utils.ts"
     },
     {
@@ -4818,7 +5050,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_auth_utils_auth_message_prefix",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "auth_message_prefix"
     },
     {
@@ -4829,7 +5061,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_auth_utils_nonce_ttl_ms",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "nonce_ttl_ms"
     },
     {
@@ -4840,7 +5072,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "provider.tsx"
     },
     {
@@ -4851,7 +5083,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_provider_walletcontext",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "walletcontext"
     },
     {
@@ -4862,7 +5094,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "session.ts"
     },
     {
@@ -4873,7 +5105,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_test",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "session.test.ts"
     },
     {
@@ -4884,7 +5116,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_test_albedomodule",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "{\n\talbedomodule,\n}"
     },
     {
@@ -4895,7 +5127,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_test_freighter_id_freightermodule",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "{\n\tfreighter_id,\n\tfreightermodule,\n}"
     },
     {
@@ -4906,7 +5138,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_test_lobstrmodule",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "{\n\tlobstrmodule,\n}"
     },
     {
@@ -4917,7 +5149,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_test_mockcookiemap_mockdb_noncerows",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "{ mockcookiemap, mockdb, noncerows }"
     },
     {
@@ -4928,7 +5160,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_test_require",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "require"
     },
     {
@@ -4939,7 +5171,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_test_xbullmodule",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "{\n\txbullmodule,\n}"
     },
     {
@@ -4950,7 +5182,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_validation",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "validation.ts"
     },
     {
@@ -4961,7 +5193,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_validation_email_regex",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "email_regex"
     },
     {
@@ -4972,7 +5204,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_validation_unsupported_albedo_message",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "unsupported_albedo_message"
     },
     {
@@ -4983,96 +5215,8 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_wallet_session_rationale_21",
       "community": 128,
-      "community_name": "session.test.ts",
+      "community_name": "session.ts",
       "norm_label": "note: no money-moving action ever trusts this session alone. every escrow"
-    },
-    {
-      "label": "product-flows.md",
-      "file_type": "document",
-      "source_file": "docs/product-flows.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 129,
-      "norm_label": "product-flows.md",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_product_flows"
-    },
-    {
-      "label": "ui-motion.md",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 129,
-      "norm_label": "ui-motion.md",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion"
-    },
-    {
-      "label": "Astrea \u2014 UI motion & React Bits components",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 129,
-      "norm_label": "astrea \u2014 ui motion & react bits components",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_astrea_ui_motion_react_bits_components"
-    },
-    {
-      "label": "Build-plan cross-references",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L62",
-      "_origin": "ast",
-      "community": 129,
-      "norm_label": "build-plan cross-references",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_build_plan_cross_references"
-    },
-    {
-      "label": "Component placement",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L40",
-      "_origin": "ast",
-      "community": 129,
-      "norm_label": "component placement",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_component_placement"
-    },
-    {
-      "label": "Corrections to the original placement assumptions",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L54",
-      "_origin": "ast",
-      "community": 129,
-      "norm_label": "corrections to the original placement assumptions",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_corrections_to_the_original_placement_assumptions"
-    },
-    {
-      "label": "Hero background \u2014 decision",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 129,
-      "norm_label": "hero background \u2014 decision",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_hero_background_decision"
-    },
-    {
-      "label": "Principles",
-      "file_type": "document",
-      "source_file": "docs/ui-motion.md",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 129,
-      "norm_label": "principles",
-      "community_name": "Astrea \u2014 UI motion & React Bits components",
-      "id": "docs_ui_motion_principles"
     },
     {
       "label": "Result",
@@ -5416,6 +5560,215 @@
       "id": "readme_wallet_requirements"
     },
     {
+      "label": "layout.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_app_locale_layout",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "layout.tsx"
+    },
+    {
+      "label": "geistMono",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "apps_web_src_app_locale_layout_geistmono",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "geistmono"
+    },
+    {
+      "label": "geistSans",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "apps_web_src_app_locale_layout_geistsans",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "geistsans"
+    },
+    {
+      "label": "viewport",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/[locale]/layout.tsx",
+      "source_location": "L109",
+      "_origin": "ast",
+      "id": "apps_web_src_app_locale_layout_viewport",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "viewport"
+    },
+    {
+      "label": "offline/page.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/offline/page.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_app_offline_page",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "offline/page.tsx"
+    },
+    {
+      "label": "sitemap.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/sitemap.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_app_sitemap",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "sitemap.ts"
+    },
+    {
+      "label": "language-switcher.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/language-switcher.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_language_switcher",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "language-switcher.tsx"
+    },
+    {
+      "label": "LOCALE_LABELS",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/language-switcher.tsx",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "apps_web_src_components_language_switcher_locale_labels",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "locale_labels"
+    },
+    {
+      "label": "marketing.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/marketing/marketing.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_marketing_marketing_test",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "marketing.test.ts"
+    },
+    {
+      "label": "pwa-register.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/pwa-register.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_pwa_register",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "pwa-register.tsx"
+    },
+    {
+      "label": "reduce-motion-toggle.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/reduce-motion-toggle.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_reduce_motion_toggle",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "reduce-motion-toggle.tsx"
+    },
+    {
+      "label": "resolve-header-variant.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/resolve-header-variant.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_resolve_header_variant",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "resolve-header-variant.ts"
+    },
+    {
+      "label": "site-footer.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/site-footer.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_site_footer",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "site-footer.tsx"
+    },
+    {
+      "label": "site-header.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/site-header.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_site_header",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "site-header.tsx"
+    },
+    {
+      "label": "staggered-menu.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/staggered-menu.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_staggered_menu",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "staggered-menu.tsx"
+    },
+    {
+      "label": "tx-hash-link.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/tx-hash-link.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_tx_hash_link",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "tx-hash-link.tsx"
+    },
+    {
+      "label": "tx-hash-link.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/tx-hash-link.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_tx_hash_link_test",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "tx-hash-link.test.ts"
+    },
+    {
+      "label": "button.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/button.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_components_ui_button",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "button.tsx"
+    },
+    {
+      "label": "buttonVariants",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/button.tsx",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "apps_web_src_components_ui_button_buttonvariants",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "buttonvariants"
+    },
+    {
       "label": "use-reduced-motion.tsx",
       "file_type": "code",
       "source_file": "apps/web/src/hooks/use-reduced-motion.tsx",
@@ -5423,7 +5776,7 @@
       "_origin": "ast",
       "id": "apps_web_src_hooks_use_reduced_motion",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
+      "community_name": "site-header.tsx",
       "norm_label": "use-reduced-motion.tsx"
     },
     {
@@ -5434,8 +5787,96 @@
       "_origin": "ast",
       "id": "apps_web_src_hooks_use_reduced_motion_motionpreferencecontext",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
+      "community_name": "site-header.tsx",
       "norm_label": "motionpreferencecontext"
+    },
+    {
+      "label": "use-scrolled-past.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/use-scrolled-past.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_hooks_use_scrolled_past",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "use-scrolled-past.ts"
+    },
+    {
+      "label": "navigation.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/i18n/navigation.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_i18n_navigation",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "navigation.ts"
+    },
+    {
+      "label": "{ Link, redirect, usePathname, useRouter, getPathname }",
+      "file_type": "code",
+      "source_file": "apps/web/src/i18n/navigation.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "apps_web_src_i18n_navigation_link_redirect_usepathname_userouter_getpathname",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "{ link, redirect, usepathname, userouter, getpathname }"
+    },
+    {
+      "label": "request.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/i18n/request.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_i18n_request",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "request.ts"
+    },
+    {
+      "label": "routing.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/i18n/routing.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_i18n_routing",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "routing.ts"
+    },
+    {
+      "label": "routing",
+      "file_type": "code",
+      "source_file": "apps/web/src/i18n/routing.ts",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "apps_web_src_i18n_routing_routing",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "routing"
+    },
+    {
+      "label": "explorer.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/explorer.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_explorer",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "explorer.ts"
+    },
+    {
+      "label": "explorer.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/explorer.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_explorer_test",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "explorer.test.ts"
     },
     {
       "label": "motion-preference.ts",
@@ -5445,7 +5886,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_motion_preference",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
+      "community_name": "site-header.tsx",
       "norm_label": "motion-preference.ts"
     },
     {
@@ -5456,7 +5897,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_motion_preference_motion_preference_storage_key",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
+      "community_name": "site-header.tsx",
       "norm_label": "motion_preference_storage_key"
     },
     {
@@ -5467,7 +5908,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_motion_preference_preferences",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
+      "community_name": "site-header.tsx",
       "norm_label": "preferences"
     },
     {
@@ -5478,7 +5919,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_motion_preference_reduced_motion_query",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
+      "community_name": "site-header.tsx",
       "norm_label": "reduced_motion_query"
     },
     {
@@ -5489,8 +5930,52 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_motion_preference_test",
       "community": 132,
-      "community_name": "use-reduced-motion.tsx",
+      "community_name": "site-header.tsx",
       "norm_label": "motion-preference.test.ts"
+    },
+    {
+      "label": "utils.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/utils.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_utils",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "utils.ts"
+    },
+    {
+      "label": "utils.test.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/lib/utils.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_lib_utils_test",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "utils.test.ts"
+    },
+    {
+      "label": "proxy.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/proxy.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_web_src_proxy",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "proxy.ts"
+    },
+    {
+      "label": "config",
+      "file_type": "code",
+      "source_file": "apps/web/src/proxy.ts",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "apps_web_src_proxy_config",
+      "community": 132,
+      "community_name": "site-header.tsx",
+      "norm_label": "config"
     },
     {
       "label": "run-testnet-proof.sh",
@@ -5631,61 +6116,6 @@
       "community": 135,
       "community_name": "overrides",
       "norm_label": "uuid"
-    },
-    {
-      "label": "marketing.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/marketing/marketing.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_marketing_marketing_test",
-      "community": 136,
-      "community_name": "site-header.tsx",
-      "norm_label": "marketing.test.ts"
-    },
-    {
-      "label": "resolve-header-variant.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/resolve-header-variant.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_resolve_header_variant",
-      "community": 136,
-      "community_name": "site-header.tsx",
-      "norm_label": "resolve-header-variant.ts"
-    },
-    {
-      "label": "site-header.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/site-header.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_site_header",
-      "community": 136,
-      "community_name": "site-header.tsx",
-      "norm_label": "site-header.tsx"
-    },
-    {
-      "label": "staggered-menu.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/staggered-menu.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_staggered_menu",
-      "community": 136,
-      "community_name": "site-header.tsx",
-      "norm_label": "staggered-menu.tsx"
-    },
-    {
-      "label": "use-scrolled-past.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/hooks/use-scrolled-past.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_hooks_use_scrolled_past",
-      "community": 136,
-      "community_name": "site-header.tsx",
-      "norm_label": "use-scrolled-past.ts"
     },
     {
       "label": "@commitlint/cli",
@@ -6161,6 +6591,17 @@
       "id": "readme"
     },
     {
+      "label": "product-flows.md",
+      "file_type": "document",
+      "source_file": "docs/product-flows.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "product-flows.md",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_product_flows"
+    },
+    {
       "label": "Astrea \u2014 Product Flows",
       "file_type": "document",
       "source_file": "docs/product-flows.md",
@@ -6258,6 +6699,83 @@
       "norm_label": "roles",
       "community_name": "Astrea \u2014 Product Flows",
       "id": "docs_product_flows_roles"
+    },
+    {
+      "label": "ui-motion.md",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "ui-motion.md",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion"
+    },
+    {
+      "label": "Astrea \u2014 UI motion & React Bits components",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "astrea \u2014 ui motion & react bits components",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_astrea_ui_motion_react_bits_components"
+    },
+    {
+      "label": "Build-plan cross-references",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L62",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "build-plan cross-references",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_build_plan_cross_references"
+    },
+    {
+      "label": "Component placement",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L40",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "component placement",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_component_placement"
+    },
+    {
+      "label": "Corrections to the original placement assumptions",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L54",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "corrections to the original placement assumptions",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_corrections_to_the_original_placement_assumptions"
+    },
+    {
+      "label": "Hero background \u2014 decision",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "hero background \u2014 decision",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_hero_background_decision"
+    },
+    {
+      "label": "Principles",
+      "file_type": "document",
+      "source_file": "docs/ui-motion.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "principles",
+      "community_name": "Astrea \u2014 Product Flows",
+      "id": "docs_ui_motion_principles"
     },
     {
       "label": "ADR-001 \u2014 Custom Soroban escrow contract, no third-party provider",
@@ -6623,61 +7141,6 @@
       "norm_label": "code \u2014 short task title"
     },
     {
-      "label": "SECURITY.md",
-      "file_type": "document",
-      "source_file": "SECURITY.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "security",
-      "community": 2,
-      "community_name": "build-plan.md",
-      "norm_label": "security.md"
-    },
-    {
-      "label": "Reporting a Vulnerability",
-      "file_type": "document",
-      "source_file": "SECURITY.md",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "security_reporting_a_vulnerability",
-      "community": 2,
-      "community_name": "build-plan.md",
-      "norm_label": "reporting a vulnerability"
-    },
-    {
-      "label": "Scope",
-      "file_type": "document",
-      "source_file": "SECURITY.md",
-      "source_location": "L30",
-      "_origin": "ast",
-      "id": "security_scope",
-      "community": 2,
-      "community_name": "build-plan.md",
-      "norm_label": "scope"
-    },
-    {
-      "label": "Security Policy",
-      "file_type": "document",
-      "source_file": "SECURITY.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "security_security_policy",
-      "community": 2,
-      "community_name": "build-plan.md",
-      "norm_label": "security policy"
-    },
-    {
-      "label": "Supported Versions",
-      "file_type": "document",
-      "source_file": "SECURITY.md",
-      "source_location": "L47",
-      "_origin": "ast",
-      "id": "security_supported_versions",
-      "community": 2,
-      "community_name": "build-plan.md",
-      "norm_label": "supported versions"
-    },
-    {
       "label": "smart-contracts/README.md",
       "file_type": "document",
       "source_file": "smart-contracts/README.md",
@@ -6744,17 +7207,6 @@
       "id": "spikes_k02_go_soroban_readme"
     },
     {
-      "label": "apply.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/state-machines/apply.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_state_machines_apply",
-      "community": 20,
-      "community_name": "apply.ts",
-      "norm_label": "apply.ts"
-    },
-    {
       "label": "errors.ts",
       "file_type": "code",
       "source_file": "apps/web/src/lib/state-machines/errors.ts",
@@ -6762,7 +7214,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_errors",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "errors.ts"
     },
     {
@@ -6773,7 +7225,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_event",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "event.ts"
     },
     {
@@ -6784,7 +7236,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_event_event_transitions",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "event_transitions"
     },
     {
@@ -6795,7 +7247,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_event_test",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "event.test.ts"
     },
     {
@@ -6806,7 +7258,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "prize.ts"
     },
     {
@@ -6817,7 +7269,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize_prize_transitions",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "prize_transitions"
     },
     {
@@ -6828,19 +7280,8 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize_test",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "prize.test.ts"
-    },
-    {
-      "label": "ADR-0007",
-      "file_type": "concept",
-      "source_file": "apps/web/src/lib/state-machines/apply.ts",
-      "source_location": "L37",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_state_machines_apply_ts_docref_adr_0007",
-      "community": 20,
-      "community_name": "apply.ts",
-      "norm_label": "adr-0007"
     },
     {
       "label": "ADR-0007",
@@ -6850,7 +7291,7 @@
       "_origin": "ast",
       "id": "apps_web_src_lib_state_machines_prize_ts_docref_adr_0007",
       "community": 20,
-      "community_name": "apply.ts",
+      "community_name": "prize.ts",
       "norm_label": "adr-0007"
     },
     {
@@ -6995,72 +7436,6 @@
       "community": 21,
       "community_name": "compilerOptions",
       "norm_label": "dom"
-    },
-    {
-      "label": "offline/page.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/offline/page.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_app_offline_page",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "offline/page.tsx"
-    },
-    {
-      "label": "reduce-motion-toggle.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/reduce-motion-toggle.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_reduce_motion_toggle",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "reduce-motion-toggle.tsx"
-    },
-    {
-      "label": "button.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/button.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_ui_button",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "button.tsx"
-    },
-    {
-      "label": "buttonVariants",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/button.tsx",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "apps_web_src_components_ui_button_buttonvariants",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "buttonvariants"
-    },
-    {
-      "label": "utils.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/utils.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_utils",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "utils.ts"
-    },
-    {
-      "label": "utils.test.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/lib/utils.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_lib_utils_test",
-      "community": 22,
-      "community_name": "cn",
-      "norm_label": "utils.test.ts"
     },
     {
       "label": "[locale]/page.tsx",
@@ -7437,70 +7812,48 @@
       "norm_label": "run()"
     },
     {
-      "label": "layout.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L1",
+      "label": "Environment Variables",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L131",
       "_origin": "ast",
-      "id": "apps_web_src_app_locale_layout",
       "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "layout.tsx"
+      "norm_label": "environment variables",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_environment_variables"
     },
     {
-      "label": "geistMono",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L19",
+      "label": "\ud83c\udfc1 Getting Started",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L102",
       "_origin": "ast",
-      "id": "apps_web_src_app_locale_layout_geistmono",
       "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "geistmono"
+      "norm_label": "\ud83c\udfc1 getting started",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_getting_started"
     },
     {
-      "label": "geistSans",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L14",
+      "label": "Prerequisites",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L106",
       "_origin": "ast",
-      "id": "apps_web_src_app_locale_layout_geistsans",
       "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "geistsans"
+      "norm_label": "prerequisites",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_prerequisites"
     },
     {
-      "label": "viewport",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/[locale]/layout.tsx",
-      "source_location": "L109",
+      "label": "Setup",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L113",
       "_origin": "ast",
-      "id": "apps_web_src_app_locale_layout_viewport",
       "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "viewport"
-    },
-    {
-      "label": "pwa-register.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/pwa-register.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_pwa_register",
-      "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "pwa-register.tsx"
-    },
-    {
-      "label": "site-footer.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/site-footer.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_web_src_components_site_footer",
-      "community": 26,
-      "community_name": "layout.tsx",
-      "norm_label": "site-footer.tsx"
+      "norm_label": "setup",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_setup"
     },
     {
       "label": "core-go/main.go",
@@ -10453,50 +10806,6 @@
       "id": "docs_build_plan_sequencing_rules"
     },
     {
-      "label": "Environment Variables",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L131",
-      "_origin": "ast",
-      "community": 6,
-      "norm_label": "environment variables",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_environment_variables"
-    },
-    {
-      "label": "\ud83c\udfc1 Getting Started",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L102",
-      "_origin": "ast",
-      "community": 6,
-      "norm_label": "\ud83c\udfc1 getting started",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_getting_started"
-    },
-    {
-      "label": "Prerequisites",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L106",
-      "_origin": "ast",
-      "community": 6,
-      "norm_label": "prerequisites",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_prerequisites"
-    },
-    {
-      "label": "Setup",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L113",
-      "_origin": "ast",
-      "community": 6,
-      "norm_label": "setup",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_setup"
-    },
-    {
       "label": "apps/web/tsconfig.json",
       "file_type": "code",
       "source_file": "apps/web/tsconfig.json",
@@ -11349,6 +11658,96 @@
       "id": "spikes_k02_go_soroban_readme_contract"
     },
     {
+      "label": "Fork-then-clone local setup workflow",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 13-22",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 116,
+      "norm_label": "fork-then-clone local setup workflow",
+      "_origin": "semantic",
+      "community_name": "Opening a PR workflow",
+      "id": "contributing_fork_workflow"
+    },
+    {
+      "label": "Opening a PR workflow",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 74-80",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 116,
+      "norm_label": "opening a pr workflow",
+      "_origin": "semantic",
+      "community_name": "Opening a PR workflow",
+      "id": "contributing_pr_workflow"
+    },
+    {
+      "label": "`security` label (extra review)",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 79",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 116,
+      "norm_label": "`security` label (extra review)",
+      "_origin": "semantic",
+      "community_name": "Opening a PR workflow",
+      "id": "contributing_security_label"
+    },
+    {
+      "label": "upstream git remote",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "lines 24-30",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 116,
+      "norm_label": "upstream git remote",
+      "_origin": "semantic",
+      "community_name": "Opening a PR workflow",
+      "id": "contributing_upstream_remote"
+    },
+    {
+      "label": "Update docs/ADRs alongside code policy",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 80",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 116,
+      "norm_label": "update docs/adrs alongside code policy",
+      "_origin": "semantic",
+      "community_name": "Opening a PR workflow",
+      "id": "contributing_adr_update_policy"
+    },
+    {
+      "label": "Money-movement change review requirement (E0*, escrow calls, signing, reconciliation job)",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 79",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 116,
+      "norm_label": "money-movement change review requirement (e0*, escrow calls, signing, reconciliation job)",
+      "_origin": "semantic",
+      "community_name": "Opening a PR workflow",
+      "id": "contributing_money_movement_review"
+    },
+    {
       "label": "/graphify --update command",
       "file_type": "code",
       "source_file": "CONTRIBUTING.md",
@@ -11362,21 +11761,6 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_graphify_update_command"
-    },
-    {
-      "label": "Biome (lint/format)",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 52",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "biome (lint/format)",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_biome"
     },
     {
       "label": "CI checks: lint, typecheck, test, build",
@@ -11424,36 +11808,6 @@
       "id": "contributing_graphify"
     },
     {
-      "label": "Husky",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 52",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "husky",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_husky"
-    },
-    {
-      "label": "lint-staged pre-commit hook",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 54",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "lint-staged pre-commit hook",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_lint_staged"
-    },
-    {
       "label": "Stellar Developers Discord",
       "file_type": "concept",
       "source_file": "CONTRIBUTING.md",
@@ -11467,66 +11821,6 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_stellar_discord"
-    },
-    {
-      "label": "Biome",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 184",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "biome",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_biome"
-    },
-    {
-      "label": "commitlint",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 184",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "commitlint",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_commitlint"
-    },
-    {
-      "label": "Conventional Commits",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 184",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "conventional commits",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_conventional_commits"
-    },
-    {
-      "label": "Husky",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 184",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "husky",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "readme_husky"
     },
     {
       "label": "MIT License",
@@ -11559,6 +11853,21 @@
       "id": "contributing_graph_html"
     },
     {
+      "label": "graphify-out/GRAPH_REPORT.md",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 62",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 12,
+      "norm_label": "graphify-out/graph_report.md",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "contributing_graph_report"
+    },
+    {
       "label": "README.md (referenced from CONTRIBUTING)",
       "file_type": "document",
       "source_file": "CONTRIBUTING.md",
@@ -11574,19 +11883,19 @@
       "id": "contributing_readme"
     },
     {
-      "label": "CONTRIBUTING.md",
+      "label": "graphify-out/GRAPH_REPORT.md",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "lines 182, 184",
+      "source_location": "line 176",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "community": 12,
-      "norm_label": "contributing.md",
+      "norm_label": "graphify-out/graph_report.md",
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
-      "id": "readme_contributing_doc"
+      "id": "readme_graph_report_doc"
     },
     {
       "label": "CI enforcement of code-graph sync",
@@ -11604,21 +11913,6 @@
       "id": "contributing_ci_graphify_check"
     },
     {
-      "label": "post-commit Husky hook (auto-rebuild graph)",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 62",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 12,
-      "norm_label": "post-commit husky hook (auto-rebuild graph)",
-      "_origin": "semantic",
-      "community_name": "CONTRIBUTING.md",
-      "id": "contributing_post_commit_hook"
-    },
-    {
       "label": "Security issue reporting (email maintainer, no public issue)",
       "file_type": "rationale",
       "source_file": "CONTRIBUTING.md",
@@ -11632,6 +11926,66 @@
       "_origin": "semantic",
       "community_name": "CONTRIBUTING.md",
       "id": "contributing_security_reporting"
+    },
+    {
+      "label": "ADR-001",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 129,
+      "norm_label": "adr-001",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "contributing_adr_001"
+    },
+    {
+      "label": "ADR-003",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 129,
+      "norm_label": "adr-003",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "contributing_adr_003"
+    },
+    {
+      "label": "docs/architecture.md",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 129,
+      "norm_label": "docs/architecture.md",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "contributing_architecture_doc"
+    },
+    {
+      "label": "spikes/ testnet spikes",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 129,
+      "norm_label": "spikes/ testnet spikes",
+      "_origin": "semantic",
+      "community_name": "docs/architecture.md",
+      "id": "contributing_spikes"
     },
     {
       "label": "Albedo wallet",
@@ -11709,6 +12063,66 @@
       "id": "readme_xbull"
     },
     {
+      "label": "coded GitHub issue tasks (e.g. [E02], [U01])",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 136,
+      "norm_label": "coded github issue tasks (e.g. [e02], [u01])",
+      "_origin": "semantic",
+      "community_name": "docs/build-plan.md",
+      "id": "contributing_issue_task_codes"
+    },
+    {
+      "label": "Task S01 (project scaffold)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 104",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 136,
+      "norm_label": "task s01 (project scaffold)",
+      "_origin": "semantic",
+      "community_name": "docs/build-plan.md",
+      "id": "readme_task_s01"
+    },
+    {
+      "label": "docs/build-plan.md",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 136,
+      "norm_label": "docs/build-plan.md",
+      "_origin": "semantic",
+      "community_name": "docs/build-plan.md",
+      "id": "contributing_build_plan"
+    },
+    {
+      "label": "docs/build-plan.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "lines 104, 174, 182",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 136,
+      "norm_label": "docs/build-plan.md",
+      "_origin": "semantic",
+      "community_name": "docs/build-plan.md",
+      "id": "readme_build_plan_doc"
+    },
+    {
       "label": ".env.example",
       "file_type": "code",
       "source_file": "CONTRIBUTING.md",
@@ -11720,7 +12134,7 @@
       "community": 15,
       "norm_label": ".env.example",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "contributing_env_example"
     },
     {
@@ -11735,7 +12149,7 @@
       "community": 15,
       "norm_label": "next_public_stellar_network=testnet",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "contributing_stellar_testnet_network"
     },
     {
@@ -11750,7 +12164,7 @@
       "community": 15,
       "norm_label": "tw_api_key",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "contributing_tw_api_key"
     },
     {
@@ -11765,38 +12179,8 @@
       "community": 15,
       "norm_label": "environment variables (database_url, direct_url, next_public_stellar_network, allow_mainnet, tw_api_url, tw_api_key, usdc_symbol, usdc_issuer)",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "readme_env_vars"
-    },
-    {
-      "label": "ADR-001",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 8",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "adr-001",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "contributing_adr_001"
-    },
-    {
-      "label": "ADR-003",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 8",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "adr-003",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "contributing_adr_003"
     },
     {
       "label": "Supabase (free project for DATABASE_URL/DIRECT_URL)",
@@ -11810,7 +12194,7 @@
       "community": 15,
       "norm_label": "supabase (free project for database_url/direct_url)",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "contributing_supabase"
     },
     {
@@ -11825,7 +12209,7 @@
       "community": 15,
       "norm_label": "trustless work testnet api key",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "contributing_trustless_work"
     },
     {
@@ -11840,23 +12224,8 @@
       "community": 15,
       "norm_label": "trustless work (current server-side integration)",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "readme_trustless_work"
-    },
-    {
-      "label": "docs/architecture.md",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 8",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "docs/architecture.md",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "contributing_architecture_doc"
     },
     {
       "label": "apps/web/prisma/README.md",
@@ -11870,7 +12239,7 @@
       "community": 15,
       "norm_label": "apps/web/prisma/readme.md",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "contributing_prisma_readme"
     },
     {
@@ -11885,7 +12254,7 @@
       "community": 15,
       "norm_label": "allow_mainnet=false gate",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "contributing_allow_mainnet_flag"
     },
     {
@@ -11900,23 +12269,8 @@
       "community": 15,
       "norm_label": "migration-baseline gotcha before first `prisma migrate dev`",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "contributing_migration_baseline_gotcha"
-    },
-    {
-      "label": "spikes/ testnet spikes",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 8",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 15,
-      "norm_label": "spikes/ testnet spikes",
-      "_origin": "semantic",
-      "community_name": "docs/architecture.md",
-      "id": "contributing_spikes"
     },
     {
       "label": "ALLOW_MAINNET explicit gate",
@@ -11930,23 +12284,23 @@
       "community": 15,
       "norm_label": "allow_mainnet explicit gate",
       "_origin": "semantic",
-      "community_name": "docs/architecture.md",
+      "community_name": ".env.example",
       "id": "readme_allow_mainnet_gate"
     },
     {
-      "label": "coded GitHub issue tasks (e.g. [E02], [U01])",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 9",
+      "label": "E01 task: migration from Trustless Work to custom Soroban contract",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "line 153",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 16,
-      "norm_label": "coded github issue tasks (e.g. [e02], [u01])",
+      "community": 15,
+      "norm_label": "e01 task: migration from trustless work to custom soroban contract",
       "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "contributing_issue_task_codes"
+      "community_name": ".env.example",
+      "id": "readme_soroban_migration_e01"
     },
     {
       "label": "Astrea (escrow-backed prize payouts platform)",
@@ -11977,6 +12331,36 @@
       "_origin": "semantic",
       "community_name": "README.md",
       "id": "readme_escrow_funding_step"
+    },
+    {
+      "label": "EscrowClient interface",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 68",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 16,
+      "norm_label": "escrowclient interface",
+      "_origin": "semantic",
+      "community_name": "README.md",
+      "id": "readme_escrowclient_interface"
+    },
+    {
+      "label": "Go backend (services/core-go)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 67, 91, 109",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 16,
+      "norm_label": "go backend (services/core-go)",
+      "_origin": "semantic",
+      "community_name": "README.md",
+      "id": "readme_go_backend"
     },
     {
       "label": "Christopher Lamberti (Maintainer)",
@@ -12054,21 +12438,6 @@
       "id": "readme_stellar"
     },
     {
-      "label": "Task S01 (project scaffold)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 104",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "task s01 (project scaffold)",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_task_s01"
-    },
-    {
       "label": "USDC",
       "file_type": "concept",
       "source_file": "README.md",
@@ -12099,36 +12468,6 @@
       "id": "readme_vercel"
     },
     {
-      "label": "docs/build-plan.md",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 9",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "docs/build-plan.md",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "contributing_build_plan"
-    },
-    {
-      "label": "graphify-out/GRAPH_REPORT.md",
-      "file_type": "document",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 62",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "graphify-out/graph_report.md",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "contributing_graph_report"
-    },
-    {
       "label": "docs/architecture.md",
       "file_type": "document",
       "source_file": "README.md",
@@ -12144,21 +12483,6 @@
       "id": "readme_architecture_doc"
     },
     {
-      "label": "docs/build-plan.md",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "lines 104, 174, 182",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "docs/build-plan.md",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_build_plan_doc"
-    },
-    {
       "label": "docs/contracts-build-plan.md",
       "file_type": "document",
       "source_file": "README.md",
@@ -12172,21 +12496,6 @@
       "_origin": "semantic",
       "community_name": "README.md",
       "id": "readme_contracts_build_plan_doc"
-    },
-    {
-      "label": "graphify-out/GRAPH_REPORT.md",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "line 176",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "graphify-out/graph_report.md",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_graph_report_doc"
     },
     {
       "label": "docs/product-flows.md",
@@ -12279,21 +12588,6 @@
       "id": "readme_solution_verifiable_by_anyone"
     },
     {
-      "label": "E01 task: migration from Trustless Work to custom Soroban contract",
-      "file_type": "rationale",
-      "source_file": "README.md",
-      "source_location": "line 153",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "e01 task: migration from trustless work to custom soroban contract",
-      "_origin": "semantic",
-      "community_name": "README.md",
-      "id": "readme_soroban_migration_e01"
-    },
-    {
       "label": "ADR-002: Multi-release Escrow, One Milestone Per Prize",
       "file_type": "rationale",
       "source_file": "docs/architecture.md",
@@ -12382,6 +12676,186 @@
       "_origin": "semantic",
       "community_name": "build-plan.md",
       "id": "spikes_k03_wallet_compat_web_index"
+    },
+    {
+      "label": "Biome (lint/format)",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 52",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "biome (lint/format)",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "contributing_biome"
+    },
+    {
+      "label": "Husky",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 52",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "husky",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "contributing_husky"
+    },
+    {
+      "label": "lint-staged pre-commit hook",
+      "file_type": "concept",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 54",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "lint-staged pre-commit hook",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "contributing_lint_staged"
+    },
+    {
+      "label": "Biome",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 184",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "biome",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "readme_biome"
+    },
+    {
+      "label": "commitlint",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 184",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "commitlint",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "readme_commitlint"
+    },
+    {
+      "label": "Conventional Commits",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 184",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "conventional commits",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "readme_conventional_commits"
+    },
+    {
+      "label": "Husky",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 184",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "husky",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "readme_husky"
+    },
+    {
+      "label": "CONTRIBUTING.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "lines 182, 184",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "contributing.md",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "readme_contributing_doc"
+    },
+    {
+      "label": "post-commit Husky hook (auto-rebuild graph)",
+      "file_type": "rationale",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": "line 62",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 22,
+      "norm_label": "post-commit husky hook (auto-rebuild graph)",
+      "_origin": "semantic",
+      "community_name": "CONTRIBUTING.md",
+      "id": "contributing_post_commit_hook"
+    },
+    {
+      "label": "Postgres",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "line 74",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "postgres",
+      "_origin": "semantic",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_postgres"
+    },
+    {
+      "label": "Prisma ORM",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 74, 95, 116",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "prisma orm",
+      "_origin": "semantic",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_prisma"
+    },
+    {
+      "label": "Supabase",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "lines 74, 96, 110",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 26,
+      "norm_label": "supabase",
+      "_origin": "semantic",
+      "community_name": "\ud83c\udfc1 Getting Started",
+      "id": "readme_supabase"
     },
     {
       "label": "Migration Baseline Gotcha",
@@ -12984,81 +13458,6 @@
       "id": "github_workflows_ci_wagoid_commitlint_action"
     },
     {
-      "label": "Fork-then-clone local setup workflow",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 13-22",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "fork-then-clone local setup workflow",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_fork_workflow"
-    },
-    {
-      "label": "Opening a PR workflow",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 74-80",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "opening a pr workflow",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_pr_workflow"
-    },
-    {
-      "label": "`security` label (extra review)",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 79",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "`security` label (extra review)",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_security_label"
-    },
-    {
-      "label": "upstream git remote",
-      "file_type": "concept",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "lines 24-30",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "upstream git remote",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_upstream_remote"
-    },
-    {
-      "label": "EscrowClient interface",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 68",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "escrowclient interface",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_escrowclient_interface"
-    },
-    {
       "label": "GitHub Actions (CI/CD)",
       "file_type": "concept",
       "source_file": "README.md",
@@ -13074,21 +13473,6 @@
       "id": "readme_github_actions"
     },
     {
-      "label": "Go backend (services/core-go)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 67, 91, 109",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "go backend (services/core-go)",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_go_backend"
-    },
-    {
       "label": "Stellar Horizon",
       "file_type": "concept",
       "source_file": "README.md",
@@ -13102,81 +13486,6 @@
       "_origin": "semantic",
       "community_name": "Knowledge graph in sync (code) job",
       "id": "readme_horizon"
-    },
-    {
-      "label": "Postgres",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "line 74",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "postgres",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_postgres"
-    },
-    {
-      "label": "Prisma ORM",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 74, 95, 116",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "prisma orm",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_prisma"
-    },
-    {
-      "label": "Supabase",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": "lines 74, 96, 110",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "supabase",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "readme_supabase"
-    },
-    {
-      "label": "Update docs/ADRs alongside code policy",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 80",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "update docs/adrs alongside code policy",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_adr_update_policy"
-    },
-    {
-      "label": "Money-movement change review requirement (E0*, escrow calls, signing, reconciliation job)",
-      "file_type": "rationale",
-      "source_file": "CONTRIBUTING.md",
-      "source_location": "line 79",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 6,
-      "norm_label": "money-movement change review requirement (e0*, escrow calls, signing, reconciliation job)",
-      "_origin": "semantic",
-      "community_name": "Knowledge graph in sync (code) job",
-      "id": "contributing_money_movement_review"
     },
     {
       "label": "GRAPHIFY_MAX_WORKERS=1 env var",
@@ -14109,6 +14418,30 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page_earningspage",
+      "target": "apps_web_src_lib_wallet_session_getsessionwallet"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page_earningspage",
+      "target": "apps_web_src_lib_earnings_query_getparticipantearnings"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "apps/web/src/app/offline/page.tsx",
       "source_location": "L40",
       "weight": 1.0,
@@ -14127,6 +14460,54 @@
       "_origin": "ast",
       "source": "apps_web_src_app_offline_page_offlinepage",
       "target": "apps_web_src_components_ui_button_buttonvariants"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard_earningsdashboard",
+      "target": "apps_web_src_lib_wallet_provider_usewallet"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L48",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard_earningsdashboard",
+      "target": "apps_web_src_lib_earnings_summary_calculateearningssummary"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard_earningsdashboard",
+      "target": "apps_web_src_lib_earnings_summary_filterandsortearnings"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L203",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard_payoutrow",
+      "target": "apps_web_src_lib_earnings_summary_formatpayoutdate",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -14475,6 +14856,18 @@
       "_origin": "ast",
       "source": "apps_web_src_hooks_use_reduced_motion_usereducedmotion",
       "target": "apps_web_src_lib_motion_preference_watchreducedmotion"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_query_getparticipantearnings",
+      "target": "apps_web_src_lib_earnings_query_isvalidwalletref",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -17552,6 +17945,18 @@
       "relation": "references",
       "context": "field",
       "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard_earningsdashboardprops",
+      "target": "apps_web_src_lib_earnings_types_earningsitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/tx-hash-link.tsx",
       "source_location": "L14",
       "weight": 1.0,
@@ -18062,6 +18467,19 @@
       "_origin": "ast",
       "source": "spikes_k06_multi_release_budget_src_lib_multireleasespike_close_event",
       "target": "spikes_k06_multi_release_budget_src_lib_rs_address",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "deferred": true,
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L93",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_query_getparticipantearnings",
+      "target": "apps_web_src_lib_db",
       "confidence_score": 1.0
     },
     {
@@ -18981,6 +19399,42 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page",
+      "target": "apps_web_src_components_earnings_earnings_dashboard_earningsdashboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page",
+      "target": "apps_web_src_lib_earnings_query_getparticipantearnings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page",
+      "target": "apps_web_src_lib_wallet_session_getsessionwallet",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
       "source_location": "L10",
       "weight": 1.0,
@@ -19203,6 +19657,126 @@
       "_origin": "ast",
       "source": "apps_web_src_app_sitemap",
       "target": "apps_web_src_i18n_routing_routing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_components_earnings_empty_state_noearningsfoundstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_components_earnings_empty_state_walletnotconnectedearningsstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_components_tx_hash_link_txhashlink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_lib_earnings_summary_calculateearningssummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_lib_earnings_summary_filterandsortearnings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_lib_earnings_summary_formatpayoutdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_lib_earnings_types_earningsitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_lib_earnings_types_earningssortoption",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_lib_wallet_provider_usewallet",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/empty-state.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_empty_state",
+      "target": "apps_web_src_components_wallet_connect_button_walletconnectbutton",
       "confidence_score": 1.0
     },
     {
@@ -19695,6 +20269,126 @@
       "_origin": "ast",
       "source": "apps_web_src_i18n_request",
       "target": "apps_web_src_i18n_routing_routing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/earnings.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_earnings_test",
+      "target": "apps_web_src_lib_db_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/earnings.test.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_earnings_test",
+      "target": "apps_web_src_lib_earnings_query_getparticipantearnings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/earnings.test.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_earnings_test",
+      "target": "apps_web_src_lib_earnings_query_getsampleearnings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/earnings.test.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_earnings_test",
+      "target": "apps_web_src_lib_earnings_summary_calculateearningssummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/earnings.test.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_earnings_test",
+      "target": "apps_web_src_lib_earnings_summary_filterandsortearnings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/earnings.test.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_earnings_test",
+      "target": "apps_web_src_lib_earnings_summary_formatpayoutdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_query",
+      "target": "apps_web_src_lib_earnings_types_earningsitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_summary",
+      "target": "apps_web_src_lib_earnings_types_earningsfilter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_summary",
+      "target": "apps_web_src_lib_earnings_types_earningsitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_summary",
+      "target": "apps_web_src_lib_earnings_types_earningssummary",
       "confidence_score": 1.0
     },
     {
@@ -21093,6 +21787,54 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page",
+      "target": "apps_web_src_components_earnings_earnings_dashboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page",
+      "target": "apps_web_src_i18n_navigation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page",
+      "target": "apps_web_src_lib_earnings_query",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page",
+      "target": "apps_web_src_lib_wallet_session",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
       "source_location": "L10",
       "weight": 1.0,
@@ -21339,6 +22081,102 @@
       "_origin": "ast",
       "source": "apps_web_src_app_sitemap",
       "target": "apps_web_src_i18n_routing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_components_earnings_empty_state",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_components_tx_hash_link",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_i18n_navigation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_lib_earnings_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_lib_earnings_types",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_lib_wallet_provider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/empty-state.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_empty_state",
+      "target": "apps_web_src_components_wallet_connect_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/empty-state.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_empty_state",
+      "target": "apps_web_src_i18n_navigation",
       "confidence_score": 1.0
     },
     {
@@ -21699,6 +22537,66 @@
       "_origin": "ast",
       "source": "apps_web_src_i18n_request",
       "target": "apps_web_src_i18n_routing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/earnings.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_earnings_test",
+      "target": "apps_web_src_lib_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/earnings.test.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_earnings_test",
+      "target": "apps_web_src_lib_earnings_query",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/earnings.test.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_earnings_test",
+      "target": "apps_web_src_lib_earnings_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_query",
+      "target": "apps_web_src_lib_earnings_types",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_summary",
+      "target": "apps_web_src_lib_earnings_types",
       "confidence_score": 1.0
     },
     {
@@ -25566,6 +26464,39 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page",
+      "target": "apps_web_src_app_locale_earnings_page_generatemetadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page",
+      "target": "apps_web_src_app_locale_earnings_page_earningspage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/[locale]/earnings/page.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_app_locale_earnings_page",
+      "target": "apps_web_src_app_locale_earnings_page_dynamic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/app/[locale]/layout.tsx",
       "source_location": "L109",
       "weight": 1.0,
@@ -25704,6 +26635,72 @@
       "_origin": "ast",
       "source": "apps_web_src_app_sitemap",
       "target": "apps_web_src_app_sitemap_sitemap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L182",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_components_earnings_earnings_dashboard_payoutrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L243",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_components_earnings_earnings_dashboard_rankbadge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_components_earnings_earnings_dashboard_earningsdashboardprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/earnings-dashboard.tsx",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_earnings_dashboard",
+      "target": "apps_web_src_components_earnings_earnings_dashboard_earningsdashboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/empty-state.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_empty_state",
+      "target": "apps_web_src_components_earnings_empty_state_noearningsfoundstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/earnings/empty-state.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_components_earnings_empty_state",
+      "target": "apps_web_src_components_earnings_empty_state_walletnotconnectedearningsstate",
       "confidence_score": 1.0
     },
     {
@@ -26529,6 +27526,116 @@
       "_origin": "ast",
       "source": "apps_web_src_lib_db",
       "target": "apps_web_src_lib_db_createclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_query",
+      "target": "apps_web_src_lib_earnings_query_getsampleearnings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L71",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_query",
+      "target": "apps_web_src_lib_earnings_query_isvalidwalletref",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "source_location": "L85",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_query",
+      "target": "apps_web_src_lib_earnings_query_getparticipantearnings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_summary",
+      "target": "apps_web_src_lib_earnings_summary_filterandsortearnings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_summary",
+      "target": "apps_web_src_lib_earnings_summary_calculateearningssummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/summary.ts",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_summary",
+      "target": "apps_web_src_lib_earnings_summary_formatpayoutdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/types.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_types",
+      "target": "apps_web_src_lib_earnings_types_earningsitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/types.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_types",
+      "target": "apps_web_src_lib_earnings_types_earningssummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/types.ts",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_types",
+      "target": "apps_web_src_lib_earnings_types_earningssortoption",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/types.ts",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_types",
+      "target": "apps_web_src_lib_earnings_types_earningsfilter",
       "confidence_score": 1.0
     },
     {
@@ -31891,6 +32998,15 @@
     {
       "relation": "dynamic_import",
       "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/lib/earnings/query.ts",
+      "_origin": "ast",
+      "source": "apps_web_src_lib_earnings_query",
+      "target": "apps_web_src_lib_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "dynamic_import",
+      "confidence": "EXTRACTED",
       "source_file": "apps/web/src/lib/env.test.ts",
       "_origin": "ast",
       "source": "apps_web_src_lib_env_test",
@@ -34677,5 +35793,5 @@
       "source_file": "CONTRIBUTING.md"
     }
   ],
-  "built_at_commit": "0fc9a47f8fa4087b5fc368734d2638b3346dea1c"
+  "built_at_commit": "99a7bfee8a8bc487b075ef7fd6518e9bd6f093bb"
 }
