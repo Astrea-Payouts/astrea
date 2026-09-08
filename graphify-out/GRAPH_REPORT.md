@@ -1,4 +1,4 @@
-# Graph Report - astrea  (2026-09-07)
+# Graph Report - astrea  (2026-09-08)
 
 ## Corpus Check
 - 229 files · ~468,801 words
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a0ddcf54`
+- Built from commit: `b82eb661`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -166,10 +166,10 @@
 10. `cn()` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Update docs/ADRs alongside code policy` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
-  CONTRIBUTING.md → .github/workflows/ci.yml
 - `Chain is source of truth; database is a mirror` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
   README.md → .github/workflows/ci.yml
+- `Update docs/ADRs alongside code policy` --semantically_similar_to--> `Fail if graphify-out/ is stale step`  [INFERRED] [semantically similar]
+  CONTRIBUTING.md → .github/workflows/ci.yml
 - `Commit messages (Conventional Commits) job` --implements--> `Conventional Commits`  [INFERRED]
   .github/workflows/ci.yml → README.md
 - `docs/architecture.md` --conceptually_related_to--> `docs/architecture.md`  [INFERRED]
@@ -440,11 +440,11 @@ Nodes (6): Astrea — Definition of Done, Every item, Money-path items additiona
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `devDependencies` to `@commitlint/cli`, `@commitlint/config-conventional`, `husky`, `tailwindcss`, `@tailwindcss/postcss`, `@types/react-dom`, `vitest`, `apps/web/package.json`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+  _High betweenness centrality (0.045) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `tailwindcss` to `README.md`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Why does `tailwindcss` connect `tailwindcss` to `devDependencies`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **What connects `$schema`, `root`, `enabled` to the rest of the system?**
   _443 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `trustless-work-adapter.ts` be split into smaller, more focused modules?**
