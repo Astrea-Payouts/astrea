@@ -60,6 +60,13 @@ jobs:
       # The repository default for GITHUB_TOKEN is read-only; this job has to
       # push the rebuilt graph back to develop.
       contents: write
+      # ...and publish graph.html to GitHub Pages. id-token is what
+      # actions/deploy-pages uses to prove the deployment came from this run.
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy-graph.outputs.page_url }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -115,6 +122,30 @@ jobs:
           # that wastes a minute of CI on every single merge.
           git commit -m "chore(graphify): rebuild knowledge graph [skip ci]"
           git push origin HEAD:develop
+
+      # Publish the interactive graph so it can be read without cloning the
+      # repo. graph.html is a self-contained 1 MB page - no external assets, no
+      # build step - so "publishing" is a copy. Runs whether or not the commit
+      # above found changes: a failed publish should not leave the site stale.
+      - name: Assemble the Pages site
+        run: |
+          mkdir -p _site
+          cp graphify-out/graph.html _site/index.html
+          cp graphify-out/GRAPH_REPORT.md _site/GRAPH_REPORT.md
+
+      # enablement: true turns Pages on the first time this runs, so the repo
+      # does not need it switched on by hand beforehand.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deploy-graph
+        uses: actions/deploy-pages@v4
 
   contracts:
     name: Test + build (contracts)
