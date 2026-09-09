@@ -38,11 +38,34 @@ jobs:
         working-directory: apps/web
         run: npm run build
 
-  graphify-drift-check:
-    name: Knowledge graph in sync (code)
+  graphify-rebuild:
+    name: Rebuild knowledge graph (develop only)
+    # CI is the ONLY writer of graphify-out/ now. Contributors do not rebuild
+    # the graph, do not commit it, and do not install graphify at all - the
+    # husky hooks that used to enforce that were removed alongside this job's
+    # predecessor, `graphify-drift-check`.
+    #
+    # Why that job is gone: it demanded a byte-identical rebuild from every
+    # contributor's machine. That is a determinism guarantee a floating-point,
+    # parallel graph build does not offer across operating systems - it failed
+    # on #151 over edge ordering and betweenness rounding with no actual drift -
+    # and generated output was the ONLY conflicting file in #139, #153 and #158.
+    # One writer on one OS removes the entire class of problem.
+    #
+    # Runs ONLY on a push to develop (i.e. after a merge), never on a PR: a PR
+    # branch's graph is stale by design and nothing checks it any more.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
+    permissions:
+      # The repository default for GITHUB_TOKEN is read-only; this job has to
+      # push the rebuilt graph back to develop.
+      contents: write
     steps:
       - uses: actions/checkout@v5
+        with:
+          # Needed to push back - the default shallow checkout cannot.
+          fetch-depth: 0
+          persist-credentials: true
 
       - uses: actions/setup-node@v5
         with:
@@ -51,8 +74,7 @@ jobs:
           cache-dependency-path: apps/web/package-lock.json
 
       # postinstall runs `prisma generate`, producing apps/web/src/generated/prisma.
-      # graphify indexes that output, so it must exist before the rebuild below -
-      # without it this job would flag drift that's just the generated client missing.
+      # graphify indexes that output, so it must exist before the rebuild below.
       - working-directory: apps/web
         run: npm ci --legacy-peer-deps
 
@@ -60,51 +82,39 @@ jobs:
         with:
           python-version: "3.12"
 
-      # Pinned - an unpinned install drifts to whatever's latest on PyPI, and a
-      # version bump (different manifest-parsing behavior, etc.) can silently
-      # desync CI's rebuild from what contributors run locally. Bump deliberately
-      # and re-run `graphify update .` locally with the new version when needed.
+      # Pinned deliberately - a version bump can change manifest-parsing
+      # behaviour and silently reshape the graph. Bump on purpose, not by drift.
       - name: Install graphify
         run: pip install graphifyy==0.9.45
 
-      # Code-only rebuild - no LLM, no API key. Doc/paper/image changes aren't
-      # covered here; see CONTRIBUTING.md ("Keeping the knowledge graph updated").
+      # Code-only rebuild - no LLM, no API key. Doc-driven changes still need a
+      # `/graphify --update` from an agent session; see CONTRIBUTING.md.
       #
-      # Both env vars are required for a reproducible rebuild - confirmed by
-      # testing locally: PYTHONHASHSEED alone still produced a different graph
-      # on every run (parallel AST workers finish in a random order, which
-      # feeds Louvain clustering non-deterministically); pinning workers to 1
-      # made back-to-back reruns byte-identical. Without both, this job would
-      # flag unrelated PRs as "stale" at random.
+      # Both env vars pin determinism: PYTHONHASHSEED alone still produced a
+      # different graph per run, because parallel AST workers finish in a random
+      # order and feed Louvain clustering non-deterministically. The old job set
+      # only PYTHONHASHSEED despite its own comment saying both were needed,
+      # which is the likeliest source of the phantom drift that failed #151.
       - name: Rebuild code graph
         env:
           PYTHONHASHSEED: "0"
           GRAPHIFY_MAX_WORKERS: "1"
         run: graphify update .
 
-      # Scoped to the actual graph output + the content-hash-keyed AST cache.
-      # graphify-out/manifest.json and cache/stat-index.json store wall-clock
-      # mtimes for the local incremental-update cache - those never match
-      # between any two checkouts (confirmed: they were the only diff left
-      # after fixing the real content drift), so comparing them here would
-      # fail every run regardless of whether the graph itself is stale.
-      - name: Fail if graphify-out/ is stale
+      - name: Commit the rebuilt graph if it changed
         run: |
-          if ! git diff --quiet -- graphify-out/graph.json graphify-out/graph.html graphify-out/GRAPH_REPORT.md graphify-out/cache/ast/; then
-            echo "::error::graphify-out/ is out of sync with the code in this PR."
-            echo "Run 'graphify update .' locally, review the diff, and commit graphify-out/."
-            echo "Or download the 'graphify-out-rebuilt' artifact from this run and commit that instead."
-            git diff --stat -- graphify-out/graph.json graphify-out/graph.html graphify-out/GRAPH_REPORT.md graphify-out/cache/ast/
-            exit 1
+          if git diff --quiet -- graphify-out/; then
+            echo "Graph already matches develop - nothing to commit."
+            exit 0
           fi
-
-      - name: Upload rebuilt graph (only runs if the check above failed)
-        if: failure()
-        uses: actions/upload-artifact@v5
-        with:
-          name: graphify-out-rebuilt
-          path: graphify-out/
-          retention-days: 7
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add graphify-out/
+          # [skip ci] stops this push re-triggering the workflow. Without it the
+          # rebuild runs once more, finds nothing to do and stops anyway - but
+          # that wastes a minute of CI on every single merge.
+          git commit -m "chore(graphify): rebuild knowledge graph [skip ci]"
+          git push origin HEAD:develop
 
   contracts:
     name: Test + build (contracts)
