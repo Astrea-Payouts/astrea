@@ -108,25 +108,10 @@ jobs:
           GRAPHIFY_MAX_WORKERS: "1"
         run: graphify update .
 
-      - name: Commit the rebuilt graph if it changed
-        run: |
-          if git diff --quiet -- graphify-out/; then
-            echo "Graph already matches develop - nothing to commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add graphify-out/
-          # [skip ci] stops this push re-triggering the workflow. Without it the
-          # rebuild runs once more, finds nothing to do and stops anyway - but
-          # that wastes a minute of CI on every single merge.
-          git commit -m "chore(graphify): rebuild knowledge graph [skip ci]"
-          git push origin HEAD:develop
-
       # Publish the interactive graph so it can be read without cloning the
       # repo. graph.html is a self-contained 1 MB page - no external assets, no
       # build step - so "publishing" is a copy. Runs whether or not the commit
-      # above found changes: a failed publish should not leave the site stale.
+      # the commit step below succeeds: a blocked push must not leave the site stale.
       - name: Assemble the Pages site
         run: |
           mkdir -p _site
@@ -146,6 +131,50 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deploy-graph
         uses: actions/deploy-pages@v4
+
+      # Attempted LAST, deliberately. Pushing to develop is the only step here
+      # that can fail for reasons outside this workflow, and publishing must
+      # not depend on it - in the first run of this job it did, and a rejected
+      # push took the Pages deploy down with it.
+      #
+      # Why it gets rejected: branch protection requires every required status
+      # check to be green ON the commit being pushed. A bot commit carrying
+      # [skip ci] can never satisfy that. Dropping [skip ci] does not help
+      # either - at push time the checks have not run yet. Direct pushes to
+      # develop are simply not possible while required checks exist.
+      #
+      # So this is best-effort. If the push is refused the job stays green, the
+      # rebuilt graph is uploaded as an artifact, and the published site above
+      # is already current - only the copy committed in git lags, and a
+      # maintainer refreshes that. To make it commit automatically,
+      # github-actions[bot] needs a bypass on develop's required status checks
+      # (a repository ruleset with a bypass actor); this step then starts
+      # working with no change here.
+      - name: Commit the rebuilt graph back to develop (best-effort)
+        run: |
+          if git diff --quiet -- graphify-out/; then
+            echo "Graph already matches develop - nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add graphify-out/
+          git commit -m "chore(graphify): rebuild knowledge graph [skip ci]"
+          if git push origin HEAD:develop; then
+            echo "Committed the rebuilt graph to develop."
+          else
+            echo "::warning::Could not push the rebuilt graph to develop - branch protection rejected it. The published site is current; the copy committed in git is not. See the comment on this step."
+          fi
+
+      # Always uploaded, so the rebuilt graph is recoverable whether or not the
+      # push above was accepted.
+      - name: Upload the rebuilt graph
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: graphify-out-rebuilt
+          path: graphify-out/
+          retention-days: 14
 
   contracts:
     name: Test + build (contracts)

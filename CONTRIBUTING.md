@@ -65,7 +65,9 @@ The repo has a [graphify](https://github.com/safishamsi/graphify) knowledge grap
 
 **Browse it at [astrea-payouts.github.io/astrea](https://astrea-payouts.github.io/astrea/)** — no clone, no install. CI republishes it on every merge to `develop`, so it always reflects the current state of that branch. The text version is [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md).
 
-**Do not commit `graphify-out/`, and do not install graphify to contribute.** CI rebuilds the graph itself after every merge to `develop` and commits the result there. Your branch's copy will be out of date and that is fine — nothing checks it.
+**Do not commit `graphify-out/`, and do not install graphify to contribute.** CI rebuilds the graph after every merge to `develop` and republishes the site above, so the published copy is always current. Your branch's copy will be out of date and that is fine — nothing checks it.
+
+The copy committed under `graphify-out/` can lag behind the published one: `develop` is a protected branch and CI cannot push to it, so the commit-back is best-effort and a maintainer refreshes it periodically. When the two disagree, **the published site is the current one**, and every run attaches the freshly built graph as a `graphify-out-rebuilt` artifact.
 
 This used to work the other way around: husky hooks rebuilt the graph on every commit and a required CI check compared your rebuild against its own, byte for byte. A parallel, floating-point graph build doesn't reproduce byte-for-byte across operating systems, so that check failed on PRs with no real drift, and generated output became the only conflicting file in three separate PRs. The hooks and the check are gone. If you have a `.husky/pre-push` from an older clone, delete it.
 
