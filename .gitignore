@@ -111,3 +111,6 @@ graphify-out/.graphify_root
 .agents/skills
 .windsurf/skills
 skills-lock.json
+
+# GitHub Pages staging dir, assembled by the graphify-rebuild job in CI
+_site/
