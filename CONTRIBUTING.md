@@ -61,7 +61,9 @@ If a check fails and you're not sure why, the error output is usually specific e
 
 ## The knowledge graph — you don't have to do anything
 
-The repo has a [graphify](https://github.com/safishamsi/graphify) knowledge graph at [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md) (interactive view: `graphify-out/graph.html`). It links code, docs, ADRs and task definitions into one navigable index — useful when you're new here and want to see how a piece fits before you change it.
+The repo has a [graphify](https://github.com/safishamsi/graphify) knowledge graph linking code, docs, ADRs and task definitions into one navigable index — useful when you're new here and want to see how a piece fits before you change it.
+
+**Browse it at [astrea-payouts.github.io/astrea](https://astrea-payouts.github.io/astrea/)** — no clone, no install. CI republishes it on every merge to `develop`, so it always reflects the current state of that branch. The text version is [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md).
 
 **Do not commit `graphify-out/`, and do not install graphify to contribute.** CI rebuilds the graph itself after every merge to `develop` and commits the result there. Your branch's copy will be out of date and that is fine — nothing checks it.
 
