@@ -61,17 +61,15 @@ If a check fails and you're not sure why, the error output is usually specific e
 
 ## The knowledge graph — you don't have to do anything
 
-The repo has a [graphify](https://github.com/safishamsi/graphify) knowledge graph linking code, docs, ADRs and task definitions into one navigable index — useful when you're new here and want to see how a piece fits before you change it.
+There's a [graphify](https://github.com/safishamsi/graphify) knowledge graph indexing code, docs, ADRs and task definitions together — useful when you're new here and want to see how a piece fits before changing it.
 
-**Browse it at [astrea-payouts.github.io/astrea](https://astrea-payouts.github.io/astrea/)** — no clone, no install. CI republishes it on every merge to `develop`, so it always reflects the current state of that branch. The text version is [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md).
+**Browse it at [astrea-payouts.github.io/astrea](https://astrea-payouts.github.io/astrea/)** — no clone, no install. CI rebuilds and republishes it on every merge to `develop`, so the published copy is always current.
 
-**Do not commit `graphify-out/`, and do not install graphify to contribute.** CI rebuilds the graph after every merge to `develop` and republishes the site above, so the published copy is always current. Your branch's copy will be out of date and that is fine — nothing checks it.
+**It is published, not committed.** A fresh clone has no `graphify-out/graph.json`, and that's deliberate: regenerating the whole graph costs zero tokens and about a minute, so committing 7.8 MB of it bought nothing — and guaranteed a stale copy, because branch protection stops CI from pushing a refreshed one back. A stale graph is worse than none, since tools read it without noticing its age. The one exception is `graphify-out/cache/semantic/`, which stays in git: that part is LLM-derived and costs real tokens to rebuild.
 
-The copy committed under `graphify-out/` can lag behind the published one: `develop` is a protected branch and CI cannot push to it, so the commit-back is best-effort and a maintainer refreshes it periodically. When the two disagree, **the published site is the current one**, and every run attaches the freshly built graph as a `graphify-out-rebuilt` artifact.
+**Nothing about this is your responsibility.** Don't install graphify, don't run it, don't commit `graphify-out/`. There is no hook and no CI check enforcing anything about the graph, by design — the previous setup demanded a byte-identical rebuild from every contributor's machine, which is not something a parallel floating-point build can guarantee across operating systems.
 
-This used to work the other way around: husky hooks rebuilt the graph on every commit and a required CI check compared your rebuild against its own, byte for byte. A parallel, floating-point graph build doesn't reproduce byte-for-byte across operating systems, so that check failed on PRs with no real drift, and generated output became the only conflicting file in three separate PRs. The hooks and the check are gone. If you have a `.husky/pre-push` from an older clone, delete it.
-
-**Doc-driven updates are separate.** CI's rebuild is code-only — it reads source files with no LLM. Extracting meaning from `.md` files needs a language model, so it isn't part of CI. A maintainer refreshes that layer periodically by running `/graphify --update` from an agent session on `develop`. You don't need to run it for your PR, and you shouldn't commit the result if you do.
+If you do want to query it locally, `pip install graphifyy==0.9.45` then `graphify update .` builds it, and [AGENTS.md](AGENTS.md) documents what it answers well and where it will confidently mislead you.
 
 ## Opening a PR
 
