@@ -2228,6 +2228,82 @@ fn test_set_paused_rejects_non_emergency_admin() {
 }
 
 #[test]
+#[should_panic(expected = "Only the emergency admin can perform this action")]
+fn test_set_admin_paused_rejects_non_emergency_admin() {
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+    let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
+    let impostor = Address::generate(&env);
+    let target_admin = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    client.set_admin_paused(&impostor, &target_admin, &true);
+}
+
+#[test]
+#[should_panic(expected = "Only the emergency admin can perform this action")]
+fn test_set_token_whitelist_enabled_rejects_non_emergency_admin() {
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+    let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
+    let impostor = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    client.set_token_whitelist_enabled(&impostor, &true);
+}
+
+#[test]
+#[should_panic(expected = "Only the emergency admin can perform this action")]
+fn test_set_token_allowed_rejects_non_emergency_admin() {
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+    let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
+    let impostor = Address::generate(&env);
+    let token_admin = Address::generate(&env);
+    let (token_address, _token_client, _asset_client) = create_test_token(&env, &token_admin);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    client.set_token_allowed(&impostor, &token_address, &true);
+}
+
+#[test]
+fn test_set_token_allowed_rejected_call_leaves_state_unchanged() {
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+    let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
+    let impostor = Address::generate(&env);
+    let token_admin = Address::generate(&env);
+    let (token_address, _token_client, _asset_client) = create_test_token(&env, &token_admin);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    client.set_token_whitelist_enabled(&emergency_admin, &true);
+    client.set_token_allowed(&emergency_admin, &token_address, &true);
+
+    assert!(client.is_token_allowed(&token_address));
+
+    let result = client.try_set_token_allowed(&impostor, &token_address, &false);
+
+    assert!(result.is_err());
+    assert!(client.is_token_allowed(&token_address));
+}
+
+#[test]
 fn test_set_admin_paused_blocks_only_target_admin() {
     let env = Env::default();
 
