@@ -14,9 +14,14 @@ tokens (structural AST extraction, no LLM).
 
 Three rules, from measuring it on this repo rather than from its description:
 
-**Known identifier → use `grep`/ripgrep, not the graph.** Searching
-`release_reward` returned the complete answer in ~2 KB. The same question put
+**Known identifier → use ripgrep, not the graph.** Searching `release_reward`
+returned the complete answer in ~2 KB and under a second. The same question put
 to the graph cost 6.5 KB and 34.5 KB across two phrasings and answered worse.
+
+Use a searcher that honours `.gitignore`. A naive `grep -r` over this repo walks
+`node_modules` and the graph artifacts and takes **765 seconds** to return the
+same 46 matches ripgrep finds in under one — measured, not estimated. If your
+search seems to hang, that is why.
 
 **A concept with no obvious search string → the graph earns its keep.** Asking
 which parts of the system sit on the money path surfaced `CONTRIBUTING.md:79`,
