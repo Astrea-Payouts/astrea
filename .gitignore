@@ -75,31 +75,48 @@ spikes/k01-trustless-work/
 # scratch
 *.bak
 
-# graphify machine-local state.
+# graphify.
 #
-# This must NOT blanket-ignore graphify-out/. The graph itself (graph.json,
-# graph.html, GRAPH_REPORT.md, cache/) is deliberately versioned - see
-# CONTRIBUTING.md - and CI compares it on every PR. It used to be ignored
-# wholesale here, with the real files force-added past their own ignore rule,
-# which is why the `git add graphify-out/` that .husky/pre-push tells you to
-# run after a rebuild failed outright ("paths are ignored by .gitignore").
-# Every contributor hit that on their first push and had to guess the fix.
-#
-# Only the parts that cannot be shared between machines belong below.
+# Almost all of graphify-out/ is ignored: the graph is published, not committed
+# (https://astrea-payouts.github.io/astrea/, rebuilt by CI on every merge to
+# develop). Only cache/semantic/ is tracked - see the note at the end of this
+# block. Do NOT blanket-ignore graphify-out/ itself: that hides the one
+# directory that must stay visible, and it is how this file ended up telling
+# contributors to run a `git add graphify-out/` that could not work.
 #
 # manifest.json and cache/stat-index.json store wall-clock mtimes for the local
-# incremental-update cache: they never match between any two checkouts, which is
-# why the drift-check job already excludes both from its comparison. Tracking
-# them just guaranteed a permanently dirty working tree and merge conflicts on
-# generated files (that was 2 of the 4 conflicting paths in #153).
+# incremental-update cache and never match between any two checkouts; tracking
+# them guaranteed a permanently dirty working tree and merge conflicts on
+# generated files (2 of the 4 conflicting paths in #153). last_query_stamp is
+# written by `graphify query`.
 graphify-out/manifest.json
 graphify-out/cache/stat-index.json
+graphify-out/cache/last_query_stamp
 #
 # Absolute path to whichever Python has graphify installed, recorded at hook
-# install time. Machine-specific by definition - the hooks fall back to PATH
+# install time. Machine-specific by definition - graphify falls back to PATH
 # detection when it is absent.
 graphify-out/.graphify_python
 graphify-out/.graphify_root
+#
+# The graph itself. Regenerating all of this costs zero tokens (structural AST
+# extraction, no LLM) and about a minute, so committing it bought nothing and
+# cost 7.8 MB - while guaranteeing a stale copy, since branch protection stops
+# CI from pushing a refreshed one back to develop. A stale graph is worse than
+# no graph: the graphify skill fast-paths onto graphify-out/graph.json when it
+# exists and answers from it without noticing it is out of date.
+#
+# The current graph is published instead: https://astrea-payouts.github.io/astrea/
+graphify-out/graph.json
+graphify-out/graph.html
+graphify-out/GRAPH_REPORT.md
+graphify-out/.graphify_labels.json
+graphify-out/.graphify_labels.json.sig
+graphify-out/cache/ast/
+#
+# NOT ignored, deliberately: graphify-out/cache/semantic/. That one is the
+# LLM-derived extraction over the .md files (236 KB, 37 files). Regenerating it
+# costs real tokens, so it stays in git and doc-driven updates stay cheap.
 
 /apps/web/src/generated/prisma
 
