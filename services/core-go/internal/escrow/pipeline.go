@@ -215,6 +215,121 @@ func Submit(ctx context.Context, rpc RPCClient, source *keypair.Full, networkPas
 	return Result{Hash: sendResp.Hash, ReturnValue: returnVal}, nil
 }
 
+// UnsignedTx is a simulated, footprint-attached Soroban transaction that
+// still needs a signature. Astrea is non-custodial: for organizer-authorized
+// calls (deposit_funds, withdraw_funds, create_event) the organizer's key
+// never reaches this service, so BuildUnsigned stops where Submit would
+// sign, and hands back an envelope for the organizer's own wallet to sign
+// instead.
+type UnsignedTx struct {
+	// XDR is the unsigned transaction envelope, base64-encoded, ready to be
+	// handed to an external signer.
+	XDR string
+	// SimulatedReturn is the host function's return value as reported by
+	// simulation. It is informational only: the transaction has not been
+	// submitted yet, so this is a preview, not an on-chain fact.
+	SimulatedReturn xdr.ScVal
+}
+
+// BuildUnsigned runs simulate -> attach footprint/resource-fee/auth for hf,
+// the same as the first half of Submit, but returns the resulting
+// transaction unsigned instead of signing and submitting it. sourceAddress
+// is the G-address that will source (and, once signed elsewhere, submit)
+// the transaction; BuildUnsigned never needs or sees a private key for it.
+func BuildUnsigned(ctx context.Context, rpc RPCClient, sourceAddress string, hf xdr.HostFunction, cfg Config) (UnsignedTx, error) {
+	cfg = cfg.withDefaults()
+
+	account, err := rpc.LoadAccount(ctx, sourceAddress)
+	if err != nil {
+		return UnsignedTx{}, fmt.Errorf("escrow: loading source account: %w", err)
+	}
+
+	simTx, err := buildTx(account, sourceAddress, hf, nil, nil, cfg.TxTimeout)
+	if err != nil {
+		return UnsignedTx{}, fmt.Errorf("escrow: building simulation transaction: %w", err)
+	}
+	simB64, err := simTx.Base64()
+	if err != nil {
+		return UnsignedTx{}, fmt.Errorf("escrow: encoding simulation transaction: %w", err)
+	}
+
+	simResp, err := rpc.SimulateTransaction(ctx, protocol.SimulateTransactionRequest{Transaction: simB64})
+	if err != nil {
+		return UnsignedTx{}, fmt.Errorf("escrow: calling simulateTransaction: %w", err)
+	}
+	if simResp.Error != "" {
+		return UnsignedTx{}, &SimulationError{Message: simResp.Error}
+	}
+
+	var sorobanData xdr.SorobanTransactionData
+	if err := xdr.SafeUnmarshalBase64(simResp.TransactionDataXDR, &sorobanData); err != nil {
+		return UnsignedTx{}, fmt.Errorf("escrow: decoding simulated transaction data: %w", err)
+	}
+	sorobanData.ResourceFee = xdr.Int64(simResp.MinResourceFee)
+
+	var auth []xdr.SorobanAuthorizationEntry
+	var returnVal xdr.ScVal
+	if len(simResp.Results) > 0 {
+		res := simResp.Results[0]
+		if res.AuthXDR != nil {
+			for _, a := range *res.AuthXDR {
+				var entry xdr.SorobanAuthorizationEntry
+				if err := xdr.SafeUnmarshalBase64(a, &entry); err != nil {
+					return UnsignedTx{}, fmt.Errorf("escrow: decoding simulated auth entry: %w", err)
+				}
+				auth = append(auth, entry)
+			}
+		}
+		if res.ReturnValueXDR != nil {
+			if err := xdr.SafeUnmarshalBase64(*res.ReturnValueXDR, &returnVal); err != nil {
+				return UnsignedTx{}, fmt.Errorf("escrow: decoding simulated return value: %w", err)
+			}
+		}
+	}
+
+	// As in Submit, the account loaded above was only used to build the
+	// throwaway simulation transaction; reload it for a fresh sequence
+	// number before building the transaction that will actually be signed
+	// (by the caller's wallet) and submitted.
+	account, err = rpc.LoadAccount(ctx, sourceAddress)
+	if err != nil {
+		return UnsignedTx{}, fmt.Errorf("escrow: reloading source account: %w", err)
+	}
+	finalTx, err := buildTx(account, sourceAddress, hf, auth, &sorobanData, cfg.TxTimeout)
+	if err != nil {
+		return UnsignedTx{}, fmt.Errorf("escrow: building final transaction: %w", err)
+	}
+	finalB64, err := finalTx.Base64()
+	if err != nil {
+		return UnsignedTx{}, fmt.Errorf("escrow: encoding unsigned transaction: %w", err)
+	}
+
+	return UnsignedTx{XDR: finalB64, SimulatedReturn: returnVal}, nil
+}
+
+// SubmitSigned submits a transaction that was already fully signed
+// elsewhere (e.g. by an organizer's wallet, from the envelope BuildUnsigned
+// produced) and polls until the ledger confirms success or failure, the
+// same as the second half of Submit. Its Result.ReturnValue is always the
+// zero xdr.ScVal: this path never re-simulates, so the only return value
+// available is the one BuildUnsigned already reported as SimulatedReturn.
+func SubmitSigned(ctx context.Context, rpc RPCClient, signedTxXDR string, cfg Config) (Result, error) {
+	cfg = cfg.withDefaults()
+
+	sendResp, err := rpc.SendTransaction(ctx, protocol.SendTransactionRequest{Transaction: signedTxXDR})
+	if err != nil {
+		return Result{}, fmt.Errorf("escrow: calling sendTransaction: %w", err)
+	}
+	if sendResp.Status == stellarcore.TXStatusError {
+		return Result{}, &SubmissionError{Status: sendResp.Status, ErrorResultXDR: sendResp.ErrorResultXDR}
+	}
+
+	if err := pollForConfirmation(ctx, rpc, sendResp.Hash, cfg); err != nil {
+		return Result{}, err
+	}
+	return Result{Hash: sendResp.Hash}, nil
+}
+
 func buildTx(account txnbuild.Account, sourceAddress string, hf xdr.HostFunction, auth []xdr.SorobanAuthorizationEntry, sorobanData *xdr.SorobanTransactionData, timeout time.Duration) (*txnbuild.Transaction, error) {
 	op := &txnbuild.InvokeHostFunction{
 		HostFunction:  hf,

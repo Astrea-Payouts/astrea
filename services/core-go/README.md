@@ -32,8 +32,26 @@ so callers can branch on which stage failed. `escrow.EncodeAddress` handles
 both G-address (account) and C-address (contract) arguments — the fix for a
 bug the spike hit on the `token` argument to `initialize`.
 
-Not wired into `main.go` yet — that's for the operations built on top of it
-(`E01b`/`E01c`/`E01d`, deposit/withdraw/create/cancel/release).
+`E01b` (done): argument encoding and call-building for the three
+`AdminWallet` operations — `deposit_funds`, `withdraw_funds`, `create_event`
+— plus the read-only `get_balance`, in `wallet.go`. One event carries a
+single `reward: i128` and a caller-supplied `event_id` (16 raw bytes,
+`escrow.EventID`); the winners list belongs to `release_reward`, a later
+issue, not to `create_event`.
+
+Astrea is non-custodial, so `deposit_funds`/`withdraw_funds`/`create_event`
+(all organizer-authorized) go through a build-only path instead of
+`Submit`'s sign-and-submit-in-one-shot: `escrow.BuildDepositFunds` /
+`BuildWithdrawFunds` / `BuildCreateEvent` simulate and attach the footprint,
+then hand back an `escrow.UnsignedTx` — this service never sees the
+organizer's key. Once the organizer's own wallet signs that envelope,
+`escrow.SubmitSigned` submits it and polls for confirmation, the same as the
+second half of `Submit`. `Submit` itself is unchanged and still exists for
+flows (like the testnet proof below) that hold the signing key directly.
+`escrow.GetBalance` reads the organizer's free balance via simulation only —
+it never builds an auth entry and never submits anything. (The contract
+deducts a new event's reward from the wallet at `create_event` time, so this
+already is the free balance — there's no separate reserved figure.)
 
 ```bash
 go test ./internal/escrow/...
@@ -43,7 +61,10 @@ A manual, network-touching harness proves the pipeline against the real
 `event-escrow` contract deployed to testnet in `E03`
 (`smart-contracts/astrea/contracts/event-escrow/README.md`). It's a `main`,
 not a `go test`, so CI's `go test ./...` never depends on testnet/friendbot
-being up:
+being up. It exercises both signing paths: `deposit_funds` via `Submit`,
+then `create_event` via `BuildCreateEvent` → (harness signs, standing in for
+the organizer's wallet) → `SubmitSigned`, then reads the balance and the
+event back:
 
 ```bash
 go run ./cmd/escrow-testnet-proof
