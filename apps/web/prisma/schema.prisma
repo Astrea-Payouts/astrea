@@ -78,10 +78,9 @@ model Wallet {
   usdcTrustlineVerifiedAt DateTime?
   createdAt               DateTime  @default(now())
 
-  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organizedEvents Event[]       @relation("EventOrganizerWallet")
-  wonPrizes       Prize[]       @relation("PrizeWinner")
-  participants    Participant[]
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizedEvents Event[]      @relation("EventOrganizerWallet")
+  teamMemberships TeamMember[]
 
   @@index([userId])
   @@map("wallets")
@@ -114,11 +113,11 @@ model Event {
   createdAt            DateTime       @default(now())
   updatedAt            DateTime       @updatedAt
 
-  organizer       User          @relation("EventOrganizer", fields: [organizerId], references: [id])
-  organizerWallet Wallet        @relation("EventOrganizerWallet", fields: [organizerWalletId], references: [id])
+  organizer       User    @relation("EventOrganizer", fields: [organizerId], references: [id])
+  organizerWallet Wallet  @relation("EventOrganizerWallet", fields: [organizerWalletId], references: [id])
   prizes          Prize[]
   judges          Judge[]
-  participants    Participant[]
+  teams           Team[]
 
   @@index([organizerId])
   @@index([organizerWalletId])
@@ -126,25 +125,29 @@ model Event {
   @@map("events")
 }
 
+/// winnerTeamId points at the Team that won this position, not a wallet —
+/// release_reward pays a team's members directly and individually (see
+/// Team/TeamMember), so "who won" and "who got paid" are no longer the same
+/// column. Payout.teamMemberId is where individual payment lands.
 model Prize {
-  id             String      @id @default(uuid())
-  eventId        String
-  rank           Int
-  amount         Decimal     @db.Decimal(18, 7)
-  status         PrizeStatus @default(PENDING)
-  winnerWalletId String?
-  releaseTxHash  String?
-  releasedAt     DateTime?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+  id            String      @id @default(uuid())
+  eventId       String
+  rank          Int
+  amount        Decimal     @db.Decimal(18, 7)
+  status        PrizeStatus @default(PENDING)
+  winnerTeamId  String?
+  releaseTxHash String?
+  releasedAt    DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
-  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  winnerWallet Wallet?  @relation("PrizeWinner", fields: [winnerWalletId], references: [id])
-  payouts      Payout[]
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  winnerTeam Team?    @relation("PrizeWinner", fields: [winnerTeamId], references: [id])
+  payouts    Payout[]
 
   @@unique([eventId, rank])
   @@index([eventId])
-  @@index([winnerWalletId])
+  @@index([winnerTeamId])
   @@index([status])
   @@map("prizes")
 }
@@ -171,19 +174,76 @@ model Judge {
   @@map("judges")
 }
 
-model Participant {
+/// A team entering an event — the unit of registration. A solo entrant is
+/// represented as a team of one (see TeamMember); there is no separate
+/// individual-participant path. submissionUrl lives here, not on a member,
+/// because the team submits one project regardless of its size.
+///
+/// Share freeze: once Event.status leaves {DRAFT, CREATED, FUNDED, LIVE} —
+/// i.e. once judging starts — a `team_members_enforce_freeze` trigger on
+/// team_members (see migration) rejects any insert/update/delete against
+/// this team's membership or shares. There is no `sharesLockedAt` column;
+/// the freeze is derived from the event's own state machine rather than
+/// tracked as separate data that could drift from it.
+model Team {
   id            String   @id @default(uuid())
   eventId       String
-  walletId      String
+  name          String
   submissionUrl String
-  registeredAt  DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  event  Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  wallet Wallet @relation(fields: [walletId], references: [id])
+  event     Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  members   TeamMember[]
+  wonPrizes Prize[]      @relation("PrizeWinner")
 
   @@index([eventId])
+  @@map("teams")
+}
+
+/// One member of a Team and their declared share of any prize the team
+/// wins, set at registration and frozen once judging starts (see Team).
+/// `eventId` duplicates `Team.eventId` on purpose: it is what lets "a
+/// wallet may not be on two teams in the same event" be a plain SQL
+/// UNIQUE constraint ([eventId, walletId]) instead of a cross-table
+/// trigger. It is not modeled as its own Prisma relation to Event —
+/// Team.event already covers navigation; this column exists only to
+/// support that constraint.
+model TeamMember {
+  id      String @id @default(uuid())
+  teamId  String
+  eventId String
+
+  walletId         String
+  /// Share of the team's eventual prize, in basis points (1 bp = 0.01%;
+  /// 10000 bp = 100%) — an integer, never a float or Decimal percentage,
+  /// so a team's shares sum exactly. A team's rows must sum to exactly
+  /// 10000 and every row must be > 0 (release_reward asserts
+  /// winner.amount > 0 per winner — see rewards.rs); both are enforced by
+  /// the `check_team_shares` constraint trigger in the migration, not by a
+  /// plain CHECK, since the invariant spans every member row of a team.
+  ///
+  /// Remainder rule: dividing an integer prize amount by these basis
+  /// points leaves a remainder, and release_reward's exact-equality assert
+  /// (total_distributed == event.reward) means that remainder cannot be
+  /// dropped. Rule: the remainder is added to the member with the lowest
+  /// `ordinal` in the team. This is the Go release-wrapper's (#25) job to
+  /// implement — nothing in this schema performs the allocation.
+  shareBasisPoints Int
+  /// Deterministic ordering within the team; also the tiebreak target for
+  /// the remainder rule above. Unique per team, not globally.
+  ordinal          Int
+  createdAt        DateTime @default(now())
+
+  team    Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  wallet  Wallet   @relation(fields: [walletId], references: [id])
+  payouts Payout[]
+
+  @@unique([eventId, walletId])
+  @@unique([teamId, ordinal])
+  @@index([teamId])
   @@index([walletId])
-  @@map("participants")
+  @@map("team_members")
 }
 
 /// Append-only audit log. `amount` here is the NET amount actually
@@ -191,18 +251,24 @@ model Participant {
 /// from Prize.amount, the gross configured amount. txHash is deliberately NOT
 /// unique: `release_reward` pays every winner of an event in a single atomic
 /// transaction, so every Payout produced by that one release shares the same
-/// txHash — one row per prize, N rows per transaction.
+/// txHash. Under teams a single Prize can have several winners — one row per
+/// paid team member, all sharing one txHash — so the old one-row-per-prize
+/// assumption behind @@unique([prizeId, txHash]) no longer holds:
+/// teamMemberId is what makes each of those N rows unique instead.
 model Payout {
-  id          String   @id @default(uuid())
-  prizeId     String
-  txHash      String
-  amount      Decimal  @db.Decimal(18, 7)
-  confirmedAt DateTime @default(now())
+  id           String   @id @default(uuid())
+  prizeId      String
+  teamMemberId String
+  txHash       String
+  amount       Decimal  @db.Decimal(18, 7)
+  confirmedAt  DateTime @default(now())
 
-  prize Prize @relation(fields: [prizeId], references: [id], onDelete: Cascade)
+  prize      Prize      @relation(fields: [prizeId], references: [id], onDelete: Cascade)
+  teamMember TeamMember @relation(fields: [teamMemberId], references: [id])
 
-  @@unique([prizeId, txHash])
+  @@unique([prizeId, txHash, teamMemberId])
   @@index([prizeId])
+  @@index([teamMemberId])
   @@index([txHash])
   @@map("payouts")
 }

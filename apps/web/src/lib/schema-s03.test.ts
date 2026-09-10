@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { Event, Participant } from "@/generated/prisma/client";
+import type { Event } from "@/generated/prisma/client";
 
+// The two Participant-shape tests this file used to carry are gone along
+// with the model itself — see 20260910080000_replace_participants_with_teams
+// (Participant is replaced by Team/TeamMember; a solo entrant is a team of
+// one). The Event.conditionsMetAt test is untouched by that change.
 describe("S03 schema definitions", () => {
 	it("verifies Event model includes conditionsMetAt nullable date field", () => {
 		const sampleEvent: Partial<Event> = {
@@ -18,33 +22,5 @@ describe("S03 schema definitions", () => {
 			conditionsMetAt: new Date("2026-09-07T00:00:00Z"),
 		};
 		expect(activatedEvent.conditionsMetAt).toBeInstanceOf(Date);
-	});
-
-	it("verifies Participant model has architecture-aligned field names", () => {
-		const sampleParticipant: Participant = {
-			id: "part-1",
-			eventId: "evt-1",
-			walletId: "wal-1",
-			submissionUrl: "https://github.com/astrea-example/demo",
-			registeredAt: new Date("2026-09-07T00:00:00Z"),
-		};
-
-		expect(sampleParticipant.id).toBe("part-1");
-		expect(sampleParticipant.eventId).toBe("evt-1");
-		expect(sampleParticipant.walletId).toBe("wal-1");
-		expect(sampleParticipant.submissionUrl).toBe(
-			"https://github.com/astrea-example/demo",
-		);
-		expect(sampleParticipant.registeredAt).toBeInstanceOf(Date);
-	});
-
-	it("verifies Participant model operations", () => {
-		const mockPrisma = {
-			participant: {
-				findMany: () => Promise.resolve([]),
-				create: () => Promise.resolve({}),
-			},
-		};
-		expect(typeof mockPrisma.participant.findMany).toBe("function");
 	});
 });

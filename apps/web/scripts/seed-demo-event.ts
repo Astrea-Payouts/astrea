@@ -96,16 +96,25 @@ async function main() {
 	await transitionEvent(event.id, "CREATED", "FUNDED");
 	await transitionEvent(event.id, "FUNDED", "LIVE");
 
-	step("Register a demo participant + verify trustline (E05)");
+	step("Register a demo team of one + verify trustline (E05)");
 	const winnerWallet = await findOrCreateWallet(winner.publicKey);
 	if (!(await verifyAndRecordTrustline(winnerWallet.id, winner.publicKey))) {
 		throw new Error("demo participant has no USDC trustline");
 	}
-	await db.participant.create({
+	const team = await db.team.create({
 		data: {
 			eventId: event.id,
-			walletId: winnerWallet.id,
+			name: "Demo Participant",
 			submissionUrl: "https://github.com/astrea-example/demo",
+		},
+	});
+	await db.teamMember.create({
+		data: {
+			teamId: team.id,
+			eventId: event.id,
+			walletId: winnerWallet.id,
+			shareBasisPoints: 10000,
+			ordinal: 0,
 		},
 	});
 
