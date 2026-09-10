@@ -21,6 +21,13 @@
 -- location, registrationOpensAt and registrationClosesAt stay nullable —
 -- none of them have an invariant that requires a value, and both existing
 -- rows get NULL, matching their current absence of this data.
+--
+-- Note: registrationOpensAt/registrationClosesAt are TIMESTAMPTZ — absolute
+-- UTC already — so `timezone` plays no part in either CHECK below. It only
+-- matters for interpreting startsAt/endsAt as the organizer entered them:
+-- if a future UI builds those from "local wall-clock time + timezone", the
+-- offset has to be applied client-side before this table ever sees the
+-- value; nothing here does that conversion.
 
 -- AlterTable
 ALTER TABLE "events"
@@ -37,8 +44,10 @@ ADD CONSTRAINT "events_registration_window_check"
 CHECK ("registrationOpensAt" IS NULL OR "registrationClosesAt" IS NULL OR "registrationOpensAt" <= "registrationClosesAt");
 
 -- CHECK: registration must close no later than the event starts, when both
--- are set — the contract has no notion of registration, so this is purely
--- an off-chain scheduling invariant, not something release_reward enforces.
+-- are set. Independent of registrationOpensAt — a closesAt-only event
+-- (opensAt never set) is still bounded against startsAt by this constraint
+-- alone. The contract has no notion of registration, so this is purely an
+-- off-chain scheduling invariant, not something release_reward enforces.
 ALTER TABLE "events"
 ADD CONSTRAINT "events_registration_before_start_check"
 CHECK ("registrationClosesAt" IS NULL OR "startsAt" IS NULL OR "registrationClosesAt" <= "startsAt");
