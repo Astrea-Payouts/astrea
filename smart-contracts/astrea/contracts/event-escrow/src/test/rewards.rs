@@ -38,7 +38,8 @@ fn test_release_compensation_pays_participants_from_admin_wallet() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_cancelled(&admin, &event_id);
 
@@ -97,7 +98,8 @@ fn test_release_compensation_allows_amount_different_from_original_reward() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_cancelled(&admin, &event_id);
 
@@ -148,7 +150,8 @@ fn test_release_compensation_rejects_event_not_cancelled() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
 
     let participants = soroban_sdk::vec![
         &env,
@@ -185,7 +188,8 @@ fn test_release_compensation_rejects_wrong_admin() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -222,7 +226,8 @@ fn test_release_compensation_rejects_empty_participants() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
     let participants: Vec<Participants> = soroban_sdk::vec![&env];
     client.release_compensation(&admin, &event_id, &participants);
@@ -251,7 +256,8 @@ fn test_release_compensation_rejects_zero_amount_participant() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -289,7 +295,8 @@ fn test_release_compensation_rejects_negative_amount_participant() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -331,7 +338,8 @@ fn test_release_compensation_rejects_total_over_wallet_balance() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -391,7 +399,8 @@ fn test_release_compensation_rejects_double_release() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -431,7 +440,8 @@ fn test_release_reward_distributes_to_winners_and_ends_event() {
         &Some(Address::generate(&env)),
         &token_address,
         &600,
-        &event_id);
+        &event_id,
+    );
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -484,7 +494,8 @@ fn test_release_reward_rejects_zero_amount_winner() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -524,7 +535,8 @@ fn test_release_reward_rejects_negative_amount_winner_even_if_sum_matches() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -571,7 +583,8 @@ fn test_release_reward_rejects_too_many_winners() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let mut winners: Vec<Winner> = Vec::new(&env);
@@ -611,7 +624,8 @@ fn test_release_reward_rejects_non_owner_admin() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -655,7 +669,8 @@ fn test_release_reward_rejects_the_organizer_itself() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -696,7 +711,8 @@ fn test_release_reward_rejects_event_not_in_progress() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
 
     let winners = soroban_sdk::vec![
         &env,
@@ -736,7 +752,8 @@ fn test_release_reward_rejects_double_release() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -805,7 +822,8 @@ fn test_release_reward_rejects_mismatched_total() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -850,7 +868,8 @@ fn test_release_reward_reverts_atomically_on_invalid_winner() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &event_id);
+        &event_id,
+    );
     force_event_state(&env, &contract_id, event_id.clone(), EventState::InProgress);
 
     let winners = soroban_sdk::vec![
@@ -900,7 +919,8 @@ fn test_compensation_released_event_is_emitted() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     let participants = soroban_sdk::vec![
@@ -948,7 +968,8 @@ fn test_reward_released_event_is_emitted() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
     client.set_event_in_progress(&admin, &event_id);
 
     let winners = soroban_sdk::vec![

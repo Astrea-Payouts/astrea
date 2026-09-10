@@ -1,7 +1,6 @@
 //! Shared test helpers used across every test module in this crate.
 
 use crate::*;
-// use soroban_sdk::testutils::Address as _;
 use soroban_sdk::{token::TokenClient, Address, BytesN, Env};
 
 /// Creates a test token (Stellar Asset Contract) and returns its client

@@ -1,4 +1,14 @@
 #![no_std]
+// create_event_with_deadline (and the internal helper feeding it) genuinely
+// need 8 params — they're a Soroban contract entry point, so every field is
+// independently supplied by the caller; a params struct wouldn't shrink
+// this meaningfully. Scoped no narrower than crate-level on purpose:
+// #[contractimpl] generates EventEscrowClient as a separate item that does
+// NOT inherit an #[allow] placed on the original impl block (confirmed —
+// clippy still flagged the generated client with the allow on the impl),
+// so a per-function or per-impl allow cannot reach the macro-generated
+// code. This is the narrowest scope that actually works.
+#![allow(clippy::too_many_arguments)]
 
 //! `EventEscrow` — Astrea's escrow contract entry point.
 //!

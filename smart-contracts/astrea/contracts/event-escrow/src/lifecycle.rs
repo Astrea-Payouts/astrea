@@ -16,6 +16,12 @@ use crate::events::{
 use crate::types::{AdminWallet, DataKey, Event, EventState};
 use soroban_sdk::{Address, BytesN, Env, Vec};
 
+// 8 params is inherent to create_event's public signature (admin, judge,
+// resolver, token, reward, event_id, deadline, plus env) — not something a
+// param-bundling struct would meaningfully shrink for a Soroban contract
+// entry point, since each field is independently supplied by the caller.
+// (clippy::too_many_arguments is allowed crate-wide in lib.rs for this
+// exact reason — see the comment there.)
 fn create_event_internal(
     env: Env,
     admin: Address,

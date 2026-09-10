@@ -37,7 +37,8 @@ fn test_create_event_deducts_from_reserve_and_returns_the_given_id() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &id_1);
+        &id_1,
+    );
 
     let returned_2 = client.create_event(
         &admin,
@@ -45,7 +46,8 @@ fn test_create_event_deducts_from_reserve_and_returns_the_given_id() {
         &Some(Address::generate(&env)),
         &token_address,
         &200,
-        &id_2);
+        &id_2,
+    );
 
     assert_eq!(returned_1, id_1);
 
@@ -83,7 +85,8 @@ fn test_create_event_rejects_duplicate_id() {
         &Some(Address::generate(&env)),
         &token_address,
         &200,
-        &id);
+        &id,
+    );
 
     client.create_event(
         &admin,
@@ -91,7 +94,8 @@ fn test_create_event_rejects_duplicate_id() {
         &Some(Address::generate(&env)),
         &token_address,
         &100,
-        &id);
+        &id,
+    );
 }
 
 #[test]
@@ -123,7 +127,8 @@ fn test_create_event_rejects_insufficient_balance() {
         &Some(Address::generate(&env)),
         &token_address,
         &500,
-        &id);
+        &id,
+    );
 }
 
 #[test]
@@ -159,7 +164,8 @@ fn test_create_event_rejects_negative_reward() {
         &Some(Address::generate(&env)),
         &token_address,
         &-500,
-        &id);
+        &id,
+    );
 }
 
 #[test]
@@ -191,7 +197,8 @@ fn test_create_event_rejects_zero_reward() {
         &Some(Address::generate(&env)),
         &token_address,
         &0,
-        &id);
+        &id,
+    );
 }
 
 #[test]
@@ -219,7 +226,8 @@ fn test_create_event_without_prior_deposit() {
         &Some(Address::generate(&env)),
         &token_address,
         &100,
-        &id);
+        &id,
+    );
 }
 
 #[test]
@@ -253,7 +261,8 @@ fn test_create_event_rejects_token_mismatched_with_wallet() {
         &Some(Address::generate(&env)),
         &token_b,
         &100,
-        &id);
+        &id,
+    );
 }
 
 #[test]
@@ -286,7 +295,8 @@ fn test_get_events_by_admin_returns_all_created_events() {
         &Some(Address::generate(&env)),
         &token_address,
         &200,
-        &id_1);
+        &id_1,
+    );
 
     client.create_event(
         &admin,
@@ -294,7 +304,8 @@ fn test_get_events_by_admin_returns_all_created_events() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &id_2);
+        &id_2,
+    );
 
     let events = client.get_events_by_admin(&admin);
 
@@ -358,7 +369,8 @@ fn test_get_events_by_admin_does_not_mix_different_admins() {
         &Some(Address::generate(&env)),
         &token_address,
         &100,
-        &id_1);
+        &id_1,
+    );
 
     client.create_event(
         &admin_2,
@@ -366,7 +378,8 @@ fn test_get_events_by_admin_does_not_mix_different_admins() {
         &Some(Address::generate(&env)),
         &token_address,
         &100,
-        &id_2);
+        &id_2,
+    );
 
     let events_admin_1 = client.get_events_by_admin(&admin_1);
 
@@ -409,7 +422,8 @@ fn test_set_event_waiting_for_start_transitions_from_created() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -445,7 +459,8 @@ fn test_set_event_waiting_for_start_rejects_double_call() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -483,7 +498,8 @@ fn test_set_event_waiting_for_start_rejects_wrong_admin() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_waiting_for_start(&impostor_admin, &event_id);
 }
@@ -538,7 +554,8 @@ fn test_set_event_in_progress_allows_release_reward_afterwards() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_in_progress(&admin, &event_id);
 
@@ -590,7 +607,8 @@ fn test_set_event_in_progress_allows_transition_from_waiting_for_start() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -641,7 +659,8 @@ fn test_set_event_in_progress_rejects_double_start() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_in_progress(&admin, &event_id);
 
@@ -679,7 +698,8 @@ fn test_set_event_in_progress_rejects_wrong_admin() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_in_progress(&impostor_admin, &event_id);
 }
@@ -730,7 +750,8 @@ fn test_set_event_cancelled_refunds_wallet_from_created_state() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     assert_eq!(client.get_balance(&admin), 200);
 
@@ -767,7 +788,8 @@ fn test_set_event_cancelled_refunds_wallet_from_waiting_for_start_state() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
@@ -811,7 +833,8 @@ fn test_set_event_cancelled_rejects_in_progress_state() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_in_progress(&admin, &event_id);
 
@@ -849,7 +872,8 @@ fn test_set_event_cancelled_rejects_wrong_admin() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     client.set_event_cancelled(&impostor_admin, &event_id);
 }
@@ -883,7 +907,8 @@ fn test_set_event_cancelled_rejects_already_ended_event() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     force_event_state(&env, &contract_id, event_id.clone(), EventState::Ended);
 
@@ -930,7 +955,8 @@ fn test_get_event_returns_current_state() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
     let event = client.get_event(&event_id);
 
     assert_eq!(event.admin, admin);
@@ -982,7 +1008,8 @@ fn test_expire_event_refunds_after_deadline() {
         &token_address,
         &400,
         &event_id,
-        &deadline);
+        &deadline,
+    );
     assert_eq!(client.get_balance(&admin), 600);
     env.ledger().with_mut(|li| li.timestamp = deadline + 1);
 
@@ -1017,7 +1044,8 @@ fn test_expire_event_rejects_before_deadline() {
         &token_address,
         &400,
         &event_id,
-        &deadline);
+        &deadline,
+    );
     client.expire_event(&event_id);
 }
 
@@ -1044,7 +1072,8 @@ fn test_expire_event_rejects_event_without_deadline() {
         &Some(Address::generate(&env)),
         &token_address,
         &400,
-        &event_id);
+        &event_id,
+    );
     client.expire_event(&event_id);
 }
 
@@ -1074,7 +1103,8 @@ fn test_create_event_with_deadline_rejects_past_deadline() {
         &token_address,
         &400,
         &event_id,
-        &past_deadline);
+        &past_deadline,
+    );
 }
 
 #[test]
@@ -1103,7 +1133,8 @@ fn test_get_events_by_admin_page_returns_bounded_slices() {
             &Some(Address::generate(&env)),
             &token_address,
             &100,
-            &id);
+            &id,
+        );
 
         ids.push_back(id);
     }
@@ -1156,7 +1187,8 @@ fn test_expire_event_works_even_when_globally_paused() {
         &token_address,
         &300,
         &event_id,
-        &deadline);
+        &deadline,
+    );
     client.set_paused(&emergency_admin, &true);
 
     env.ledger().with_mut(|li| li.timestamp = deadline + 1);

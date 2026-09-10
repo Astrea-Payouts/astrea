@@ -32,7 +32,8 @@ fn test_event_created_is_emitted() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
 
     assert_eq!(
         env.events().all().filter_by_contract(&contract_id),
@@ -70,7 +71,8 @@ fn test_event_expired_is_emitted() {
         &token_address,
         &300,
         &event_id,
-        &deadline);
+        &deadline,
+    );
 
     env.ledger().with_mut(|li| li.timestamp = deadline + 1);
     client.expire_event(&event_id);
@@ -108,7 +110,8 @@ fn test_event_waiting_for_start_is_emitted() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
     client.set_event_waiting_for_start(&admin, &event_id);
 
     assert_eq!(
@@ -143,7 +146,8 @@ fn test_event_started_is_emitted() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
     client.set_event_in_progress(&admin, &event_id);
 
     assert_eq!(
@@ -178,7 +182,8 @@ fn test_event_cancelled_is_emitted() {
         &Some(Address::generate(&env)),
         &token_address,
         &300,
-        &event_id);
+        &event_id,
+    );
     client.set_event_cancelled(&admin, &event_id);
 
     assert_eq!(

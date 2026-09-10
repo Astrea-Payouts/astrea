@@ -33,7 +33,8 @@ fn test_emergency_pause_blocks_and_unblocks_writes() {
         &Some(Address::generate(&env)),
         &token_address,
         &100,
-        &event_id);
+        &event_id,
+    );
 
     assert!(result.is_err());
     client.set_paused(&emergency_admin, &false);
@@ -44,7 +45,8 @@ fn test_emergency_pause_blocks_and_unblocks_writes() {
         &Some(Address::generate(&env)),
         &token_address,
         &100,
-        &event_id);
+        &event_id,
+    );
 }
 
 #[test]
@@ -185,7 +187,8 @@ fn test_set_admin_paused_blocks_only_target_admin() {
         &Some(Address::generate(&env)),
         &token_address,
         &100,
-        &event_id_a);
+        &event_id_a,
+    );
 
     assert!(result.is_err());
     let event_id_b = test_event_id(&env, 2);
@@ -196,7 +199,8 @@ fn test_set_admin_paused_blocks_only_target_admin() {
         &Some(Address::generate(&env)),
         &token_address,
         &100,
-        &event_id_b);
+        &event_id_b,
+    );
 }
 
 #[test]
