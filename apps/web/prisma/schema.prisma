@@ -88,19 +88,31 @@ model Wallet {
 }
 
 model Event {
-  id                String         @id @default(uuid())
-  organizerId       String
-  organizerWalletId String
-  name              String
-  description       String?
-  startsAt          DateTime?
-  endsAt            DateTime?
-  status            EventStatus    @default(DRAFT)
-  conditionsMetAt   DateTime?
-  network           StellarNetwork @default(TESTNET)
-  escrowContractId  String?        @unique
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  id                   String         @id @default(uuid())
+  organizerId          String
+  organizerWalletId    String
+  name                 String
+  description          String?
+  logoUrl              String?
+  tagline              String?
+  location             String?
+  /// IANA identifier (e.g. "America/Costa_Rica"), not offset shorthand. The
+  /// on-chain `deadline` is a ledger timestamp — UTC with no timezone of its
+  /// own — and `expire_event` is permissionless: once it passes, anyone can
+  /// call it and the reserved reward refunds to the organizer. Recording the
+  /// timezone the organizer meant is what keeps a local "11:59 PM" from
+  /// silently becoming a different UTC instant than intended.
+  timezone             String         @default("UTC")
+  registrationOpensAt  DateTime?
+  registrationClosesAt DateTime?
+  startsAt             DateTime?
+  endsAt               DateTime?
+  status               EventStatus    @default(DRAFT)
+  conditionsMetAt      DateTime?
+  network              StellarNetwork @default(TESTNET)
+  escrowContractId     String?        @unique
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
 
   organizer       User          @relation("EventOrganizer", fields: [organizerId], references: [id])
   organizerWallet Wallet        @relation("EventOrganizerWallet", fields: [organizerWalletId], references: [id])
