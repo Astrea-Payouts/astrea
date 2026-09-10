@@ -11,7 +11,6 @@ export function getSampleEarnings(_walletAddress: string): EarningsItem[] {
 			eventId: "evt-soroban-hackathon-2026",
 			eventName: "Soroban DeFi & Smart Contracts Hackathon",
 			prizeRank: 1,
-			milestoneIndex: 0,
 			amountUsdc: "5,000",
 			amountUsdcNum: 5000,
 			txHash:
@@ -24,7 +23,6 @@ export function getSampleEarnings(_walletAddress: string): EarningsItem[] {
 			eventId: "evt-stellar-community-fund-sprint",
 			eventName: "SCF Community Infrastructure Sprint #45",
 			prizeRank: 1,
-			milestoneIndex: 0,
 			amountUsdc: "3,000",
 			amountUsdcNum: 3000,
 			txHash:
@@ -37,7 +35,6 @@ export function getSampleEarnings(_walletAddress: string): EarningsItem[] {
 			eventId: "evt-meridian-micropayments-bounty",
 			eventName: "Meridian Fast Micropayments Track",
 			prizeRank: 2,
-			milestoneIndex: 1,
 			amountUsdc: "2,500",
 			amountUsdcNum: 2500,
 			txHash:
@@ -50,7 +47,6 @@ export function getSampleEarnings(_walletAddress: string): EarningsItem[] {
 			eventId: "evt-latam-cross-border-challenge",
 			eventName: "LATAM Anchor Cross-Border Settlement Challenge",
 			prizeRank: 3,
-			milestoneIndex: 2,
 			amountUsdc: "1,500",
 			amountUsdcNum: 1500,
 			txHash:
@@ -118,7 +114,7 @@ export async function getParticipantEarnings(
 		}
 
 		return payouts.map((p) => {
-			const amountNum = Number(p.amountUsdc);
+			const amountNum = Number(p.amount);
 			const sanitizedAmount = Number.isNaN(amountNum) ? 0 : amountNum;
 
 			return {
@@ -126,7 +122,6 @@ export async function getParticipantEarnings(
 				eventId: p.prize.eventId,
 				eventName: p.prize.event?.name ?? "Astrea Competition",
 				prizeRank: p.prize.rank,
-				milestoneIndex: p.prize.milestoneIndex,
 				amountUsdc: sanitizedAmount.toLocaleString("en-US", {
 					maximumFractionDigits: 0,
 				}),

@@ -1,24 +1,24 @@
-// E06: the vertical slice demo. Proves E01-E05 work end to end, against the
-// real database and real testnet — not another isolated spike of the TW API
-// (that was K01's job). Reuses the K01 accounts so no fresh funding is
-// needed: organizer funds, judge approves/releases/forwards (ADR-007),
-// winner gets paid, and E04's reconciliation checks confirm it.
+// E06: the vertical slice demo. Proves E01-E05 work end to end against the
+// real database and state machine.
+//
+// This script originally drove live testnet calls through Trustless Work
+// (deploy escrow -> fund -> approve milestone -> release milestone -> judge
+// forwards to winner). That backend was rejected in favor of a custom
+// Soroban contract (docs/architecture.md ADR-001), and the TW adapter has
+// been deleted — see PR #170. The real event-escrow contract has no
+// approval step and no forwarding hop: `release_reward` pays every winner
+// directly, in one call, signed only by the judge
+// (smart-contracts/astrea/contracts/event-escrow/src/lib.rs). apps/web does
+// not call the contract directly today — that's services/core-go's job per
+// docs/architecture.md — so this script proves the DB + state-machine layer
+// only, using a placeholder tx hash where a real `release_reward` call
+// would go.
 import "dotenv/config";
+import { randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { Keypair, TransactionBuilder } from "@stellar/stellar-sdk";
 import { db } from "@/lib/db";
-import { env } from "@/lib/env";
-import { netAmountAfterFee } from "@/lib/escrow/fees";
 import { prepareOperation, submitOperation } from "@/lib/escrow/pipeline";
-import {
-	buildForwardPaymentXdr,
-	submitForwardPayment,
-} from "@/lib/escrow/stellar-payment";
-import { trustlessWorkAdapter } from "@/lib/escrow/trustless-work-adapter";
-import { findStalledForwardsInDb } from "@/lib/reconciliation/run";
-import { isTransactionConfirmed } from "@/lib/reconciliation/transaction-confirmation";
 import { transitionEvent, transitionPrize } from "@/lib/state-machines/apply";
-import { STELLAR_NETWORK_PASSPHRASE } from "@/lib/stellar-network";
 import { verifyAndRecordTrustline } from "@/lib/trustline/verify-and-record";
 import { hasUsdcTrustline } from "@/lib/trustline/verify-trustline";
 
@@ -34,17 +34,14 @@ const accounts: Record<"organizer" | "judge" | "winner" | "resolver", Keys> =
 		),
 	);
 
-function signXdr(unsignedXdr: string, secret: string): string {
-	const tx = TransactionBuilder.fromXDR(
-		unsignedXdr,
-		STELLAR_NETWORK_PASSPHRASE,
-	);
-	tx.sign(Keypair.fromSecret(secret));
-	return tx.toXDR();
-}
-
 function step(label: string) {
 	console.log(`\n[step] ${label}`);
+}
+
+// Placeholder for the real `release_reward` transaction hash — see the file
+// header for why apps/web doesn't submit one itself yet.
+function placeholderTxHash(): string {
+	return randomBytes(32).toString("hex");
 }
 
 async function findOrCreateWallet(address: string) {
@@ -55,7 +52,7 @@ async function findOrCreateWallet(address: string) {
 }
 
 async function main() {
-	const { organizer, judge, winner, resolver } = accounts;
+	const { organizer, judge, winner } = accounts;
 	const prizeAmount = 1;
 	const runId = Date.now();
 
@@ -64,7 +61,7 @@ async function main() {
 	const winnerWallet = await findOrCreateWallet(winner.publicKey);
 
 	step(
-		"Judge must already hold a USDC trustline to receive a release (ADR-007)",
+		"Judge must already hold a trustline for the registration/assignment checks below (ADR-004)",
 	);
 	if (!(await hasUsdcTrustline(judge.publicKey))) {
 		throw new Error(
@@ -84,7 +81,7 @@ async function main() {
 	});
 	console.log("  event:", event.id);
 
-	step("Add judge");
+	step("Add judge — the contract's sole release signer (ADR-003)");
 	await db.judge.create({
 		data: {
 			eventId: event.id,
@@ -98,86 +95,15 @@ async function main() {
 		data: {
 			eventId: event.id,
 			rank: 1,
-			amountUsdc: prizeAmount,
-			milestoneIndex: 0,
+			amount: prizeAmount,
 		},
 	});
 	console.log("  prize:", prize.id);
 
 	step(
-		"Deploy escrow — judge is the milestone receiver, winner unknown yet (ADR-007)",
+		"Event created, funded, and live — one reward locked on the organizer's AdminWallet (ADR-006)",
 	);
-	const deployKey = `deploy-escrow:${event.id}`;
-	const deployPrepared = await prepareOperation({
-		idempotencyKey: deployKey,
-		operation: "deploy-escrow",
-		requestPayload: { eventId: event.id },
-		build: () =>
-			trustlessWorkAdapter.deployEscrow({
-				signerPublicKey: organizer.publicKey,
-				engagementId: `astrea-e06-${runId}`,
-				title: event.name,
-				description: event.description ?? "",
-				roles: {
-					approver: judge.publicKey,
-					serviceProvider: winner.publicKey,
-					platformAddress: organizer.publicKey,
-					releaseSigner: judge.publicKey,
-					disputeResolver: resolver.publicKey,
-				},
-				platformFee: 0,
-				milestones: [
-					{
-						description: "1st place",
-						amount: prizeAmount,
-						receiver: judge.publicKey,
-					},
-				],
-				trustline: { symbol: env.USDC_SYMBOL, address: env.USDC_ISSUER },
-			}),
-	});
-	if (deployPrepared.alreadySucceeded)
-		throw new Error("unexpected: fresh event already has a deploy op");
-	const deploySubmitted = await submitOperation({
-		idempotencyKey: deployKey,
-		signedXdr: signXdr(deployPrepared.unsignedXdr, organizer.secret),
-		submit: (signedXdr) =>
-			trustlessWorkAdapter.submitSignedTransaction(signedXdr),
-	});
-	const contractId = deploySubmitted.contractId;
-	if (!contractId)
-		throw new Error("deploy submission did not return a contractId");
-	console.log("  contractId:", contractId, "tx:", deploySubmitted.txHash);
-
-	await db.event.update({
-		where: { id: event.id },
-		data: { escrowContractId: contractId },
-	});
 	await transitionEvent(event.id, "DRAFT", "CREATED");
-
-	step("Fund escrow");
-	const fundKey = `fund-escrow:${event.id}`;
-	const fundPrepared = await prepareOperation({
-		idempotencyKey: fundKey,
-		operation: "fund-escrow",
-		requestPayload: { contractId, amount: prizeAmount },
-		build: () =>
-			trustlessWorkAdapter.fundEscrow({
-				contractId,
-				signerPublicKey: organizer.publicKey,
-				amount: prizeAmount,
-			}),
-	});
-	if (fundPrepared.alreadySucceeded)
-		throw new Error("unexpected: fresh event already funded");
-	const fundSubmitted = await submitOperation({
-		idempotencyKey: fundKey,
-		signedXdr: signXdr(fundPrepared.unsignedXdr, organizer.secret),
-		submit: (signedXdr) =>
-			trustlessWorkAdapter.submitSignedTransaction(signedXdr),
-	});
-	console.log("  funded, tx:", fundSubmitted.txHash);
-
 	await transitionEvent(event.id, "CREATED", "FUNDED");
 	await transitionEvent(event.id, "FUNDED", "LIVE");
 
@@ -206,86 +132,26 @@ async function main() {
 		throw new Error("winner trustline no longer valid at assignment");
 	}
 
-	step("Judge approves the milestone");
-	const approveKey = `approve-milestone:${prize.id}`;
-	const approvePrepared = await prepareOperation({
-		idempotencyKey: approveKey,
-		operation: "approve-milestone",
-		requestPayload: { contractId, milestoneIndex: prize.milestoneIndex },
-		build: () =>
-			trustlessWorkAdapter.approveMilestone({
-				contractId,
-				milestoneIndex: prize.milestoneIndex,
-				approverPublicKey: judge.publicKey,
-			}),
-	});
-	if (approvePrepared.alreadySucceeded)
-		throw new Error("unexpected: fresh prize already approved");
-	await submitOperation({
-		idempotencyKey: approveKey,
-		signedXdr: signXdr(approvePrepared.unsignedXdr, judge.secret),
-		submit: (signedXdr) =>
-			trustlessWorkAdapter.submitSignedTransaction(signedXdr),
-	});
-	await transitionPrize(prize.id, "ASSIGNED", "APPROVED");
-
 	step(
-		"Judge releases the milestone — funds land in the judge's own wallet (ADR-007)",
+		"Judge releases — release_reward pays the winner directly in one call, no approval/forward hop",
 	);
-	const releaseKey = `release-milestone:${prize.id}`;
+	const releaseKey = `release-reward:${prize.id}`;
 	const releasePrepared = await prepareOperation({
 		idempotencyKey: releaseKey,
-		operation: "release-milestone",
-		requestPayload: { contractId, milestoneIndex: prize.milestoneIndex },
-		build: () =>
-			trustlessWorkAdapter.releaseMilestone({
-				contractId,
-				milestoneIndex: prize.milestoneIndex,
-				releaseSignerPublicKey: judge.publicKey,
-			}),
+		operation: "release-reward",
+		requestPayload: { prizeId: prize.id, winner: winner.publicKey },
+		build: async () => ({ unsignedXdr: "placeholder-unsigned-xdr" }),
 	});
 	if (releasePrepared.alreadySucceeded)
 		throw new Error("unexpected: fresh prize already released");
 	const releaseSubmitted = await submitOperation({
 		idempotencyKey: releaseKey,
-		signedXdr: signXdr(releasePrepared.unsignedXdr, judge.secret),
-		submit: (signedXdr) =>
-			trustlessWorkAdapter.submitSignedTransaction(signedXdr),
+		signedXdr: "placeholder-signed-xdr",
+		submit: async () => ({ txHash: placeholderTxHash() }),
 	});
 	console.log("  released, tx:", releaseSubmitted.txHash);
-	await transitionPrize(prize.id, "APPROVED", "RELEASED", {
+	await transitionPrize(prize.id, "ASSIGNED", "RELEASED", {
 		releaseTxHash: releaseSubmitted.txHash,
-	});
-
-	step(
-		"Judge forwards the net amount to the winner (ADR-007, plain Stellar payment)",
-	);
-	const netAmount = netAmountAfterFee(prizeAmount);
-	console.log(
-		`  gross ${prizeAmount} USDC -> net ${netAmount} USDC (ADR-005 0.3% fee)`,
-	);
-	const forwardKey = `forward-payment:${prize.id}`;
-	const forwardPrepared = await prepareOperation({
-		idempotencyKey: forwardKey,
-		operation: "forward-payment",
-		requestPayload: { prizeId: prize.id, amount: netAmount },
-		build: () =>
-			buildForwardPaymentXdr({
-				fromPublicKey: judge.publicKey,
-				toPublicKey: winner.publicKey,
-				amount: netAmount,
-			}),
-	});
-	if (forwardPrepared.alreadySucceeded)
-		throw new Error("unexpected: fresh prize already forwarded");
-	const forwardSubmitted = await submitOperation({
-		idempotencyKey: forwardKey,
-		signedXdr: signXdr(forwardPrepared.unsignedXdr, judge.secret),
-		submit: submitForwardPayment,
-	});
-	console.log("  forwarded, tx:", forwardSubmitted.txHash);
-	await transitionPrize(prize.id, "RELEASED", "PAID_OUT", {
-		forwardTxHash: forwardSubmitted.txHash,
 	});
 
 	step("Mark event COMPLETED and record the audit Payout row");
@@ -293,36 +159,10 @@ async function main() {
 	await db.payout.create({
 		data: {
 			prizeId: prize.id,
-			txHash: forwardSubmitted.txHash,
-			amountUsdc: netAmount,
+			txHash: releaseSubmitted.txHash,
+			amount: prizeAmount,
 		},
 	});
-
-	step(
-		"E04 — confirm both hops directly against Horizon (Principle 2, not TW's own indexer)",
-	);
-	const releaseConfirmed = await isTransactionConfirmed(
-		releaseSubmitted.txHash,
-	);
-	const forwardConfirmed = await isTransactionConfirmed(
-		forwardSubmitted.txHash,
-	);
-	console.log("  release tx confirmed on-chain:", releaseConfirmed);
-	console.log("  forward tx confirmed on-chain:", forwardConfirmed);
-	if (!(releaseConfirmed && forwardConfirmed)) {
-		throw new Error("a recorded tx hash did not confirm on Horizon");
-	}
-
-	step(
-		"E04 — stalled-forward check (should be empty; this prize just paid out)",
-	);
-	const stalled = await findStalledForwardsInDb();
-	const stillStalled = stalled.some((alert) => alert.prizeId === prize.id);
-	console.log("  this prize flagged as stalled:", stillStalled);
-	if (stillStalled)
-		throw new Error(
-			"prize incorrectly flagged as a stalled forward right after paying out",
-		);
 
 	step(
 		"E02 — idempotency check: replaying the release submit must short-circuit, not resubmit",
@@ -349,11 +189,9 @@ async function main() {
 	}
 
 	console.log(
-		"\n✅ E06 vertical slice complete — the product guarantee works end to end.",
+		"\n✅ E06 vertical slice complete — DB + state-machine layer verified end to end.",
 	);
-	console.log(
-		`   Event ${event.id} / Prize ${prize.id} / contract ${contractId}`,
-	);
+	console.log(`   Event ${event.id} / Prize ${prize.id}`);
 	await db.$disconnect();
 }
 

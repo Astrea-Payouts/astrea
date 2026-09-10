@@ -202,7 +202,7 @@ function PayoutRow({ item }: { item: EarningsItem }) {
 					<div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-zinc-500">
 						<span>{formatPayoutDate(item.confirmedAt)}</span>
 						<span>•</span>
-						<span>{t("milestoneTag", { index: item.milestoneIndex + 1 })}</span>
+						<span>{t("milestoneTag", { index: item.prizeRank })}</span>
 						<span>•</span>
 						<span className="inline-flex items-center gap-1 text-emerald-400/90 font-medium">
 							<CheckCircle2 className="size-3 text-emerald-400" />

@@ -4,13 +4,18 @@ import { InvalidTransitionError } from "./errors";
 // docs/product-flows.md "Event state machine". Cancel is allowed from every
 // state that already has an escrow at stake (CREATED onward) — a DRAFT event
 // has no escrow yet, so it's discarded directly rather than "cancelled".
+// DISPUTED is reachable from CREATED, LIVE, or JUDGING per the 2026-09-09
+// state machine decision; its own outgoing transitions aren't specified by
+// that decision, so this assumes a resolved dispute lands on COMPLETED
+// (paid out) or CANCELLED (refunded) — flag if that's wrong.
 const EVENT_TRANSITIONS: Record<EventStatus, EventStatus[]> = {
 	DRAFT: ["CREATED"],
-	CREATED: ["FUNDED", "CANCELLED"],
+	CREATED: ["FUNDED", "DISPUTED", "CANCELLED"],
 	FUNDED: ["LIVE", "CANCELLED"],
-	LIVE: ["JUDGING", "CANCELLED"],
-	JUDGING: ["COMPLETED", "CANCELLED"],
+	LIVE: ["JUDGING", "DISPUTED", "CANCELLED"],
+	JUDGING: ["COMPLETED", "DISPUTED", "CANCELLED"],
 	COMPLETED: [],
+	DISPUTED: ["COMPLETED", "CANCELLED"],
 	CANCELLED: [],
 };
 

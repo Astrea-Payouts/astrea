@@ -1,15 +1,14 @@
 import type { PrizeStatus } from "@/generated/prisma/enums";
 import { InvalidTransitionError } from "./errors";
 
-// docs/product-flows.md "Prize (milestone) states" + ADR-007. RELEASED means
-// funds landed in the judge's wallet; PAID_OUT means the forward (or, from
-// DISPUTED, the resolver's direct payout) is confirmed on-chain. DISPUTED
-// skips RELEASED entirely — resolve-milestone-dispute pays the winner
-// directly, with no forwarding step (see architecture.md ADR-007).
+// docs/product-flows.md "Prize states". RELEASED means release_reward's
+// on-chain transfer to this prize's winner already landed — the contract
+// has no approval step, so ASSIGNED goes straight to RELEASED (see
+// docs/architecture.md ADR-001/ADR-003). DISPUTED skips RELEASED entirely —
+// a resolved dispute pays the winner directly, with no forwarding step.
 const PRIZE_TRANSITIONS: Record<PrizeStatus, PrizeStatus[]> = {
 	PENDING: ["ASSIGNED"],
-	ASSIGNED: ["APPROVED", "DISPUTED"],
-	APPROVED: ["RELEASED", "DISPUTED"],
+	ASSIGNED: ["RELEASED", "DISPUTED"],
 	RELEASED: ["PAID_OUT"],
 	PAID_OUT: [],
 	DISPUTED: ["PAID_OUT"],

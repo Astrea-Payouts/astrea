@@ -3,7 +3,6 @@ export interface EarningsItem {
 	eventId: string;
 	eventName: string;
 	prizeRank: number;
-	milestoneIndex: number;
 	amountUsdc: string;
 	amountUsdcNum: number;
 	txHash: string;

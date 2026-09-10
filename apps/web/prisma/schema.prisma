@@ -24,16 +24,20 @@ enum EventStatus {
   LIVE
   JUDGING
   COMPLETED
+  DISPUTED
   CANCELLED
 }
 
-/// Prize (milestone) lifecycle — see docs/product-flows.md "Prize (milestone) states".
-/// RELEASED means funds landed in the judge's wallet; PAID_OUT means the
-/// judge's forward payment to the winner is confirmed on-chain (ADR-007).
+/// Prize lifecycle — see docs/product-flows.md "Prize states".
+/// RELEASED means the on-chain `release_reward` call already paid this
+/// prize's winner directly — the contract has no approval step and no
+/// forwarding hop (event-escrow/src/lib.rs `release_reward`; ADR-001, ADR-003).
+/// PAID_OUT is kept as a separate terminal status for now, pending a decision
+/// on whether it still means anything distinct from RELEASED now that there
+/// is no forward payment to wait for — not resolved by this change.
 enum PrizeStatus {
   PENDING
   ASSIGNED
-  APPROVED
   RELEASED
   PAID_OUT
   DISPUTED
@@ -114,16 +118,11 @@ model Prize {
   id             String      @id @default(uuid())
   eventId        String
   rank           Int
-  amountUsdc     Decimal     @db.Decimal(18, 7)
-  milestoneIndex Int
+  amount         Decimal     @db.Decimal(18, 7)
   status         PrizeStatus @default(PENDING)
   winnerWalletId String?
   releaseTxHash  String?
   releasedAt     DateTime?
-  /// ADR-007: the judge's forward-to-winner payment — a plain Stellar tx,
-  /// not a Trustless Work call. Set together with paidOutAt.
-  forwardTxHash  String?
-  paidOutAt      DateTime?
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
@@ -131,16 +130,20 @@ model Prize {
   winnerWallet Wallet?  @relation("PrizeWinner", fields: [winnerWalletId], references: [id])
   payouts      Payout[]
 
-  @@unique([eventId, milestoneIndex])
+  @@unique([eventId, rank])
   @@index([eventId])
   @@index([winnerWalletId])
   @@index([status])
   @@map("prizes")
 }
 
-/// Judges hold the on-chain `approver` + `releaseSigner` role (ADR-003).
+/// Judges map to the single on-chain `judge` address stored on the
+/// contract's `Event` (ADR-003) — the only address `release_reward` requires
+/// auth from, not a separate `approver` + `releaseSigner` pair.
 /// walletAddress is a raw Stellar address, not a Wallet FK — it may be a
-/// multisig account the platform has no user/Wallet row for.
+/// multisig account the platform has no user/Wallet row for. Multiple
+/// `Judge` rows can represent a panel, but only one address ever reaches
+/// the chain — see #62.
 model Judge {
   id            String      @id @default(uuid())
   eventId       String
@@ -171,25 +174,30 @@ model Participant {
   @@map("participants")
 }
 
-/// Append-only audit log. amountUsdc here is the NET amount actually
-/// transferred (post protocol + platform fee — see ADR-005), distinct from
-/// Prize.amountUsdc which is the gross configured amount.
+/// Append-only audit log. `amount` here is the NET amount actually
+/// transferred (post protocol + platform fee, if any — see ADR-001), distinct
+/// from Prize.amount, the gross configured amount. txHash is deliberately NOT
+/// unique: `release_reward` pays every winner of an event in a single atomic
+/// transaction, so every Payout produced by that one release shares the same
+/// txHash — one row per prize, N rows per transaction.
 model Payout {
   id          String   @id @default(uuid())
   prizeId     String
-  txHash      String   @unique
-  amountUsdc  Decimal  @db.Decimal(18, 7)
+  txHash      String
+  amount      Decimal  @db.Decimal(18, 7)
   confirmedAt DateTime @default(now())
 
   prize Prize @relation(fields: [prizeId], references: [id], onDelete: Cascade)
 
+  @@unique([prizeId, txHash])
   @@index([prizeId])
+  @@index([txHash])
   @@map("payouts")
 }
 
-/// Idempotency key + outbox record for every escrow-mutating call to
-/// Trustless Work. Read by the reconciliation job (E04) to heal drift
-/// between confirmed on-chain transactions and mirror table state.
+/// Idempotency key + outbox record for every escrow-mutating call to the
+/// event-escrow contract. Read by the reconciliation job (E04) to heal
+/// drift between confirmed on-chain transactions and mirror table state.
 model OpLog {
   id             String   @id @default(uuid())
   idempotencyKey String   @unique

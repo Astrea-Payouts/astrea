@@ -6,7 +6,7 @@ import { decidePrepare, decideSubmit } from "./idempotency";
 
 interface StoredResult {
 	txHash: string;
-	// Only present for a deploy operation's result — see types.ts SubmittedTx.
+	// Only present for a deploy operation's result.
 	contractId?: string;
 }
 
