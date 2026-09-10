@@ -7,7 +7,7 @@
 export interface OpRecord {
 	status: "PENDING" | "SUCCEEDED" | "FAILED";
 	txHash?: string;
-	// Only meaningful for a deploy operation's result — see types.ts SubmittedTx.
+	// Only meaningful for a deploy operation's result.
 	contractId?: string;
 }
 

@@ -2,16 +2,14 @@ import { describe, expect, it } from "vitest";
 import { assertPrizeTransition, canTransitionPrize } from "./prize";
 
 describe("prize state machine", () => {
-	it("allows the documented happy path, including the ADR-007 forward step", () => {
+	it("allows the documented happy path — no approval step, release_reward pays directly", () => {
 		expect(canTransitionPrize("PENDING", "ASSIGNED")).toBe(true);
-		expect(canTransitionPrize("ASSIGNED", "APPROVED")).toBe(true);
-		expect(canTransitionPrize("APPROVED", "RELEASED")).toBe(true);
+		expect(canTransitionPrize("ASSIGNED", "RELEASED")).toBe(true);
 		expect(canTransitionPrize("RELEASED", "PAID_OUT")).toBe(true);
 	});
 
-	it("allows a dispute from ASSIGNED or APPROVED", () => {
+	it("allows a dispute from ASSIGNED", () => {
 		expect(canTransitionPrize("ASSIGNED", "DISPUTED")).toBe(true);
-		expect(canTransitionPrize("APPROVED", "DISPUTED")).toBe(true);
 	});
 
 	it("does not allow disputing a PENDING prize (no winner assigned yet)", () => {
@@ -23,8 +21,7 @@ describe("prize state machine", () => {
 		expect(canTransitionPrize("DISPUTED", "RELEASED")).toBe(false);
 	});
 
-	it("rejects releasing before approval", () => {
-		expect(canTransitionPrize("ASSIGNED", "RELEASED")).toBe(false);
+	it("rejects releasing a prize with no winner assigned yet", () => {
 		expect(canTransitionPrize("PENDING", "RELEASED")).toBe(false);
 	});
 
