@@ -107,15 +107,26 @@ async function main() {
 	await transitionEvent(event.id, "CREATED", "FUNDED");
 	await transitionEvent(event.id, "FUNDED", "LIVE");
 
-	step("Register winner + verify trustline (E05, registration checkpoint)");
+	step(
+		"Register winner team of one + verify trustline (E05, registration checkpoint)",
+	);
 	if (!(await verifyAndRecordTrustline(winnerWallet.id, winner.publicKey))) {
 		throw new Error("winner has no USDC trustline");
 	}
-	await db.participant.create({
+	const winnerTeam = await db.team.create({
 		data: {
 			eventId: event.id,
-			walletId: winnerWallet.id,
+			name: "Demo Winner",
 			submissionUrl: "https://github.com/astrea-example/demo",
+		},
+	});
+	const winnerTeamMember = await db.teamMember.create({
+		data: {
+			teamId: winnerTeam.id,
+			eventId: event.id,
+			walletId: winnerWallet.id,
+			shareBasisPoints: 10000,
+			ordinal: 0,
 		},
 	});
 
@@ -125,7 +136,7 @@ async function main() {
 	step("Assign winner + re-verify trustline (E05, assignment checkpoint)");
 	await db.prize.update({
 		where: { id: prize.id },
-		data: { winnerWalletId: winnerWallet.id },
+		data: { winnerTeamId: winnerTeam.id },
 	});
 	await transitionPrize(prize.id, "PENDING", "ASSIGNED");
 	if (!(await verifyAndRecordTrustline(winnerWallet.id, winner.publicKey))) {
@@ -159,6 +170,7 @@ async function main() {
 	await db.payout.create({
 		data: {
 			prizeId: prize.id,
+			teamMemberId: winnerTeamMember.id,
 			txHash: releaseSubmitted.txHash,
 			amount: prizeAmount,
 		},

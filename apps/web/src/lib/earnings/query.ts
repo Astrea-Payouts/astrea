@@ -73,8 +73,11 @@ export function isValidWalletRef(value: unknown): value is string {
 }
 
 /**
- * Queries confirmed payout rows for the verified participant's wallet.
- * Filtered by Prize.winnerWalletId to guarantee wallet-scoped privacy.
+ * Queries confirmed payout rows for the verified wallet's team memberships.
+ * Filtered by TeamMember.walletId (via Payout.teamMember) to guarantee
+ * wallet-scoped privacy — a Prize no longer has a single winner wallet
+ * directly, since a team's members are each paid individually (see
+ * Team/TeamMember in schema.prisma).
  * Returns an empty array if unauthenticated, database unavailable, or no payouts exist.
  * Sample/demo data is NEVER returned here — only the empty state downstream.
  */
@@ -90,10 +93,10 @@ export async function getParticipantEarnings(
 
 		const payouts = await db.payout.findMany({
 			where: {
-				prize: {
+				teamMember: {
 					OR: [
-						{ winnerWalletId: walletIdOrAddress },
-						{ winnerWallet: { address: walletIdOrAddress } },
+						{ walletId: walletIdOrAddress },
+						{ wallet: { address: walletIdOrAddress } },
 					],
 				},
 			},
