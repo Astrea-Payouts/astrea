@@ -16,4 +16,5 @@ mod event_emission;
 mod governance;
 mod lifecycle;
 mod rewards;
+mod ttl;
 mod wallet;
