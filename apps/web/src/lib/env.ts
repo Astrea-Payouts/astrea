@@ -1,7 +1,9 @@
 import { z } from "zod";
 import {
+	DEFAULT_SOROBAN_RPC_URL,
 	HORIZON_URL,
 	STELLAR_ACCOUNT_ID,
+	STELLAR_CONTRACT_ID,
 	STELLAR_NETWORK_PASSPHRASE,
 } from "./stellar-network";
 
@@ -23,13 +25,19 @@ const serverSchema = z.object({
 		.enum(["true", "false"])
 		.default("false")
 		.transform((v) => v === "true"),
-	TW_API_URL: z.url().default("https://dev.api.trustlesswork.com"),
-	TW_API_KEY: z
+	// Same "server and client must never disagree" reasoning as
+	// NEXT_PUBLIC_STELLAR_NETWORK above — also NEXT_PUBLIC_ on purpose: it's
+	// not a secret, and the client builds stellar.expert links from it.
+	NEXT_PUBLIC_ESCROW_CONTRACT_ID: z
 		.string()
-		.min(
-			1,
-			"TW_API_KEY is required — request one at https://dapp.trustlesswork.com",
+		.regex(
+			STELLAR_CONTRACT_ID,
+			"NEXT_PUBLIC_ESCROW_CONTRACT_ID must be a Soroban contract ID: starts with C, 56 characters total, base32 (A-Z, 2-7) after that",
 		),
+	// Optional override; defaults to the public testnet RPC (stellar-network.ts).
+	// No free public mainnet Soroban RPC exists, so this becomes required
+	// below when NEXT_PUBLIC_STELLAR_NETWORK=mainnet.
+	SOROBAN_RPC_URL: z.url().optional(),
 	USDC_ISSUER: z
 		.string()
 		.regex(
@@ -58,10 +66,19 @@ function parseEnv() {
 		);
 	}
 
+	if (data.NEXT_PUBLIC_STELLAR_NETWORK === "mainnet" && !data.SOROBAN_RPC_URL) {
+		throw new Error(
+			"SOROBAN_RPC_URL is required when NEXT_PUBLIC_STELLAR_NETWORK=mainnet — " +
+				"there is no free public mainnet Soroban RPC to default to. Set " +
+				"SOROBAN_RPC_URL to your provider's mainnet endpoint.",
+		);
+	}
+
 	return {
 		...data,
 		networkPassphrase: STELLAR_NETWORK_PASSPHRASE,
 		horizonUrl: HORIZON_URL,
+		sorobanRpcUrl: data.SOROBAN_RPC_URL ?? DEFAULT_SOROBAN_RPC_URL,
 	};
 }
 

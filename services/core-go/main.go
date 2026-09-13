@@ -9,12 +9,16 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/config"
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	// Fails fast, at boot, before the mux is even built — a validator that
+	// exists but isn't called before ListenAndServe doesn't satisfy #8/S04.
+	cfg, err := config.Load(os.Getenv)
+	if err != nil {
+		log.Fatalf("invalid configuration: %v", err)
 	}
 
 	mux := http.NewServeMux()
@@ -24,12 +28,12 @@ func main() {
 	})
 
 	srv := &http.Server{
-		Addr:    ":" + port,
+		Addr:    ":" + cfg.Port,
 		Handler: mux,
 	}
 
 	go func() {
-		log.Printf("core-go listening on :%s", port)
+		log.Printf("core-go listening on :%s (network=%s)", cfg.Port, cfg.Network)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("server error: %v", err)
 		}
