@@ -30,7 +30,7 @@ The wizard is a 5-step horizontal stepper (U01) — completed steps marked, the 
 4. **Participants.** A toggle, off by default, for whether participants answer any custom questions at registration (U17) — off means the one-click registration in Flow 3 stays exactly as-is.
 5. **Review & Sign.** Full summary of every step above. Then the actual money-moving action: if the `AdminWallet` balance needs a top-up first, that's shown explicitly as its own signed step ("1 of 2: deposit" → "2 of 2: create event"), never hidden inside a single click. This step signs `create_event`, which reserves the prize total from the `AdminWallet` free balance — no separate deploy transaction, no separate fund transaction afterward, one call does both.
 
-An event cannot be created unless the organizer's free balance covers the full prize total. That's the core product guarantee, and it's exact — no fee disclosure needed, because there isn't one to disclose.
+An event cannot be created unless the organizer's free balance covers the full prize total. That's the core product guarantee, and it's exact — the winners receive precisely the announced total. The go-live fee is separate and disclosed at go-live, not here: before the organizer signs to go live (Flow 2), the UI shows the fee quoted by `quote_go_live_fee`, with a top-up step first if the free balance doesn't cover it — the same "1 of 2: deposit" → "2 of 2: go live" shape as this flow's step 5.
 
 ## Flow 2 — Organizer publishes the event
 

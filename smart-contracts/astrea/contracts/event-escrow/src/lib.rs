@@ -107,6 +107,10 @@ impl EventEscrow {
         lifecycle::set_event_in_progress(env, admin, event_id, judging_deadline)
     }
 
+    pub fn quote_go_live_fee(env: Env, event_id: BytesN<16>) -> i128 {
+        lifecycle::quote_go_live_fee(env, event_id)
+    }
+
     pub fn set_event_cancelled(env: Env, admin: Address, event_id: BytesN<16>) {
         lifecycle::set_event_cancelled(env, admin, event_id)
     }
@@ -202,6 +206,22 @@ impl EventEscrow {
 
     pub fn is_token_allowed(env: Env, token: Address) -> bool {
         governance::is_token_allowed(env, token)
+    }
+
+    pub fn initialize_treasury(env: Env, caller: Address, treasury: Address) {
+        governance::initialize_treasury(env, caller, treasury)
+    }
+
+    pub fn get_treasury(env: Env) -> Address {
+        governance::get_treasury(env)
+    }
+
+    pub fn set_fee_bps(env: Env, caller: Address, fee_bps: u32) {
+        governance::set_fee_bps(env, caller, fee_bps)
+    }
+
+    pub fn get_fee_bps(env: Env) -> u32 {
+        governance::get_fee_bps(env)
     }
 }
 

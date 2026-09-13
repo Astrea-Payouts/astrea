@@ -16,6 +16,7 @@ fn test_resolve_dispute_pays_winners_after_deadline_and_ends_event() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let resolver = Address::generate(&env);
@@ -23,6 +24,9 @@ fn test_resolve_dispute_pays_winners_after_deadline_and_ends_event() {
     let (token_address, token_client, asset_client) = create_test_token(&env, &token_admin);
     let first_place = Address::generate(&env);
     let second_place = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -80,12 +84,16 @@ fn test_resolve_dispute_rejects_before_deadline() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let resolver = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -122,6 +130,7 @@ fn test_resolve_dispute_rejects_wrong_resolver() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let resolver = Address::generate(&env);
@@ -129,6 +138,9 @@ fn test_resolve_dispute_rejects_wrong_resolver() {
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -169,12 +181,16 @@ fn test_resolve_dispute_rejects_judge_as_caller() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let resolver = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -215,12 +231,16 @@ fn test_resolve_dispute_rejects_admin_as_caller() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let resolver = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -299,12 +319,16 @@ fn test_resolve_dispute_rejects_mismatched_total() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let resolver = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -343,12 +367,16 @@ fn test_resolve_dispute_rejects_zero_amount_winner() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let resolver = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -387,11 +415,15 @@ fn test_resolve_dispute_rejects_too_many_winners() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let resolver = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -439,6 +471,7 @@ fn test_resolve_dispute_rejects_when_globally_paused() {
     let winner_address = Address::generate(&env);
 
     client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -488,6 +521,7 @@ fn test_resolve_dispute_rejects_when_admin_paused() {
     let winner_address = Address::generate(&env);
 
     client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -528,12 +562,16 @@ fn test_release_reward_rejects_after_resolve_dispute() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let resolver = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);
@@ -574,12 +612,16 @@ fn test_resolve_dispute_rejects_after_release_reward() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let resolver = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner_address = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);

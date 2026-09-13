@@ -132,9 +132,13 @@ fn test_event_started_is_emitted() {
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
 
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    let treasury = init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &500);
@@ -150,13 +154,25 @@ fn test_event_started_is_emitted() {
     );
     client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 
+    // Default 50bps on a 300 reward floors to 1 — the go-live fee is
+    // nonzero here, so FeeCharged is published in the same invocation as
+    // EventStarted (see lifecycle::set_event_in_progress).
     assert_eq!(
         env.events().all().filter_by_contract(&contract_id),
-        [EventStarted {
-            event_id: event_id.clone(),
-            admin: admin.clone(),
-        }
-        .to_xdr(&env, &contract_id)],
+        [
+            EventStarted {
+                event_id: event_id.clone(),
+                admin: admin.clone(),
+            }
+            .to_xdr(&env, &contract_id),
+            FeeCharged {
+                event_id: event_id.clone(),
+                admin: admin.clone(),
+                treasury,
+                fee: 1,
+            }
+            .to_xdr(&env, &contract_id),
+        ],
     );
 }
 
