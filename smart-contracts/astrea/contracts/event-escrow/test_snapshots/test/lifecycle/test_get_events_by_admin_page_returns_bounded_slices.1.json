@@ -366,6 +366,12 @@
                   },
                   {
                     "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": "void"
+                  },
+                  {
+                    "key": {
                       "symbol": "resolver"
                     },
                     "val": {
@@ -445,6 +451,12 @@
                     "val": {
                       "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM"
                     }
+                  },
+                  {
+                    "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": "void"
                   },
                   {
                     "key": {
@@ -530,6 +542,12 @@
                   },
                   {
                     "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": "void"
+                  },
+                  {
+                    "key": {
                       "symbol": "resolver"
                     },
                     "val": {
@@ -612,6 +630,12 @@
                   },
                   {
                     "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": "void"
+                  },
+                  {
+                    "key": {
                       "symbol": "resolver"
                     },
                     "val": {
@@ -691,6 +715,12 @@
                     "val": {
                       "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2ZMN"
                     }
+                  },
+                  {
+                    "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": "void"
                   },
                   {
                     "key": {

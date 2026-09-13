@@ -90,6 +90,7 @@ fn create_event_internal(
         reward,
         state: EventState::Created,
         deadline,
+        judging_deadline: None,
     };
 
     env.storage().persistent().set(&event_key, &event);
@@ -158,10 +159,13 @@ pub(crate) fn expire_event(env: Env, event_id: BytesN<16>) {
         .get(&event_key)
         .expect("Event does not exist");
 
+    // InProgress is deliberately excluded: once a resolver-dispute path
+    // exists (resolve_dispute in rewards.rs), a permissionless bare refund
+    // of a live event would both violate ADR-006 and let anyone front-run
+    // the resolver by refunding the organizer right after the deadline.
+    // Created and WaitingForStart still expire as before.
     assert!(
-        event.state == EventState::Created
-            || event.state == EventState::WaitingForStart
-            || event.state == EventState::InProgress,
+        event.state == EventState::Created || event.state == EventState::WaitingForStart,
         "Event cannot be expired in its current state"
     );
 
@@ -233,7 +237,12 @@ pub(crate) fn set_event_waiting_for_start(env: Env, admin: Address, event_id: By
     EventWaitingForStart { event_id, admin }.publish(&env);
 }
 
-pub(crate) fn set_event_in_progress(env: Env, admin: Address, event_id: BytesN<16>) {
+pub(crate) fn set_event_in_progress(
+    env: Env,
+    admin: Address,
+    event_id: BytesN<16>,
+    judging_deadline: u64,
+) {
     admin.require_auth();
 
     assert_not_paused(&env, &admin);
@@ -256,7 +265,13 @@ pub(crate) fn set_event_in_progress(env: Env, admin: Address, event_id: BytesN<1
         "Event must be in Created or WaitingForStart state to start"
     );
 
+    assert!(
+        judging_deadline > env.ledger().timestamp(),
+        "Judging deadline must be in the future"
+    );
+
     event.state = EventState::InProgress;
+    event.judging_deadline = Some(judging_deadline);
 
     env.storage().persistent().set(&event_key, &event);
 

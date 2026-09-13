@@ -201,7 +201,7 @@ fn test_emergency_withdraw_fails_once_in_progress() {
         &event_id,
     );
 
-    client.set_event_in_progress(&admin, &event_id);
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 
     client.emergency_withdraw(&admin, &resolver, &event_id, &200);
 }

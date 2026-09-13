@@ -427,7 +427,7 @@ fn test_set_event_waiting_for_start_transitions_from_created() {
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
-    client.set_event_in_progress(&admin, &event_id);
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 }
 
 #[test]
@@ -557,7 +557,7 @@ fn test_set_event_in_progress_allows_release_reward_afterwards() {
         &event_id,
     );
 
-    client.set_event_in_progress(&admin, &event_id);
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 
     let winners = soroban_sdk::vec![
         &env,
@@ -612,7 +612,7 @@ fn test_set_event_in_progress_allows_transition_from_waiting_for_start() {
 
     client.set_event_waiting_for_start(&admin, &event_id);
 
-    client.set_event_in_progress(&admin, &event_id);
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 
     let winners = soroban_sdk::vec![
         &env,
@@ -662,9 +662,9 @@ fn test_set_event_in_progress_rejects_double_start() {
         &event_id,
     );
 
-    client.set_event_in_progress(&admin, &event_id);
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 
-    client.set_event_in_progress(&admin, &event_id);
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 }
 
 #[test]
@@ -701,7 +701,11 @@ fn test_set_event_in_progress_rejects_wrong_admin() {
         &event_id,
     );
 
-    client.set_event_in_progress(&impostor_admin, &event_id);
+    client.set_event_in_progress(
+        &impostor_admin,
+        &event_id,
+        &(env.ledger().timestamp() + 1_000),
+    );
 }
 
 #[test]
@@ -719,7 +723,7 @@ fn test_set_event_in_progress_rejects_nonexistent_event() {
 
     let event_id = test_event_id(&env, 99);
 
-    client.set_event_in_progress(&admin, &event_id);
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 }
 
 #[test]
@@ -836,7 +840,7 @@ fn test_set_event_cancelled_rejects_in_progress_state() {
         &event_id,
     );
 
-    client.set_event_in_progress(&admin, &event_id);
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 
     client.set_event_cancelled(&admin, &event_id);
 }
@@ -1074,6 +1078,45 @@ fn test_expire_event_rejects_event_without_deadline() {
         &400,
         &event_id,
     );
+    client.expire_event(&event_id);
+}
+
+#[test]
+#[should_panic(expected = "Event cannot be expired in its current state")]
+fn test_expire_event_rejects_in_progress_event() {
+    // With resolve_dispute available (#22), a permissionless bare refund of
+    // a live event would both violate ADR-006 and let anyone front-run the
+    // resolver right after the deadline. Once InProgress, expire_event must
+    // no longer be a way out — only release_reward or resolve_dispute are.
+    let env = Env::default();
+
+    env.mock_all_auths();
+
+    let contract_id = env.register(EventEscrow, ());
+    let client = EventEscrowClient::new(&env, &contract_id);
+    let admin = Address::generate(&env);
+    let token_admin = Address::generate(&env);
+    let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    asset_client.mint(&admin, &1_000);
+    client.deposit_funds(&admin, &token_address, &1_000);
+    let event_id = test_event_id(&env, 1);
+    let deadline = env.ledger().timestamp() + 100;
+
+    client.create_event_with_deadline(
+        &admin,
+        &Address::generate(&env),
+        &Some(Address::generate(&env)),
+        &token_address,
+        &400,
+        &event_id,
+        &deadline,
+    );
+
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
+
+    env.ledger().with_mut(|li| li.timestamp = deadline + 1);
+
     client.expire_event(&event_id);
 }
 

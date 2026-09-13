@@ -65,6 +65,17 @@ pub struct RewardReleased {
     pub total_distributed: i128,
 }
 
+/// Distinct from `RewardReleased` on purpose: off-chain reconciliation
+/// needs to tell a judge release from a resolver-adjudicated one apart.
+#[contractevent(topics = ["evt_dsp"], data_format = "vec")]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DisputeResolved {
+    #[topic]
+    pub event_id: BytesN<16>,
+    pub resolver: Address,
+    pub total_distributed: i128,
+}
+
 /// E01b — emitted when a pre-launch two-signature emergency withdraw
 /// succeeds. Both `admin` and `resolver` are included since either address
 /// alone was insufficient to authorize the withdrawal; the event should let

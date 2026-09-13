@@ -259,6 +259,12 @@
                   },
                   {
                     "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": "void"
+                  },
+                  {
+                    "key": {
                       "symbol": "resolver"
                     },
                     "val": {
@@ -338,6 +344,12 @@
                     "val": {
                       "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM"
                     }
+                  },
+                  {
+                    "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": "void"
                   },
                   {
                     "key": {

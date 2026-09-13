@@ -98,8 +98,13 @@ impl EventEscrow {
         lifecycle::set_event_waiting_for_start(env, admin, event_id)
     }
 
-    pub fn set_event_in_progress(env: Env, admin: Address, event_id: BytesN<16>) {
-        lifecycle::set_event_in_progress(env, admin, event_id)
+    pub fn set_event_in_progress(
+        env: Env,
+        admin: Address,
+        event_id: BytesN<16>,
+        judging_deadline: u64,
+    ) {
+        lifecycle::set_event_in_progress(env, admin, event_id, judging_deadline)
     }
 
     pub fn set_event_cancelled(env: Env, admin: Address, event_id: BytesN<16>) {
@@ -127,6 +132,15 @@ impl EventEscrow {
 
     pub fn release_reward(env: Env, judge: Address, event_id: BytesN<16>, winners: Vec<Winner>) {
         rewards::release_reward(env, judge, event_id, winners)
+    }
+
+    pub fn resolve_dispute(
+        env: Env,
+        resolver: Address,
+        event_id: BytesN<16>,
+        winners: Vec<Winner>,
+    ) {
+        rewards::resolve_dispute(env, resolver, event_id, winners)
     }
 
     pub fn get_events_by_admin(env: Env, admin: Address) -> Vec<BytesN<16>> {

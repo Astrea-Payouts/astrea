@@ -970,7 +970,7 @@ fn test_reward_released_event_is_emitted() {
         &300,
         &event_id,
     );
-    client.set_event_in_progress(&admin, &event_id);
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 
     let winners = soroban_sdk::vec![
         &env,
