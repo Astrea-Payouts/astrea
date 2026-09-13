@@ -276,9 +276,9 @@ pub(crate) fn set_event_in_progress(
     // organizer's free wallet balance, not the `reward` already reserved
     // by `create_event`, so `release_reward`/`resolve_dispute` keep paying
     // exactly `reward`. Non-refundable: nothing in `resolve_dispute`,
-    // `expire_event` or `release_compensation` returns it. The balance
-    // check below must run before the state change, so a rejected go-live
-    // leaves the event in its pre-launch state.
+    // `expire_event` or `release_compensation` returns it. Order is for
+    // readability; atomicity on a rejected go-live comes from the host
+    // reverting every write on panic.
     let fee_bps = get_fee_bps(&env);
     let fee = event.reward * i128::from(fee_bps) / 10_000;
 
