@@ -53,6 +53,27 @@ it never builds an auth entry and never submits anything. (The contract
 deducts a new event's reward from the wallet at `create_event` time, so this
 already is the free balance — there's no separate reserved figure.)
 
+`E01c` (done): the four calls that end an event for good, in
+`lifecycle.go` — `set_event_cancelled` and `expire_event` (the two refund
+paths; `expire_event` alone has no signer at all, so its `Build...` takes a
+plain fee-paying account instead of an organizer's address), and
+`release_reward`/`release_compensation`, which pay out `Vec<Winner>`/
+`Vec<Participants>`. Those two are this package's first arguments that are
+structs rather than scalars or addresses, and Soroban encodes a
+`#[contracttype]` struct as an `ScMap` keyed by field name in *sorted*
+order — `{address, amount, place}` for `Winner`, not `Winner`'s declared
+`{place, amount, address}` — so `lifecycle_test.go` asserts that exact key
+sequence rather than trusting it implicitly. `allocate.go` adds
+`escrow.AllocateWinners`, a pure function with no database or RPC access
+that turns an organizer's per-position prizes and each position's winning
+team into that flat `[]Winner` — one entry per `TeamMember`, all sharing
+their position's `place` — applying the remainder rule
+`schema.prisma`'s `TeamMember.shareBasisPoints` comment documents: a
+position's leftover unit after flooring every member's basis-point share
+goes to the team's lowest-`Ordinal` member, and any member a split floors
+to zero is rejected before it ever reaches the contract (which would
+otherwise reject the *entire* release).
+
 ```bash
 go test ./internal/escrow/...
 ```
@@ -64,7 +85,12 @@ not a `go test`, so CI's `go test ./...` never depends on testnet/friendbot
 being up. It exercises both signing paths: `deposit_funds` via `Submit`,
 then `create_event` via `BuildCreateEvent` → (harness signs, standing in for
 the organizer's wallet) → `SubmitSigned`, then reads the balance and the
-event back:
+event back — and, added for `E01c`, drives a second event to `InProgress`
+and closes it with `release_reward` to a 3-member team on an uneven
+3333/3333/3334 bp split (so the remainder rule fires on a real ledger, not
+just in a unit test), cancels a third event pre-launch, and proves against
+the contract itself — not asserted client-side — that a fourth event's
+cancellation is rejected once it reaches `InProgress`:
 
 ```bash
 go run ./cmd/escrow-testnet-proof
