@@ -4,13 +4,16 @@ Go backend: event/prize state machine, participant registration, real-time track
 
 ## Status
 
-`S01` (module scaffold) done — builds, runs, `GET /healthz` returns 200. Everything else is still ahead: `S02` (CI), `S03` (Postgres schema), `S04` (env config), `E01-E06` (business logic). See [docs/build-plan.md](../../docs/build-plan.md).
+`S01` (module scaffold) and `S04` (env config) done — builds, runs, `GET /healthz` returns 200, and refuses to start with missing/malformed config (see Configuration below). Everything else is still ahead: `S02` (CI), `S03` (Postgres schema), `E01-E06` (business logic). See [docs/build-plan.md](../../docs/build-plan.md).
 
 ## Run locally
 
+Requires `ESCROW_CONTRACT_ID` at minimum — see Configuration below and
+`.env.example`.
+
 ```bash
-go run .
-# optional: PORT=8091 go run .
+ESCROW_CONTRACT_ID=<your-testnet-contract-id> go run .
+# optional: PORT=8091 ESCROW_CONTRACT_ID=<...> go run .
 curl localhost:8080/healthz
 ```
 
@@ -20,6 +23,41 @@ curl localhost:8080/healthz
 go build .
 go vet ./...
 ```
+
+## Configuration
+
+`S04` (done): `internal/config.Load` validates five environment variables —
+`STELLAR_NETWORK`, `ALLOW_MAINNET`, `SOROBAN_RPC_URL`, `ESCROW_CONTRACT_ID`,
+`PORT` — and `main` calls it before building the mux, so a missing or
+malformed variable fails the process at boot (non-zero exit, one line per
+problem) instead of surfacing as a confusing error on the first real
+request. See `.env.example` for what each variable means and its default.
+
+The network passphrase is derived from `STELLAR_NETWORK` via
+`github.com/stellar/go/network`'s constants, never a separate variable —
+letting the two drift is exactly the testnet/mainnet mix-up
+`apps/web/src/lib/env.ts` also guards against. `ESCROW_CONTRACT_ID` is
+validated by decoding it with `internal/escrow.ContractAddress` (real
+strkey/checksum validation, not a regex) rather than re-implementing that
+parsing here. `ALLOW_MAINNET` mirrors the web app's gate: setting
+`STELLAR_NETWORK=mainnet` alone is refused.
+
+**Key handling.** This service holds no signing key, plaintext or
+otherwise. Organizer and judge keys never leave their own wallets — every
+organizer-authorized call (`deposit_funds`, `withdraw_funds`,
+`create_event`) goes through the build-only path (`escrow.UnsignedTx`),
+and `release_reward`/`release_compensation` require the judge's own
+signature the same way. The resolver and emergency-admin keys
+(`initialize_default_resolver`, `initialize_treasury`,
+`resolve_dispute`, `set_paused`, and friends) are used directly from the
+`stellar` CLI by a human operator holding the governance keys — this
+service never touches them. The treasury is a receive-only address, not a
+signer. The one key this service will eventually hold is a fee payer for
+permissionless `expire_event` submissions (anyone can trigger a timed-out
+event's refund; something has to pay the network fee) — by construction
+it's low-value, holding fee dust only, and its `_FILE`-style indirection
+and log-redaction handling is deferred to the issue that introduces that
+job, not decided speculatively here.
 
 ## `internal/escrow` — Soroban transaction pipeline
 

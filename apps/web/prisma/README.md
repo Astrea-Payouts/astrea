@@ -16,7 +16,7 @@ DIRECT_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/p
 
 **Copy the full URI with the copy button in Supabase's dashboard — don't retype the password by hand.** Supabase-generated passwords often contain characters like `%` that need percent-encoding inside a connection-string URL; pasting the raw password into the `<password>` placeholder yourself can silently corrupt it (Postgres then rejects it with `28P01 password authentication failed`, even though the password "looks right"). The dashboard's copy button already encodes it correctly.
 
-**Also watch for tooling that overwrites `.env` wholesale** (a `prisma init`-style wizard, a Vercel/Supabase env-pull step, etc.) — it can quietly replace your working `DATABASE_URL`/`TW_API_KEY`/etc. with fresh boilerplate. If a script that was working suddenly can't authenticate, check whether `.env` still has all the keys from `.env.example` before re-deriving credentials from scratch.
+**Also watch for tooling that overwrites `.env` wholesale** (a `prisma init`-style wizard, a Vercel/Supabase env-pull step, etc.) — it can quietly replace your working `DATABASE_URL`/`NEXT_PUBLIC_ESCROW_CONTRACT_ID`/etc. with fresh boilerplate. If a script that was working suddenly can't authenticate, check whether `.env` still has all the keys from `.env.example` before re-deriving credentials from scratch.
 
 ## ⚠️ Migration baseline (read before running `prisma migrate dev`)
 

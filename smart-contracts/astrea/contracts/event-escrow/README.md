@@ -103,6 +103,10 @@ deploys the contract, and runs both scenarios end to end, printing every
 transaction hash as it goes. It uses only the stellar-cli's local identity
 store — no secrets are written to disk in this repo.
 
+`scripts/deploy-testnet.sh` (issue #8) deploys a fresh contract and runs the
+three governance initializations (emergency admin, default resolver,
+treasury) against real governance keys — see that script's header for usage.
+
 ## Verification
 
 `cargo test` still passes 78/78, unchanged — this task only added the script

@@ -2,7 +2,8 @@
 // modules depending on it (src/lib/escrow/*) need these present even though
 // they never hit the real network — fetch/Horizon calls are mocked per test.
 // env.test.ts manages these keys itself per test and overrides these defaults.
-process.env.TW_API_KEY ??= "test-key";
+process.env.NEXT_PUBLIC_ESCROW_CONTRACT_ID ??=
+	"CAD5IOA2FFSUTRIHEK6YQ2BPO2JVDPXYRXBVMPBBWFQEWRWKFRG36TQH";
 process.env.USDC_ISSUER ??=
 	"GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5";
 process.env.DATABASE_URL ??=
