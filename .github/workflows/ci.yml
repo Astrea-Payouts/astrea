@@ -30,13 +30,25 @@ jobs:
         working-directory: apps/web
         run: npm run typecheck
 
+      # --coverage works without extra flags in Vitest as long as
+      # @vitest/coverage-v8 is already installed; if not, add it as a
+      # devDependency. lcov is the format Sonar expects.
       - name: Test (Vitest)
         working-directory: apps/web
-        run: npm run test
+        run: npm run test -- --coverage --coverage.reporter=lcov
 
       - name: Build
         working-directory: apps/web
         run: npm run build
+
+      # Upload lcov.info as an artifact so the sonarcloud job can consume
+      # it without having to re-run the tests.
+      - name: Upload web coverage
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage-web
+          path: apps/web/coverage/lcov.info
+          retention-days: 1
 
   graphify-rebuild:
     name: Rebuild knowledge graph (develop only)
@@ -206,6 +218,23 @@ jobs:
       - name: Build (wasm release artifact)
         run: cargo build --release --target wasm32v1-none
 
+      # cargo-tarpaulin runs the crate's native test suite (same tests as the
+      # "Test" step above) and produces a Cobertura XML report, which is the
+      # format the Sonar Rust analyzer accepts. This does not touch the wasm
+      # build above - tarpaulin instruments and runs the native target only.
+      - name: Install cargo-tarpaulin
+        run: cargo install --locked cargo-tarpaulin
+
+      - name: Test with coverage (tarpaulin)
+        run: cargo tarpaulin --out Xml --output-dir .
+
+      - name: Upload contracts coverage
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage-contracts
+          path: smart-contracts/astrea/cobertura.xml
+          retention-days: 1
+
   core-go:
     name: Build, vet, test (core-go)
     runs-on: ubuntu-latest
@@ -235,8 +264,17 @@ jobs:
       - name: Vet
         run: go vet ./...
 
+      # -coverprofile added so the sonarcloud job below has a Go coverage
+      # report to consume; the profile is uploaded as an artifact right after.
       - name: Test
-        run: go test ./...
+        run: go test ./... -coverprofile=coverage.out
+
+      - name: Upload core-go coverage
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage-core-go
+          path: services/core-go/coverage.out
+          retention-days: 1
 
   commitlint:
     name: Commit messages (Conventional Commits)
@@ -257,3 +295,54 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           node-version: 24
+
+  # New job: runs after the three coverage-producing jobs and feeds their
+  # artifacts into the SonarCloud scan, instead of re-running tests here.
+  sonarcloud:
+    name: SonarCloud analysis
+    runs-on: ubuntu-latest
+    # Depends on the three jobs that produce coverage. If one fails, the
+    # analysis still runs (with whatever coverage does exist) instead of
+    # blocking the report over a failure unrelated to Sonar.
+    needs: [build-lint-test, core-go, contracts]
+    if: always() && (needs.build-lint-test.result != 'cancelled' && needs.core-go.result != 'cancelled' && needs.contracts.result != 'cancelled')
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # SonarCloud needs the full git history to blame new vs.
+          # pre-existing issues.
+          fetch-depth: 0
+
+      # The Sonar Rust analyzer invokes cargo and clippy itself during the
+      # scan, so both need to be on PATH on this machine - not just on the
+      # `contracts` job's runner where the coverage report was generated.
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Download web coverage
+        uses: actions/download-artifact@v6
+        with:
+          name: coverage-web
+          path: apps/web/coverage
+        continue-on-error: true
+
+      - name: Download core-go coverage
+        uses: actions/download-artifact@v6
+        with:
+          name: coverage-core-go
+          path: services/core-go
+        continue-on-error: true
+
+      - name: Download contracts coverage
+        uses: actions/download-artifact@v6
+        with:
+          name: coverage-contracts
+          path: smart-contracts/astrea
+        continue-on-error: true
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

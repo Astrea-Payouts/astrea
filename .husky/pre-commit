@@ -1,1 +1,1 @@
-npx lint-staged
+cd apps/web && npx lint-staged
