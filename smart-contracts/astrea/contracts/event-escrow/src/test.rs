@@ -11,6 +11,7 @@
 //! events (`EventCreated`, `ContractPaused`, etc.).
 
 mod common;
+mod dispute;
 mod emergency_withdraw;
 mod event_emission;
 mod governance;

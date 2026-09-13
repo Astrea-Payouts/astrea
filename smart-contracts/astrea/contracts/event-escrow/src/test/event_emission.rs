@@ -148,7 +148,7 @@ fn test_event_started_is_emitted() {
         &300,
         &event_id,
     );
-    client.set_event_in_progress(&admin, &event_id);
+    client.set_event_in_progress(&admin, &event_id, &(env.ledger().timestamp() + 1_000));
 
     assert_eq!(
         env.events().all().filter_by_contract(&contract_id),

@@ -328,6 +328,12 @@
                   },
                   {
                     "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": "void"
+                  },
+                  {
+                    "key": {
                       "symbol": "resolver"
                     },
                     "val": {
@@ -407,6 +413,12 @@
                     "val": {
                       "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARQG5"
                     }
+                  },
+                  {
+                    "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": "void"
                   },
                   {
                     "key": {

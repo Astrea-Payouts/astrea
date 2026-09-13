@@ -142,6 +142,9 @@
                 },
                 {
                   "bytes": "00000000000000000000000000000001"
+                },
+                {
+                  "u64": "1000"
                 }
               ]
             }
@@ -296,6 +299,14 @@
                     },
                     "val": {
                       "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": {
+                      "u64": "1000"
                     }
                   },
                   {

@@ -315,6 +315,12 @@
                   },
                   {
                     "key": {
+                      "symbol": "judging_deadline"
+                    },
+                    "val": "void"
+                  },
+                  {
+                    "key": {
                       "symbol": "resolver"
                     },
                     "val": {

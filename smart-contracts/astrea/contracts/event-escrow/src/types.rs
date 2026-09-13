@@ -33,14 +33,20 @@ pub struct Event {
     /// requires this address's auth, not `admin`'s. See ADR-003.
     pub judge: Address,
     pub token: Address,
-    /// The resolver's job is narrow and pre-launch-only: co-signing an
-    /// emergency withdraw alongside `admin` (E01b). It defaults to Astrea's
-    /// own resolver address (see `DataKey::DefaultResolver`) unless the
-    /// organizer names one explicitly at `create_event` time (ADR-003).
+    /// The resolver co-signs the pre-launch emergency withdraw alongside
+    /// `admin` (E01b), and is also the only party who can release a live
+    /// event's funds via `resolve_dispute` once `judging_deadline` has
+    /// passed and the judge hasn't (ADR-003). It defaults to Astrea's own
+    /// resolver address (see `DataKey::DefaultResolver`) unless the
+    /// organizer names one explicitly at `create_event` time.
     pub resolver: Address,
     pub reward: i128,
     pub state: EventState,
     pub deadline: Option<u64>,
+    /// Set at `set_event_in_progress`, mandatory for every live event —
+    /// meaningless before then, and required from that point on so a live
+    /// event can never end up with no resolver-dispute exit (ADR-006).
+    pub judging_deadline: Option<u64>,
 }
 
 #[contracttype]
