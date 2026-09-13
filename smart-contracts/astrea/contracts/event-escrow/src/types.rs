@@ -80,4 +80,13 @@ pub enum DataKey {
     AdminPaused(Address),
     TokenWhitelistEnabled,
     AllowedToken(Address),
+    /// Go-live-fee treasury address. `set_event_in_progress` transfers the
+    /// fee here from the organizer's `AdminWallet` free balance. Governance
+    /// singleton, same init-once shape as `DefaultResolver`.
+    Treasury,
+    /// Go-live fee rate in basis points, adjustable by the emergency admin
+    /// within the on-chain ceiling (`governance::MAX_FEE_BPS`). Absent
+    /// means the default rate (`governance::DEFAULT_FEE_BPS`) applies —
+    /// see `governance::get_fee_bps`.
+    FeeBps,
 }

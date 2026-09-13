@@ -90,6 +90,20 @@ pub struct EmergencyWithdrawal {
     pub amount: i128,
 }
 
+/// Emitted only when `set_event_in_progress` actually moves a nonzero
+/// go-live fee — a reward small enough to floor to zero pays nothing and
+/// emits nothing. Non-refundable: no other event ever reverses this
+/// transfer.
+#[contractevent(topics = ["evt_fee"], data_format = "vec")]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct FeeCharged {
+    #[topic]
+    pub event_id: BytesN<16>,
+    pub admin: Address,
+    pub treasury: Address,
+    pub fee: i128,
+}
+
 #[contractevent(topics = ["paused"], data_format = "single-value")]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ContractPaused {

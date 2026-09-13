@@ -404,11 +404,17 @@ fn test_set_event_waiting_for_start_transitions_from_created() {
 
     let client = EventEscrowClient::new(&env, &contract_id);
 
+    let emergency_admin = Address::generate(&env);
+
     let admin = Address::generate(&env);
 
     let token_admin = Address::generate(&env);
 
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    client.initialize_emergency_admin(&emergency_admin);
+
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
 
@@ -532,6 +538,8 @@ fn test_set_event_in_progress_allows_release_reward_afterwards() {
 
     let client = EventEscrowClient::new(&env, &contract_id);
 
+    let emergency_admin = Address::generate(&env);
+
     let admin = Address::generate(&env);
 
     let judge = Address::generate(&env);
@@ -541,6 +549,10 @@ fn test_set_event_in_progress_allows_release_reward_afterwards() {
     let (token_address, token_client, asset_client) = create_test_token(&env, &token_admin);
 
     let winner_address = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
 
@@ -585,6 +597,8 @@ fn test_set_event_in_progress_allows_transition_from_waiting_for_start() {
 
     let client = EventEscrowClient::new(&env, &contract_id);
 
+    let emergency_admin = Address::generate(&env);
+
     let admin = Address::generate(&env);
 
     let judge = Address::generate(&env);
@@ -594,6 +608,10 @@ fn test_set_event_in_progress_allows_transition_from_waiting_for_start() {
     let (token_address, token_client, asset_client) = create_test_token(&env, &token_admin);
 
     let winner_address = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
 
@@ -641,11 +659,17 @@ fn test_set_event_in_progress_rejects_double_start() {
 
     let client = EventEscrowClient::new(&env, &contract_id);
 
+    let emergency_admin = Address::generate(&env);
+
     let admin = Address::generate(&env);
 
     let token_admin = Address::generate(&env);
 
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    client.initialize_emergency_admin(&emergency_admin);
+
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
 
@@ -819,11 +843,17 @@ fn test_set_event_cancelled_rejects_in_progress_state() {
 
     let client = EventEscrowClient::new(&env, &contract_id);
 
+    let emergency_admin = Address::generate(&env);
+
     let admin = Address::generate(&env);
 
     let token_admin = Address::generate(&env);
 
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    client.initialize_emergency_admin(&emergency_admin);
+
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
 
@@ -1094,9 +1124,13 @@ fn test_expire_event_rejects_in_progress_event() {
 
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &1_000);

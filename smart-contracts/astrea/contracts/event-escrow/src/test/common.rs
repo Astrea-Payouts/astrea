@@ -1,6 +1,7 @@
 //! Shared test helpers used across every test module in this crate.
 
 use crate::*;
+use soroban_sdk::testutils::Address as _;
 use soroban_sdk::{token::TokenClient, Address, BytesN, Env};
 
 /// Creates a test token (Stellar Asset Contract) and returns its client
@@ -29,6 +30,23 @@ pub(crate) fn test_event_id(env: &Env, n: u8) -> BytesN<16> {
     bytes[15] = n;
 
     BytesN::from_array(env, &bytes)
+}
+
+/// Test-only helper: initializes the go-live-fee treasury via the given
+/// (already-initialized) emergency admin and returns the generated
+/// treasury address. The go-live fee defaults to nonzero
+/// (`DEFAULT_FEE_BPS`) and `set_event_in_progress` fails closed without a
+/// treasury, so every test that reaches it needs this call first.
+pub(crate) fn init_treasury(
+    env: &Env,
+    client: &EventEscrowClient,
+    emergency_admin: &Address,
+) -> Address {
+    let treasury = Address::generate(env);
+
+    client.initialize_treasury(emergency_admin, &treasury);
+
+    treasury
 }
 
 /// Test-only helper: directly overwrites an event's state in storage.

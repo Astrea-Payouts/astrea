@@ -4,6 +4,7 @@
 //! ABI — these are internal helpers only, `pub(crate)` so sibling modules
 //! can call them but the outside world never sees them directly.
 
+use crate::governance::DEFAULT_FEE_BPS;
 use crate::types::DataKey;
 use soroban_sdk::{Address, Env};
 
@@ -116,4 +117,24 @@ pub(crate) fn assert_token_allowed(env: &Env, token: &Address) {
         is_token_allowed_internal(env, token),
         "Token is not allowed"
     );
+}
+
+/// Go-live fee treasury — mirrors `get_default_resolver`'s "not
+/// initialized" failure shape so `set_event_in_progress` fails closed
+/// instead of silently charging nothing when governance forgot to set one.
+pub(crate) fn get_treasury(env: &Env) -> Address {
+    env.storage()
+        .persistent()
+        .get(&DataKey::Treasury)
+        .expect("Treasury not initialized")
+}
+
+/// Go-live fee rate in basis points. Unlike the other governance singletons
+/// this one is never "uninitialized" — it just falls back to
+/// `DEFAULT_FEE_BPS` until the emergency admin sets an explicit rate.
+pub(crate) fn get_fee_bps(env: &Env) -> u32 {
+    env.storage()
+        .persistent()
+        .get(&DataKey::FeeBps)
+        .unwrap_or(DEFAULT_FEE_BPS)
 }

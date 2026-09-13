@@ -7,14 +7,14 @@
 
 use crate::access::{
     assert_not_paused, assert_token_allowed, bump_event_ttl, bump_events_index_ttl,
-    bump_wallet_ttl, get_default_resolver,
+    bump_wallet_ttl, get_default_resolver, get_fee_bps, get_treasury,
 };
 use crate::events::{
     EmergencyWithdrawal, EventCancelled, EventCreated, EventExpired, EventStarted,
-    EventWaitingForStart,
+    EventWaitingForStart, FeeCharged,
 };
 use crate::types::{AdminWallet, DataKey, Event, EventState};
-use soroban_sdk::{Address, BytesN, Env, Vec};
+use soroban_sdk::{token::TokenClient, Address, BytesN, Env, Vec};
 
 // 8 params is inherent to create_event's public signature (admin, judge,
 // resolver, token, reward, event_id, deadline, plus env) — not something a
@@ -270,6 +270,49 @@ pub(crate) fn set_event_in_progress(
         "Judging deadline must be in the future"
     );
 
+    // Go-live fee (ADR-003 / PR #178 follow-up): charged once, here, in
+    // exchange for Astrea standing as the event's resolver from this point
+    // on. On top of the prize, never out of it — it comes from the
+    // organizer's free wallet balance, not the `reward` already reserved
+    // by `create_event`, so `release_reward`/`resolve_dispute` keep paying
+    // exactly `reward`. Non-refundable: nothing in `resolve_dispute`,
+    // `expire_event` or `release_compensation` returns it. The balance
+    // check below must run before the state change, so a rejected go-live
+    // leaves the event in its pre-launch state.
+    let fee_bps = get_fee_bps(&env);
+    let fee = event.reward * i128::from(fee_bps) / 10_000;
+
+    let treasury = if fee > 0 {
+        // Fail closed: an unset treasury must never silently mean "free".
+        let treasury = get_treasury(&env);
+
+        let wallet_key = DataKey::Wallet(admin.clone());
+
+        let mut wallet: AdminWallet = env
+            .storage()
+            .persistent()
+            .get(&wallet_key)
+            .expect("Admin has no wallet registered");
+
+        assert!(
+            wallet.balance >= fee,
+            "Insufficient balance to cover the go-live fee"
+        );
+
+        wallet.balance -= fee;
+
+        env.storage().persistent().set(&wallet_key, &wallet);
+
+        bump_wallet_ttl(&env, &wallet_key);
+
+        let token_client = TokenClient::new(&env, &event.token);
+        token_client.transfer(&env.current_contract_address(), &treasury, &fee);
+
+        Some(treasury)
+    } else {
+        None
+    };
+
     event.state = EventState::InProgress;
     event.judging_deadline = Some(judging_deadline);
 
@@ -277,7 +320,36 @@ pub(crate) fn set_event_in_progress(
 
     bump_event_ttl(&env, &event_key);
 
-    EventStarted { event_id, admin }.publish(&env);
+    EventStarted {
+        event_id: event_id.clone(),
+        admin: admin.clone(),
+    }
+    .publish(&env);
+
+    if let Some(treasury) = treasury {
+        FeeCharged {
+            event_id,
+            admin,
+            treasury,
+            fee,
+        }
+        .publish(&env);
+    }
+}
+
+/// Read-only quote of what `set_event_in_progress` would charge this event
+/// right now, at the current `fee_bps`. Lets the UI/off-chain service tell
+/// the organizer "deposit reward + fee" before they sign anything.
+pub(crate) fn quote_go_live_fee(env: Env, event_id: BytesN<16>) -> i128 {
+    let event: Event = env
+        .storage()
+        .persistent()
+        .get(&DataKey::Event(event_id))
+        .expect("Event does not exist");
+
+    let fee_bps = get_fee_bps(&env);
+
+    event.reward * i128::from(fee_bps) / 10_000
 }
 
 pub(crate) fn set_event_cancelled(env: Env, admin: Address, event_id: BytesN<16>) {

@@ -14,6 +14,7 @@ mod common;
 mod dispute;
 mod emergency_withdraw;
 mod event_emission;
+mod fees;
 mod governance;
 mod lifecycle;
 mod rewards;

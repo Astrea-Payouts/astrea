@@ -36,6 +36,7 @@ that follow them, not off the ADRs.
 | Resolver (event.resolver) | Co-authorizes emergency_withdraw together with the organizer — dual authorization, both require_auth calls present. | **Unilaterally move funds.** emergency_withdraw needs the organizer's signature too, so a compromised resolver alone drains nothing. Open a dispute on its own escrow — that entry point does not exist yet (section 6). |
 | Anyone | expire_event — permissionless, no require_auth call at all (section 4.5). | — |
 | Winner | Nothing. Receives; never authorizes. | — |
+| Emergency admin | Governance-only calls, each asserting caller == the stored EmergencyAdmin via assert_is_emergency_admin: initialize_default_resolver, set_paused, set_admin_paused, set_token_whitelist_enabled, set_token_allowed, initialize_treasury (init-once), and set_fee_bps. | Raise the go-live fee above MAX_FEE_BPS — a const, not a storage value, so doing so needs a redeploy. Charge the fee at any moment other than set_event_in_progress (go-live) — the charge itself lives in lifecycle.rs, not in any governance call. |
 
 ## 3. Trust boundaries
 
@@ -149,6 +150,7 @@ The declared-breakdown case is the worked example of the middle one.
 | 4.5 Forced expiry | Bounded by state and by the deadline; effect is a refund to the organizer, not a misdirection of funds | **Enforced on-chain**, permissionless by design |
 | 4.6 Organizer and resolver collude | Published identities; resolver recommended as a multisig; amount never exceeds the reward | **Not yet enforced** (social and procedural) |
 | 4.7 Reentrancy | State written before external calls; host rejects reentry; single atomic payout | **Enforced on-chain** |
+| 4.8 Fee misconfiguration or abuse | On-chain ceiling (MAX_FEE_BPS); fail-closed on an unset treasury; fee moves only from the organizer's free balance, never from an event's reserved reward | **Enforced on-chain** |
 
 Two entries deserve a sentence beyond the table.
 

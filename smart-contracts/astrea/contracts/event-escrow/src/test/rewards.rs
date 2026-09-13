@@ -952,11 +952,15 @@ fn test_reward_released_event_is_emitted() {
     let contract_id = env.register(EventEscrow, ());
     let client = EventEscrowClient::new(&env, &contract_id);
 
+    let emergency_admin = Address::generate(&env);
     let admin = Address::generate(&env);
     let judge = Address::generate(&env);
     let token_admin = Address::generate(&env);
     let (token_address, _token_client, asset_client) = create_test_token(&env, &token_admin);
     let winner = Address::generate(&env);
+
+    client.initialize_emergency_admin(&emergency_admin);
+    init_treasury(&env, &client, &emergency_admin);
 
     asset_client.mint(&admin, &1_000);
     client.deposit_funds(&admin, &token_address, &500);
