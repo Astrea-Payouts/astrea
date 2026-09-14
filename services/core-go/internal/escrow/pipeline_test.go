@@ -158,6 +158,53 @@ func happyMockRPC(t *testing.T, returnVal xdr.ScVal) *mockRPC {
 	}
 }
 
+// happyMockRPCWithAuth is happyMockRPC, but the simulation reports authEntries
+// as the auth list an invocation needs -- used by auth_test.go to exercise
+// BuildUnsigned's PendingAuth handling without a real RPC endpoint.
+func happyMockRPCWithAuth(t *testing.T, returnVal xdr.ScVal, authEntries []xdr.SorobanAuthorizationEntry) *mockRPC {
+	t.Helper()
+	rpc := happyMockRPC(t, returnVal)
+
+	authXDR := make([]string, 0, len(authEntries))
+	for _, entry := range authEntries {
+		b64, err := xdr.MarshalBase64(entry)
+		if err != nil {
+			t.Fatalf("marshaling test auth entry: %v", err)
+		}
+		authXDR = append(authXDR, b64)
+	}
+	returnValB64, err := xdr.MarshalBase64(returnVal)
+	if err != nil {
+		t.Fatalf("marshaling test return value: %v", err)
+	}
+	sorobanDataB64, err := xdr.MarshalBase64(xdr.SorobanTransactionData{})
+	if err != nil {
+		t.Fatalf("marshaling empty SorobanTransactionData: %v", err)
+	}
+
+	rpc.simulateFn = func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+		return protocol.SimulateTransactionResponse{
+			TransactionDataXDR: sorobanDataB64,
+			MinResourceFee:     100,
+			Results: []protocol.SimulateHostFunctionResult{
+				{ReturnValueXDR: &returnValB64, AuthXDR: &authXDR},
+			},
+		}, nil
+	}
+	return rpc
+}
+
+// wrapSimulateWithLatestLedger wraps an existing simulateFn so its response
+// also reports latestLedger, letting a test pin down what BuildUnsigned
+// derives a PendingAuth entry's SignatureExpirationLedger from.
+func wrapSimulateWithLatestLedger(inner func(context.Context, protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error), latestLedger uint32) func(context.Context, protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+	return func(ctx context.Context, req protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+		resp, err := inner(ctx, req)
+		resp.LatestLedger = latestLedger
+		return resp, err
+	}
+}
+
 func TestSubmit_Success(t *testing.T) {
 	source, err := keypair.Random()
 	if err != nil {

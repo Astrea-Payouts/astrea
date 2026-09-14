@@ -144,12 +144,19 @@ func GetBalanceHostFunction(contract xdr.ScAddress, admin string) (xdr.HostFunct
 }
 
 // CreateEventHostFunction builds the host function for
-// create_event(admin, judge, token, reward, event_id). One event carries
-// exactly one reward: the winners list is supplied later, to
+// create_event(admin, judge, resolver, token, reward, event_id). One event
+// carries exactly one reward: the winners list is supplied later, to
 // release_reward, not here. judge is deliberately distinct from admin --
 // it is judge's auth, not admin's, that release_reward will require later
 // (see lib.rs's Event.judge doc comment and ADR-003).
-func CreateEventHostFunction(contract xdr.ScAddress, admin, judge, token string, reward int64, eventID EventID) (xdr.HostFunction, error) {
+//
+// resolver is optional (lib.rs's Event.resolver, added by PR #178): pass ""
+// to encode Option::None, which makes the contract fall back to Astrea's own
+// DefaultResolver (governance.rs) -- or a G-address to name one explicitly,
+// which encodes as Option::Some(address). Per soroban-env-common's Option<T>
+// conversion, None is ScvVoid and Some(v) is v's own encoding, never wrapped
+// in an extra structure.
+func CreateEventHostFunction(contract xdr.ScAddress, admin, judge, resolver, token string, reward int64, eventID EventID) (xdr.HostFunction, error) {
 	adminArg, err := EncodeAddress(admin)
 	if err != nil {
 		return xdr.HostFunction{}, fmt.Errorf("escrow: encoding admin address: %w", err)
@@ -158,11 +165,18 @@ func CreateEventHostFunction(contract xdr.ScAddress, admin, judge, token string,
 	if err != nil {
 		return xdr.HostFunction{}, fmt.Errorf("escrow: encoding judge address: %w", err)
 	}
+	resolverArg := xdr.ScVal{Type: xdr.ScValTypeScvVoid}
+	if resolver != "" {
+		resolverArg, err = EncodeAddress(resolver)
+		if err != nil {
+			return xdr.HostFunction{}, fmt.Errorf("escrow: encoding resolver address: %w", err)
+		}
+	}
 	tokenArg, err := EncodeAddress(token)
 	if err != nil {
 		return xdr.HostFunction{}, fmt.Errorf("escrow: encoding token address: %w", err)
 	}
-	return invokeContractHF(contract, "create_event", adminArg, judgeArg, tokenArg, EncodeI128(reward), eventID.scVal()), nil
+	return invokeContractHF(contract, "create_event", adminArg, judgeArg, resolverArg, tokenArg, EncodeI128(reward), eventID.scVal()), nil
 }
 
 // BuildDepositFunds simulates deposit_funds and returns an unsigned
@@ -187,9 +201,11 @@ func BuildWithdrawFunds(ctx context.Context, rpc RPCClient, contract xdr.ScAddre
 }
 
 // BuildCreateEvent simulates create_event and returns an unsigned
-// transaction for the organizer's own wallet to sign.
-func BuildCreateEvent(ctx context.Context, rpc RPCClient, contract xdr.ScAddress, admin, judge, token string, reward int64, eventID EventID, cfg Config) (UnsignedTx, error) {
-	hf, err := CreateEventHostFunction(contract, admin, judge, token, reward, eventID)
+// transaction for the organizer's own wallet to sign. resolver may be ""
+// (Option::None -- Astrea's default resolver) as described on
+// CreateEventHostFunction.
+func BuildCreateEvent(ctx context.Context, rpc RPCClient, contract xdr.ScAddress, admin, judge, resolver, token string, reward int64, eventID EventID, cfg Config) (UnsignedTx, error) {
+	hf, err := CreateEventHostFunction(contract, admin, judge, resolver, token, reward, eventID)
 	if err != nil {
 		return UnsignedTx{}, err
 	}

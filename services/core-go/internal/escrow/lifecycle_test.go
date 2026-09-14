@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	protocol "github.com/stellar/go/protocols/rpc"
 	"github.com/stellar/go/txnbuild"
 	"github.com/stellar/go/xdr"
 )
@@ -12,9 +13,10 @@ import (
 // wallet_test.go and pipeline_test.go -- none of these tests touch the
 // network.
 const (
-	testWinner1Address = "GBXNBZFHSILK4HNBOVGANXADKY6FGJYH2R253PBPT4QF3CXEFJXBU27X"
-	testWinner2Address = "GBLH7BFPOM5AUYM7E64SP25AR6HOUM3IDSZEFM6OEBHRVEM67JQZPEQA"
-	testWinner3Address = "GCRN2BZIQPZ3AYMJUWB2FTQQD2BFQYCFS6UF7ELWIC2RRDTDXND4XI23"
+	testWinner1Address  = "GBXNBZFHSILK4HNBOVGANXADKY6FGJYH2R253PBPT4QF3CXEFJXBU27X"
+	testWinner2Address  = "GBLH7BFPOM5AUYM7E64SP25AR6HOUM3IDSZEFM6OEBHRVEM67JQZPEQA"
+	testWinner3Address  = "GCRN2BZIQPZ3AYMJUWB2FTQQD2BFQYCFS6UF7ELWIC2RRDTDXND4XI23"
+	testResolverAddress = "GDCYCXUVREFDIJGGVCLSFQLMB7GQLX7MNLBMIAXDVVWPRUA66HOVMR5L"
 )
 
 // --- set_event_cancelled -------------------------------------------------
@@ -404,6 +406,333 @@ func TestBuildReleaseCompensation_ReturnsUnsignedEnvelope(t *testing.T) {
 		t.Fatalf("BuildReleaseCompensation returned error: %v", err)
 	}
 	assertUnsignedEnvelope(t, unsigned)
+}
+
+// --- set_event_waiting_for_start / set_event_in_progress -----------------
+
+func TestSetEventWaitingForStartHostFunction(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+
+	hf, err := SetEventWaitingForStartHostFunction(contract, testAccountAddress, eventID)
+	if err != nil {
+		t.Fatalf("SetEventWaitingForStartHostFunction returned error: %v", err)
+	}
+
+	if got := string(hf.InvokeContract.FunctionName); got != "set_event_waiting_for_start" {
+		t.Fatalf("function name = %q, want %q", got, "set_event_waiting_for_start")
+	}
+	args := hf.InvokeContract.Args
+	if len(args) != 2 {
+		t.Fatalf("got %d args, want 2 (admin, event_id)", len(args))
+	}
+	assertAccountAddress(t, args[0], testAccountAddress)
+	gotID, err := EventIDFromScVal(args[1])
+	if err != nil {
+		t.Fatalf("decoding event_id arg: %v", err)
+	}
+	if gotID != eventID {
+		t.Fatalf("event_id arg = %x, want %x", gotID, eventID)
+	}
+}
+
+// TestSetEventInProgressHostFunction_JudgingDeadlineIsU64 is the regression
+// test for this task's second encoding gotcha: judging_deadline is a u64 in
+// lifecycle.rs (PR #178), so it must encode as ScvU64. Encoding it as ScvU32
+// instead would silently truncate any deadline past 2^32 seconds and, more
+// immediately, simulation would reject the argument type outright.
+func TestSetEventInProgressHostFunction_JudgingDeadlineIsU64(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	const judgingDeadline = uint64(4102444800) // 2100-01-01, well past 2^32-1
+
+	hf, err := SetEventInProgressHostFunction(contract, testAccountAddress, eventID, judgingDeadline)
+	if err != nil {
+		t.Fatalf("SetEventInProgressHostFunction returned error: %v", err)
+	}
+
+	if got := string(hf.InvokeContract.FunctionName); got != "set_event_in_progress" {
+		t.Fatalf("function name = %q, want %q", got, "set_event_in_progress")
+	}
+	args := hf.InvokeContract.Args
+	if len(args) != 3 {
+		t.Fatalf("got %d args, want 3 (admin, event_id, judging_deadline)", len(args))
+	}
+	assertAccountAddress(t, args[0], testAccountAddress)
+	gotID, err := EventIDFromScVal(args[1])
+	if err != nil {
+		t.Fatalf("decoding event_id arg: %v", err)
+	}
+	if gotID != eventID {
+		t.Fatalf("event_id arg = %x, want %x", gotID, eventID)
+	}
+
+	deadlineArg := args[2]
+	if deadlineArg.Type != xdr.ScValTypeScvU64 || deadlineArg.U64 == nil {
+		t.Fatalf("judging_deadline arg = %+v, want ScvU64", deadlineArg)
+	}
+	if got := uint64(*deadlineArg.U64); got != judgingDeadline {
+		t.Fatalf("judging_deadline arg = %d, want %d", got, judgingDeadline)
+	}
+}
+
+func TestBuildSetEventWaitingForStart_ReturnsUnsignedEnvelope(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+
+	unsigned, err := BuildSetEventWaitingForStart(context.Background(), rpc, contract, testAccountAddress, eventID, Config{})
+	if err != nil {
+		t.Fatalf("BuildSetEventWaitingForStart returned error: %v", err)
+	}
+	assertUnsignedEnvelope(t, unsigned)
+}
+
+func TestBuildSetEventInProgress_ReturnsUnsignedEnvelope(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+
+	unsigned, err := BuildSetEventInProgress(context.Background(), rpc, contract, testAccountAddress, eventID, 4102444800, Config{})
+	if err != nil {
+		t.Fatalf("BuildSetEventInProgress returned error: %v", err)
+	}
+	assertUnsignedEnvelope(t, unsigned)
+}
+
+// --- quote_go_live_fee -------------------------------------------------------
+
+func TestQuoteGoLiveFee_NeverSubmits(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	sorobanDataB64, err := xdr.MarshalBase64(xdr.SorobanTransactionData{})
+	if err != nil {
+		t.Fatalf("marshaling empty SorobanTransactionData: %v", err)
+	}
+	returnValB64, err := xdr.MarshalBase64(xdr.ScVal{Type: xdr.ScValTypeScvI128, I128: &xdr.Int128Parts{Hi: 0, Lo: 15_000}})
+	if err != nil {
+		t.Fatalf("marshaling test return value: %v", err)
+	}
+
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{
+				TransactionDataXDR: sorobanDataB64,
+				MinResourceFee:     100,
+				Results: []protocol.SimulateHostFunctionResult{
+					{ReturnValueXDR: &returnValB64},
+				},
+			}, nil
+		},
+		// sendFn and getFn are deliberately nil, same reasoning as
+		// TestGetBalance_NeverSubmits in wallet_test.go.
+	}
+
+	fee, err := QuoteGoLiveFee(context.Background(), rpc, contract, eventID, testAccountAddress, Config{})
+	if err != nil {
+		t.Fatalf("QuoteGoLiveFee returned error: %v", err)
+	}
+	if fee != 15_000 {
+		t.Fatalf("fee = %d, want 15000", fee)
+	}
+}
+
+// --- resolve_dispute -----------------------------------------------------
+
+func TestResolveDisputeHostFunction(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	winners := []Winner{
+		{Place: 1, Amount: 4_000_000, Address: testWinner1Address},
+		{Place: 1, Amount: 1_000_000, Address: testAccountAddress}, // cancel-after-launch: organizer as "winner"
+	}
+
+	hf, err := ResolveDisputeHostFunction(contract, testResolverAddress, eventID, winners)
+	if err != nil {
+		t.Fatalf("ResolveDisputeHostFunction returned error: %v", err)
+	}
+
+	if got := string(hf.InvokeContract.FunctionName); got != "resolve_dispute" {
+		t.Fatalf("function name = %q, want %q", got, "resolve_dispute")
+	}
+	args := hf.InvokeContract.Args
+	if len(args) != 3 {
+		t.Fatalf("got %d args, want 3 (resolver, event_id, winners)", len(args))
+	}
+	assertAccountAddress(t, args[0], testResolverAddress)
+	gotID, err := EventIDFromScVal(args[1])
+	if err != nil {
+		t.Fatalf("decoding event_id arg: %v", err)
+	}
+	if gotID != eventID {
+		t.Fatalf("event_id arg = %x, want %x", gotID, eventID)
+	}
+	vec, ok := args[2].GetVec()
+	if !ok || vec == nil || len(*vec) != 2 {
+		t.Fatalf("winners arg = %+v, want a 2-element ScvVec", args[2])
+	}
+}
+
+func TestResolveDisputeHostFunction_NoWinners(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	_, err = ResolveDisputeHostFunction(contract, testResolverAddress, eventID, nil)
+	if err == nil {
+		t.Fatal("expected an error for an empty winners list, got nil")
+	}
+}
+
+func TestBuildResolveDispute_ReturnsUnsignedEnvelope(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+	winners := []Winner{{Place: 1, Amount: 10, Address: testWinner1Address}}
+
+	unsigned, err := BuildResolveDispute(context.Background(), rpc, contract, testResolverAddress, eventID, winners, Config{})
+	if err != nil {
+		t.Fatalf("BuildResolveDispute returned error: %v", err)
+	}
+	assertUnsignedEnvelope(t, unsigned)
+}
+
+// --- emergency_withdraw ------------------------------------------------------
+
+// TestEmergencyWithdrawHostFunction_ArgumentOrder pins the exact argument
+// order the contract expects: emergency_withdraw(admin, resolver, event_id,
+// amount) (lifecycle.rs) -- admin before resolver, matching neither
+// alphabetical nor "who signs first" order, so it is worth asserting
+// directly rather than trusting the Go parameter order to carry it.
+func TestEmergencyWithdrawHostFunction_ArgumentOrder(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+
+	hf, err := EmergencyWithdrawHostFunction(contract, testAccountAddress, testResolverAddress, eventID, 2_000_000)
+	if err != nil {
+		t.Fatalf("EmergencyWithdrawHostFunction returned error: %v", err)
+	}
+
+	if got := string(hf.InvokeContract.FunctionName); got != "emergency_withdraw" {
+		t.Fatalf("function name = %q, want %q", got, "emergency_withdraw")
+	}
+	args := hf.InvokeContract.Args
+	if len(args) != 4 {
+		t.Fatalf("got %d args, want 4 (admin, resolver, event_id, amount)", len(args))
+	}
+	assertAccountAddress(t, args[0], testAccountAddress)
+	assertAccountAddress(t, args[1], testResolverAddress)
+	gotID, err := EventIDFromScVal(args[2])
+	if err != nil {
+		t.Fatalf("decoding event_id arg: %v", err)
+	}
+	if gotID != eventID {
+		t.Fatalf("event_id arg = %x, want %x", gotID, eventID)
+	}
+	assertI128(t, args[3], 2_000_000)
+}
+
+func TestBuildEmergencyWithdraw_SourceMustBeAdminOrResolver(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+
+	_, err = BuildEmergencyWithdraw(context.Background(), rpc, contract, testWinner1Address, testAccountAddress, testResolverAddress, eventID, 1_000, Config{})
+	if err == nil {
+		t.Fatal("expected an error when source is neither admin nor resolver, got nil")
+	}
+}
+
+// TestBuildEmergencyWithdraw_OtherPartyIsPending proves the two-signature
+// shape end to end: with admin as source, the resolver's entry -- and only
+// the resolver's -- surfaces in PendingAuth.
+func TestBuildEmergencyWithdraw_OtherPartyIsPending(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	sourceEntry := xdr.SorobanAuthorizationEntry{
+		Credentials:    xdr.SorobanCredentials{Type: xdr.SorobanCredentialsTypeSorobanCredentialsSourceAccount},
+		RootInvocation: testInvocation(t),
+	}
+	resolverEntry := testAuthAddressCredentials(t, testResolverAddress, 1, 0)
+	rpc := happyMockRPCWithAuth(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid}, []xdr.SorobanAuthorizationEntry{sourceEntry, resolverEntry})
+
+	unsigned, err := BuildEmergencyWithdraw(context.Background(), rpc, contract, testAccountAddress, testAccountAddress, testResolverAddress, eventID, 1_000, Config{})
+	if err != nil {
+		t.Fatalf("BuildEmergencyWithdraw returned error: %v", err)
+	}
+	if len(unsigned.PendingAuth) != 1 {
+		t.Fatalf("PendingAuth has %d entries, want 1", len(unsigned.PendingAuth))
+	}
+	if !unsigned.PendingAuth[0].Credentials.Address.Address.Equals(resolverEntry.Credentials.Address.Address) {
+		t.Fatalf("pending entry address = %+v, want the resolver's", unsigned.PendingAuth[0].Credentials.Address.Address)
+	}
 }
 
 // assertUnsignedEnvelope proves an UnsignedTx carries a parseable

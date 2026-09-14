@@ -50,6 +50,12 @@ const (
 	defaultPollTimeout     = 30 * time.Second
 	defaultPollInterval    = 1 * time.Second
 	defaultMaxPollInterval = 5 * time.Second
+
+	// authExpirationLedgers bounds how many ledgers a PendingAuth entry
+	// produced by BuildUnsigned stays signable, counted from the ledger
+	// simulation just observed. ~100 ledgers is ~8-10 minutes at Stellar's
+	// ~5s ledger close time -- see BuildUnsigned's PendingAuth comment.
+	authExpirationLedgers = 100
 )
 
 func (c Config) withDefaults() Config {
@@ -229,6 +235,15 @@ type UnsignedTx struct {
 	// simulation. It is informational only: the transaction has not been
 	// submitted yet, so this is a preview, not an on-chain fact.
 	SimulatedReturn xdr.ScVal
+	// PendingAuth carries any simulated SOROBAN_CREDENTIALS_ADDRESS auth
+	// entries that still need a signature from a party other than the
+	// transaction's source account (SOROBAN_CREDENTIALS_SOURCE_ACCOUNT
+	// entries are implicitly authorized by the envelope signature and never
+	// appear here). Empty for every call with a single signer -- only
+	// multi-auth calls like emergency_withdraw populate it. Sign each entry
+	// with SignAuthEntry, then fold the results back in with
+	// AttachSignedAuth before this transaction can be submitted.
+	PendingAuth []xdr.SorobanAuthorizationEntry
 }
 
 // BuildUnsigned runs simulate -> attach footprint/resource-fee/auth for hf,
@@ -287,6 +302,31 @@ func BuildUnsigned(ctx context.Context, rpc RPCClient, sourceAddress string, hf 
 		}
 	}
 
+	// Any SOROBAN_CREDENTIALS_ADDRESS entry needs a signature from its own
+	// key before submission -- SOROBAN_CREDENTIALS_SOURCE_ACCOUNT entries are
+	// implicitly authorized by the envelope signature and never appear here.
+	// Every entry simulation returns starts with an empty Signature; give
+	// each address entry a bounded window to be signed in by stamping a
+	// SignatureExpirationLedger now, from the ledger simulation itself just
+	// ran against (simResp.LatestLedger) -- one RPC round trip cheaper than a
+	// separate getLatestLedger call. authExpirationLedgers (~100 ledgers,
+	// ~8-10 minutes at Stellar's ~5s ledger close time) is a deliberately
+	// generous but bounded window: long enough for an external wallet (e.g.
+	// the resolver's, in emergency_withdraw) to receive, sign and return the
+	// entry, short enough that a stale, unsubmitted auth grant doesn't stay
+	// valid indefinitely.
+	var pendingAuth []xdr.SorobanAuthorizationEntry
+	for i, entry := range auth {
+		if entry.Credentials.Type != xdr.SorobanCredentialsTypeSorobanCredentialsAddress || entry.Credentials.Address == nil {
+			continue
+		}
+		addrCreds := *entry.Credentials.Address
+		addrCreds.SignatureExpirationLedger = xdr.Uint32(simResp.LatestLedger) + authExpirationLedgers
+		entry.Credentials.Address = &addrCreds
+		auth[i] = entry
+		pendingAuth = append(pendingAuth, entry)
+	}
+
 	// As in Submit, the account loaded above was only used to build the
 	// throwaway simulation transaction; reload it for a fresh sequence
 	// number before building the transaction that will actually be signed
@@ -304,7 +344,7 @@ func BuildUnsigned(ctx context.Context, rpc RPCClient, sourceAddress string, hf 
 		return UnsignedTx{}, fmt.Errorf("escrow: encoding unsigned transaction: %w", err)
 	}
 
-	return UnsignedTx{XDR: finalB64, SimulatedReturn: returnVal}, nil
+	return UnsignedTx{XDR: finalB64, SimulatedReturn: returnVal, PendingAuth: pendingAuth}, nil
 }
 
 // SubmitSigned submits a transaction that was already fully signed
