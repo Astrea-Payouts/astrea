@@ -17,6 +17,8 @@ enum StellarNetwork {
 }
 
 /// Event lifecycle — see docs/product-flows.md "Event state machine".
+/// FUNDED is unused — funding happens inside create_event (docs/product-flows.md
+/// Flow 1); removal is a separate decision.
 enum EventStatus {
   DRAFT
   CREATED
@@ -106,6 +108,9 @@ model Event {
   registrationClosesAt DateTime?
   startsAt             DateTime?
   endsAt               DateTime?
+  /// Deadline the judge has to sign release_reward, passed to the contract's
+  /// set_event_in_progress as ledger seconds (see #11). Null while DRAFT.
+  judgingDeadlineAt    DateTime?
   status               EventStatus    @default(DRAFT)
   conditionsMetAt      DateTime?
   network              StellarNetwork @default(TESTNET)
