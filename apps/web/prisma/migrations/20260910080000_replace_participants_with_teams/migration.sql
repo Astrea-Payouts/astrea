@@ -212,17 +212,28 @@ ALTER TABLE "payouts" ADD COLUMN "teamMemberId" UUID;
 
 -- Backfill: each existing payout paid the one member of the team-of-one
 -- that won the prize it's attached to.
+--
+-- Fixed in place: the UPDATE target's alias (po) cannot be referenced
+-- inside the FROM clause's own JOIN condition on any Postgres — only the
+-- FROM-list's own tables (prizes, team_members) are visible there; po
+-- only comes into scope in SET and WHERE. The join moves to WHERE instead
+-- (same never-applied-anywhere, deploy-halts-on-first-failure reasoning as
+-- the header note on 20260909150000_fix_escrow_contract_drift).
 UPDATE "payouts" po
 SET "teamMemberId" = tm."id"
-FROM "team_members" tm
-JOIN "prizes" pr ON pr."id" = po."prizeId"
-WHERE tm."teamId" = pr."winnerTeamId";
+FROM "prizes" pr, "team_members" tm
+WHERE pr."id" = po."prizeId"
+  AND tm."teamId" = pr."winnerTeamId";
 
 ALTER TABLE "payouts" ALTER COLUMN "teamMemberId" SET NOT NULL;
 ALTER TABLE "payouts" ADD CONSTRAINT "payouts_teamMemberId_fkey" FOREIGN KEY ("teamMemberId") REFERENCES "team_members"("id");
 CREATE INDEX "payouts_teamMemberId_idx" ON "payouts"("teamMemberId");
 
-ALTER TABLE "payouts" DROP CONSTRAINT "payouts_prizeId_txHash_key";
+-- Fixed in place: 20260909150000_fix_escrow_contract_drift created this
+-- as a plain CREATE UNIQUE INDEX (no table constraint of that name
+-- exists), so DROP CONSTRAINT on it fails — the inverse of this same
+-- file's earlier payouts backfill fix. DROP INDEX is what actually works.
+DROP INDEX "payouts_prizeId_txHash_key";
 CREATE UNIQUE INDEX "payouts_prizeId_txHash_teamMemberId_key" ON "payouts"("prizeId", "txHash", "teamMemberId");
 
 -- DropTable: Participant is gone (decision 3 — a solo entrant is a team of
