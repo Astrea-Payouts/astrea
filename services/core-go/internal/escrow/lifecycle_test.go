@@ -2,6 +2,7 @@ package escrow
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	protocol "github.com/stellar/go/protocols/rpc"
@@ -506,6 +507,28 @@ func TestBuildSetEventWaitingForStart_ReturnsUnsignedEnvelope(t *testing.T) {
 	assertUnsignedEnvelope(t, unsigned)
 }
 
+// TestBuildSetEventWaitingForStart_InvalidAdmin covers both
+// SetEventWaitingForStartHostFunction's own address-encoding error and
+// BuildSetEventWaitingForStart's propagation of it -- an organizer-signed
+// call fails the same way every other organizer-signed call does when
+// handed a malformed address.
+func TestBuildSetEventWaitingForStart_InvalidAdmin(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+
+	_, err = BuildSetEventWaitingForStart(context.Background(), rpc, contract, "not-a-real-strkey", eventID, Config{})
+	if err == nil {
+		t.Fatal("expected an error for a malformed admin address, got nil")
+	}
+}
+
 func TestBuildSetEventInProgress_ReturnsUnsignedEnvelope(t *testing.T) {
 	contract, err := ContractAddress(testContractAddress)
 	if err != nil {
@@ -522,6 +545,26 @@ func TestBuildSetEventInProgress_ReturnsUnsignedEnvelope(t *testing.T) {
 		t.Fatalf("BuildSetEventInProgress returned error: %v", err)
 	}
 	assertUnsignedEnvelope(t, unsigned)
+}
+
+// TestBuildSetEventInProgress_InvalidAdmin covers both
+// SetEventInProgressHostFunction's own address-encoding error and
+// BuildSetEventInProgress's propagation of it.
+func TestBuildSetEventInProgress_InvalidAdmin(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+
+	_, err = BuildSetEventInProgress(context.Background(), rpc, contract, "not-a-real-strkey", eventID, 4102444800, Config{})
+	if err == nil {
+		t.Fatal("expected an error for a malformed admin address, got nil")
+	}
 }
 
 // --- quote_go_live_fee -------------------------------------------------------
@@ -567,6 +610,167 @@ func TestQuoteGoLiveFee_NeverSubmits(t *testing.T) {
 	}
 	if fee != 15_000 {
 		t.Fatalf("fee = %d, want 15000", fee)
+	}
+}
+
+func TestQuoteGoLiveFee_LoadAccountError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, _ string) (txnbuild.Account, error) {
+			return nil, errors.New("rpc: getAccount failed")
+		},
+	}
+
+	_, err = QuoteGoLiveFee(context.Background(), rpc, contract, eventID, testAccountAddress, Config{})
+	if err == nil {
+		t.Fatal("expected an error when LoadAccount fails, got nil")
+	}
+}
+
+// TestQuoteGoLiveFee_BuildTxError covers the one error buildTx itself can
+// return here: source isn't a well-formed strkey and the operation fails
+// validation when the transaction is assembled.
+func TestQuoteGoLiveFee_BuildTxError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+	}
+
+	_, err = QuoteGoLiveFee(context.Background(), rpc, contract, eventID, "not-a-real-strkey", Config{})
+	if err == nil {
+		t.Fatal("expected an error for a malformed source address, got nil")
+	}
+}
+
+func TestQuoteGoLiveFee_SimulateTransactionRPCError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{}, errors.New("rpc: simulateTransaction transport error")
+		},
+	}
+
+	_, err = QuoteGoLiveFee(context.Background(), rpc, contract, eventID, testAccountAddress, Config{})
+	if err == nil {
+		t.Fatal("expected an error when SimulateTransaction itself fails, got nil")
+	}
+}
+
+func TestQuoteGoLiveFee_SimulationHostError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{Error: "HostError: Error(Contract, #4)"}, nil
+		},
+	}
+
+	_, err = QuoteGoLiveFee(context.Background(), rpc, contract, eventID, testAccountAddress, Config{})
+	var simErr *SimulationError
+	if !errors.As(err, &simErr) {
+		t.Fatalf("QuoteGoLiveFee error = %v (%T), want *SimulationError", err, err)
+	}
+}
+
+func TestQuoteGoLiveFee_NoReturnValue(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	sorobanDataB64, err := xdr.MarshalBase64(xdr.SorobanTransactionData{})
+	if err != nil {
+		t.Fatalf("marshaling empty SorobanTransactionData: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{
+				TransactionDataXDR: sorobanDataB64,
+				MinResourceFee:     100,
+				Results:            nil,
+			}, nil
+		},
+	}
+
+	_, err = QuoteGoLiveFee(context.Background(), rpc, contract, eventID, testAccountAddress, Config{})
+	if err == nil {
+		t.Fatal("expected an error when simulation returns no results, got nil")
+	}
+}
+
+func TestQuoteGoLiveFee_DecodeReturnValueError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	sorobanDataB64, err := xdr.MarshalBase64(xdr.SorobanTransactionData{})
+	if err != nil {
+		t.Fatalf("marshaling empty SorobanTransactionData: %v", err)
+	}
+	garbage := "not-valid-base64-xdr!!"
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{
+				TransactionDataXDR: sorobanDataB64,
+				MinResourceFee:     100,
+				Results: []protocol.SimulateHostFunctionResult{
+					{ReturnValueXDR: &garbage},
+				},
+			}, nil
+		},
+	}
+
+	_, err = QuoteGoLiveFee(context.Background(), rpc, contract, eventID, testAccountAddress, Config{})
+	if err == nil {
+		t.Fatal("expected an error decoding a malformed return value, got nil")
 	}
 }
 
@@ -627,6 +831,67 @@ func TestResolveDisputeHostFunction_NoWinners(t *testing.T) {
 	}
 }
 
+// TestResolveDisputeHostFunction_TooManyWinners is resolve_dispute's
+// analogue of TestReleaseRewardHostFunction_TooManyWinners -- it reuses
+// release_reward's exact Winner shape and MAX_WINNERS bound.
+func TestResolveDisputeHostFunction_TooManyWinners(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	winners := make([]Winner, maxWinners+1)
+	for i := range winners {
+		winners[i] = Winner{Place: 1, Amount: 1, Address: testWinner1Address}
+	}
+
+	_, err = ResolveDisputeHostFunction(contract, testResolverAddress, eventID, winners)
+	if err == nil {
+		t.Fatal("expected an error for a winners list exceeding MAX_WINNERS, got nil")
+	}
+}
+
+func TestResolveDisputeHostFunction_InvalidResolver(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	winners := []Winner{{Place: 1, Amount: 10, Address: testWinner1Address}}
+
+	_, err = ResolveDisputeHostFunction(contract, "not-a-real-strkey", eventID, winners)
+	if err == nil {
+		t.Fatal("expected an error for a malformed resolver address, got nil")
+	}
+}
+
+// TestResolveDisputeHostFunction_InvalidWinnerAddress covers winnersScVal's
+// error propagation into ResolveDisputeHostFunction -- the same encoding
+// path release_reward shares, exercised here through resolve_dispute's new
+// call site.
+func TestResolveDisputeHostFunction_InvalidWinnerAddress(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	winners := []Winner{{Place: 1, Amount: 10, Address: "not-a-real-strkey"}}
+
+	_, err = ResolveDisputeHostFunction(contract, testResolverAddress, eventID, winners)
+	if err == nil {
+		t.Fatal("expected an error for a malformed winner address, got nil")
+	}
+}
+
 func TestBuildResolveDispute_ReturnsUnsignedEnvelope(t *testing.T) {
 	contract, err := ContractAddress(testContractAddress)
 	if err != nil {
@@ -644,6 +909,26 @@ func TestBuildResolveDispute_ReturnsUnsignedEnvelope(t *testing.T) {
 		t.Fatalf("BuildResolveDispute returned error: %v", err)
 	}
 	assertUnsignedEnvelope(t, unsigned)
+}
+
+// TestBuildResolveDispute_PropagatesHostFunctionError covers
+// BuildResolveDispute's own error-propagation branch (as opposed to
+// ResolveDisputeHostFunction's, tested directly above).
+func TestBuildResolveDispute_PropagatesHostFunctionError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+
+	_, err = BuildResolveDispute(context.Background(), rpc, contract, "not-a-real-strkey", eventID, []Winner{{Place: 1, Amount: 10, Address: testWinner1Address}}, Config{})
+	if err == nil {
+		t.Fatal("expected an error for a malformed resolver address, got nil")
+	}
 }
 
 // --- emergency_withdraw ------------------------------------------------------
@@ -687,6 +972,38 @@ func TestEmergencyWithdrawHostFunction_ArgumentOrder(t *testing.T) {
 	assertI128(t, args[3], 2_000_000)
 }
 
+func TestEmergencyWithdrawHostFunction_InvalidAdmin(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+
+	_, err = EmergencyWithdrawHostFunction(contract, "not-a-real-strkey", testResolverAddress, eventID, 1_000)
+	if err == nil {
+		t.Fatal("expected an error for a malformed admin address, got nil")
+	}
+}
+
+func TestEmergencyWithdrawHostFunction_InvalidResolver(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+
+	_, err = EmergencyWithdrawHostFunction(contract, testAccountAddress, "not-a-real-strkey", eventID, 1_000)
+	if err == nil {
+		t.Fatal("expected an error for a malformed resolver address, got nil")
+	}
+}
+
 func TestBuildEmergencyWithdraw_SourceMustBeAdminOrResolver(t *testing.T) {
 	contract, err := ContractAddress(testContractAddress)
 	if err != nil {
@@ -701,6 +1018,28 @@ func TestBuildEmergencyWithdraw_SourceMustBeAdminOrResolver(t *testing.T) {
 	_, err = BuildEmergencyWithdraw(context.Background(), rpc, contract, testWinner1Address, testAccountAddress, testResolverAddress, eventID, 1_000, Config{})
 	if err == nil {
 		t.Fatal("expected an error when source is neither admin nor resolver, got nil")
+	}
+}
+
+// TestBuildEmergencyWithdraw_PropagatesHostFunctionError covers
+// BuildEmergencyWithdraw's own error-propagation branch, once source has
+// already passed the admin-or-resolver check (source == admin here, and
+// admin itself is the malformed address).
+func TestBuildEmergencyWithdraw_PropagatesHostFunctionError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+
+	const invalidAdmin = "not-a-real-strkey"
+	_, err = BuildEmergencyWithdraw(context.Background(), rpc, contract, invalidAdmin, invalidAdmin, testResolverAddress, eventID, 1_000, Config{})
+	if err == nil {
+		t.Fatal("expected an error for a malformed admin address, got nil")
 	}
 }
 

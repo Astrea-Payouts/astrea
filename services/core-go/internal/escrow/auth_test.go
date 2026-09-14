@@ -116,6 +116,33 @@ func TestAuthPreimageHash_FixedVector(t *testing.T) {
 	}
 }
 
+func TestAuthPreimageHash_RejectsSourceAccountCredentials(t *testing.T) {
+	entry := xdr.SorobanAuthorizationEntry{
+		Credentials: xdr.SorobanCredentials{Type: xdr.SorobanCredentialsTypeSorobanCredentialsSourceAccount},
+	}
+	_, err := authPreimageHash(entry, network.TestNetworkPassphrase)
+	if err == nil {
+		t.Fatal("expected an error for a SOURCE_ACCOUNT credentials entry, got nil")
+	}
+}
+
+// TestAuthPreimageHash_MarshalError covers the one way xdr.Marshal itself
+// can fail here: an invocation whose own union discriminant doesn't match
+// any of its populated arms. RPC simulation never actually produces this --
+// it's the same class of failure the fixed-vector regression proof (this
+// package's README) demonstrated for the outer HashIdPreimage.Type field,
+// reproduced here for the inner, caller-supplied RootInvocation instead.
+func TestAuthPreimageHash_MarshalError(t *testing.T) {
+	entry := testAuthAddressCredentials(t, testWinner1Address, 1, 100)
+	entry.RootInvocation.Function.Type = xdr.SorobanAuthorizedFunctionType(999)
+	entry.RootInvocation.Function.ContractFn = nil
+
+	_, err := authPreimageHash(entry, network.TestNetworkPassphrase)
+	if err == nil {
+		t.Fatal("expected a marshal error for an invalid union discriminant, got nil")
+	}
+}
+
 // --- SignAuthEntry ---------------------------------------------------------
 
 func TestSignAuthEntry_ProducesValidSignature(t *testing.T) {
@@ -181,6 +208,22 @@ func TestSignAuthEntry_RejectsSourceAccountCredentials(t *testing.T) {
 	_, err = SignAuthEntry(entry, signer, network.TestNetworkPassphrase)
 	if err == nil {
 		t.Fatal("expected an error signing a SOURCE_ACCOUNT credentials entry, got nil")
+	}
+}
+
+// --- accountEd25519SignatureScVal -------------------------------------------
+
+func TestAccountEd25519SignatureScVal_RejectsShortPublicKey(t *testing.T) {
+	_, err := accountEd25519SignatureScVal(make([]byte, 31), make([]byte, 64))
+	if err == nil {
+		t.Fatal("expected an error for a 31-byte public key, got nil")
+	}
+}
+
+func TestAccountEd25519SignatureScVal_RejectsShortSignature(t *testing.T) {
+	_, err := accountEd25519SignatureScVal(make([]byte, 32), make([]byte, 63))
+	if err == nil {
+		t.Fatal("expected an error for a 63-byte signature, got nil")
 	}
 }
 
@@ -349,5 +392,185 @@ func TestAttachSignedAuth_RejectsNonMatchingEntry(t *testing.T) {
 	_, err = AttachSignedAuth(unsigned, []xdr.SorobanAuthorizationEntry{signedUnrelated})
 	if err == nil {
 		t.Fatal("expected an error attaching a signed entry that matches no pending entry, got nil")
+	}
+}
+
+func TestAttachSignedAuth_RejectsCountMismatch(t *testing.T) {
+	resolver, err := keypair.Random()
+	if err != nil {
+		t.Fatalf("generating resolver keypair: %v", err)
+	}
+	pending := testAuthAddressCredentials(t, resolver.Address(), 1, 0)
+	signed, err := SignAuthEntry(pending, resolver, network.TestNetworkPassphrase)
+	if err != nil {
+		t.Fatalf("SignAuthEntry: %v", err)
+	}
+
+	tx := UnsignedTx{XDR: "irrelevant", PendingAuth: []xdr.SorobanAuthorizationEntry{pending}}
+	_, err = AttachSignedAuth(tx, []xdr.SorobanAuthorizationEntry{signed, signed})
+	if err == nil {
+		t.Fatal("expected an error when signed count doesn't match PendingAuth count, got nil")
+	}
+}
+
+func TestAttachSignedAuth_RejectsUndecodableXDR(t *testing.T) {
+	tx := UnsignedTx{XDR: "not-valid-base64-xdr!!"}
+	_, err := AttachSignedAuth(tx, nil)
+	if err == nil {
+		t.Fatal("expected an error decoding a malformed envelope, got nil")
+	}
+}
+
+// TestAttachSignedAuth_RejectsMultiOperationEnvelope covers the "not a
+// single-operation v1 transaction" branch -- AttachSignedAuth only ever
+// expects the exact shape BuildUnsigned produces (one InvokeHostFunction
+// operation).
+func TestAttachSignedAuth_RejectsMultiOperationEnvelope(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	hf, err := GetBalanceHostFunction(contract, testAccountAddress)
+	if err != nil {
+		t.Fatalf("GetBalanceHostFunction: %v", err)
+	}
+	account := &txnbuild.SimpleAccount{AccountID: testAccountAddress, Sequence: 1}
+	op1 := &txnbuild.InvokeHostFunction{HostFunction: hf, SourceAccount: testAccountAddress}
+	op2 := &txnbuild.InvokeHostFunction{HostFunction: hf, SourceAccount: testAccountAddress}
+	tx, err := txnbuild.NewTransaction(txnbuild.TransactionParams{
+		SourceAccount:        account,
+		IncrementSequenceNum: true,
+		Operations:           []txnbuild.Operation{op1, op2},
+		BaseFee:              txnbuild.MinBaseFee,
+		Preconditions:        txnbuild.Preconditions{TimeBounds: txnbuild.NewTimeout(30)},
+	})
+	if err != nil {
+		t.Fatalf("NewTransaction: %v", err)
+	}
+	b64, err := tx.Base64()
+	if err != nil {
+		t.Fatalf("Base64: %v", err)
+	}
+
+	_, err = AttachSignedAuth(UnsignedTx{XDR: b64}, nil)
+	if err == nil {
+		t.Fatal("expected an error for a 2-operation envelope, got nil")
+	}
+}
+
+// TestAttachSignedAuth_RejectsNonInvokeHostFunctionOp covers the "expected
+// an InvokeHostFunction operation" branch with an otherwise well-formed
+// single-operation envelope.
+func TestAttachSignedAuth_RejectsNonInvokeHostFunctionOp(t *testing.T) {
+	account := &txnbuild.SimpleAccount{AccountID: testAccountAddress, Sequence: 1}
+	payment := &txnbuild.Payment{
+		Destination:   testAccountAddress,
+		Amount:        "10",
+		Asset:         txnbuild.NativeAsset{},
+		SourceAccount: testAccountAddress,
+	}
+	tx, err := txnbuild.NewTransaction(txnbuild.TransactionParams{
+		SourceAccount:        account,
+		IncrementSequenceNum: true,
+		Operations:           []txnbuild.Operation{payment},
+		BaseFee:              txnbuild.MinBaseFee,
+		Preconditions:        txnbuild.Preconditions{TimeBounds: txnbuild.NewTimeout(30)},
+	})
+	if err != nil {
+		t.Fatalf("NewTransaction: %v", err)
+	}
+	b64, err := tx.Base64()
+	if err != nil {
+		t.Fatalf("Base64: %v", err)
+	}
+
+	_, err = AttachSignedAuth(UnsignedTx{XDR: b64}, nil)
+	if err == nil {
+		t.Fatal("expected an error for a non-InvokeHostFunction operation, got nil")
+	}
+}
+
+func TestAttachSignedAuth_RejectsNonAddressSignedEntry(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	hf, err := GetBalanceHostFunction(contract, testAccountAddress)
+	if err != nil {
+		t.Fatalf("GetBalanceHostFunction: %v", err)
+	}
+	pending := testAuthAddressCredentials(t, testWinner1Address, 1, 0)
+	rpc := happyMockRPCWithAuth(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid}, []xdr.SorobanAuthorizationEntry{pending})
+
+	unsigned, err := BuildUnsigned(context.Background(), rpc, testAccountAddress, hf, Config{})
+	if err != nil {
+		t.Fatalf("BuildUnsigned: %v", err)
+	}
+
+	sourceAccountEntry := xdr.SorobanAuthorizationEntry{
+		Credentials:    xdr.SorobanCredentials{Type: xdr.SorobanCredentialsTypeSorobanCredentialsSourceAccount},
+		RootInvocation: testInvocation(t),
+	}
+	_, err = AttachSignedAuth(unsigned, []xdr.SorobanAuthorizationEntry{sourceAccountEntry})
+	if err == nil {
+		t.Fatal("expected an error attaching a SOURCE_ACCOUNT credentials entry, got nil")
+	}
+}
+
+// TestAttachSignedAuth_InternalMismatch covers the "internal error: pending
+// entry not present in the transaction's auth list" branch: a pending entry
+// that matches a signed entry by nonce+address but was never actually
+// present in the envelope's own op.Auth (only reachable by hand-crafting an
+// UnsignedTx that doesn't reflect what BuildUnsigned would ever really
+// produce -- this can't happen through the public build path).
+func TestAttachSignedAuth_InternalMismatch(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	hf, err := GetBalanceHostFunction(contract, testAccountAddress)
+	if err != nil {
+		t.Fatalf("GetBalanceHostFunction: %v", err)
+	}
+	resolver, err := keypair.Random()
+	if err != nil {
+		t.Fatalf("generating resolver keypair: %v", err)
+	}
+
+	entryInEnvelope := testAuthAddressCredentials(t, resolver.Address(), 1, 0)
+	rpc := happyMockRPCWithAuth(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid}, []xdr.SorobanAuthorizationEntry{entryInEnvelope})
+	unsigned, err := BuildUnsigned(context.Background(), rpc, testAccountAddress, hf, Config{})
+	if err != nil {
+		t.Fatalf("BuildUnsigned: %v", err)
+	}
+
+	// Overwrite PendingAuth with an entry that was never part of the
+	// envelope BuildUnsigned actually produced.
+	fakePending := testAuthAddressCredentials(t, resolver.Address(), 999, 0)
+	unsigned.PendingAuth = []xdr.SorobanAuthorizationEntry{fakePending}
+
+	signed, err := SignAuthEntry(fakePending, resolver, network.TestNetworkPassphrase)
+	if err != nil {
+		t.Fatalf("SignAuthEntry: %v", err)
+	}
+
+	_, err = AttachSignedAuth(unsigned, []xdr.SorobanAuthorizationEntry{signed})
+	if err == nil {
+		t.Fatal("expected an internal-error for a pending entry absent from the envelope's auth list, got nil")
+	}
+}
+
+// --- authEntriesMatch --------------------------------------------------------
+
+func TestAuthEntriesMatch_NilAddressCredentials(t *testing.T) {
+	withAddress := testAuthAddressCredentials(t, testWinner1Address, 1, 0)
+	malformed := xdr.SorobanAuthorizationEntry{
+		Credentials: xdr.SorobanCredentials{Type: xdr.SorobanCredentialsTypeSorobanCredentialsAddress, Address: nil},
+	}
+	if authEntriesMatch(withAddress, malformed) {
+		t.Fatal("authEntriesMatch = true for an entry with nil Address credentials, want false")
+	}
+	if authEntriesMatch(malformed, withAddress) {
+		t.Fatal("authEntriesMatch = true for an entry with nil Address credentials, want false")
 	}
 }

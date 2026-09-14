@@ -166,6 +166,27 @@ func TestCreateEventHostFunction_ExplicitResolver(t *testing.T) {
 	assertAccountAddress(t, args[2], testWinner1Address)
 }
 
+// TestCreateEventHostFunction_InvalidResolver covers the resolver encoding
+// branch added alongside the Option<Address> parameter (PR #178): a
+// non-empty resolver must still be a well-formed strkey, exactly like
+// admin/judge/token -- an empty string is the only value that skips
+// encoding (Option::None).
+func TestCreateEventHostFunction_InvalidResolver(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+
+	_, err = CreateEventHostFunction(contract, testAccountAddress, testJudgeAddress, "not-a-real-strkey", testTokenAddress, 30_000_000, eventID)
+	if err == nil {
+		t.Fatal("expected an error for a malformed resolver address, got nil")
+	}
+}
+
 // --- assertion helpers ----------------------------------------------------
 
 func assertAccountAddress(t *testing.T, arg xdr.ScVal, want string) {
