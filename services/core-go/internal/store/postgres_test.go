@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -193,6 +194,19 @@ func TestNew_MalformedURL(t *testing.T) {
 	_, err := New(context.Background(), "not-a-connection-string")
 	if err == nil {
 		t.Fatal("expected an error for a malformed DATABASE_URL, got nil")
+	}
+}
+
+// TestNew_PingFails doesn't need TEST_DATABASE_URL either -- the URL is
+// well-formed but names a port nothing listens on, so pgxpool.New succeeds
+// (it doesn't connect eagerly) and the failure surfaces from Ping.
+func TestNew_PingFails(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	_, err := New(ctx, "postgres://postgres@127.0.0.1:1/nonexistent?sslmode=disable&connect_timeout=1")
+	if err == nil {
+		t.Fatal("expected an error for an unreachable database, got nil")
 	}
 }
 

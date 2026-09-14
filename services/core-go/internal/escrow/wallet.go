@@ -62,6 +62,28 @@ func EventIDFromScVal(v xdr.ScVal) (EventID, error) {
 	return id, nil
 }
 
+// ParseEventID decodes id -- 32 lowercase hex characters, the format
+// EventID.String() produces and Event.escrowEventId is stored as
+// (schema.prisma) -- into an EventID. Rejects anything else: wrong length,
+// uppercase, or non-hex characters.
+func ParseEventID(id string) (EventID, error) {
+	if len(id) != 32 {
+		return EventID{}, fmt.Errorf("escrow: event id must be 32 hex characters, got %d", len(id))
+	}
+	for _, c := range id {
+		if (c < '0' || c > '9') && (c < 'a' || c > 'f') {
+			return EventID{}, fmt.Errorf("escrow: event id must be lowercase hex, got %q", id)
+		}
+	}
+	b, err := hex.DecodeString(id)
+	if err != nil {
+		return EventID{}, fmt.Errorf("escrow: decoding event id %q: %w", id, err)
+	}
+	var eid EventID
+	copy(eid[:], b)
+	return eid, nil
+}
+
 // EncodeI128 builds a Soroban ScVal i128 argument from an int64, sign-
 // extending it into the high 64 bits the way two's-complement i128 requires.
 // Every i128 argument in this contract (amount, reward) is asserted > 0
