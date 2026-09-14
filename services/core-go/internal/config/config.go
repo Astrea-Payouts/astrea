@@ -29,6 +29,20 @@ const (
 	minServiceTokenBytes = 32
 )
 
+// Chain is the subset of Config that governs which network and contract a
+// process talks to — everything main.go's HTTP server AND
+// cmd/escrow-testnet-proof's harness both need. Split out of Config (rather
+// than the harness depending on the full Config, which also demands
+// DATABASE_URL and CORE_GO_SERVICE_TOKEN) so a network-only tool never has
+// to fake a database connection just to boot.
+type Chain struct {
+	Network           string
+	NetworkPassphrase string
+	SorobanRPCURL     string
+	EscrowContractID  string
+	AllowMainnet      bool
+}
+
 // Config is the validated result of Load. Deliberately holds no signing
 // key: this service holds none — see README.md's Configuration section.
 type Config struct {
@@ -43,13 +57,24 @@ type Config struct {
 	ServiceToken string
 }
 
-// Load reads and validates every environment variable core-go needs at
-// boot, through getenv rather than os.Getenv directly so tests never touch
-// the real environment. It collects every problem instead of stopping at
-// the first one — an operator fixes a broken .env in one pass, not one
-// restart per variable — and returns them joined into a single error, one
-// line per variable.
-func Load(getenv func(string) string) (Config, error) {
+// LoadChain reads and validates just the four environment variables that
+// determine which Stellar network and contract a process talks to
+// (STELLAR_NETWORK, ALLOW_MAINNET, SOROBAN_RPC_URL, ESCROW_CONTRACT_ID),
+// with the same aggregated-error, mainnet-gate and RPC-default behavior
+// Load has always had for these. See Load's doc comment for why every
+// problem is collected before returning.
+func LoadChain(getenv func(string) string) (Chain, error) {
+	chain, problems := loadChain(getenv)
+	if len(problems) > 0 {
+		return Chain{}, formatProblems(problems)
+	}
+	return chain, nil
+}
+
+// loadChain is LoadChain's validation logic without the final aggregate-and-
+// return step, so Load can merge these problems with its own service-level
+// ones into a single error instead of reporting two.
+func loadChain(getenv func(string) string) (Chain, []string) {
 	var problems []string
 
 	stellarNetwork := getenv("STELLAR_NETWORK")
@@ -91,6 +116,36 @@ func Load(getenv func(string) string) (Config, error) {
 		problems = append(problems, fmt.Sprintf("ESCROW_CONTRACT_ID: invalid contract address %q: %v", contractID, err))
 	}
 
+	// Derived from the network, never a separate variable — the same
+	// drift argument as apps/web/src/lib/stellar-network.ts not letting the
+	// passphrase be configured independently of the network name.
+	passphrase := network.TestNetworkPassphrase
+	if stellarNetwork == NetworkMainnet {
+		passphrase = network.PublicNetworkPassphrase
+	}
+
+	return Chain{
+		Network:           stellarNetwork,
+		NetworkPassphrase: passphrase,
+		SorobanRPCURL:     rpcURL,
+		EscrowContractID:  contractID,
+		AllowMainnet:      allowMainnet,
+	}, problems
+}
+
+func formatProblems(problems []string) error {
+	return fmt.Errorf("invalid environment configuration:\n  - %s", strings.Join(problems, "\n  - "))
+}
+
+// Load reads and validates every environment variable core-go needs at
+// boot, through getenv rather than os.Getenv directly so tests never touch
+// the real environment. It collects every problem instead of stopping at
+// the first one — an operator fixes a broken .env in one pass, not one
+// restart per variable — and returns them joined into a single error, one
+// line per variable.
+func Load(getenv func(string) string) (Config, error) {
+	chain, problems := loadChain(getenv)
+
 	port := getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -124,23 +179,15 @@ func Load(getenv func(string) string) (Config, error) {
 	}
 
 	if len(problems) > 0 {
-		return Config{}, fmt.Errorf("invalid environment configuration:\n  - %s", strings.Join(problems, "\n  - "))
-	}
-
-	// Derived from the network, never a separate variable — the same
-	// drift argument as apps/web/src/lib/stellar-network.ts not letting the
-	// passphrase be configured independently of the network name.
-	passphrase := network.TestNetworkPassphrase
-	if stellarNetwork == NetworkMainnet {
-		passphrase = network.PublicNetworkPassphrase
+		return Config{}, formatProblems(problems)
 	}
 
 	return Config{
-		Network:           stellarNetwork,
-		NetworkPassphrase: passphrase,
-		SorobanRPCURL:     rpcURL,
-		EscrowContractID:  contractID,
-		AllowMainnet:      allowMainnet,
+		Network:           chain.Network,
+		NetworkPassphrase: chain.NetworkPassphrase,
+		SorobanRPCURL:     chain.SorobanRPCURL,
+		EscrowContractID:  chain.EscrowContractID,
+		AllowMainnet:      chain.AllowMainnet,
 		Port:              port,
 		DatabaseURL:       databaseURL,
 		ServiceToken:      serviceToken,

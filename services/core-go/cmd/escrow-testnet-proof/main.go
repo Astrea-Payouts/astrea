@@ -58,6 +58,7 @@ import (
 	"math"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/stellar/go/clients/horizonclient"
@@ -72,13 +73,14 @@ import (
 )
 
 const (
-	// Deposited once, up front, with generous headroom over every event's
+	// defaultDepositUnits is depositAmount's default (native mode, unchanged
+	// from before TOKEN existed) -- generous headroom over every event's
 	// reward plus every go-live fee this run pays (default fee_bps is 50 =
 	// 0.5%, so even the sum of B/D/E's rewards costs well under 1 XLM in
-	// fees) -- simpler than sizing the deposit to the exact total, and this
-	// harness's own friendbot-funded admin account has no other use for the
-	// XLM.
-	depositAmount = int64(200_000_000)
+	// fees). Overridable via DEPOSIT_UNITS -- a USDC run sets it much lower
+	// (Circle's testnet faucet gives 10 USDC per request), see
+	// peakReservationUnits below for the floor that still has to hold.
+	defaultDepositUnits = int64(200_000_000)
 
 	eventRewardA = int64(4_000_000)
 	// Deliberately not a multiple of 3, so a 3333/3333/3334 bp split leaves
@@ -96,6 +98,25 @@ const (
 	eventRewardG             = int64(3_000_000)
 	emergencyWithdrawAmountG = int64(2_000_000)
 
+	// peakReservationUnits is the largest amount ever simultaneously reserved
+	// out of the admin's single up-front deposit, i.e. the deposit's real
+	// floor. Every reward reserves units at create_event time and only some
+	// of them ever come back (C's cancellation and F's partial emergency
+	// withdrawal); A's, D's and G's reservations are never released within
+	// this run, and E's is spent in place by resolve_dispute rather than
+	// refunded. Walking the run in order, the running total peaks right
+	// after G is created (C's reserve-then-refund cycle finishes well before
+	// then and never itself exceeds this figure):
+	//   A -> +eventRewardA
+	//   B -> +teamRewardB
+	//   C -> +cancelledEventRewardC, then -cancelledEventRewardC (refunded)
+	//   D -> +inProgressRejectRewardD
+	//   E -> +disputeRewardE
+	//   F -> +eventRewardF, then -emergencyWithdrawAmountF (partial refund)
+	//   G -> +eventRewardG  <- running total peaks here
+	peakReservationUnits = eventRewardA + teamRewardB + inProgressRejectRewardD +
+		disputeRewardE + eventRewardF + eventRewardG - emergencyWithdrawAmountF
+
 	// How far past "now" E's judging_deadline is set -- short enough that
 	// this harness can just wait it out, long enough that the harness's own
 	// setup (create_event, two state transitions) reliably finishes first.
@@ -109,9 +130,22 @@ const (
 func main() {
 	ctx := context.Background()
 
-	cfg, err := config.Load(os.Getenv)
+	depositAmount := defaultDepositUnits
+	if raw := os.Getenv("DEPOSIT_UNITS"); raw != "" {
+		v, err := strconv.ParseInt(raw, 10, 64)
+		if err != nil {
+			log.Fatalf("DEPOSIT_UNITS: invalid integer %q: %v", raw, err)
+		}
+		depositAmount = v
+	}
+	if depositAmount < peakReservationUnits {
+		log.Fatalf("DEPOSIT_UNITS=%d is below this run's peak reservation of %d units -- "+
+			"the seven scenarios would run out of reserved balance partway through", depositAmount, peakReservationUnits)
+	}
+
+	cfg, err := config.LoadChain(os.Getenv)
 	if err != nil {
-		log.Fatalf("loading config: %v", err)
+		log.Fatalf("loading chain config: %v", err)
 	}
 	fmt.Println("network:", cfg.Network)
 	fmt.Println("contract:", cfg.EscrowContractID)
@@ -157,14 +191,37 @@ func main() {
 	fmt.Println("team member 2 (ordinal 1, 3333 bp):", teamMember2.Address())
 	fmt.Println("team member 3 (ordinal 2, 3334 bp):", teamMember3.Address())
 
-	token, err := nativeAssetContractID(cfg.NetworkPassphrase)
+	tok, err := resolveToken(os.Getenv("TOKEN"), cfg.NetworkPassphrase)
 	if err != nil {
-		log.Fatalf("deriving native XLM SAC contract id: %v", err)
+		log.Fatalf("TOKEN: %v", err)
 	}
+	unitLabel = tok.unitLabel()
+	token := tok.contractID
 	fmt.Println("token:", token)
 
-	fmt.Println("\n[deposit_funds] admin deposits", depositAmount, "stroops -- via escrow.Submit")
-	depositHF, err := escrow.DepositFundsHostFunction(contractAddr, admin.Address(), token, depositAmount)
+	if !tok.native {
+		fmt.Println("\n[treasury check] confirming the go-live fee treasury holds a", tok.code, "trustline before anything moves")
+		treasuryAddr := mustGetTreasury(ctx, rpc, contractAddr, admin, cfg.NetworkPassphrase)
+		fmt.Println("  treasury:", treasuryAddr)
+		if _, err := assetBalanceUnits(horizon, treasuryAddr, tok); err != nil {
+			log.Fatalf("treasury %s has no %s trustline -- the go-live fee transfer in scenarios D/E/F/G would fail on-chain, "+
+				"which would look like a contract bug rather than a governance/deploy problem: %v", treasuryAddr, tok.code, err)
+		}
+		fmt.Println("  trustline confirmed")
+
+		fmt.Println("\n[trustlines] establishing", tok.code, "trustlines for every throwaway account that can receive it (admin + the 3 team members; judge and resolver never receive tokens)")
+		for _, owner := range []*keypair.Full{admin, teamMember1, teamMember2, teamMember3} {
+			mustChangeTrust(horizon, cfg.NetworkPassphrase, owner, tok)
+		}
+		fmt.Println("  trustlines established")
+
+		if err := waitForAssetFunding(horizon, admin, tok, depositAmount); err != nil {
+			log.Fatalf("funding admin with %s: %v", tok.code, err)
+		}
+	}
+
+	fmt.Println("\n[deposit_funds] admin deposits", depositAmount, unitLabel, "-- via escrow.Submit")
+	depositHF, err := escrow.DepositFundsHostFunction(contractAddr, admin.Address(), tok.contractID, depositAmount)
 	if err != nil {
 		log.Fatalf("building deposit_funds host function: %v", err)
 	}
@@ -178,7 +235,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("get_balance failed: %v", err)
 	}
-	fmt.Printf("  balance: %d stroops (want %d)\n", balanceAfterDeposit, depositAmount)
+	fmt.Printf("  balance: %d %s (want %d)\n", balanceAfterDeposit, unitLabel, depositAmount)
 	if balanceAfterDeposit != depositAmount {
 		log.Fatalf("balance mismatch after deposit: got %d, want %d", balanceAfterDeposit, depositAmount)
 	}
@@ -207,7 +264,7 @@ func main() {
 		log.Fatalf("get_balance failed: %v", err)
 	}
 	wantBalanceAfterA := depositAmount - eventRewardA
-	fmt.Printf("  balance: %d stroops (want %d)\n", balanceAfterCreateA, wantBalanceAfterA)
+	fmt.Printf("  balance: %d %s (want %d)\n", balanceAfterCreateA, unitLabel, wantBalanceAfterA)
 	if balanceAfterCreateA != wantBalanceAfterA {
 		log.Fatalf("balance mismatch after create_event(A): got %d, want %d", balanceAfterCreateA, wantBalanceAfterA)
 	}
@@ -254,7 +311,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("decoding reward from event: %v", err)
 	}
-	fmt.Printf("  reward: %d stroops (want %d)\n", gotReward, eventRewardA)
+	fmt.Printf("  reward: %d %s (want %d)\n", gotReward, unitLabel, eventRewardA)
 	if gotReward != eventRewardA {
 		log.Fatalf("event reward mismatch: got %d, want %d", gotReward, eventRewardA)
 	}
@@ -282,12 +339,12 @@ func main() {
 		log.Fatalf("AllocateWinners failed: %v", err)
 	}
 	for _, w := range winnersB {
-		fmt.Printf("  allocated: %s -> %d stroops (place %d)\n", w.Address, w.Amount, w.Place)
+		fmt.Printf("  allocated: %s -> %d %s (place %d)\n", w.Address, w.Amount, unitLabel, w.Place)
 	}
 
 	balancesBeforeB := map[string]int64{}
 	for _, member := range []*keypair.Full{teamMember1, teamMember2, teamMember3} {
-		bal, err := nativeBalanceStroops(horizon, member.Address())
+		bal, err := assetBalanceUnits(horizon, member.Address(), tok)
 		if err != nil {
 			log.Fatalf("reading pre-release balance for %s: %v", member.Address(), err)
 		}
@@ -311,12 +368,12 @@ func main() {
 	fmt.Println("  on-chain transfer amounts (post-release balance delta):")
 	var totalTransferredB int64
 	for _, w := range winnersB {
-		after, err := nativeBalanceStroops(horizon, w.Address)
+		after, err := assetBalanceUnits(horizon, w.Address, tok)
 		if err != nil {
 			log.Fatalf("reading post-release balance for %s: %v", w.Address, err)
 		}
 		delta := after - balancesBeforeB[w.Address]
-		fmt.Printf("    %s: +%d stroops (want %d)\n", w.Address, delta, w.Amount)
+		fmt.Printf("    %s: +%d %s (want %d)\n", w.Address, delta, unitLabel, w.Amount)
 		if delta != w.Amount {
 			log.Fatalf("transfer amount mismatch for %s: got %d, want %d", w.Address, delta, w.Amount)
 		}
@@ -353,7 +410,7 @@ func main() {
 		log.Fatalf("get_balance after cancel(C) failed: %v", err)
 	}
 	wantBalanceAfterCancelC := balanceBeforeCancelC + cancelledEventRewardC
-	fmt.Printf("  balance: %d stroops (want %d, i.e. reward refunded)\n", balanceAfterCancelC, wantBalanceAfterCancelC)
+	fmt.Printf("  balance: %d %s (want %d, i.e. reward refunded)\n", balanceAfterCancelC, unitLabel, wantBalanceAfterCancelC)
 	if balanceAfterCancelC != wantBalanceAfterCancelC {
 		log.Fatalf("balance mismatch after cancel(C): got %d, want %d", balanceAfterCancelC, wantBalanceAfterCancelC)
 	}
@@ -422,7 +479,7 @@ func main() {
 	}
 	balancesBeforeE := map[string]int64{}
 	for _, addr := range []string{teamMember1.Address(), admin.Address()} {
-		bal, err := nativeBalanceStroops(horizon, addr)
+		bal, err := assetBalanceUnits(horizon, addr, tok)
 		if err != nil {
 			log.Fatalf("reading pre-resolve balance for %s: %v", addr, err)
 		}
@@ -446,12 +503,12 @@ func main() {
 	fmt.Println("  on-chain transfer amounts (post-resolve balance delta):")
 	var totalTransferredE int64
 	for _, w := range winnersE {
-		after, err := nativeBalanceStroops(horizon, w.Address)
+		after, err := assetBalanceUnits(horizon, w.Address, tok)
 		if err != nil {
 			log.Fatalf("reading post-resolve balance for %s: %v", w.Address, err)
 		}
 		delta := after - balancesBeforeE[w.Address]
-		fmt.Printf("    %s: +%d stroops (want %d)\n", w.Address, delta, w.Amount)
+		fmt.Printf("    %s: +%d %s (want %d)\n", w.Address, delta, unitLabel, w.Amount)
 		if delta != w.Amount {
 			log.Fatalf("transfer amount mismatch for %s: got %d, want %d", w.Address, delta, w.Amount)
 		}
@@ -504,7 +561,7 @@ func main() {
 		log.Fatalf("get_balance after emergency_withdraw(F) failed: %v", err)
 	}
 	wantBalanceAfterF := balanceBeforeF + emergencyWithdrawAmountF
-	fmt.Printf("  balance: %d stroops (want %d, i.e. withdrawn amount credited back)\n", balanceAfterF, wantBalanceAfterF)
+	fmt.Printf("  balance: %d %s (want %d, i.e. withdrawn amount credited back)\n", balanceAfterF, unitLabel, wantBalanceAfterF)
 	if balanceAfterF != wantBalanceAfterF {
 		log.Fatalf("balance mismatch after emergency_withdraw(F): got %d, want %d", balanceAfterF, wantBalanceAfterF)
 	}
@@ -558,7 +615,7 @@ func mustNewEventID() escrow.EventID {
 // mustCreateEvent creates one event with an explicit resolver (never relying
 // on the contract's DefaultResolver fallback, so every scenario below
 // exercises the same, known resolver key) and fails the whole run on error.
-func mustCreateEvent(ctx context.Context, rpc escrow.RPCClient, contract xdr.ScAddress, admin, judge, resolver *keypair.Full, token string, reward int64, eventID escrow.EventID, cfg config.Config) {
+func mustCreateEvent(ctx context.Context, rpc escrow.RPCClient, contract xdr.ScAddress, admin, judge, resolver *keypair.Full, token string, reward int64, eventID escrow.EventID, cfg config.Chain) {
 	hf, err := escrow.CreateEventHostFunction(contract, admin.Address(), judge.Address(), resolver.Address(), token, reward, eventID)
 	if err != nil {
 		log.Fatalf("building create_event host function: %v", err)
@@ -574,13 +631,13 @@ func mustCreateEvent(ctx context.Context, rpc escrow.RPCClient, contract xdr.ScA
 // (set_event_waiting_for_start, then set_event_in_progress) with
 // judging_deadline set farJudgingDeadlineOffset out -- for scenarios that
 // never need judging_deadline to actually pass.
-func mustGoLive(ctx context.Context, rpc escrow.RPCClient, contract xdr.ScAddress, admin *keypair.Full, eventID escrow.EventID, offset time.Duration, cfg config.Config, label string) {
+func mustGoLive(ctx context.Context, rpc escrow.RPCClient, contract xdr.ScAddress, admin *keypair.Full, eventID escrow.EventID, offset time.Duration, cfg config.Chain, label string) {
 	mustGoLiveAt(ctx, rpc, contract, admin, eventID, uint64(time.Now().Add(offset).Unix()), cfg, label)
 }
 
 // mustGoLiveAt is mustGoLive with an explicit judging_deadline (a Unix
 // timestamp), for scenarios (E) that need to wait for it to pass.
-func mustGoLiveAt(ctx context.Context, rpc escrow.RPCClient, contract xdr.ScAddress, admin *keypair.Full, eventID escrow.EventID, judgingDeadline uint64, cfg config.Config, label string) {
+func mustGoLiveAt(ctx context.Context, rpc escrow.RPCClient, contract xdr.ScAddress, admin *keypair.Full, eventID escrow.EventID, judgingDeadline uint64, cfg config.Chain, label string) {
 	waitingHF, err := escrow.SetEventWaitingForStartHostFunction(contract, admin.Address(), eventID)
 	if err != nil {
 		log.Fatalf("building set_event_waiting_for_start(%s) host function: %v", label, err)
@@ -593,7 +650,7 @@ func mustGoLiveAt(ctx context.Context, rpc escrow.RPCClient, contract xdr.ScAddr
 	if err != nil {
 		log.Fatalf("quote_go_live_fee(%s) failed: %v", label, err)
 	}
-	fmt.Printf("  quote_go_live_fee(%s): %d stroops\n", label, fee)
+	fmt.Printf("  quote_go_live_fee(%s): %d %s\n", label, fee, unitLabel)
 
 	inProgressHF, err := escrow.SetEventInProgressHostFunction(contract, admin.Address(), eventID, judgingDeadline)
 	if err != nil {
@@ -606,36 +663,193 @@ func mustGoLiveAt(ctx context.Context, rpc escrow.RPCClient, contract xdr.ScAddr
 	fmt.Printf("  set_event_in_progress(%s) tx hash: %s (judging_deadline=%d)\n", label, result.Hash, judgingDeadline)
 }
 
-// nativeAssetContractID returns the deterministic contract id of the native
-// XLM Stellar Asset Contract on the configured network.
-func nativeAssetContractID(networkPassphrase string) (string, error) {
-	asset := xdr.Asset{Type: xdr.AssetTypeAssetTypeNative}
-	id, err := asset.ContractID(networkPassphrase)
-	if err != nil {
-		return "", err
-	}
-	return strkey.Encode(strkey.VersionByteContract, id[:])
+// unitLabel is what every balance/amount fmt.Print in this harness prints
+// after the number -- "stroops" for native XLM (unchanged from before TOKEN
+// existed), or the classic asset's code (e.g. "USDC") once resolveToken has
+// run. Package-level because mustGoLiveAt (which prints quote_go_live_fee's
+// result) has no other way to reach it.
+var unitLabel = "stroops"
+
+// asset carries whatever resolveToken derived from TOKEN: enough to build
+// deposit_funds/create_event's token argument (contractID, always -- the
+// contract only ever sees a SAC address, native or otherwise), and, for a
+// classic asset, enough to build ChangeTrust operations and read Horizon
+// balances for it.
+type asset struct {
+	native     bool
+	code       string // "" for native
+	classic    txnbuild.CreditAsset
+	contractID string // C-address: the SAC id the contract's `token` param takes
 }
 
-// nativeBalanceStroops reads address's classic native XLM balance (visible
-// via Horizon even though transfers move through the SAC/Soroban side) and
-// converts it to stroops, for before/after delta checks around a payout.
-func nativeBalanceStroops(horizon *horizonclient.Client, address string) (int64, error) {
+func (a asset) unitLabel() string {
+	if a.native {
+		return "stroops"
+	}
+	return a.code
+}
+
+// circleFaucetURL is where an operator requests testnet USDC -- no
+// scriptable faucet for it exists (unlike native XLM's friendbot), so this
+// harness can only print the address and wait.
+const circleFaucetURL = "https://faucet.circle.com"
+
+// resolveToken parses TOKEN ("" or "native" for native XLM, "CODE:ISSUER"
+// for a classic asset e.g. "USDC:GBBD47IF...") and derives its Stellar
+// Asset Contract id on networkPassphrase -- the same C-address
+// `stellar contract id asset --asset CODE:ISSUER --network testnet` prints,
+// via the identical xdr.Asset.ContractID path the stellar-cli itself uses.
+func resolveToken(raw, networkPassphrase string) (asset, error) {
+	if raw == "" || raw == "native" {
+		xdrAsset := xdr.Asset{Type: xdr.AssetTypeAssetTypeNative}
+		id, err := xdrAsset.ContractID(networkPassphrase)
+		if err != nil {
+			return asset{}, fmt.Errorf("deriving native XLM SAC contract id: %w", err)
+		}
+		contractID, err := strkey.Encode(strkey.VersionByteContract, id[:])
+		if err != nil {
+			return asset{}, fmt.Errorf("encoding native XLM SAC contract id: %w", err)
+		}
+		return asset{native: true, contractID: contractID}, nil
+	}
+
+	code, issuer, ok := strings.Cut(raw, ":")
+	if !ok || code == "" || issuer == "" {
+		return asset{}, fmt.Errorf("TOKEN must be \"native\" or \"CODE:ISSUER\" (e.g. \"USDC:GBBD47IF...\"), got %q", raw)
+	}
+	classic := txnbuild.CreditAsset{Code: code, Issuer: issuer}
+	xdrAsset, err := classic.ToXDR()
+	if err != nil {
+		return asset{}, fmt.Errorf("building classic asset %s:%s: %w", code, issuer, err)
+	}
+	id, err := xdrAsset.ContractID(networkPassphrase)
+	if err != nil {
+		return asset{}, fmt.Errorf("deriving %s SAC contract id: %w", code, err)
+	}
+	contractID, err := strkey.Encode(strkey.VersionByteContract, id[:])
+	if err != nil {
+		return asset{}, fmt.Errorf("encoding %s SAC contract id: %w", code, err)
+	}
+	return asset{code: code, classic: classic, contractID: contractID}, nil
+}
+
+// assetBalanceUnits reads address's classic balance for a (native XLM
+// balances are visible on Horizon even though transfers move through the
+// SAC/Soroban side) and converts it to the asset's smallest unit (7
+// decimals for every asset this harness deals with, native or classic).
+// Returns an error if address has no trustline (or, for native, no funded
+// account) for a -- callers use that to detect a missing trustline, e.g.
+// the treasury check.
+func assetBalanceUnits(horizon *horizonclient.Client, address string, a asset) (int64, error) {
 	account, err := horizon.AccountDetail(horizonclient.AccountRequest{AccountID: address})
 	if err != nil {
 		return 0, fmt.Errorf("loading account %s: %w", address, err)
 	}
 	for _, b := range account.Balances {
-		if b.Asset.Type != "native" {
+		matches := a.native && b.Asset.Type == "native"
+		matches = matches || (!a.native && b.Asset.Code == a.code && b.Asset.Issuer == a.classic.Issuer)
+		if !matches {
 			continue
 		}
-		xlm, err := strconv.ParseFloat(b.Balance, 64)
+		units, err := strconv.ParseFloat(b.Balance, 64)
 		if err != nil {
-			return 0, fmt.Errorf("parsing native balance %q: %w", b.Balance, err)
+			return 0, fmt.Errorf("parsing balance %q: %w", b.Balance, err)
 		}
-		return int64(math.Round(xlm * 1e7)), nil
+		return int64(math.Round(units * 1e7)), nil
 	}
-	return 0, fmt.Errorf("no native balance entry for %s", address)
+	if a.native {
+		return 0, fmt.Errorf("no native balance entry for %s", address)
+	}
+	return 0, fmt.Errorf("no %s trustline for %s", a.code, address)
+}
+
+// mustChangeTrust submits a ChangeTrust operation (unlimited trustline) for
+// a's classic asset, sourced and signed by owner -- required before owner
+// can hold or receive it; native XLM needs no trustline, so callers never
+// invoke this for a native asset. Uses horizonclient directly rather than
+// the escrow/RPC pipeline: ChangeTrust is a classic operation, not a
+// Soroban host function invocation.
+func mustChangeTrust(horizon *horizonclient.Client, networkPassphrase string, owner *keypair.Full, a asset) {
+	account, err := horizon.AccountDetail(horizonclient.AccountRequest{AccountID: owner.Address()})
+	if err != nil {
+		log.Fatalf("loading account %s for change_trust: %v", owner.Address(), err)
+	}
+	tx, err := txnbuild.NewTransaction(txnbuild.TransactionParams{
+		SourceAccount:        &account,
+		IncrementSequenceNum: true,
+		Operations:           []txnbuild.Operation{&txnbuild.ChangeTrust{Line: a.classic.MustToChangeTrustAsset()}},
+		BaseFee:              txnbuild.MinBaseFee,
+		Preconditions:        txnbuild.Preconditions{TimeBounds: txnbuild.NewTimeout(60)},
+	})
+	if err != nil {
+		log.Fatalf("building change_trust transaction for %s: %v", owner.Address(), err)
+	}
+	tx, err = tx.Sign(networkPassphrase, owner)
+	if err != nil {
+		log.Fatalf("signing change_trust transaction for %s: %v", owner.Address(), err)
+	}
+	if _, err := horizon.SubmitTransaction(tx); err != nil {
+		log.Fatalf("submitting change_trust transaction for %s: %v", owner.Address(), err)
+	}
+	fmt.Println("  trustline:", owner.Address(), "->", a.code)
+}
+
+// mustGetTreasury reads the go-live fee treasury's G-address via
+// get_treasury(), a permissionless read-only call -- source only sources
+// the transaction (as in QuoteGoLiveFee) and is never charged meaningfully
+// or itself a party to the call.
+func mustGetTreasury(ctx context.Context, rpc escrow.RPCClient, contract xdr.ScAddress, source *keypair.Full, networkPassphrase string) string {
+	hf := invokeContractHF(contract, "get_treasury")
+	result, err := escrow.Submit(ctx, rpc, source, networkPassphrase, hf, escrow.Config{})
+	if err != nil {
+		log.Fatalf("get_treasury failed: %v", err)
+	}
+	if result.ReturnValue.Type != xdr.ScValTypeScvAddress || result.ReturnValue.Address == nil {
+		log.Fatalf("get_treasury returned unexpected type %v, want an address", result.ReturnValue.Type)
+	}
+	treasuryAddr, err := result.ReturnValue.Address.String()
+	if err != nil {
+		log.Fatalf("decoding treasury address: %v", err)
+	}
+	return treasuryAddr
+}
+
+// waitForAssetFunding prints instructions for funding admin with at least
+// needed units of a's asset via Circle's testnet faucet (no scriptable
+// faucet for any classic asset exists, unlike native XLM's friendbot), then
+// polls Horizon for up to 10 minutes until admin's balance reaches needed.
+// The poll is the actual synchronization gate -- run under a harness or
+// background job runner where stdin cannot be relied on to deliver a real
+// operator keypress (as opposed to an interactive terminal, where it either
+// blocks forever or returns instantly on a closed/redirected stdin), this
+// deliberately does not also wait on a stdin read: the operator has up to
+// pollTimeout, from this message printing, to fund the account in their own
+// browser.
+func waitForAssetFunding(horizon *horizonclient.Client, admin *keypair.Full, a asset, needed int64) error {
+	fmt.Printf("\n[funding] admin needs at least %d %s units (%.7f %s) -- no scriptable testnet faucet exists for it\n",
+		needed, a.code, float64(needed)/1e7, a.code)
+	fmt.Println("  1. open", circleFaucetURL, "(network: Stellar testnet)")
+	fmt.Println("  2. send", a.code, "to:", admin.Address())
+	fmt.Println("  polling Horizon for up to 10 minutes for the balance to arrive...")
+
+	const pollTimeout = 10 * time.Minute
+	const pollInterval = 10 * time.Second
+	deadline := time.Now().Add(pollTimeout)
+	var lastBalance int64
+	var lastErr error
+	for {
+		bal, err := assetBalanceUnits(horizon, admin.Address(), a)
+		lastBalance, lastErr = bal, err
+		if err == nil && bal >= needed {
+			fmt.Println("  admin funded:", bal, a.code)
+			return nil
+		}
+		if time.Now().After(deadline) {
+			return fmt.Errorf("timed out after %s waiting for admin's %s balance to reach %d (last read: %d, err: %v)",
+				pollTimeout, a.code, needed, lastBalance, lastErr)
+		}
+		time.Sleep(pollInterval)
+	}
 }
 
 // signTransaction stands in for an organizer's/judge's/resolver's wallet: it

@@ -184,6 +184,129 @@ func TestLoad_CollectsEveryProblemAtOnce(t *testing.T) {
 	)
 }
 
+// validChainVars is the base set LoadChain's own tests build on — narrower
+// than validVars() since LoadChain never looks at DATABASE_URL or
+// CORE_GO_SERVICE_TOKEN.
+func validChainVars() map[string]string {
+	return map[string]string{"ESCROW_CONTRACT_ID": validContractID}
+}
+
+func withChainVars(overrides map[string]string) map[string]string {
+	vars := validChainVars()
+	for k, v := range overrides {
+		if v == "" {
+			delete(vars, k)
+			continue
+		}
+		vars[k] = v
+	}
+	return vars
+}
+
+func TestLoadChain_ValidTestnetConfig(t *testing.T) {
+	chain, err := LoadChain(lookup(validChainVars()))
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
+	if chain.Network != NetworkTestnet {
+		t.Errorf("Network = %q, want %q", chain.Network, NetworkTestnet)
+	}
+	if chain.NetworkPassphrase != "Test SDF Network ; September 2015" {
+		t.Errorf("unexpected testnet passphrase: %q", chain.NetworkPassphrase)
+	}
+	if chain.SorobanRPCURL != defaultTestnetSorobanRPCURL {
+		t.Errorf("SorobanRPCURL = %q, want default %q", chain.SorobanRPCURL, defaultTestnetSorobanRPCURL)
+	}
+	if chain.EscrowContractID != validContractID {
+		t.Errorf("EscrowContractID = %q, want %q", chain.EscrowContractID, validContractID)
+	}
+	if chain.AllowMainnet {
+		t.Errorf("AllowMainnet = true, want false")
+	}
+}
+
+func TestLoadChain_ValidMainnetConfig(t *testing.T) {
+	chain, err := LoadChain(lookup(withChainVars(map[string]string{
+		"STELLAR_NETWORK": NetworkMainnet,
+		"ALLOW_MAINNET":   "true",
+		"SOROBAN_RPC_URL": "https://mainnet.sorobanrpc.example",
+	})))
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
+	if chain.NetworkPassphrase != "Public Global Stellar Network ; September 2015" {
+		t.Errorf("unexpected mainnet passphrase: %q", chain.NetworkPassphrase)
+	}
+	if chain.SorobanRPCURL != "https://mainnet.sorobanrpc.example" {
+		t.Errorf("SorobanRPCURL = %q, want the explicit override", chain.SorobanRPCURL)
+	}
+}
+
+func TestLoadChain_MissingEscrowContractID(t *testing.T) {
+	_, err := LoadChain(lookup(withChainVars(map[string]string{"ESCROW_CONTRACT_ID": ""})))
+	assertErrorNames(t, err, "ESCROW_CONTRACT_ID")
+}
+
+func TestLoadChain_MalformedEscrowContractID(t *testing.T) {
+	_, err := LoadChain(lookup(withChainVars(map[string]string{"ESCROW_CONTRACT_ID": "not-a-contract-id"})))
+	assertErrorNames(t, err, "ESCROW_CONTRACT_ID")
+}
+
+func TestLoadChain_MainnetWithoutAllowMainnetGate(t *testing.T) {
+	_, err := LoadChain(lookup(withChainVars(map[string]string{
+		"STELLAR_NETWORK": NetworkMainnet,
+		"SOROBAN_RPC_URL": "https://mainnet.sorobanrpc.example",
+	})))
+	assertErrorNames(t, err, "ALLOW_MAINNET")
+}
+
+func TestLoadChain_MainnetWithoutSorobanRPCURL(t *testing.T) {
+	_, err := LoadChain(lookup(withChainVars(map[string]string{
+		"STELLAR_NETWORK": NetworkMainnet,
+		"ALLOW_MAINNET":   "true",
+	})))
+	assertErrorNames(t, err, "SOROBAN_RPC_URL")
+}
+
+func TestLoadChain_MalformedAllowMainnet(t *testing.T) {
+	_, err := LoadChain(lookup(withChainVars(map[string]string{"ALLOW_MAINNET": "yes-please"})))
+	assertErrorNames(t, err, "ALLOW_MAINNET")
+}
+
+func TestLoadChain_MalformedStellarNetwork(t *testing.T) {
+	_, err := LoadChain(lookup(withChainVars(map[string]string{"STELLAR_NETWORK": "devnet"})))
+	assertErrorNames(t, err, "STELLAR_NETWORK")
+}
+
+// TestLoadChain_CollectsEveryProblemAtOnce mirrors
+// TestLoad_CollectsEveryProblemAtOnce for the chain-only subset — LoadChain
+// never touches DATABASE_URL or CORE_GO_SERVICE_TOKEN, so a harness running
+// with only chain vars set still gets every chain problem in one error.
+func TestLoadChain_CollectsEveryProblemAtOnce(t *testing.T) {
+	_, err := LoadChain(lookup(map[string]string{
+		"STELLAR_NETWORK": NetworkMainnet,
+		// ALLOW_MAINNET, SOROBAN_RPC_URL, ESCROW_CONTRACT_ID all left unset.
+	}))
+	assertErrorNames(t, err, "ALLOW_MAINNET", "SOROBAN_RPC_URL", "ESCROW_CONTRACT_ID")
+}
+
+// TestLoadChain_NoDatabaseOrServiceTokenRequired is the harness's actual
+// precondition (issue: config.Load requiring DATABASE_URL/
+// CORE_GO_SERVICE_TOKEN broke a tool that needs neither) — LoadChain must
+// succeed with only chain vars set, database and service-token env left
+// completely unset.
+func TestLoadChain_NoDatabaseOrServiceTokenRequired(t *testing.T) {
+	getenv := func(key string) string {
+		if key == "ESCROW_CONTRACT_ID" {
+			return validContractID
+		}
+		return ""
+	}
+	if _, err := LoadChain(getenv); err != nil {
+		t.Fatalf("expected no error with only ESCROW_CONTRACT_ID set, got: %v", err)
+	}
+}
+
 func assertErrorNames(t *testing.T, err error, names ...string) {
 	t.Helper()
 	if err == nil {
