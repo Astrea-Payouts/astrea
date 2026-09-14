@@ -7,6 +7,7 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -234,17 +235,22 @@ func handleReleaseSubmit(deps Deps) http.HandlerFunc {
 			return
 		}
 
-		result, err := escrow.SubmitSigned(r.Context(), deps.RPC, req.SignedTransactionXDR, deps.EscrowCfg)
+		// From here on the transaction may already be on the network, so a
+		// client that disconnects mid-poll must not cancel the poll or the
+		// writes that record the outcome -- that would leave a paid release
+		// stuck at PENDING/ASSIGNED.
+		ctx := context.WithoutCancel(r.Context())
+		result, err := escrow.SubmitSigned(ctx, deps.RPC, req.SignedTransactionXDR, deps.EscrowCfg)
 		if err != nil {
 			var submissionErr *escrow.SubmissionError
 			var onChainErr *escrow.OnChainError
 			var timeoutErr *escrow.TimeoutError
 			switch {
 			case errors.As(err, &submissionErr):
-				markReleaseFailedBestEffort(r, deps.Store, eventID, err)
+				markReleaseFailedBestEffort(ctx, deps.Store, eventID, err)
 				writeError(w, http.StatusBadGateway, "submission_failed", submissionErr.Error())
 			case errors.As(err, &onChainErr):
-				markReleaseFailedBestEffort(r, deps.Store, eventID, err)
+				markReleaseFailedBestEffort(ctx, deps.Store, eventID, err)
 				writeError(w, http.StatusBadGateway, "on_chain_failed", onChainErr.Error())
 			case errors.As(err, &timeoutErr):
 				// Op stays PENDING -- the outcome is unknown, not failed; a
@@ -260,7 +266,7 @@ func handleReleaseSubmit(deps Deps) http.HandlerFunc {
 			return
 		}
 
-		if err := deps.Store.MarkReleaseSucceeded(r.Context(), eventID, result.Hash, time.Now().UTC()); err != nil {
+		if err := deps.Store.MarkReleaseSucceeded(ctx, eventID, result.Hash, time.Now().UTC()); err != nil {
 			log.Printf("api: event %s: MarkReleaseSucceeded (tx %s): %v", eventID, result.Hash, err)
 			writeError(w, http.StatusInternalServerError, "internal", "internal error")
 			return
@@ -275,8 +281,8 @@ func handleReleaseSubmit(deps Deps) http.HandlerFunc {
 // markReleaseFailedBestEffort records reason against the event's release
 // op_log row. Its own failure is logged, not surfaced: the RPC-side error
 // that triggered it is already what the caller sees.
-func markReleaseFailedBestEffort(r *http.Request, st store.Store, eventID string, reason error) {
-	if err := st.MarkReleaseFailed(r.Context(), eventID, reason.Error()); err != nil {
+func markReleaseFailedBestEffort(ctx context.Context, st store.Store, eventID string, reason error) {
+	if err := st.MarkReleaseFailed(ctx, eventID, reason.Error()); err != nil {
 		log.Printf("api: event %s: MarkReleaseFailed: %v", eventID, err)
 	}
 }
