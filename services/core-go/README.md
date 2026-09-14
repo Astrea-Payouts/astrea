@@ -4,17 +4,25 @@ Go backend: event/prize state machine, participant registration, real-time track
 
 ## Status
 
-`S01` (module scaffold) and `S04` (env config) done — builds, runs, `GET /healthz` returns 200, and refuses to start with missing/malformed config (see Configuration below). Everything else is still ahead: `S02` (CI), `S03` (Postgres schema), `E01-E06` (business logic). See [docs/build-plan.md](../../docs/build-plan.md).
+`S01` (module scaffold) and `S04` (env config) done — builds, runs, `GET /healthz` returns 200, and refuses to start with missing/malformed config (see Configuration below). `#185 PR 1` adds a Postgres store (`internal/store`), the service-to-service auth middleware, and the router (`internal/api`) — no handlers yet, see `#185 PR 2`. Everything else is still ahead: `S02` (CI), `E01-E06` (business logic). See [docs/build-plan.md](../../docs/build-plan.md).
 
 ## Run locally
 
-Requires `ESCROW_CONTRACT_ID` at minimum — see Configuration below and
-`.env.example`.
+Requires `ESCROW_CONTRACT_ID`, `DATABASE_URL`, and `CORE_GO_SERVICE_TOKEN`
+at minimum — see Configuration below and `.env.example`. A local Postgres
+with `apps/web`'s Prisma migrations applied is required; there is no
+in-memory fallback.
 
 ```bash
-ESCROW_CONTRACT_ID=<your-testnet-contract-id> go run .
-# optional: PORT=8091 ESCROW_CONTRACT_ID=<...> go run .
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres \
+CORE_GO_SERVICE_TOKEN=$(openssl rand -hex 32) \
+ESCROW_CONTRACT_ID=<your-testnet-contract-id> \
+go run .
 curl localhost:8080/healthz
+curl -i localhost:8080/whoami   # 401 — no bearer
+curl -i localhost:8080/whoami \
+  -H "Authorization: Bearer $CORE_GO_SERVICE_TOKEN" \
+  -H "X-Astrea-Wallet: G..."    # 200, echoes the wallet
 ```
 
 ## Build
@@ -26,12 +34,13 @@ go vet ./...
 
 ## Configuration
 
-`S04` (done): `internal/config.Load` validates five environment variables —
+`S04` (done): `internal/config.Load` validates seven environment variables —
 `STELLAR_NETWORK`, `ALLOW_MAINNET`, `SOROBAN_RPC_URL`, `ESCROW_CONTRACT_ID`,
-`PORT` — and `main` calls it before building the mux, so a missing or
-malformed variable fails the process at boot (non-zero exit, one line per
-problem) instead of surfacing as a confusing error on the first real
-request. See `.env.example` for what each variable means and its default.
+`PORT`, `DATABASE_URL`, `CORE_GO_SERVICE_TOKEN` — and `main` calls it before
+opening the database pool or building the mux, so a missing or malformed
+variable fails the process at boot (non-zero exit, one line per problem)
+instead of surfacing as a confusing error on the first real request. See
+`.env.example` for what each variable means and its default.
 
 The network passphrase is derived from `STELLAR_NETWORK` via
 `github.com/stellar/go/network`'s constants, never a separate variable —
@@ -41,6 +50,24 @@ validated by decoding it with `internal/escrow.ContractAddress` (real
 strkey/checksum validation, not a regex) rather than re-implementing that
 parsing here. `ALLOW_MAINNET` mirrors the web app's gate: setting
 `STELLAR_NETWORK=mainnet` alone is refused.
+
+**`DATABASE_URL`.** This service reads Postgres directly (`internal/store`,
+`github.com/jackc/pgx/v5` — hand-written SQL, no ORM); Prisma (`apps/web`)
+keeps sole ownership of every migration. The URL must be the **direct**
+connection (port 5432), not `apps/web/.env.example`'s pooled Supabase URL
+(port 6543, `?pgbouncer=true`) — pgx forwards `pgbouncer=true` to Postgres
+as a server runtime setting, which Postgres refuses outright, and the
+transaction-mode pooler also breaks pgx's prepared statements. `Load`
+parses it with `pgxpool.ParseConfig` and refuses to boot if `pgbouncer=true`
+is present, rather than failing confusingly on the first query.
+
+**`CORE_GO_SERVICE_TOKEN`.** A shared secret this service and `apps/web`
+both hold, at least 32 bytes. `apps/web` sends it as
+`Authorization: Bearer <token>` on every call, alongside `X-Astrea-Wallet`
+for the session's wallet address (`apps/web` authenticates via its own
+SEP-0043 session; this service only authorizes the service-to-service call
+and checks the wallet is a real Stellar account address — see
+`internal/api/auth.go`). Never logged.
 
 **Key handling.** This service holds no signing key, plaintext or
 otherwise. Organizer and judge keys never leave their own wallets — every
@@ -66,6 +93,42 @@ event's refund; something has to pay the network fee) — by construction
 it's low-value, holding fee dust only, and its `_FILE`-style indirection
 and log-redaction handling is deferred to the issue that introduces that
 job, not decided speculatively here.
+
+## `internal/store` — Postgres reads
+
+`#185 PR 1` (done): `Store.LoadEventForRelease` is the one query PR 2's
+`/release/build` handler needs, in one round trip per table — the event,
+its ACTIVE judges, its prizes ordered by rank, and its teams with members
+(ordinal, share, wallet address). Hand-written SQL over
+`github.com/jackc/pgx/v5`/`pgxpool`, no ORM, no code generator — Prisma
+(`apps/web`) keeps sole ownership of every migration; this package only
+reads and writes rows. Tables are snake_case (Prisma's `@@map`) but columns
+are camelCase and unrenamed, so every identifier in the SQL is
+double-quoted (`"escrowEventId"`, `"shareBasisPoints"`), and every uuid
+column read back is cast `::text` in the query itself — pgx's binary uuid
+codec doesn't scan into a plain Go string, but the ordinary text codec
+does. `Prize.Amount` stays the exact `Decimal(18,7)` text Postgres renders,
+untouched: the Decimal→i128 conversion is PR 2's job, not this package's.
+`postgres_test.go` is a gated integration test (`t.Skip` unless
+`TEST_DATABASE_URL` is set — see CI's core-go job for the Postgres service
+container that sets it) that seeds one event, one judge, three prizes, and
+two teams inside a transaction rolled back at the end, and asserts every
+field round-trips exactly.
+
+## `internal/api` — router and service auth
+
+`#185 PR 1` (done): `router.go` mounts `GET /healthz` unauthenticated and
+everything else behind `RequireAuth` — including `GET /whoami`, which
+exists only to exercise the middleware end to end through the real mux and
+to give PR 2 a working handler to copy from (PR 2 may delete it once the
+real release endpoints land). `auth.go` checks the `Authorization: Bearer`
+header with a constant-time compare (`crypto/subtle`) and validates
+`X-Astrea-Wallet` as a real Stellar account address with
+`strkey.Decode(strkey.VersionByteAccountID, ...)`, putting the wallet on
+the request context (`WalletFrom`) for handlers to read. `errors.go` is the
+one JSON error shape every failure uses:
+`{"error":{"code":"...","message":"..."}}`. No handlers beyond `/whoami`
+exist yet — see `#185 PR 2` for `/release/build` and `/release/submit`.
 
 ## `internal/escrow` — Soroban transaction pipeline
 
