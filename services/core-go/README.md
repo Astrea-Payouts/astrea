@@ -45,14 +45,22 @@ parsing here. `ALLOW_MAINNET` mirrors the web app's gate: setting
 **Key handling.** This service holds no signing key, plaintext or
 otherwise. Organizer and judge keys never leave their own wallets — every
 organizer-authorized call (`deposit_funds`, `withdraw_funds`,
-`create_event`) goes through the build-only path (`escrow.UnsignedTx`),
-and `release_reward`/`release_compensation` require the judge's own
-signature the same way. The resolver and emergency-admin keys
-(`initialize_default_resolver`, `initialize_treasury`,
-`resolve_dispute`, `set_paused`, and friends) are used directly from the
-`stellar` CLI by a human operator holding the governance keys — this
-service never touches them. The treasury is a receive-only address, not a
-signer. The one key this service will eventually hold is a fee payer for
+`create_event`, and, added for `E01d`, the two go-live transitions) goes
+through the build-only path (`escrow.UnsignedTx`), and
+`release_reward`/`release_compensation` require the judge's own signature
+the same way. `E01d` adds build-only wrappers for `resolve_dispute` and
+`emergency_withdraw` too, but the resolver's key still never enters this
+service: `resolve_dispute` is resolver-signed exactly like
+`release_reward` is judge-signed, and `emergency_withdraw`'s two-signature
+requirement is satisfied by handing the *other* party's pending auth
+entry (`UnsignedTx.PendingAuth`) to `escrow.SignAuthEntry` — a function
+that exists so a real wallet can compute the exact bytes it needs to sign
+client-side, not so this service can sign on the resolver's behalf.
+Emergency-admin-only governance calls (`initialize_default_resolver`,
+`initialize_treasury`, `set_paused`, and friends) are still used directly
+from the `stellar` CLI by a human operator holding the governance keys —
+this service never touches them either. The treasury is a receive-only
+address, not a signer. The one key this service will eventually hold is a fee payer for
 permissionless `expire_event` submissions (anyone can trigger a timed-out
 event's refund; something has to pay the network fee) — by construction
 it's low-value, holding fee dust only, and its `_FILE`-style indirection
@@ -112,24 +120,63 @@ goes to the team's lowest-`Ordinal` member, and any member a split floors
 to zero is rejected before it ever reaches the contract (which would
 otherwise reject the *entire* release).
 
+`E01d` (done): `resolve_dispute`, the two-signature `emergency_withdraw`,
+and the two go-live state transitions, in `lifecycle.go` —
+`set_event_waiting_for_start`/`set_event_in_progress` (the latter now
+takes a `judging_deadline: u64` and charges a go-live fee out of the
+organizer's free balance, quoted beforehand with the read-only
+`QuoteGoLiveFee`) and `resolve_dispute` (resolver-signed, reusing
+`release_reward`'s exact `Winner` shape — it's the same
+"pay `event.reward` out to arbitrary addresses" primitive, just callable
+by the resolver instead of the judge, and only once `InProgress` and past
+`judging_deadline`). `emergency_withdraw` is this package's first call
+needing *two* independent signatures (admin's and the resolver's), which
+is what `auth.go` exists for: `BuildUnsigned` (`pipeline.go`) now surfaces
+any simulated `SOROBAN_CREDENTIALS_ADDRESS` auth entry that isn't the
+transaction's own source account as `UnsignedTx.PendingAuth`, each with a
+`SignatureExpirationLedger` set ~100 ledgers (~8-10 minutes) out from the
+simulated ledger; `escrow.SignAuthEntry` computes the exact preimage hash
+the Soroban host checks (`sha256` of a
+`HashIdPreimage{type: ENVELOPE_TYPE_SOROBAN_AUTHORIZATION, ...}`) and
+signs it in the `{public_key, signature}` shape the built-in account
+contract's `__check_auth` expects; `escrow.AttachSignedAuth` folds a
+signed entry back into the envelope, matched by nonce + address. A fixed
+preimage vector is asserted byte-for-byte in `auth_test.go`, not just
+"no error" — and a `SOROBAN_CREDENTIALS_SOURCE_ACCOUNT` entry is asserted
+to never appear in `PendingAuth`, since the envelope's own signature
+already satisfies that kind of entry implicitly.
+
 ```bash
 go test ./internal/escrow/...
 ```
 
-A manual, network-touching harness proves the pipeline against the real
-`event-escrow` contract deployed to testnet in `E03`
-(`smart-contracts/astrea/contracts/event-escrow/README.md`). It's a `main`,
-not a `go test`, so CI's `go test ./...` never depends on testnet/friendbot
-being up. It exercises both signing paths: `deposit_funds` via `Submit`,
-then `create_event` via `BuildCreateEvent` → (harness signs, standing in for
-the organizer's wallet) → `SubmitSigned`, then reads the balance and the
-event back — and, added for `E01c`, drives a second event to `InProgress`
-and closes it with `release_reward` to a 3-member team on an uneven
-3333/3333/3334 bp split (so the remainder rule fires on a real ledger, not
-just in a unit test), cancels a third event pre-launch, and proves against
-the contract itself — not asserted client-side — that a fourth event's
-cancellation is rejected once it reaches `InProgress`:
+A manual, network-touching harness proves the pipeline against a real
+`event-escrow` contract on testnet, read from `ESCROW_CONTRACT_ID` (see
+Configuration above — `E01d` dropped the harness's old hardcoded contract
+id in favor of `internal/config.Load`, since a contract built before
+`E01d`'s own contract-side prerequisites, PRs #178/#179, can't run these
+scenarios at all). It's a `main`, not a `go test`, so CI's `go test ./...`
+never depends on testnet/friendbot being up. It exercises both signing
+paths: `deposit_funds` via `Submit`, then `create_event` via
+`BuildCreateEvent` → (harness signs, standing in for the organizer's
+wallet) → `SubmitSigned`, then reads the balance and the event back (`A`);
+drives a second event to `InProgress` and closes it with `release_reward`
+to a 3-member team on an uneven 3333/3333/3334 bp split so the remainder
+rule fires on a real ledger, not just in a unit test (`B`); cancels a
+third event pre-launch (`C`); proves against the contract itself, not
+asserted client-side, that a fourth event's cancellation is rejected once
+it reaches `InProgress` (`D`); drives a fifth event `InProgress` with a
+~45s `judging_deadline`, proves the judge is rejected from calling
+`resolve_dispute`, waits out the deadline, and has the resolver settle it
+by paying a team member and the organizer's own address in one call —
+`resolve_dispute`'s "cancel-after-launch" pattern (`E`); runs the full
+two-signature `emergency_withdraw` happy path, with the resolver's pending
+auth entry signed via `SignAuthEntry` entirely client-side and folded back
+in with `AttachSignedAuth` (`F`); and submits the identical
+`emergency_withdraw` call with only the admin's envelope signature, which
+the host rejects (`InvokeHostFunction` trapped) rather than this package
+catching it beforehand (`G`):
 
 ```bash
-go run ./cmd/escrow-testnet-proof
+ESCROW_CONTRACT_ID=<your-testnet-contract-id> go run ./cmd/escrow-testnet-proof
 ```

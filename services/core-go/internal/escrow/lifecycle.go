@@ -16,6 +16,7 @@ import (
 	"context"
 	"fmt"
 
+	protocol "github.com/stellar/go/protocols/rpc"
 	"github.com/stellar/go/xdr"
 )
 
@@ -161,6 +162,182 @@ func BuildReleaseCompensation(ctx context.Context, rpc RPCClient, contract xdr.S
 	return BuildUnsigned(ctx, rpc, admin, hf, cfg)
 }
 
+// SetEventWaitingForStartHostFunction builds the host function for
+// set_event_waiting_for_start(admin, event_id). Organizer-authorized --
+// this is the first of the two go-live transitions (Created ->
+// WaitingForStart), and unlike set_event_in_progress it charges no fee.
+func SetEventWaitingForStartHostFunction(contract xdr.ScAddress, admin string, eventID EventID) (xdr.HostFunction, error) {
+	adminArg, err := EncodeAddress(admin)
+	if err != nil {
+		return xdr.HostFunction{}, fmt.Errorf("escrow: encoding admin address: %w", err)
+	}
+	return invokeContractHF(contract, "set_event_waiting_for_start", adminArg, eventID.scVal()), nil
+}
+
+// BuildSetEventWaitingForStart simulates set_event_waiting_for_start and
+// returns an unsigned transaction for the organizer's own wallet to sign.
+func BuildSetEventWaitingForStart(ctx context.Context, rpc RPCClient, contract xdr.ScAddress, admin string, eventID EventID, cfg Config) (UnsignedTx, error) {
+	hf, err := SetEventWaitingForStartHostFunction(contract, admin, eventID)
+	if err != nil {
+		return UnsignedTx{}, err
+	}
+	return BuildUnsigned(ctx, rpc, admin, hf, cfg)
+}
+
+// SetEventInProgressHostFunction builds the host function for
+// set_event_in_progress(admin, event_id, judging_deadline). Organizer-
+// authorized. judgingDeadline is a Unix timestamp (u64 seconds) past which
+// resolve_dispute becomes callable (lifecycle.rs) -- it MUST encode as
+// ScvU64, not ScvU32: the contract's own parameter is a u64, and simulation
+// rejects a mismatched Soroban type outright. This call also charges the
+// go-live fee (quote it first with QuoteGoLiveFee) from admin's free
+// balance to the governance treasury; the contract fails closed if a
+// nonzero fee is configured but no treasury has been set (governance.rs).
+func SetEventInProgressHostFunction(contract xdr.ScAddress, admin string, eventID EventID, judgingDeadline uint64) (xdr.HostFunction, error) {
+	adminArg, err := EncodeAddress(admin)
+	if err != nil {
+		return xdr.HostFunction{}, fmt.Errorf("escrow: encoding admin address: %w", err)
+	}
+	return invokeContractHF(contract, "set_event_in_progress", adminArg, eventID.scVal(), scU64(judgingDeadline)), nil
+}
+
+// BuildSetEventInProgress simulates set_event_in_progress and returns an
+// unsigned transaction for the organizer's own wallet to sign.
+func BuildSetEventInProgress(ctx context.Context, rpc RPCClient, contract xdr.ScAddress, admin string, eventID EventID, judgingDeadline uint64, cfg Config) (UnsignedTx, error) {
+	hf, err := SetEventInProgressHostFunction(contract, admin, eventID, judgingDeadline)
+	if err != nil {
+		return UnsignedTx{}, err
+	}
+	return BuildUnsigned(ctx, rpc, admin, hf, cfg)
+}
+
+// QuoteGoLiveFee simulates quote_go_live_fee(event_id) -- a read-only call
+// (lib.rs's own signature takes no signer at all) -- and returns the go-live
+// fee set_event_in_progress will charge the organizer, without ever
+// submitting anything. source only sources the simulated transaction (any
+// funded, existing account works, since quote_go_live_fee needs no
+// authorization); it is never charged or signed for. Modeled on
+// GetBalance's simulate-and-decode pattern in wallet.go.
+func QuoteGoLiveFee(ctx context.Context, rpc RPCClient, contract xdr.ScAddress, eventID EventID, source string, cfg Config) (int64, error) {
+	cfg = cfg.withDefaults()
+
+	hf := invokeContractHF(contract, "quote_go_live_fee", eventID.scVal())
+
+	account, err := rpc.LoadAccount(ctx, source)
+	if err != nil {
+		return 0, fmt.Errorf("escrow: loading source account: %w", err)
+	}
+	simTx, err := buildTx(account, source, hf, nil, nil, cfg.TxTimeout)
+	if err != nil {
+		return 0, fmt.Errorf("escrow: building simulation transaction: %w", err)
+	}
+	simB64, err := simTx.Base64()
+	if err != nil {
+		return 0, fmt.Errorf("escrow: encoding simulation transaction: %w", err)
+	}
+
+	simResp, err := rpc.SimulateTransaction(ctx, protocol.SimulateTransactionRequest{Transaction: simB64})
+	if err != nil {
+		return 0, fmt.Errorf("escrow: calling simulateTransaction: %w", err)
+	}
+	if simResp.Error != "" {
+		return 0, &SimulationError{Message: simResp.Error}
+	}
+	if len(simResp.Results) == 0 || simResp.Results[0].ReturnValueXDR == nil {
+		return 0, fmt.Errorf("escrow: quote_go_live_fee simulation returned no value")
+	}
+
+	var returnVal xdr.ScVal
+	if err := xdr.SafeUnmarshalBase64(*simResp.Results[0].ReturnValueXDR, &returnVal); err != nil {
+		return 0, fmt.Errorf("escrow: decoding simulated return value: %w", err)
+	}
+	return DecodeI128ToInt64(returnVal)
+}
+
+// ResolveDisputeHostFunction builds the host function for
+// resolve_dispute(resolver, event_id, winners). resolver -- named on the
+// event at create_event time, defaulting to Astrea's own governance
+// DefaultResolver -- is the signer; neither admin nor judge may call this.
+// The contract only accepts it while the event is InProgress and past its
+// judging_deadline (lifecycle.rs), i.e. after the judge has missed its
+// window to call release_reward. winners reuses the exact Winner shape and
+// sum-validation contract as release_reward: this is AllocateWinners'
+// second consumer, and the exact-sum-to-event.reward assertion still lives
+// entirely in the contract.
+func ResolveDisputeHostFunction(contract xdr.ScAddress, resolver string, eventID EventID, winners []Winner) (xdr.HostFunction, error) {
+	if len(winners) == 0 {
+		return xdr.HostFunction{}, fmt.Errorf("escrow: resolve_dispute requires at least one winner")
+	}
+	if len(winners) > maxWinners {
+		return xdr.HostFunction{}, fmt.Errorf("escrow: %d winners exceeds the contract's MAX_WINNERS (%d)", len(winners), maxWinners)
+	}
+	resolverArg, err := EncodeAddress(resolver)
+	if err != nil {
+		return xdr.HostFunction{}, fmt.Errorf("escrow: encoding resolver address: %w", err)
+	}
+	winnersArg, err := winnersScVal(winners)
+	if err != nil {
+		return xdr.HostFunction{}, err
+	}
+	return invokeContractHF(contract, "resolve_dispute", resolverArg, eventID.scVal(), winnersArg), nil
+}
+
+// BuildResolveDispute simulates resolve_dispute and returns an unsigned
+// transaction for the resolver's own wallet to sign -- never the
+// organizer's or judge's key (README, S04: the resolver's key never enters
+// this service).
+func BuildResolveDispute(ctx context.Context, rpc RPCClient, contract xdr.ScAddress, resolver string, eventID EventID, winners []Winner, cfg Config) (UnsignedTx, error) {
+	hf, err := ResolveDisputeHostFunction(contract, resolver, eventID, winners)
+	if err != nil {
+		return UnsignedTx{}, err
+	}
+	return BuildUnsigned(ctx, rpc, resolver, hf, cfg)
+}
+
+// EmergencyWithdrawHostFunction builds the host function for
+// emergency_withdraw(admin, resolver, event_id, amount) -- note admin
+// before resolver, the contract's own argument order (lifecycle.rs), which
+// this function preserves exactly rather than reordering to match its own
+// (source, admin, resolver, ...) parameter list. The call requires BOTH
+// admin's and resolver's authorization (a genuine two-signature Soroban
+// auth, unlike every other call in this package) and only succeeds
+// pre-launch (Created or WaitingForStart) -- it exists as a governance
+// escape hatch before participants have committed real work.
+func EmergencyWithdrawHostFunction(contract xdr.ScAddress, admin, resolver string, eventID EventID, amount int64) (xdr.HostFunction, error) {
+	adminArg, err := EncodeAddress(admin)
+	if err != nil {
+		return xdr.HostFunction{}, fmt.Errorf("escrow: encoding admin address: %w", err)
+	}
+	resolverArg, err := EncodeAddress(resolver)
+	if err != nil {
+		return xdr.HostFunction{}, fmt.Errorf("escrow: encoding resolver address: %w", err)
+	}
+	return invokeContractHF(contract, "emergency_withdraw", adminArg, resolverArg, eventID.scVal(), EncodeI128(amount)), nil
+}
+
+// BuildEmergencyWithdraw simulates emergency_withdraw and returns an
+// unsigned transaction sourced by source, which MUST be either admin or
+// resolver -- the contract requires both of their authorizations, and one
+// of them has to be the transaction's source account to pay its fee and
+// implicitly satisfy its own SOROBAN_CREDENTIALS_SOURCE_ACCOUNT auth entry.
+// The OTHER party's SOROBAN_CREDENTIALS_ADDRESS entry comes back in the
+// result's PendingAuth (BuildUnsigned already surfaces any such entry
+// generically -- see pipeline.go) and must be signed separately with
+// SignAuthEntry and folded back in with AttachSignedAuth before this
+// transaction can be submitted. Whichever party is NOT source signs via
+// SignAuthEntry entirely client-side: this service never holds the
+// resolver's key (README, S04).
+func BuildEmergencyWithdraw(ctx context.Context, rpc RPCClient, contract xdr.ScAddress, source, admin, resolver string, eventID EventID, amount int64, cfg Config) (UnsignedTx, error) {
+	if source != admin && source != resolver {
+		return UnsignedTx{}, fmt.Errorf("escrow: emergency_withdraw source must be admin or resolver, got %q", source)
+	}
+	hf, err := EmergencyWithdrawHostFunction(contract, admin, resolver, eventID, amount)
+	if err != nil {
+		return UnsignedTx{}, err
+	}
+	return BuildUnsigned(ctx, rpc, source, hf, cfg)
+}
+
 // --- #[contracttype] struct encoding ----------------------------------
 //
 // Soroban's default encoding for a #[contracttype] struct is NOT an
@@ -181,6 +358,11 @@ func scSymbol(name string) xdr.ScVal {
 func scU32(v uint32) xdr.ScVal {
 	u := xdr.Uint32(v)
 	return xdr.ScVal{Type: xdr.ScValTypeScvU32, U32: &u}
+}
+
+func scU64(v uint64) xdr.ScVal {
+	u := xdr.Uint64(v)
+	return xdr.ScVal{Type: xdr.ScValTypeScvU64, U64: &u}
 }
 
 func scMap(entries xdr.ScMap) xdr.ScVal {

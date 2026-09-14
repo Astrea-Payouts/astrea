@@ -100,6 +100,10 @@ func TestGetBalanceHostFunction(t *testing.T) {
 // BuildCreateEvent(admin, prizes []Prize) matches no signature in lib.rs).
 // It also covers the same G/C address mix as deposit_funds: admin and judge
 // are G-addresses, token is the C-address native XLM SAC.
+//
+// resolver is left empty here (-> ScvVoid, i.e. Option::None): PR #178 added
+// a resolver: Option<Address> parameter to create_event, between judge and
+// token (lib.rs), which this test also pins down positionally.
 func TestCreateEventHostFunction_SinglePrize(t *testing.T) {
 	contract, err := ContractAddress(testContractAddress)
 	if err != nil {
@@ -110,7 +114,7 @@ func TestCreateEventHostFunction_SinglePrize(t *testing.T) {
 		t.Fatalf("NewEventID: %v", err)
 	}
 
-	hf, err := CreateEventHostFunction(contract, testAccountAddress, testJudgeAddress, testTokenAddress, 30_000_000, eventID)
+	hf, err := CreateEventHostFunction(contract, testAccountAddress, testJudgeAddress, "", testTokenAddress, 30_000_000, eventID)
 	if err != nil {
 		t.Fatalf("CreateEventHostFunction returned error: %v", err)
 	}
@@ -119,21 +123,67 @@ func TestCreateEventHostFunction_SinglePrize(t *testing.T) {
 		t.Fatalf("function name = %q, want %q", got, "create_event")
 	}
 	args := hf.InvokeContract.Args
-	if len(args) != 5 {
-		t.Fatalf("got %d args, want 5 (admin, judge, token, reward, event_id) -- a Prize/winners list does not belong here, see AGENTS.md", len(args))
+	if len(args) != 6 {
+		t.Fatalf("got %d args, want 6 (admin, judge, resolver, token, reward, event_id) -- a Prize/winners list does not belong here, see AGENTS.md", len(args))
 	}
 
 	assertAccountAddress(t, args[0], testAccountAddress)
 	assertAccountAddress(t, args[1], testJudgeAddress)
-	assertContractAddress(t, args[2], testTokenAddress)
-	assertI128(t, args[3], 30_000_000)
+	if args[2].Type != xdr.ScValTypeScvVoid {
+		t.Fatalf("resolver arg = %+v, want ScvVoid for an empty resolver (Option::None)", args[2])
+	}
+	assertContractAddress(t, args[3], testTokenAddress)
+	assertI128(t, args[4], 30_000_000)
 
-	gotID, err := EventIDFromScVal(args[4])
+	gotID, err := EventIDFromScVal(args[5])
 	if err != nil {
 		t.Fatalf("decoding event_id arg: %v", err)
 	}
 	if gotID != eventID {
 		t.Fatalf("event_id arg = %x, want %x", gotID, eventID)
+	}
+}
+
+// TestCreateEventHostFunction_ExplicitResolver proves a non-empty resolver
+// encodes as the Address itself (Option::Some(address)), not wrapped in any
+// extra structure -- see soroban-env-common's Option<T> -> Val conversion.
+func TestCreateEventHostFunction_ExplicitResolver(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+
+	hf, err := CreateEventHostFunction(contract, testAccountAddress, testJudgeAddress, testWinner1Address, testTokenAddress, 30_000_000, eventID)
+	if err != nil {
+		t.Fatalf("CreateEventHostFunction returned error: %v", err)
+	}
+
+	args := hf.InvokeContract.Args
+	assertAccountAddress(t, args[2], testWinner1Address)
+}
+
+// TestCreateEventHostFunction_InvalidResolver covers the resolver encoding
+// branch added alongside the Option<Address> parameter (PR #178): a
+// non-empty resolver must still be a well-formed strkey, exactly like
+// admin/judge/token -- an empty string is the only value that skips
+// encoding (Option::None).
+func TestCreateEventHostFunction_InvalidResolver(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	eventID, err := NewEventID()
+	if err != nil {
+		t.Fatalf("NewEventID: %v", err)
+	}
+
+	_, err = CreateEventHostFunction(contract, testAccountAddress, testJudgeAddress, "not-a-real-strkey", testTokenAddress, 30_000_000, eventID)
+	if err == nil {
+		t.Fatal("expected an error for a malformed resolver address, got nil")
 	}
 }
 
