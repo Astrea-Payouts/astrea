@@ -136,16 +136,9 @@ func AttachSignedAuth(tx UnsignedTx, signed []xdr.SorobanAuthorizationEntry) (Un
 		return UnsignedTx{}, fmt.Errorf("escrow: AttachSignedAuth got %d signed entries, want exactly %d (one per pending entry)", len(signed), len(tx.PendingAuth))
 	}
 
-	var envelope xdr.TransactionEnvelope
-	if err := xdr.SafeUnmarshalBase64(tx.XDR, &envelope); err != nil {
-		return UnsignedTx{}, fmt.Errorf("escrow: decoding unsigned envelope: %w", err)
-	}
-	if envelope.V1 == nil || len(envelope.V1.Tx.Operations) != 1 {
-		return UnsignedTx{}, fmt.Errorf("escrow: expected a single-operation v1 transaction envelope")
-	}
-	op := envelope.V1.Tx.Operations[0].Body.InvokeHostFunctionOp
-	if op == nil {
-		return UnsignedTx{}, fmt.Errorf("escrow: expected an InvokeHostFunction operation")
+	envelope, op, err := DecodeSingleOpInvokeHostFunction(tx.XDR)
+	if err != nil {
+		return UnsignedTx{}, err
 	}
 
 	matchedPending := make([]bool, len(tx.PendingAuth))
@@ -184,6 +177,28 @@ func AttachSignedAuth(tx UnsignedTx, signed []xdr.SorobanAuthorizationEntry) (Un
 		return UnsignedTx{}, fmt.Errorf("escrow: encoding updated envelope: %w", err)
 	}
 	return UnsignedTx{XDR: xdrB64, SimulatedReturn: tx.SimulatedReturn, PendingAuth: nil}, nil
+}
+
+// DecodeSingleOpInvokeHostFunction decodes envelopeXDR (a base64
+// TransactionEnvelope) and returns it along with its one InvokeHostFunction
+// operation, requiring a V1 envelope with exactly one operation of that
+// type. This is the guard AttachSignedAuth has always needed on the build
+// side; the release path's `/submit` handler (#185 decision 3) reuses it
+// verbatim on the signed envelope a judge's wallet returns, so both sides
+// of the envelope-mismatch comparison go through the identical decode.
+func DecodeSingleOpInvokeHostFunction(envelopeXDR string) (xdr.TransactionEnvelope, *xdr.InvokeHostFunctionOp, error) {
+	var envelope xdr.TransactionEnvelope
+	if err := xdr.SafeUnmarshalBase64(envelopeXDR, &envelope); err != nil {
+		return xdr.TransactionEnvelope{}, nil, fmt.Errorf("escrow: decoding transaction envelope: %w", err)
+	}
+	if envelope.V1 == nil || len(envelope.V1.Tx.Operations) != 1 {
+		return xdr.TransactionEnvelope{}, nil, fmt.Errorf("escrow: expected a single-operation v1 transaction envelope")
+	}
+	op := envelope.V1.Tx.Operations[0].Body.InvokeHostFunctionOp
+	if op == nil {
+		return xdr.TransactionEnvelope{}, nil, fmt.Errorf("escrow: expected an InvokeHostFunction operation")
+	}
+	return envelope, op, nil
 }
 
 // authEntriesMatch identifies "the same required authorization" across two

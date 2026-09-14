@@ -18,13 +18,26 @@ type querier interface {
 	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
 }
 
+// txBeginner is the one method the release-path write methods
+// (postgres_release.go) need to open their own transaction. Kept separate
+// from querier, rather than folded into it, so the existing read-only
+// fakeQuerier-based unit tests (postgres_unit_test.go) keep compiling
+// unchanged. *pgxpool.Pool satisfies it in production; pgx.Tx also
+// satisfies it (Begin on an open pgx.Tx opens a real Postgres SAVEPOINT),
+// which is what lets postgres_release_test.go run each write method's own
+// transaction nested inside one outer transaction it rolls back at the end.
+type txBeginner interface {
+	Begin(ctx context.Context) (pgx.Tx, error)
+}
+
 // Postgres is the pgx-backed Store. Tables are snake_case (Prisma's
 // @@map), but columns are camelCase and Prisma never renames them, so
 // every identifier below is double-quoted — an unquoted eventid is a
 // different, nonexistent column to Postgres.
 type Postgres struct {
-	pool *pgxpool.Pool // owns the connection lifecycle; Close() releases it
-	db   querier       // what queries actually run against
+	pool  *pgxpool.Pool // owns the connection lifecycle; Close() releases it
+	db    querier       // what read-only queries actually run against
+	begin txBeginner    // what write methods open their own transaction from
 }
 
 // New opens a pool against databaseURL and pings it, so a bad connection
@@ -39,7 +52,7 @@ func New(ctx context.Context, databaseURL string) (*Postgres, error) {
 		pool.Close()
 		return nil, fmt.Errorf("store: ping: %w", err)
 	}
-	return &Postgres{pool: pool, db: pool}, nil
+	return &Postgres{pool: pool, db: pool, begin: pool}, nil
 }
 
 // Close releases every connection in the pool.
