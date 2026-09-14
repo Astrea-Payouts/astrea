@@ -244,6 +244,25 @@ jobs:
     # the commitlint job fell into, which left every develop -> main promotion
     # BLOCKED with all checks green. See the `contracts` job above for the
     # same reasoning. Don't "optimize" this back to a paths filter.
+    #
+    # Postgres service container (#185 PR 1): internal/store's integration
+    # test is gated on TEST_DATABASE_URL and needs a real Postgres to run
+    # against, or it never gets coverage in CI and the SonarCloud new-code
+    # gate fails on this job's own PR. The migrations applied below are
+    # Prisma's (apps/web) — this service never runs a migration itself,
+    # only reads/writes through the schema Prisma already owns.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     defaults:
       run:
         working-directory: services/core-go
@@ -264,9 +283,29 @@ jobs:
       - name: Vet
         run: go vet ./...
 
+      # Applies every apps/web/prisma/migrations/*/migration.sql in lexical
+      # (i.e. chronological, since each directory is timestamp-prefixed)
+      # order against the service container above with the same psql the
+      # runner already ships. Runs from the repo root since the migrations
+      # live under apps/web, outside this job's services/core-go default
+      # working directory.
+      - name: Apply Prisma migrations (for the store integration test only)
+        working-directory: .
+        env:
+          PGPASSWORD: postgres
+        run: |
+          for f in $(ls apps/web/prisma/migrations/*/migration.sql | sort); do
+            echo "Applying $f"
+            psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 -f "$f"
+          done
+
       # -coverprofile added so the sonarcloud job below has a Go coverage
       # report to consume; the profile is uploaded as an artifact right after.
+      # TEST_DATABASE_URL points at the service container migrated above,
+      # so internal/store's gated integration test runs instead of skipping.
       - name: Test
+        env:
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
         run: go test ./... -coverprofile=coverage.out
 
       - name: Upload core-go coverage
