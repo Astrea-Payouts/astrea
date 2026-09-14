@@ -98,24 +98,40 @@ const (
 	eventRewardG             = int64(3_000_000)
 	emergencyWithdrawAmountG = int64(2_000_000)
 
+	// feeBpsAssumed documents the contract's default go-live fee (get_fee_bps),
+	// unchanged on every deploy this harness has driven so far. B, D and E
+	// each pay it out of the deposited balance when they call
+	// set_event_in_progress, on top of their own reward reservation -- a
+	// real cost peakReservationUnits below has to budget for, not just a
+	// print-out. If governance ever changes the deployed fee, this floor
+	// stops being exact, but it stays a same-order-of-magnitude sanity
+	// check rather than silently under-covering it by zero.
+	feeBpsAssumed   = int64(50)
+	goLiveFeeUnitsB = teamRewardB * feeBpsAssumed / 10_000
+	goLiveFeeUnitsD = inProgressRejectRewardD * feeBpsAssumed / 10_000
+	goLiveFeeUnitsE = disputeRewardE * feeBpsAssumed / 10_000
+
 	// peakReservationUnits is the largest amount ever simultaneously reserved
 	// out of the admin's single up-front deposit, i.e. the deposit's real
 	// floor. Every reward reserves units at create_event time and only some
 	// of them ever come back (C's cancellation and F's partial emergency
 	// withdrawal); A's, D's and G's reservations are never released within
 	// this run, and E's is spent in place by resolve_dispute rather than
-	// refunded. Walking the run in order, the running total peaks right
-	// after G is created (C's reserve-then-refund cycle finishes well before
-	// then and never itself exceeds this figure):
+	// refunded. B, D and E additionally each pay a go-live fee straight out
+	// of the deposited balance the moment they call set_event_in_progress.
+	// Walking the run in order, the running total peaks right after G is
+	// created (C's reserve-then-refund cycle finishes well before then and
+	// never itself exceeds this figure):
 	//   A -> +eventRewardA
-	//   B -> +teamRewardB
+	//   B -> +teamRewardB, +goLiveFeeUnitsB
 	//   C -> +cancelledEventRewardC, then -cancelledEventRewardC (refunded)
-	//   D -> +inProgressRejectRewardD
-	//   E -> +disputeRewardE
+	//   D -> +inProgressRejectRewardD, +goLiveFeeUnitsD
+	//   E -> +disputeRewardE, +goLiveFeeUnitsE
 	//   F -> +eventRewardF, then -emergencyWithdrawAmountF (partial refund)
 	//   G -> +eventRewardG  <- running total peaks here
 	peakReservationUnits = eventRewardA + teamRewardB + inProgressRejectRewardD +
-		disputeRewardE + eventRewardF + eventRewardG - emergencyWithdrawAmountF
+		disputeRewardE + eventRewardF + eventRewardG - emergencyWithdrawAmountF +
+		goLiveFeeUnitsB + goLiveFeeUnitsD + goLiveFeeUnitsE
 
 	// How far past "now" E's judging_deadline is set -- short enough that
 	// this harness can just wait it out, long enough that the harness's own
@@ -158,10 +174,13 @@ func main() {
 		log.Fatalf("decoding event-escrow contract address: %v", err)
 	}
 
-	admin := mustRandomKeypair()
+	admin := mustAdminKeypair()
 	fmt.Println("admin:", admin.Address())
 	if _, err := horizon.Fund(admin.Address()); err != nil {
-		log.Fatalf("funding admin via friendbot: %v", err)
+		if _, derr := horizon.AccountDetail(horizonclient.AccountRequest{AccountID: admin.Address()}); derr != nil {
+			log.Fatalf("funding admin via friendbot: %v", err)
+		}
+		fmt.Println("  (admin account already exists, friendbot funding skipped)")
 	}
 
 	judge := mustRandomKeypair()
@@ -592,6 +611,21 @@ func main() {
 	fmt.Println("\ndone")
 	fmt.Println("E01d testnet round-trip complete: resolve_dispute (E), two-signature emergency_withdraw (F), and a proven single-signature rejection (G) -- on top of E01a-E01c's original scenarios (A-D).")
 	fmt.Println("contract:", cfg.EscrowContractID)
+}
+
+// mustAdminKeypair returns ADMIN_SEED (a secret seed, S...) when set, so a
+// human's testnet USDC faucet send survives a retry instead of landing on
+// an address the previous attempt already abandoned; unset generates a
+// fresh throwaway admin as before.
+func mustAdminKeypair() *keypair.Full {
+	if seed := os.Getenv("ADMIN_SEED"); seed != "" {
+		kp, err := keypair.ParseFull(seed)
+		if err != nil {
+			log.Fatalf("ADMIN_SEED: invalid secret seed: %v", err)
+		}
+		return kp
+	}
+	return mustRandomKeypair()
 }
 
 // mustRandomKeypair panics on error -- acceptable in this manual harness,
