@@ -142,8 +142,17 @@ export function SeeItInAction() {
 							deliberate off-canvas bleed — that only works beside the text
 							column on desktop. Below lg it puts the stack off-screen, so
 							the container is re-anchored to the centre and scaled to fit.
-							The overrides live here rather than in card-swap.tsx to keep
-							that file a clean port. */}
+							At lg the container is bottom-right anchored again, but the
+							vertical bleed is cut from upstream's 20% to 5%: the section
+							clips overflow, and 20% (76px of the 380px card height, plus
+							the skew transform's own vertical overhang) pushed the front
+							card past the section's bottom padding. The wrapper's own
+							height can't absorb this — it anchors the container's bottom
+							edge, so growing it pushes the section's bottom edge down by
+							the same amount and the gap never closes. 5% leaves enough
+							clearance for the swap animation's elastic overshoot too. The
+							overrides live here rather than in card-swap.tsx to keep that
+							file a clean port. */}
 							<div
 								className={[
 									"relative lg:col-span-7",
@@ -155,7 +164,7 @@ export function SeeItInAction() {
 									"lg:[&>div]:!top-auto lg:[&>div]:!bottom-0",
 									"lg:[&>div]:!left-auto lg:[&>div]:!right-0",
 									"lg:[&>div]:!origin-bottom-right lg:[&>div]:!scale-100",
-									"lg:[&>div]:!translate-x-[5%] lg:[&>div]:!translate-y-[20%]",
+									"lg:[&>div]:!translate-x-[5%] lg:[&>div]:!translate-y-[5%]",
 								].join(" ")}
 							>
 								<CardSwap
