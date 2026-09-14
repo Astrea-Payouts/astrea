@@ -20,7 +20,7 @@
 ## Domain model (Postgres sketch)
 
 ```
-Event       — id, organizerId, name, dates, status, escrowContractId, network, conditionsMetAt
+Event       — id, organizerId, name, dates, status, escrowContractId, escrowEventId, network, conditionsMetAt
 Prize       — id, eventId, rank, amountUsdc, milestoneIndex, status, winnerWalletId, releaseTxHash
 Judge       — id, eventId, walletAddress, displayName, status
 Participant — id, eventId, walletId, submissionUrl, registeredAt
