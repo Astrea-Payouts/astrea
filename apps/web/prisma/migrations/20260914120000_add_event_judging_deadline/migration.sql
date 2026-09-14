@@ -7,4 +7,4 @@
 -- to "fix" with unrelated ALTER COLUMN ... SET DATA TYPE statements across
 -- every table (breaks RLS policies that reference those columns) -- same
 -- reason 20260911090000_add_event_escrow_event_id is hand-written.
-ALTER TABLE "events" ADD COLUMN "judgingDeadlineAt" TIMESTAMP(3);
+ALTER TABLE "events" ADD COLUMN "judgingDeadlineAt" TIMESTAMPTZ;
