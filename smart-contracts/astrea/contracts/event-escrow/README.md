@@ -40,7 +40,37 @@ real testnet RPC.
   exercises the same "funds return to the organizer's wallet" guarantee
   deterministically, in the same run, with no timing dependency.
 
-## Results (reference run — 2026-09-07)
+## Current testnet deployment (2026-09-14)
+
+Deployed with `scripts/deploy-testnet.sh` using the project's own governance
+identities (not throwaway keys). This is the contract `apps/web`
+(`NEXT_PUBLIC_ESCROW_CONTRACT_ID`) and `services/core-go`
+(`ESCROW_CONTRACT_ID`) point at. It replaces the 2026-09-07 instance below,
+which predates the resolver, `emergency_withdraw`, `resolve_dispute` and the
+go-live fee/treasury and is kept only as the reference run's record.
+
+| Field | Value |
+|-------|-------|
+| Contract ID | [`CCNAQ6MC3LZMT3U3RHVS62HEXCHTHDACSGSDKUTJUQWHGPYSAD7NFQZD`](https://stellar.expert/explorer/testnet/contract/CCNAQ6MC3LZMT3U3RHVS62HEXCHTHDACSGSDKUTJUQWHGPYSAD7NFQZD) |
+| Emergency admin | `GB7BZCAAW6LPA3EQD6NQD3CXJ4446H5W7ZU6IEVFRB3H5PSZF7IGMADQ` |
+| Default resolver | `GDBGUDZFW55W7ZR2DIDN2KZEIUPRBI3SSTOC4BBPNSHK5UHLWVQO7ARM` |
+| Treasury | `GDQGMSSSCASTOWK42SFOM5Z74GWFKAGHXMBGH5UJNVXUA5I57IMR3ERB` (USDC trustline set) |
+| Fee (bps) | 50 (default; `set_fee_bps` not called) |
+| Token whitelist | disabled (default) — every SAC accepted; USDC testnet `GBBD47IF…` is the MVP token |
+
+| Call | Tx hash |
+|------|---------|
+| `deploy` | [`1efb74d3…`](https://stellar.expert/explorer/testnet/tx/1efb74d3dbbe1f25bcb54ac999f0c4013218e228b82dab81749ad081ed2c028d) |
+| `initialize_emergency_admin` | [`6735b075…`](https://stellar.expert/explorer/testnet/tx/6735b075dc13a5c1207bcfd6db9352c513c4f164c9858ece89d2ae54d10e862d) |
+| `initialize_default_resolver` | [`8374ad0c…`](https://stellar.expert/explorer/testnet/tx/8374ad0c5b10de79a2cf6fa766355e7f0153d18f6519f894cd1854ad34675d62) |
+| `initialize_treasury` | [`4ceef903…`](https://stellar.expert/explorer/testnet/tx/4ceef90350211b88faacbba7bb1f571cf0d9900261fce32c3011ed0efb4335de) |
+
+Readback after init: `get_default_resolver`, `get_treasury` and
+`get_fee_bps` return the values above. No functional scenario has run
+against this instance yet — that is the USDC smoke test tracked in
+`services/core-go/cmd/escrow-testnet-proof`.
+
+## Results (reference run — 2026-09-07, superseded instance)
 
 **Contract ID:** [`CAD5IOA2FFSUTRIHEK6YQ2BPO2JVDPXYRXBVMPBBWFQEWRWKFRG36TQH`](https://stellar.expert/explorer/testnet/contract/CAD5IOA2FFSUTRIHEK6YQ2BPO2JVDPXYRXBVMPBBWFQEWRWKFRG36TQH)
 **Token (native XLM SAC):** [`CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`](https://stellar.expert/explorer/testnet/contract/CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC)

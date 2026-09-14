@@ -51,7 +51,7 @@ The Stellar Development Foundation funds security audits for Soroban contracts t
 
 - [ ] SCF Build Award applied for (L01b) — everything else is downstream of this
 - [ ] **Threat model written down** (L01a) — assets, actors, trust boundaries, attack scenarios and mitigations
-- [x] Testnet deployment live (E03) — contract `CAD5IOA2FFSUTRIHEK6YQ2BPO2JVDPXYRXBVMPBBWFQEWRWKFRG36TQH`, full tx trail in [contracts/event-escrow/README.md](../smart-contracts/astrea/contracts/event-escrow/README.md)
+- [x] Testnet deployment live (E03) — contract `CCNAQ6MC3LZMT3U3RHVS62HEXCHTHDACSGSDKUTJUQWHGPYSAD7NFQZD` (governance deploy, 2026-09-14), full tx trail in [contracts/event-escrow/README.md](../smart-contracts/astrea/contracts/event-escrow/README.md)
 - [ ] Test suite covering the money paths and their negative cases (largely done — see the findings log)
 - [ ] Contract documentation complete enough for an external reader with no context
 - [ ] Open money-path gaps closed: #20 and #22
