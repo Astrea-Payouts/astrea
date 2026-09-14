@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stellar/go/network"
 
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/escrow"
@@ -22,6 +23,10 @@ const (
 	defaultTestnetSorobanRPCURL = "https://soroban-testnet.stellar.org"
 
 	defaultPort = "8080"
+
+	// minServiceTokenBytes is a floor, not a recommendation — generate the
+	// real value with `openssl rand -hex 32` (see README.md).
+	minServiceTokenBytes = 32
 )
 
 // Config is the validated result of Load. Deliberately holds no signing
@@ -33,6 +38,9 @@ type Config struct {
 	EscrowContractID  string
 	AllowMainnet      bool
 	Port              string
+	DatabaseURL       string
+	// ServiceToken is never logged — see README.md's Configuration section.
+	ServiceToken string
 }
 
 // Load reads and validates every environment variable core-go needs at
@@ -88,6 +96,33 @@ func Load(getenv func(string) string) (Config, error) {
 		port = defaultPort
 	}
 
+	databaseURL := getenv("DATABASE_URL")
+	if databaseURL == "" {
+		problems = append(problems, "DATABASE_URL: required")
+	} else if poolCfg, err := pgxpool.ParseConfig(databaseURL); err != nil {
+		problems = append(problems, fmt.Sprintf("DATABASE_URL: invalid: %v", err))
+	} else if poolCfg.ConnConfig.Config.RuntimeParams["pgbouncer"] == "true" {
+		// pgx forwards unrecognized query params (like pgbouncer) as server
+		// runtime settings, and Postgres refuses to SET a parameter named
+		// "pgbouncer" — this is also apps/web/.env.example's pooled
+		// (port 6543) URL, which is the single most likely operator mistake.
+		problems = append(problems, "DATABASE_URL: must not carry pgbouncer=true — "+
+			"use the direct (port 5432) connection here, not the pooled one "+
+			"apps/web uses. The transaction-mode pooler also breaks pgx's "+
+			"prepared statements")
+	}
+
+	serviceToken := getenv("CORE_GO_SERVICE_TOKEN")
+	if serviceToken == "" {
+		problems = append(problems, "CORE_GO_SERVICE_TOKEN: required")
+	} else if len(serviceToken) < minServiceTokenBytes {
+		problems = append(problems, fmt.Sprintf(
+			"CORE_GO_SERVICE_TOKEN: must be at least %d bytes, got %d — "+
+				"generate one with `openssl rand -hex 32`",
+			minServiceTokenBytes, len(serviceToken),
+		))
+	}
+
 	if len(problems) > 0 {
 		return Config{}, fmt.Errorf("invalid environment configuration:\n  - %s", strings.Join(problems, "\n  - "))
 	}
@@ -107,6 +142,8 @@ func Load(getenv func(string) string) (Config, error) {
 		EscrowContractID:  contractID,
 		AllowMainnet:      allowMainnet,
 		Port:              port,
+		DatabaseURL:       databaseURL,
+		ServiceToken:      serviceToken,
 	}, nil
 }
 

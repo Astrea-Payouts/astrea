@@ -10,7 +10,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/api"
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/config"
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/store"
 )
 
 func main() {
@@ -21,10 +23,19 @@ func main() {
 		log.Fatalf("invalid configuration: %v", err)
 	}
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok"))
+	// New pings the pool itself, so a bad DATABASE_URL or an unreachable
+	// database fails boot here too, not on the first request.
+	ctx, cancelBoot := context.WithTimeout(context.Background(), 10*time.Second)
+	pg, err := store.New(ctx, cfg.DatabaseURL)
+	cancelBoot()
+	if err != nil {
+		log.Fatalf("database: %v", err)
+	}
+	defer pg.Close()
+
+	mux := api.New(api.Deps{
+		ServiceToken: cfg.ServiceToken,
+		Store:        pg,
 	})
 
 	srv := &http.Server{
