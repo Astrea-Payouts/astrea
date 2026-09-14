@@ -10,8 +10,11 @@ import (
 	"syscall"
 	"time"
 
+	rpcclient "github.com/stellar/go/clients/rpcclient"
+
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/api"
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/config"
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/escrow"
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/store"
 )
 
@@ -33,9 +36,20 @@ func main() {
 	}
 	defer pg.Close()
 
+	contract, err := escrow.ContractAddress(cfg.EscrowContractID)
+	if err != nil {
+		// config.Load already validates ESCROW_CONTRACT_ID, so this would
+		// mean that validation and this decoding have drifted apart.
+		log.Fatalf("escrow contract address: %v", err)
+	}
+
 	mux := api.New(api.Deps{
-		ServiceToken: cfg.ServiceToken,
-		Store:        pg,
+		ServiceToken:      cfg.ServiceToken,
+		Store:             pg,
+		RPC:               rpcclient.NewClient(cfg.SorobanRPCURL, nil),
+		Contract:          contract,
+		NetworkPassphrase: cfg.NetworkPassphrase,
+		EscrowCfg:         escrow.Config{},
 	})
 
 	srv := &http.Server{

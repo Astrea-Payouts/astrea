@@ -4,7 +4,7 @@ Go backend: event/prize state machine, participant registration, real-time track
 
 ## Status
 
-`S01` (module scaffold) and `S04` (env config) done — builds, runs, `GET /healthz` returns 200, and refuses to start with missing/malformed config (see Configuration below). `#185 PR 1` adds a Postgres store (`internal/store`), the service-to-service auth middleware, and the router (`internal/api`) — no handlers yet, see `#185 PR 2`. Everything else is still ahead: `S02` (CI), `E01-E06` (business logic). See [docs/build-plan.md](../../docs/build-plan.md).
+`S01` (module scaffold) and `S04` (env config) done — builds, runs, `GET /healthz` returns 200, and refuses to start with missing/malformed config (see Configuration below). `#185 PR 1` adds a Postgres store (`internal/store`), the service-to-service auth middleware, and the router (`internal/api`). `#185 PR 2` (done) adds the judge release path — `POST /events/{id}/release/build` and `POST /events/{id}/release/submit` — see [Release path](#release-path) below. Everything else is still ahead: `S02` (CI), `E01-E06` (business logic besides the release path). See [docs/build-plan.md](../../docs/build-plan.md).
 
 ## Run locally
 
@@ -19,10 +19,13 @@ CORE_GO_SERVICE_TOKEN=$(openssl rand -hex 32) \
 ESCROW_CONTRACT_ID=<your-testnet-contract-id> \
 go run .
 curl localhost:8080/healthz
-curl -i localhost:8080/whoami   # 401 — no bearer
-curl -i localhost:8080/whoami \
+curl -i localhost:8080/events/<event-id>/release/build   # 401 — no bearer
+curl -i localhost:8080/events/<event-id>/release/build \
+  -X POST \
   -H "Authorization: Bearer $CORE_GO_SERVICE_TOKEN" \
-  -H "X-Astrea-Wallet: G..."    # 200, echoes the wallet
+  -H "X-Astrea-Wallet: G..." \
+  -H "Content-Type: application/json" \
+  -d '{"assignments":[{"rank":1,"teamId":"..."}]}'
 ```
 
 ## Build
@@ -94,9 +97,9 @@ it's low-value, holding fee dust only, and its `_FILE`-style indirection
 and log-redaction handling is deferred to the issue that introduces that
 job, not decided speculatively here.
 
-## `internal/store` — Postgres reads
+## `internal/store` — Postgres reads and writes
 
-`#185 PR 1` (done): `Store.LoadEventForRelease` is the one query PR 2's
+`#185 PR 1` (done): `Store.LoadEventForRelease` is the one query the
 `/release/build` handler needs, in one round trip per table — the event,
 its ACTIVE judges, its prizes ordered by rank, and its teams with members
 (ordinal, share, wallet address). Hand-written SQL over
@@ -108,27 +111,174 @@ double-quoted (`"escrowEventId"`, `"shareBasisPoints"`), and every uuid
 column read back is cast `::text` in the query itself — pgx's binary uuid
 codec doesn't scan into a plain Go string, but the ordinary text codec
 does. `Prize.Amount` stays the exact `Decimal(18,7)` text Postgres renders,
-untouched: the Decimal→i128 conversion is PR 2's job, not this package's.
-`postgres_test.go` is a gated integration test (`t.Skip` unless
-`TEST_DATABASE_URL` is set — see CI's core-go job for the Postgres service
-container that sets it) that seeds one event, one judge, three prizes, and
-two teams inside a transaction rolled back at the end, and asserts every
-field round-trips exactly.
+untouched: the Decimal→i128 conversion happens in `internal/escrow` (see
+`AmountToStroops` below).
 
-## `internal/api` — router and service auth
+`#185 PR 2` (done): the release path's writes, in `postgres_release.go` —
+`SaveReleaseBuild`, `LoadReleaseOp`, `MarkReleaseSucceeded`,
+`MarkReleaseFailed`. Each write method opens and commits its own
+transaction (`Postgres.begin`, a `txBeginner` interface kept separate from
+the read-only `querier` one so PR 1's existing fake-based unit tests keep
+compiling unchanged); `SaveReleaseBuild` re-checks inside that transaction
+that the event is still `JUDGING` and that every prize the build names
+still belongs to it, closing the race window a handler's own
+`LoadEventForRelease` read can't see past. The `op_log` row's
+`idempotencyKey` is always `<eventId>:release_reward` — one row per event,
+ever — upserted with an `INSERT ... ON CONFLICT ... WHERE status <>
+'SUCCEEDED'` so a rebuild after a paid-out release is refused
+(`ErrAlreadySucceeded`) without a separate read-then-write step.
+`postgres_test.go`/`postgres_release_test.go` are gated integration tests
+(`t.Skip` unless `TEST_DATABASE_URL` is set — see CI's core-go job for the
+Postgres service container that sets it) that seed rows and roll every
+transaction back at the end.
+
+## `internal/api` — router, service auth, and the release path
 
 `#185 PR 1` (done): `router.go` mounts `GET /healthz` unauthenticated and
-everything else behind `RequireAuth` — including `GET /whoami`, which
-exists only to exercise the middleware end to end through the real mux and
-to give PR 2 a working handler to copy from (PR 2 may delete it once the
-real release endpoints land). `auth.go` checks the `Authorization: Bearer`
-header with a constant-time compare (`crypto/subtle`) and validates
-`X-Astrea-Wallet` as a real Stellar account address with
-`strkey.Decode(strkey.VersionByteAccountID, ...)`, putting the wallet on
-the request context (`WalletFrom`) for handlers to read. `errors.go` is the
-one JSON error shape every failure uses:
-`{"error":{"code":"...","message":"..."}}`. No handlers beyond `/whoami`
-exist yet — see `#185 PR 2` for `/release/build` and `/release/submit`.
+everything else behind `RequireAuth`. `auth.go` checks the
+`Authorization: Bearer` header with a constant-time compare
+(`crypto/subtle`) and validates `X-Astrea-Wallet` as a real Stellar account
+address with `strkey.Decode(strkey.VersionByteAccountID, ...)`, putting the
+wallet on the request context (`WalletFrom`) for handlers to read.
+`errors.go` is the one JSON error shape every failure uses:
+`{"error":{"code":"...","message":"..."}}`.
+
+`#185 PR 2` (done): `release.go`'s `POST /events/{id}/release/build` and
+`POST /events/{id}/release/submit` — see [Release path](#release-path)
+below for the full contract. The placeholder `GET /whoami` PR 1 shipped to
+exercise `RequireAuth` end to end is gone; these two handlers are the real
+thing.
+
+## Release path
+
+`#185 PR 2` (done). The judge who owns an event's single `ACTIVE` `Judge`
+row calls these two endpoints, in order, to pay out `release_reward` —
+both require the shared bearer token and `X-Astrea-Wallet` set to that
+judge's address (see Configuration above). Neither request or response
+body ever carries a payout amount: amounts live only in
+`internal/store`/Postgres and in the signed transaction itself.
+
+### `POST /events/{id}/release/build`
+
+Request:
+
+```json
+{"assignments": [{"rank": 1, "teamId": "<uuid>"}]}
+```
+
+One assignment per prize `rank` on the event, each naming the `Team` that
+won it — never an amount; `Prize.amount` (organizer-set at creation) and
+`TeamMember.shareBasisPoints` (set at registration) are what determine
+each member's payout. The handler loads the event, allocates winners with
+`escrow.AllocateWinners` (the remainder rule: a position's leftover stroop
+after flooring every member's basis-point share goes to the team's
+lowest-`Ordinal` member), simulates `release_reward` for the judge's own
+wallet to sign, and persists the result as the event's `op_log` row.
+
+Response (`200`):
+
+```json
+{
+  "eventId": "<uuid>",
+  "unsignedTransactionXdr": "AAAA...",
+  "winners": [
+    {"rank": 1, "teamId": "<uuid>", "teamMemberId": "<uuid>", "address": "G..."}
+  ]
+}
+```
+
+The judge's own wallet signs `unsignedTransactionXdr` (e.g.
+`stellar tx sign --sign-with-key <judge> --network testnet`) and hands the
+result to `/release/submit`.
+
+### `POST /events/{id}/release/submit`
+
+Request:
+
+```json
+{"signedTransactionXdr": "AAAA..."}
+```
+
+Before ever calling the RPC, the handler re-derives and compares this
+signed envelope against what `/release/build` stored
+(`escrow.DecodeSingleOpInvokeHostFunction`, the same single-op
+`InvokeHostFunction` guard `AttachSignedAuth` has always used): it must be
+a V1, single-operation envelope; carry at least one signature; have a
+source account equal to the judge who built this release; and its
+`InvokeHostFunction`'s host function must marshal to exactly the bytes
+`/release/build` persisted. Any mismatch is refused as `409
+envelope_mismatch` with no RPC call made at all — see Guarantee below.
+Once it passes, the envelope is submitted (`escrow.SubmitSigned`) and
+polled for confirmation.
+
+Response (`200`, on-chain success):
+
+```json
+{"txHash": "...", "status": "succeeded"}
+```
+
+Response (`202`, `escrow.TimeoutError` — outcome unknown, not failed; the
+`op_log` row stays `PENDING` and a later `/release/submit` retry or manual
+reconciliation still has it to work with):
+
+```json
+{"txHash": "...", "status": "pending"}
+```
+
+### Status codes
+
+Every error body is `{"error":{"code":"...","message":"..."}}`.
+
+| Status | Code | Meaning |
+| --- | --- | --- |
+| 401 | `unauthorized` | missing/invalid bearer token (middleware) |
+| 400 | `invalid_wallet` | `X-Astrea-Wallet` isn't a Stellar account address (middleware) |
+| 400 | `invalid_request` | malformed JSON body, or empty `assignments`/`signedTransactionXdr` |
+| 404 | `event_not_found` | no event with that id — including a path id that isn't a well-formed UUID, rejected before ever reaching a query, since a raw `WHERE id = $1` against a `uuid` column would otherwise surface a Postgres syntax error as a `500` |
+| 403 | `not_judge` | caller's wallet isn't the event's judge |
+| 409 | `event_not_judging` | `Event.status` isn't `JUDGING` |
+| 409 | `event_not_on_chain` | `Event.escrowEventId` is null |
+| 409 | `judge_ambiguous` | the event doesn't have exactly one `ACTIVE` judge |
+| 409 | `assignments_invalid` | a rank missing, duplicated, or unknown; a team from another event; or a team assigned twice |
+| 409 | `allocation_failed` | `escrow.AllocateWinners` rejected the split (wraps `*escrow.AllocationError`) |
+| 409 | `release_already_succeeded` | this event's release already paid out |
+| 409 | `no_pending_release` | `/release/submit` called with no currently-`PENDING` build (never built, or the last build's submit already failed and needs a fresh `/release/build`) |
+| 409 | `envelope_mismatch` | the signed envelope doesn't match what `/release/build` produced (decision below) |
+| 502 | `simulation_failed` | RPC simulation of `release_reward` failed (`/release/build`) |
+| 502 | `submission_failed` | stellar-core rejected the transaction at submission (`/release/submit`; marks the op `FAILED`) |
+| 502 | `on_chain_failed` | the transaction landed but executed with an error (`/release/submit`; marks the op `FAILED`) |
+| 500 | `internal` | anything else — logged with the event id, never the request body |
+
+### `op_log` status and who moves it
+
+`SaveReleaseBuild` upserts the row to `PENDING` (idempotency key
+`<eventId>:release_reward` — one row per event, ever) and assigns every
+named prize's `winnerTeamId`/`status=ASSIGNED`, all in one transaction.
+`MarkReleaseSucceeded` moves `PENDING → SUCCEEDED`: every prize the build
+named goes to `RELEASED` with the same `releaseTxHash`, one `Payout` row
+per winning `TeamMember` (all sharing that hash), and `Event.status →
+COMPLETED` — also one transaction. `MarkReleaseFailed` moves the row to
+`FAILED` and merges the failure reason into its payload under
+`"lastError"`, leaving prizes `ASSIGNED` so a fresh `/release/build` can
+overwrite the row and try again. A `*escrow.TimeoutError` moves nothing —
+the row stays `PENDING`, since the outcome is genuinely unknown, not
+failed.
+
+### Guarantee
+
+Astrea never holds a judge's key, so nothing stops a judge's wallet from
+signing something other than what `/release/build` asked it to. The
+split enforced by `escrow.AllocateWinners` — one prize per team, shares
+summing to exactly 10000 bp, the remainder rule — is therefore an
+off-chain guarantee, not an on-chain one: the `event-escrow` contract
+itself only asserts that `release_reward`'s winner amounts sum to
+`Event.reward`, nothing about how that sum is split. What makes the
+off-chain guarantee real is `/release/submit`'s byte-for-byte comparison
+of the signed envelope's host function against the one `/release/build`
+simulated and persisted (`409 envelope_mismatch` on any difference, before
+any RPC call): a judge's wallet cannot silently submit a different split
+than the one this service computed and showed it, because the two are
+checked to be identical, not merely trusted to be.
 
 ## `internal/escrow` — Soroban transaction pipeline
 
@@ -208,6 +358,19 @@ preimage vector is asserted byte-for-byte in `auth_test.go`, not just
 "no error" — and a `SOROBAN_CREDENTIALS_SOURCE_ACCOUNT` entry is asserted
 to never appear in `PendingAuth`, since the envelope's own signature
 already satisfies that kind of entry implicitly.
+
+`#185 PR 2` (done): `amount.go` adds `AmountToStroops`/`StroopsToAmount`,
+the exact (no floating point) conversion between `Prize.amount`'s
+`Decimal(18,7)` text and stroops — exact because every SAC the contract's
+`token` can name, native XLM or a wrapped classic asset, has exactly 7
+decimals; a custom token with a different decimal count is out of scope,
+noted on `AmountToStroops` itself. `wallet.go` adds `ParseEventID`, the
+inverse of `EventID.String()`, for turning `Event.escrowEventId` back into
+an `EventID` the contract calls expect. `auth.go`'s single-op
+`InvokeHostFunction` decode — used internally by `AttachSignedAuth` since
+PR 1 — is now the exported `DecodeSingleOpInvokeHostFunction`, so the
+release path's `/submit` handler reuses the identical guard on a judge's
+signed envelope instead of a second copy of the same decode logic.
 
 ```bash
 go test ./internal/escrow/...
