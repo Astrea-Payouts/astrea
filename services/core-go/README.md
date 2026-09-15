@@ -4,7 +4,7 @@ Go backend: event/prize state machine, participant registration, real-time track
 
 ## Status
 
-`S01` (module scaffold) and `S04` (env config) done — builds, runs, `GET /healthz` returns 200, and refuses to start with missing/malformed config (see Configuration below). `#185 PR 1` adds a Postgres store (`internal/store`), the service-to-service auth middleware, and the router (`internal/api`). `#185 PR 2` (done) adds the judge release path — `POST /events/{id}/release/build` and `POST /events/{id}/release/submit` — see [Release path](#release-path) below. `#11 PR 1` (done) adds the organizer path's wallet and create_event endpoints — `GET /wallets/{address}/balance`, `POST /wallets/{address}/deposit/build|submit`, `POST /events/{id}/create/build|submit` — see `internal/api/wallet.go` and `internal/api/create.go`; `#11 PR 2` (the `/start/*` go-live endpoints) is still ahead. Everything else is still ahead: `S02` (CI), the rest of `E01-E06`. See [docs/build-plan.md](../../docs/build-plan.md).
+`S01` (module scaffold) and `S04` (env config) done — builds, runs, `GET /healthz` returns 200, and refuses to start with missing/malformed config (see Configuration below). `#185 PR 1` adds a Postgres store (`internal/store`), the service-to-service auth middleware, and the router (`internal/api`). `#185 PR 2` (done) adds the judge release path — `POST /events/{id}/release/build` and `POST /events/{id}/release/submit` — see [Release path](#release-path) below. `#11 PR 1` (done) adds the organizer path's wallet and create_event endpoints — `GET /wallets/{address}/balance`, `POST /wallets/{address}/deposit/build|submit`, `POST /events/{id}/create/build|submit`. `#11 PR 2` (done) adds the go-live endpoints — `GET /events/{id}/start/quote`, `POST /events/{id}/start/build|submit` — the only code path that moves an event `CREATED -> LIVE`; see [Organizer path](#organizer-path) below for the full contract. Everything else is still ahead: `S02` (CI), the rest of `E01-E06`. See [docs/build-plan.md](../../docs/build-plan.md).
 
 ## Run locally
 
@@ -139,6 +139,43 @@ ever — upserted with an `INSERT ... ON CONFLICT ... WHERE status <>
 Postgres service container that sets it) that seed rows and roll every
 transaction back at the end.
 
+`#11 PR 1` (done): the organizer path's own writes, in
+`postgres_organizer.go` — `SaveCreateBuild`/`LoadCreateOp`/
+`MarkCreateSucceeded`/`MarkCreateFailed` (idempotency key
+`<eventId>:create_event`) and `SaveDepositBuild`/`LoadDepositOp`/
+`MarkDepositSucceeded`/`MarkDepositFailed` (key `deposit_funds:<opId>`,
+freshly generated per call — deposits repeat, unlike the other two op_log
+rows in this file, so there is no existing row to upsert).
+
+`#11 PR 2` (done): `LoadEventForStart`/`SaveStartBuild`/`LoadStartOp`/
+`MarkStartSucceeded`/`MarkStartFailed`, also in `postgres_organizer.go`
+(idempotency key `<eventId>:set_event_in_progress`). `MarkStartSucceeded`
+is, by construction, the only place in the service that writes
+`Event.status = LIVE` (issue #11 decision 6) — one transaction does both:
+an `op_log` `PENDING -> SUCCEEDED` update conditioned on the row still
+naming the exact `hostFunctionXdr` that was confirmed (`ErrStartBuildReplaced`
+on a mismatch or a non-`PENDING` row — closes the window where a rebuild
+mid-submit could otherwise confirm a stale build), then, only if that
+matched, an `events` `CREATED -> LIVE` update conditioned on the current
+status (a generic race error on 0 rows — a second, would-be identical
+transition never silently no-ops). `TestOnlyOneSQLStatementWritesLive`
+(`internal/api`) backs the "only writer" claim with a repo-wide scan
+rather than trusting the comment. `postgres_organizer_test.go`'s
+`TestPostgres_StartWrites` covers this sequentially, the same
+seed-then-roll-back pattern as every other gated test here; genuine
+concurrent confirmation is different in kind, not degree, from a
+sequential retry, so it gets its own file:
+`postgres_start_race_test.go`'s `TestMarkStartSucceeded_RealConcurrency`
+opens a real pool and a separate connection, seeds and *commits* real
+rows (there is no shared outer transaction to roll back when two
+goroutines must race across two genuinely separate ones), fires two
+goroutines at the same `PENDING` build, and asserts on Postgres's own
+MVCC guarantee: the loser's `UPDATE` blocks on the winner's row lock, then
+re-evaluates its `WHERE` clause once that lock releases and finds the row
+already `SUCCEEDED` — so the outcome is deterministic (one `nil`, one
+`ErrStartBuildReplaced`), not a coin flip, and the test cleans up its own
+rows explicitly afterward instead of relying on a rollback.
+
 ## `internal/api` — router, service auth, and the release path
 
 `#185 PR 1` (done): `router.go` mounts `GET /healthz` unauthenticated and
@@ -163,9 +200,20 @@ same envelope-comparison trust boundary as `release.go` (`envelope.go`'s
 and `POST /wallets/{address}/deposit/build|submit`. `create.go` adds
 `POST /events/{id}/create/build|submit` — reward is always
 `sum(Prize.amount)`, never client-supplied, and a successful submit moves
-the event `DRAFT -> CREATED` ("startable"), never straight to `LIVE`. The
-full organizer-path narrative — including `#11 PR 2`'s `/start/*` go-live
-endpoints — belongs to that PR's own README section, not this one.
+the event `DRAFT -> CREATED` ("startable"), never straight to `LIVE`.
+
+`#11 PR 2` (done): `start.go` adds the go-live endpoints —
+`GET /events/{id}/start/quote`, `POST /events/{id}/start/build|submit` —
+the same build-only-then-compare shape as every other write pair in this
+package. Unlike `create.go`/`release.go`, `/start/submit` has its own
+precondition function (`checkStartSubmitPreconditions`) rather than
+sharing `checkStartPreconditions` with `/start/quote` and `/start/build`:
+a `SUCCEEDED` `op_log` row must win over the event's now-`LIVE` status, so
+a second, redundant submit for an already-confirmed build reports
+`409 start_already_succeeded` rather than the generic `event_not_created`
+a stranger sees. The full organizer-path contract — every endpoint,
+status code, and `op_log` transition — lives in
+[Organizer path](#organizer-path) below, not here.
 
 ## Release path
 
@@ -297,6 +345,193 @@ simulated and persisted (`409 envelope_mismatch` on any difference, before
 any RPC call): a judge's wallet cannot silently submit a different split
 than the one this service computed and showed it, because the two are
 checked to be identical, not merely trusted to be.
+
+## Organizer path
+
+`#11 PR 1`/`PR 2` (both done). The organizer named on `Event.organizerWalletId`
+calls these endpoints, in order, to fund their wallet, put an event
+on-chain, and then take it live — all behind the shared bearer token and
+`X-Astrea-Wallet` set to the organizer's own address (see Configuration
+above). Every build/submit pair sits on the same trust boundary as the
+[Release path](#release-path): `/build` simulates and persists a
+`hostFunctionXdr`; `/submit` re-derives and byte-for-byte compares the
+signed envelope against it (`envelope.go`'s `verifySignedEnvelope`) before
+ever calling the RPC, so an organizer's wallet cannot silently sign
+something other than what this service showed it.
+
+### `GET /wallets/{address}/balance`
+
+Read-only simulation, no `op_log` row. `{address}` must equal the caller's
+own `X-Astrea-Wallet`.
+
+Response (`200`):
+
+```json
+{"address": "G...", "balance": "1500000000"}
+```
+
+### `POST /wallets/{address}/deposit/build`
+
+Request:
+
+```json
+{"amount": "150.0000000"}
+```
+
+Simulates `deposit_funds` for `amount` (capped at 1,000,000 USDC,
+`Decimal(18,7)` text converted to stroops via `escrow.AmountToStroops`)
+and persists a brand-new `PENDING` `op_log` row — deposits repeat, unlike
+`create_event`/`set_event_in_progress`, so there is no existing row to
+upsert.
+
+Response (`200`):
+
+```json
+{"opId": "<32 hex chars>", "unsignedTransactionXdr": "AAAA..."}
+```
+
+### `POST /wallets/{address}/deposit/submit`
+
+Request:
+
+```json
+{"opId": "<32 hex chars>", "signedTransactionXdr": "AAAA..."}
+```
+
+Response shape matches `/release/submit` (`{"txHash", "status"}` —
+`"succeeded"` on `200`, `"pending"` on a `202` poll timeout).
+
+### `POST /events/{id}/create/build`
+
+No request body. The event must be `DRAFT`, have no `escrowEventId` yet,
+at least one prize, and exactly one `ACTIVE` judge. Reward is always
+`sum(Prize.amount)` — never client-supplied (issue #11 decision 2) — and a
+fresh on-chain event id is minted on every call, even a rebuild.
+
+Response (`200`):
+
+```json
+{"unsignedTransactionXdr": "AAAA...", "reward": 1500000000, "escrowEventId": "<32 hex chars>"}
+```
+
+### `POST /events/{id}/create/submit`
+
+Request:
+
+```json
+{"signedTransactionXdr": "AAAA..."}
+```
+
+On confirmation, moves the event `DRAFT -> CREATED` — "startable", never
+straight to `LIVE` (issue #11 decision 4). Response adds `escrowEventId`
+to the usual `{"txHash", "status"}` shape.
+
+### `GET /events/{id}/start/quote`
+
+Read-only, no `op_log` row. The event must be `CREATED` with an
+`escrowEventId` set. Reads the go-live fee (`escrow.QuoteGoLiveFee`) and
+the organizer's free balance (`escrow.GetBalance`) via simulation only.
+
+Response (`200`):
+
+```json
+{"fee": "500", "balance": "200", "shortfall": "300"}
+```
+
+All three are stroop strings; `shortfall` is `max(fee - balance, 0)` —
+`/start/build` refuses with `409 insufficient_balance` below that same
+threshold, so a caller can check affordability before ever building.
+
+### `POST /events/{id}/start/build`
+
+No request body. Beyond `/start/quote`'s two preconditions, the event's
+`judgingDeadlineAt` must be set (`409 deadline_missing`) and in the future
+(`409 deadline_past`), and the organizer's free balance must cover the
+freshly quoted fee (`409 insufficient_balance` — the fee/balance/shortfall
+are in the error message, not the opaque `simulation_failed` a raw
+contract trap would otherwise surface). Simulates
+`set_event_in_progress` with `judgingDeadlineAt` converted to Unix seconds
+(`time.Time.Unix()` — location-independent, no timezone handling needed)
+and persists the result as the event's single
+`set_event_in_progress` `op_log` row (idempotency key
+`<eventId>:set_event_in_progress` — one row per event, ever, upserted the
+same way `create_event`'s is).
+
+Response (`200`):
+
+```json
+{"unsignedTransactionXdr": "AAAA...", "judgingDeadline": 1780000000, "fee": 500}
+```
+
+### `POST /events/{id}/start/submit`
+
+Request:
+
+```json
+{"signedTransactionXdr": "AAAA..."}
+```
+
+**The only code path in this service that moves an event `CREATED -> LIVE`**
+(issue #11 decision 6) — `TestOnlyStartSubmitMovesEventLive` and
+`TestOnlyOneSQLStatementWritesLive` (`internal/api/start_test.go`) back
+that claim from two directions: running every other go-live endpoint
+against an otherwise-eligible event never moves it off `CREATED`, and a
+repo-wide scan of every non-test `.go` file under `internal/` finds the
+literal SQL `'LIVE'` exactly once. On confirmation, `MarkStartSucceeded`
+runs the two conditional updates described in
+`internal/store` above; a
+rebuild that replaces the `PENDING` row while an earlier submit's RPC call
+is still in flight surfaces as `409 start_build_replaced`, not a silent
+wrong-deadline confirmation.
+
+Response shape matches `/release/submit`.
+
+### Status codes
+
+Every error body is `{"error":{"code":"...","message":"..."}}`. Only
+organizer-path-specific codes are listed; `unauthorized`/`invalid_wallet`/
+`event_not_found`/`internal`/`simulation_failed`/`submission_failed`/
+`on_chain_failed`/`envelope_mismatch` mean the same thing they do on the
+[Release path](#release-path).
+
+| Status | Code | Meaning |
+| --- | --- | --- |
+| 400 | `invalid_amount` | deposit `amount` isn't a valid `Decimal(18,7)`, or exceeds the 1,000,000 USDC cap |
+| 400 | `invalid_request` | malformed JSON body, or an empty `signedTransactionXdr`/`opId` shaped wrong |
+| 403 | `not_wallet_owner` | `{address}` in the path isn't the caller's own `X-Astrea-Wallet` |
+| 403 | `not_organizer` | caller's wallet isn't this event's organizer (create/start endpoints) |
+| 404 | `deposit_not_found` | no deposit build with that `opId` |
+| 409 | `event_not_draft` | `/create/*`: `Event.status` isn't `DRAFT` |
+| 409 | `event_already_on_chain` | `/create/*`: `Event.escrowEventId` is already set |
+| 409 | `no_prizes` | `/create/*`: event has no prizes to sum into a reward |
+| 409 | `judge_ambiguous` | `/create/*`: event doesn't have exactly one `ACTIVE` judge |
+| 409 | `create_already_succeeded` | this event's `create_event` already succeeded |
+| 409 | `no_pending_create` | `/create/submit` with no currently-`PENDING` build |
+| 409 | `create_build_replaced` | a rebuild overwrote the `PENDING` row while an earlier submit was in flight |
+| 409 | `deposit_already_succeeded` | this deposit already succeeded |
+| 409 | `no_pending_deposit` | the last deposit attempt failed — build again before submitting |
+| 409 | `event_not_created` | `/start/*`: `Event.status` isn't `CREATED` |
+| 409 | `event_not_on_chain` | `/start/*`: `Event.escrowEventId` is null |
+| 409 | `deadline_missing` | `/start/build`: `Event.judgingDeadlineAt` is null |
+| 409 | `deadline_past` | `/start/build`: `Event.judgingDeadlineAt` is not in the future |
+| 409 | `insufficient_balance` | `/start/build`: organizer's free balance is short of the quoted fee |
+| 409 | `start_already_succeeded` | this event has already gone live |
+| 409 | `no_pending_start` | `/start/submit` with no currently-`PENDING` build |
+| 409 | `start_build_replaced` | a rebuild overwrote the `PENDING` row while an earlier submit was in flight |
+
+### `op_log` status and who moves it
+
+Three independent idempotency keys, one op_log "lane" each:
+`<eventId>:create_event`, `deposit_funds:<opId>` (freshly generated per
+call, since deposits repeat), and `<eventId>:set_event_in_progress`. Each
+follows the same shape: `/build` upserts `PENDING`; `/submit` moves it to
+`SUCCEEDED` on confirmation or `FAILED` on a submission/on-chain error
+(merging the reason into the payload under `"lastError"`); a
+`*escrow.TimeoutError` moves nothing, since the outcome is genuinely
+unknown. `set_event_in_progress`'s `SUCCEEDED` transition is the one
+exception carrying a side effect beyond its own row: it also moves
+`Event.status` `CREATED -> LIVE`, in the same transaction (see
+`internal/store` above).
 
 ## `internal/escrow` — Soroban transaction pipeline
 

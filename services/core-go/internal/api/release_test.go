@@ -98,6 +98,26 @@ type fakeStore struct {
 
 	depositSucceededCalls []string
 	depositFailedCalls    []depositFailedCall
+
+	// --- organizer path: set_event_in_progress (go-live) -----------------
+
+	startEvents map[string]*store.EventForStart
+	startOps    map[string]*store.StartOp
+
+	loadEventForStartErr  error
+	saveStartBuildErr     error
+	loadStartOpErr        error
+	markStartSucceededErr error
+	markStartFailedErr    error
+
+	startSucceededCalls []startSucceededCall
+	startFailedCalls    []failedCall
+}
+
+type startSucceededCall struct {
+	eventID         string
+	hostFunctionXDR string
+	confirmedAt     time.Time
 }
 
 type succeededCall struct {
@@ -294,6 +314,71 @@ func (f *fakeStore) MarkDepositFailed(_ context.Context, opID, reason string) er
 	}
 	f.depositFailedCalls = append(f.depositFailedCalls, depositFailedCall{opID: opID, reason: reason})
 	if op, ok := f.depositOps[opID]; ok {
+		op.Status = store.OpStatusFailed
+	}
+	return nil
+}
+
+// --- fakeStore: organizer path (set_event_in_progress / go-live) ---------
+
+func (f *fakeStore) LoadEventForStart(_ context.Context, eventID string) (*store.EventForStart, error) {
+	if f.loadEventForStartErr != nil {
+		return nil, f.loadEventForStartErr
+	}
+	ev, ok := f.startEvents[eventID]
+	if !ok {
+		return nil, store.ErrNotFound
+	}
+	return ev, nil
+}
+
+func (f *fakeStore) SaveStartBuild(_ context.Context, eventID string, build store.StartBuild) error {
+	if f.saveStartBuildErr != nil {
+		return f.saveStartBuildErr
+	}
+	if op, ok := f.startOps[eventID]; ok && op.Status == store.OpStatusSucceeded {
+		return store.ErrAlreadySucceeded
+	}
+	if f.startOps == nil {
+		f.startOps = map[string]*store.StartOp{}
+	}
+	f.startOps[eventID] = &store.StartOp{Status: store.OpStatusPending, Build: build}
+	return nil
+}
+
+func (f *fakeStore) LoadStartOp(_ context.Context, eventID string) (*store.StartOp, error) {
+	if f.loadStartOpErr != nil {
+		return nil, f.loadStartOpErr
+	}
+	op, ok := f.startOps[eventID]
+	if !ok {
+		return nil, store.ErrNotFound
+	}
+	return op, nil
+}
+
+func (f *fakeStore) MarkStartSucceeded(_ context.Context, eventID, hostFunctionXDR string, confirmedAt time.Time) error {
+	if f.markStartSucceededErr != nil {
+		return f.markStartSucceededErr
+	}
+	op, ok := f.startOps[eventID]
+	if !ok || op.Status != store.OpStatusPending || op.Build.HostFunctionXDR != hostFunctionXDR {
+		return store.ErrStartBuildReplaced
+	}
+	op.Status = store.OpStatusSucceeded
+	f.startSucceededCalls = append(f.startSucceededCalls, startSucceededCall{eventID: eventID, hostFunctionXDR: hostFunctionXDR, confirmedAt: confirmedAt})
+	if ev, ok := f.startEvents[eventID]; ok {
+		ev.Status = "LIVE"
+	}
+	return nil
+}
+
+func (f *fakeStore) MarkStartFailed(_ context.Context, eventID, reason string) error {
+	if f.markStartFailedErr != nil {
+		return f.markStartFailedErr
+	}
+	f.startFailedCalls = append(f.startFailedCalls, failedCall{eventID: eventID, reason: reason})
+	if op, ok := f.startOps[eventID]; ok {
 		op.Status = store.OpStatusFailed
 	}
 	return nil

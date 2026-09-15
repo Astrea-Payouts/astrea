@@ -38,6 +38,16 @@ var ErrCreateBuildReplaced = errors.New("create build was replaced while the sub
 // SUCCEEDED, or FAILED).
 var ErrDepositNotPending = errors.New("store: deposit op is not pending")
 
+// ErrStartBuildReplaced is returned by MarkStartSucceeded when the
+// set_event_in_progress op_log row it tried to confirm is no longer the
+// build this call is confirming -- either because it is not PENDING at all
+// (missing, already SUCCEEDED, or FAILED), or because a later
+// /start/build call overwrote it with a different judging deadline (and
+// therefore a different host function XDR) while this call's RPC
+// submission was still in flight. Mirrors ErrCreateBuildReplaced's exact
+// reasoning for create_event.
+var ErrStartBuildReplaced = errors.New("start build was replaced while the submit was in flight")
+
 // Release op_log statuses, mirroring the OpStatus enum (schema.prisma).
 const (
 	OpStatusPending   = "PENDING"
@@ -172,6 +182,41 @@ type DepositOp struct {
 	Build  DepositBuild
 }
 
+// EventForStart is everything the organizer path's start/quote|build|submit
+// handlers need about one event, loaded in a single round trip — the
+// go-live counterpart of EventForCreate. JudgingDeadlineAt is nil until the
+// organizer's wizard sets it; /start/build refuses to build without one set
+// in the future.
+type EventForStart struct {
+	ID                     string
+	Status                 string
+	EscrowEventID          *string
+	JudgingDeadlineAt      *time.Time
+	OrganizerWalletAddress string
+}
+
+// StartBuild is exactly what SaveStartBuild persists as the op_log row's
+// JSON payload — enough for LoadStartOp to hand /submit the built host
+// function XDR to compare against, and for MarkStartSucceeded to confirm
+// against the exact build it verified (mirrors CreateBuild's shape).
+// JudgingDeadline is Unix seconds, the same unit
+// escrow.BuildSetEventInProgress takes. Fee is the go-live fee quoted at
+// build time — informational only; the contract's own charge at
+// set_event_in_progress time is the actual guarantee.
+type StartBuild struct {
+	HostFunctionXDR string `json:"hostFunctionXdr"`
+	SourceAccount   string `json:"sourceAccount"`
+	JudgingDeadline int64  `json:"judgingDeadline"`
+	Fee             int64  `json:"fee"`
+}
+
+// StartOp is the op_log row LoadStartOp reads back: its current status plus
+// the StartBuild payload from the last successful /build.
+type StartOp struct {
+	Status string
+	Build  StartBuild
+}
+
 // Store is the read/write surface PR 2's handlers are built against.
 type Store interface {
 	// LoadEventForRelease returns ErrNotFound if eventID does not match any
@@ -265,4 +310,44 @@ type Store interface {
 	// merges reason into its payload under "lastError". Returns ErrNotFound
 	// if no deposit op_log row exists for opID.
 	MarkDepositFailed(ctx context.Context, opID, reason string) error
+
+	// --- organizer path: set_event_in_progress (go-live) -----------------
+
+	// LoadEventForStart returns ErrNotFound if eventID does not match any
+	// event.
+	LoadEventForStart(ctx context.Context, eventID string) (*EventForStart, error)
+
+	// SaveStartBuild upserts the event's set_event_in_progress op_log row
+	// (idempotencyKey = "<eventId>:set_event_in_progress") to PENDING with
+	// build as its payload — one row per event, ever, like create_event.
+	// Re-validates, inside its own transaction, that the event is still
+	// CREATED with an escrowEventId set — the same read-then-write race
+	// guard SaveCreateBuild applies to DRAFT. Returns ErrAlreadySucceeded,
+	// unchanged, if the op_log row is already SUCCEEDED.
+	SaveStartBuild(ctx context.Context, eventID string, build StartBuild) error
+
+	// LoadStartOp returns the event's set_event_in_progress op_log row, or
+	// ErrNotFound if none exists yet.
+	LoadStartOp(ctx context.Context, eventID string) (*StartOp, error)
+
+	// MarkStartSucceeded transitions a PENDING set_event_in_progress op_log
+	// row to SUCCEEDED and, in the same transaction, moves the event's
+	// status CREATED -> LIVE via a conditional update — the only code path
+	// in the service that writes status = LIVE (issue #11 decision 6). The
+	// op_log UPDATE is conditioned on the row's payload still naming
+	// hostFunctionXDR: a rebuild (a fresh /start/build call, e.g. with a
+	// different judging deadline) can overwrite that PENDING row with a
+	// different host function while this call's RPC submission was still
+	// in flight, and confirming against the wrong one would move an event
+	// live for a deadline it never actually agreed to. Returns
+	// ErrStartBuildReplaced if the row no longer matches — not PENDING at
+	// all, or PENDING for a different build.
+	MarkStartSucceeded(ctx context.Context, eventID, hostFunctionXDR string, confirmedAt time.Time) error
+
+	// MarkStartFailed transitions the set_event_in_progress op_log row to
+	// FAILED and merges reason into its payload under "lastError". The
+	// event is left untouched, so a new /build can overwrite. Returns
+	// ErrNotFound if no set_event_in_progress op_log row exists for
+	// eventID.
+	MarkStartFailed(ctx context.Context, eventID, reason string) error
 }

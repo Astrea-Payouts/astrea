@@ -42,6 +42,9 @@ func New(deps Deps) http.Handler {
 	authed.HandleFunc("POST /wallets/{address}/deposit/submit", handleDepositSubmit(deps))
 	authed.HandleFunc("POST /events/{id}/create/build", handleCreateBuild(deps))
 	authed.HandleFunc("POST /events/{id}/create/submit", handleCreateSubmit(deps))
+	authed.HandleFunc("GET /events/{id}/start/quote", handleStartQuote(deps))
+	authed.HandleFunc("POST /events/{id}/start/build", handleStartBuild(deps))
+	authed.HandleFunc("POST /events/{id}/start/submit", handleStartSubmit(deps))
 	mux.Handle("/", RequireAuth(deps.ServiceToken)(authed))
 
 	return mux

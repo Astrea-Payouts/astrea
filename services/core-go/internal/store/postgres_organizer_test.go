@@ -359,6 +359,238 @@ func TestPostgres_OrganizerWrites(t *testing.T) {
 	}
 }
 
+// --- TestPostgres_StartWrites: gated integration test for the go-live
+// path, mirroring TestPostgres_OrganizerWrites' create_event coverage above.
+
+func TestPostgres_StartWrites(t *testing.T) {
+	dbURL := os.Getenv("TEST_DATABASE_URL")
+	if dbURL == "" {
+		t.Skip("TEST_DATABASE_URL not set; skipping Postgres integration test")
+	}
+
+	ctx := context.Background()
+	conn, err := pgx.Connect(ctx, dbURL)
+	if err != nil {
+		t.Fatalf("connect: %v", err)
+	}
+	defer conn.Close(ctx)
+
+	tx, err := conn.Begin(ctx)
+	if err != nil {
+		t.Fatalf("begin: %v", err)
+	}
+	defer func() {
+		if err := tx.Rollback(ctx); err != nil && err != pgx.ErrTxClosed {
+			t.Errorf("rollback: %v", err)
+		}
+	}()
+
+	exec := func(sql string, args ...any) {
+		t.Helper()
+		if _, err := tx.Exec(ctx, sql, args...); err != nil {
+			t.Fatalf("seed %q: %v", sql, err)
+		}
+	}
+
+	const (
+		userID  = "81111111-1111-1111-1111-111111111111"
+		orgWlt  = "82222222-2222-2222-2222-222222222222"
+		orgAddr = "GORGSTARTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+
+		// Event OS1: happy path CREATED -> LIVE, then refused rebuild/re-mark.
+		eventOS1       = "83333333-3333-3333-3333-333333333333"
+		escrowEventOS1 = "aaaa1111111111111111111111111111"
+
+		// Event OS2: FAILED, then a successful rebuild.
+		eventOS2       = "85555555-5555-5555-5555-555555555555"
+		escrowEventOS2 = "bbbb2222222222222222222222222222"
+	)
+
+	exec(`INSERT INTO users (id) VALUES ($1)`, userID)
+	exec(`INSERT INTO wallets (id, "userId", address) VALUES ($1, $2, $3)`, orgWlt, userID, orgAddr)
+
+	pg := &Postgres{db: tx, begin: tx}
+
+	// --- Event OS1: happy path --------------------------------------------
+	exec(`INSERT INTO events (id, "organizerId", "organizerWalletId", name, status, "escrowEventId", "judgingDeadlineAt", "updatedAt")
+	      VALUES ($1, $2, $3, 'Start Test Event OS1', 'CREATED', $4, now() + interval '48 hours', now())`,
+		eventOS1, userID, orgWlt, escrowEventOS1)
+
+	ev, err := pg.LoadEventForStart(ctx, eventOS1)
+	if err != nil {
+		t.Fatalf("LoadEventForStart(OS1): %v", err)
+	}
+	if ev.Status != "CREATED" || ev.OrganizerWalletAddress != orgAddr || ev.EscrowEventID == nil || *ev.EscrowEventID != escrowEventOS1 {
+		t.Fatalf("LoadEventForStart(OS1) = %+v, want CREATED/orgAddr/escrowEventOS1", ev)
+	}
+	if ev.JudgingDeadlineAt == nil {
+		t.Fatalf("LoadEventForStart(OS1).JudgingDeadlineAt is nil, want set")
+	}
+
+	buildV1 := StartBuild{HostFunctionXDR: "xdr-start-v1", SourceAccount: orgAddr, JudgingDeadline: ev.JudgingDeadlineAt.Unix(), Fee: 500}
+	if err := pg.SaveStartBuild(ctx, eventOS1, buildV1); err != nil {
+		t.Fatalf("SaveStartBuild(v1): %v", err)
+	}
+	assertStartOpRowCount(t, ctx, tx, eventOS1, 1)
+
+	// Re-running /build overwrites the payload -- still exactly one row.
+	buildV2 := buildV1
+	buildV2.HostFunctionXDR = "xdr-start-v2"
+	if err := pg.SaveStartBuild(ctx, eventOS1, buildV2); err != nil {
+		t.Fatalf("SaveStartBuild(v2, overwrite): %v", err)
+	}
+	assertStartOpRowCount(t, ctx, tx, eventOS1, 1)
+
+	op, err := pg.LoadStartOp(ctx, eventOS1)
+	if err != nil {
+		t.Fatalf("LoadStartOp: %v", err)
+	}
+	if op.Status != OpStatusPending || op.Build.HostFunctionXDR != "xdr-start-v2" {
+		t.Errorf("LoadStartOp = %+v, want PENDING with the overwritten host function", op)
+	}
+
+	confirmedAt := time.Now().UTC().Truncate(time.Microsecond)
+	if err := pg.MarkStartSucceeded(ctx, eventOS1, buildV2.HostFunctionXDR, confirmedAt); err != nil {
+		t.Fatalf("MarkStartSucceeded: %v", err)
+	}
+
+	var eventStatus, escrowEventID string
+	if err := tx.QueryRow(ctx, `SELECT status::text, "escrowEventId" FROM events WHERE id = $1`, eventOS1).Scan(&eventStatus, &escrowEventID); err != nil {
+		t.Fatalf("query event OS1: %v", err)
+	}
+	if eventStatus != "LIVE" {
+		t.Errorf("event OS1 status = %q, want LIVE", eventStatus)
+	}
+	if escrowEventID != escrowEventOS1 {
+		t.Errorf("event OS1 escrowEventId = %q, want unchanged %q", escrowEventID, escrowEventOS1)
+	}
+
+	// A build after success must refuse, unchanged.
+	if err := pg.SaveStartBuild(ctx, eventOS1, buildV1); err != ErrAlreadySucceeded {
+		t.Errorf("SaveStartBuild after success: err = %v, want ErrAlreadySucceeded", err)
+	}
+	// A second confirmation (the sequential half of the conditional-update
+	// race, issue #11) must refuse -- the op_log row is no longer PENDING.
+	if err := pg.MarkStartSucceeded(ctx, eventOS1, buildV2.HostFunctionXDR, time.Now()); err != ErrStartBuildReplaced {
+		t.Errorf("MarkStartSucceeded twice: err = %v, want ErrStartBuildReplaced", err)
+	}
+
+	// --- Event OS2: FAILED, then a successful rebuild ---------------------
+	exec(`INSERT INTO events (id, "organizerId", "organizerWalletId", name, status, "escrowEventId", "judgingDeadlineAt", "updatedAt")
+	      VALUES ($1, $2, $3, 'Start Test Event OS2', 'CREATED', $4, now() + interval '48 hours', now())`,
+		eventOS2, userID, orgWlt, escrowEventOS2)
+
+	buildA := StartBuild{HostFunctionXDR: "xdr-os2-a", SourceAccount: orgAddr, JudgingDeadline: time.Now().Add(48 * time.Hour).Unix(), Fee: 200}
+	if err := pg.SaveStartBuild(ctx, eventOS2, buildA); err != nil {
+		t.Fatalf("SaveStartBuild(OS2, a): %v", err)
+	}
+	// A hostFunctionXDR mismatch (a rebuild happened, then the stale
+	// submit's confirmation arrives) must refuse without touching the row.
+	if err := pg.MarkStartSucceeded(ctx, eventOS2, "xdr-does-not-match", time.Now()); err != ErrStartBuildReplaced {
+		t.Errorf("MarkStartSucceeded(OS2, mismatched xdr): err = %v, want ErrStartBuildReplaced", err)
+	}
+	if err := pg.MarkStartFailed(ctx, eventOS2, "simulated submission failure"); err != nil {
+		t.Fatalf("MarkStartFailed(OS2): %v", err)
+	}
+
+	var os2Status string
+	var os2LastError *string
+	if err := tx.QueryRow(ctx, `SELECT status::text, payload->>'lastError' FROM op_log WHERE "idempotencyKey" = $1`, startIdempotencyKey(eventOS2)).Scan(&os2Status, &os2LastError); err != nil {
+		t.Fatalf("query OS2 op_log: %v", err)
+	}
+	if os2Status != OpStatusFailed {
+		t.Errorf("OS2 op_log status = %q, want %q", os2Status, OpStatusFailed)
+	}
+	if os2LastError == nil || *os2LastError != "simulated submission failure" {
+		t.Errorf("OS2 op_log lastError = %v, want %q", os2LastError, "simulated submission failure")
+	}
+
+	buildB := buildA
+	buildB.HostFunctionXDR = "xdr-os2-b"
+	if err := pg.SaveStartBuild(ctx, eventOS2, buildB); err != nil {
+		t.Fatalf("SaveStartBuild(OS2, b, rebuild after failure): %v", err)
+	}
+	op2, err := pg.LoadStartOp(ctx, eventOS2)
+	if err != nil {
+		t.Fatalf("LoadStartOp(OS2): %v", err)
+	}
+	if op2.Status != OpStatusPending || op2.Build.HostFunctionXDR != "xdr-os2-b" {
+		t.Errorf("OS2 op after rebuild = %+v, want PENDING xdr-os2-b", op2)
+	}
+
+	// MarkStartFailed / LoadStartOp against an event with no start op at all.
+	const noOpEvent = "89999999-9999-9999-9999-999999999999"
+	if err := pg.MarkStartFailed(ctx, noOpEvent, "n/a"); err != ErrNotFound {
+		t.Errorf("MarkStartFailed(no op): err = %v, want ErrNotFound", err)
+	}
+	if _, err := pg.LoadStartOp(ctx, noOpEvent); err != ErrNotFound {
+		t.Errorf("LoadStartOp(no op): err = %v, want ErrNotFound", err)
+	}
+
+	// SaveStartBuild against an event that does not exist at all.
+	if err := pg.SaveStartBuild(ctx, noOpEvent, buildA); err != ErrNotFound {
+		t.Errorf("SaveStartBuild(unknown event): err = %v, want ErrNotFound", err)
+	}
+
+	// --- Event OS3: not CREATED, never built -- the plain "not CREATED" guard.
+	const eventOS3 = "8a999999-9999-9999-9999-999999999993"
+	exec(`INSERT INTO events (id, "organizerId", "organizerWalletId", name, status, "escrowEventId", "updatedAt")
+	      VALUES ($1, $2, $3, 'Start Test Event OS3', 'LIVE', $4, now())`,
+		eventOS3, userID, orgWlt, "cccc3333333333333333333333333333")
+	if err := pg.SaveStartBuild(ctx, eventOS3, buildA); err == nil || err == ErrAlreadySucceeded || err == ErrNotFound {
+		t.Errorf("SaveStartBuild(OS3, not CREATED): err = %v, want a not-CREATED error", err)
+	}
+
+	// --- Event OS4: CREATED but no escrowEventId -- the store's own guard,
+	// independent of the handler's own precondition check.
+	const eventOS4 = "8b999999-9999-9999-9999-999999999994"
+	exec(`INSERT INTO events (id, "organizerId", "organizerWalletId", name, status, "updatedAt")
+	      VALUES ($1, $2, $3, 'Start Test Event OS4', 'CREATED', now())`,
+		eventOS4, userID, orgWlt)
+	if err := pg.SaveStartBuild(ctx, eventOS4, buildA); err == nil || err == ErrAlreadySucceeded || err == ErrNotFound {
+		t.Errorf("SaveStartBuild(OS4, no escrowEventId): err = %v, want a guard error", err)
+	}
+
+	// LoadStartOp against a payload that fails to decode as StartBuild.
+	const eventOS5 = "8c999999-9999-9999-9999-999999999995"
+	exec(`INSERT INTO op_log (id, "idempotencyKey", operation, payload, status, "createdAt", "updatedAt")
+	      VALUES (gen_random_uuid(), $1, 'set_event_in_progress', '"not-an-object"'::jsonb, 'PENDING', now(), now())`,
+		startIdempotencyKey(eventOS5))
+	if _, err := pg.LoadStartOp(ctx, eventOS5); err == nil || err == ErrNotFound {
+		t.Errorf("LoadStartOp(malformed payload): err = %v, want a decode error", err)
+	}
+
+	// MarkStartSucceeded against a PENDING op_log row whose event is no
+	// longer CREATED (race) -- the events conditional UPDATE's RowsAffected
+	// guard, independent of the op_log UPDATE's own guard above.
+	const eventOS6 = "8d999999-9999-9999-9999-999999999996"
+	exec(`INSERT INTO events (id, "organizerId", "organizerWalletId", name, status, "updatedAt")
+	      VALUES ($1, $2, $3, 'Start Test Event OS6', 'LIVE', now())`,
+		eventOS6, userID, orgWlt)
+	buildOS6 := StartBuild{HostFunctionXDR: "xdr-os6", SourceAccount: orgAddr, JudgingDeadline: time.Now().Add(48 * time.Hour).Unix(), Fee: 300}
+	payloadOS6, err := json.Marshal(buildOS6)
+	if err != nil {
+		t.Fatalf("marshal buildOS6: %v", err)
+	}
+	exec(`INSERT INTO op_log (id, "idempotencyKey", operation, payload, status, "createdAt", "updatedAt")
+	      VALUES (gen_random_uuid(), $1, 'set_event_in_progress', $2::jsonb, 'PENDING', now(), now())`,
+		startIdempotencyKey(eventOS6), payloadOS6)
+	if err := pg.MarkStartSucceeded(ctx, eventOS6, buildOS6.HostFunctionXDR, time.Now()); err == nil {
+		t.Errorf("MarkStartSucceeded(event not CREATED, race): err = nil, want a race error")
+	}
+}
+
+func assertStartOpRowCount(t *testing.T, ctx context.Context, tx pgx.Tx, eventID string, want int) {
+	t.Helper()
+	var count int
+	if err := tx.QueryRow(ctx, `SELECT count(*) FROM op_log WHERE "idempotencyKey" = $1`, startIdempotencyKey(eventID)).Scan(&count); err != nil {
+		t.Fatalf("count op_log rows: %v", err)
+	}
+	if count != want {
+		t.Errorf("op_log row count for event %s = %d, want %d", eventID, count, want)
+	}
+}
+
 func assertCreateOpRowCount(t *testing.T, ctx context.Context, tx pgx.Tx, eventID string, want int) {
 	t.Helper()
 	var count int
