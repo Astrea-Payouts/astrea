@@ -141,3 +141,19 @@ func TestCollectTeams_RowsErr(t *testing.T) {
 		t.Fatal("expected rows.Err() to propagate")
 	}
 }
+
+func TestLoadEventForStart_QueryError(t *testing.T) {
+	pg := &Postgres{db: &fakeQuerier{row: fakeRow{scanErr: errBoom}}}
+	_, err := pg.LoadEventForStart(context.Background(), "e1")
+	if err == nil || err == ErrNotFound {
+		t.Fatalf("err = %v, want a wrapped non-ErrNotFound error", err)
+	}
+}
+
+func TestLoadEventForStart_NoRows(t *testing.T) {
+	pg := &Postgres{db: &fakeQuerier{row: fakeRow{scanErr: pgx.ErrNoRows}}}
+	_, err := pg.LoadEventForStart(context.Background(), "e1")
+	if err != ErrNotFound {
+		t.Errorf("err = %v, want ErrNotFound", err)
+	}
+}
