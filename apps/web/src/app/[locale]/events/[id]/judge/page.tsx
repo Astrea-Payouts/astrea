@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { EventStatusBadge } from "@/components/events/status-badge";
+import { TxHashLink } from "@/components/tx-hash-link";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
+import { STELLAR_NETWORK } from "@/lib/stellar-network";
 import { getSessionWallet } from "@/lib/wallet/session";
 import { ReleaseForm } from "./release-form";
 
@@ -32,7 +34,10 @@ export default async function JudgePage({ params }: { params: Params }) {
 	const event = await db.event.findUnique({
 		where: { id },
 		include: {
-			prizes: { orderBy: { rank: "asc" } },
+			prizes: {
+				orderBy: { rank: "asc" },
+				include: { winnerTeam: { select: { name: true } } },
+			},
 			judges: { where: { status: "ACTIVE" } },
 			teams: {
 				orderBy: { createdAt: "asc" },
@@ -50,6 +55,12 @@ export default async function JudgePage({ params }: { params: Params }) {
 	const judge = event.judges.length === 1 ? event.judges[0] : null;
 	const isJudge = !!session && judge?.walletAddress === session.address;
 	const isJudging = event.status === "JUDGING";
+	// After a release the page revalidates into COMPLETED; showing the 403
+	// "not in judging" there reads as a failure, so the outcome is shown
+	// instead. The hash is public data, same as on the event page.
+	const isCompleted = event.status === "COMPLETED";
+	const releaseTxHash =
+		event.prizes.find((p) => p.releaseTxHash)?.releaseTxHash ?? null;
 
 	return (
 		<main className="min-h-screen bg-black text-white pt-28 pb-16 px-4 sm:px-6 md:py-12 md:px-12">
@@ -67,7 +78,51 @@ export default async function JudgePage({ params }: { params: Params }) {
 					</h1>
 				</header>
 
-				{!session ? (
+				{isCompleted ? (
+					<section
+						className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5 flex flex-col gap-3"
+						role="status"
+					>
+						<p className="font-semibold text-emerald-300">{t("done.title")}</p>
+						<p className="text-sm text-zinc-300">{t("done.hint")}</p>
+						<ul className="divide-y divide-white/10 text-sm">
+							{event.prizes.map((prize) => (
+								<li
+									key={prize.rank}
+									className="flex flex-col gap-0.5 py-2 sm:flex-row sm:justify-between"
+								>
+									<span>
+										{t("rank", { rank: prize.rank })}{" "}
+										<span className="font-mono text-zinc-400">
+											{prize.amount.toString()} {env.USDC_SYMBOL}
+										</span>
+									</span>
+									<span className="text-zinc-300">
+										{t("done.winner", {
+											team: prize.winnerTeam?.name ?? "—",
+										})}
+									</span>
+								</li>
+							))}
+						</ul>
+						{releaseTxHash ? (
+							<div className="break-all">
+								<TxHashLink
+									hash={releaseTxHash}
+									network={STELLAR_NETWORK}
+									leadingChars={10}
+									trailingChars={10}
+								/>
+							</div>
+						) : null}
+						<Link
+							href={`/events/${event.id}`}
+							className="text-sm text-zinc-400 underline-offset-4 hover:underline w-fit"
+						>
+							{t("done.backToEvent")}
+						</Link>
+					</section>
+				) : !session ? (
 					<section className="rounded-2xl border border-white/10 p-5 flex flex-col gap-3">
 						<p className="text-sm text-zinc-300">{t("connect")}</p>
 						<WalletConnectButton className="w-full sm:w-auto" />

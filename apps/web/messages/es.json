@@ -222,7 +222,13 @@
 		"sign": "Firmar y liberar",
 		"rebuild": "Cambiar asignaciones",
 		"released": "Premios liberados.",
-		"pending": "Enviada — la confirmación expiró, resultado desconocido. Revisá el hash."
+		"pending": "Enviada — la confirmación expiró, resultado desconocido. Revisá el hash.",
+		"done": {
+			"title": "Premios liberados.",
+			"hint": "Este evento está completo. La liberación está en la cadena; no queda nada por asignar.",
+			"winner": "Ganador: {team}",
+			"backToEvent": "Volver al evento"
+		}
 	},
 	"SignStep": {
 		"sign": "Firmar con la wallet",

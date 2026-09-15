@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { Keypair } from "@stellar/stellar-sdk";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -191,6 +192,36 @@ describe("S07: Stellar challenge-response auth and session management", () => {
 			const sigBase64 = sig.toString("base64");
 
 			expect(verifyStellarSignature(address, message, sigBase64)).toBe(true);
+		});
+
+		it("verifies a SEP-0053 signature (what Freighter's signMessage produces)", () => {
+			const message = "Astrea Test Message";
+			const digest = createHash("sha256")
+				.update(
+					Buffer.concat([
+						Buffer.from("Stellar Signed Message:\n", "utf-8"),
+						Buffer.from(message, "utf-8"),
+					]),
+				)
+				.digest();
+			const sig = keypair.sign(digest);
+
+			expect(
+				verifyStellarSignature(address, message, sig.toString("base64")),
+			).toBe(true);
+		});
+
+		it("verifies a real Freighter SEP-0053 signature captured on testnet", () => {
+			const freighter =
+				"GDLWMKYOJYXW4EIE6DNE2K354RTWDDBXDJCZMPICRBPHO3OBIUDWJSNC";
+			const message = `Astrea Authentication\nAddress: ${freighter}\nNonce: be5feeb9-5edd-49e7-990a-c46f48da091b`;
+			const signature =
+				"jcvI4R6DKyYJg0x0bhsyjC+dMhwu1Its5Mg3r60434rqa01+P0eB0PecSA3zFt7fBQe3czAqk6wvXD/w5DMiDg==";
+
+			expect(verifyStellarSignature(freighter, message, signature)).toBe(true);
+			expect(verifyStellarSignature(freighter, `${message}x`, signature)).toBe(
+				false,
+			);
 		});
 
 		it("verifies a valid Ed25519 signature in hex format", () => {
