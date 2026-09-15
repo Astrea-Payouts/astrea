@@ -88,22 +88,39 @@ describe("env", () => {
 		expect(env.sorobanRpcUrl).toBe("https://soroban-testnet.stellar.org");
 	});
 
-	it("throws when CORE_GO_URL is missing or not a URL", async () => {
-		await expect(loadEnvWith({ CORE_GO_URL: undefined })).rejects.toThrow(
-			/CORE_GO_URL/,
-		);
+	it("leaves CORE_GO_URL and CORE_GO_SERVICE_TOKEN undefined when missing or blank", async () => {
+		const missing = await loadEnvWith({
+			CORE_GO_URL: undefined,
+			CORE_GO_SERVICE_TOKEN: undefined,
+		});
+		expect(missing.env.CORE_GO_URL).toBeUndefined();
+		expect(missing.env.CORE_GO_SERVICE_TOKEN).toBeUndefined();
+
+		// .env.example ships `CORE_GO_SERVICE_TOKEN=` with no value.
+		const blank = await loadEnvWith({
+			CORE_GO_URL: "",
+			CORE_GO_SERVICE_TOKEN: "",
+		});
+		expect(blank.env.CORE_GO_URL).toBeUndefined();
+		expect(blank.env.CORE_GO_SERVICE_TOKEN).toBeUndefined();
+	});
+
+	it("still rejects a CORE_GO_URL that is not a URL", async () => {
 		await expect(loadEnvWith({ CORE_GO_URL: "localhost" })).rejects.toThrow(
 			/CORE_GO_URL/,
 		);
 	});
 
-	it("throws when CORE_GO_SERVICE_TOKEN is missing or shorter than 32 chars", async () => {
-		await expect(
-			loadEnvWith({ CORE_GO_SERVICE_TOKEN: undefined }),
-		).rejects.toThrow(/CORE_GO_SERVICE_TOKEN/);
+	it("still rejects a CORE_GO_SERVICE_TOKEN shorter than 32 chars", async () => {
 		await expect(
 			loadEnvWith({ CORE_GO_SERVICE_TOKEN: "short" }),
 		).rejects.toThrow(/CORE_GO_SERVICE_TOKEN/);
+	});
+
+	it("exposes CORE_GO_URL and CORE_GO_SERVICE_TOKEN when both are set", async () => {
+		const { env } = await loadEnvWith({});
+		expect(env.CORE_GO_URL).toBe("http://localhost:8080");
+		expect(env.CORE_GO_SERVICE_TOKEN).toBe("t".repeat(32));
 	});
 
 	it("defaults to testnet with the correct Horizon/Soroban RPC URL and passphrase", async () => {

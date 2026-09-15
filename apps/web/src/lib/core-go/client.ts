@@ -38,6 +38,27 @@ export class CoreGoTransportError extends Error {
 	}
 }
 
+// CORE_GO_URL / CORE_GO_SERVICE_TOKEN are optional in env.ts so a deploy
+// without Go still boots; the first call that needs Go fails here, before
+// any fetch, with a message that names the missing var instead of an
+// "Invalid URL" from the runtime.
+export class CoreGoConfigError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "CoreGoConfigError";
+	}
+}
+
+function config(): { url: string; token: string } {
+	const url = env.CORE_GO_URL;
+	const token = env.CORE_GO_SERVICE_TOKEN;
+	if (!url) throw new CoreGoConfigError("CORE_GO_URL is not configured");
+	if (!token) {
+		throw new CoreGoConfigError("CORE_GO_SERVICE_TOKEN is not configured");
+	}
+	return { url, token };
+}
+
 function isErrorBody(value: unknown): value is CoreGoErrorBody {
 	if (typeof value !== "object" || value === null || !("error" in value)) {
 		return false;
@@ -56,12 +77,13 @@ async function post<TRes>(
 	wallet: string,
 	body: unknown,
 ): Promise<TRes> {
+	const { url, token } = config();
 	// The token travels only in the Authorization header — never in the URL,
 	// never in a log line, never in a client component's props.
-	const res = await fetch(new URL(path, env.CORE_GO_URL), {
+	const res = await fetch(new URL(path, url), {
 		method: "POST",
 		headers: {
-			Authorization: `Bearer ${env.CORE_GO_SERVICE_TOKEN}`,
+			Authorization: `Bearer ${token}`,
 			"X-Astrea-Wallet": wallet,
 			"Content-Type": "application/json",
 			Accept: "application/json",

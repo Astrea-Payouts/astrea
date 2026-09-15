@@ -53,8 +53,16 @@ const serverSchema = z.object({
 	// every /build and /submit goes through a server action (issue #15,
 	// decision 1). The token is the shared bearer secret Go checks with a
 	// constant-time compare; it is never NEXT_PUBLIC_ and never logged.
-	CORE_GO_URL: z.url(),
-	CORE_GO_SERVICE_TOKEN: z.string().min(32),
+	// Both optional so a deploy without Go still serves every other page;
+	// lib/core-go/client.ts refuses to call out when either is missing.
+	CORE_GO_URL: z.preprocess(
+		(v) => (v === "" ? undefined : v),
+		z.url().optional(),
+	),
+	CORE_GO_SERVICE_TOKEN: z.preprocess(
+		(v) => (v === "" ? undefined : v),
+		z.string().min(32).optional(),
+	),
 });
 
 function parseEnv() {
@@ -103,22 +111,11 @@ let parsed: Env | undefined;
 // `next build` imports every page module to collect its config, with no
 // runtime env present in CI, and a throw there fails the build instead of
 // the request.
+// Only `get` is trapped: nothing spreads or enumerates env, so the other
+// traps would be untested code.
 export const env: Env = new Proxy({} as Env, {
 	get(_target, prop) {
 		parsed ??= parseEnv();
 		return parsed[prop as keyof Env];
-	},
-	has(_target, prop) {
-		parsed ??= parseEnv();
-		return prop in parsed;
-	},
-	ownKeys() {
-		parsed ??= parseEnv();
-		return Reflect.ownKeys(parsed);
-	},
-	getOwnPropertyDescriptor(_target, prop) {
-		parsed ??= parseEnv();
-		const desc = Object.getOwnPropertyDescriptor(parsed, prop);
-		return desc ? { ...desc, configurable: true } : undefined;
 	},
 });

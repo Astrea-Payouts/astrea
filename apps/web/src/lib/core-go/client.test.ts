@@ -152,4 +152,46 @@ describe("core-go client", () => {
 		expect(err).toBeInstanceOf(CoreGoTransportError);
 		expect(err.status).toBe(500);
 	});
+
+	describe("without CORE_GO_URL / CORE_GO_SERVICE_TOKEN", () => {
+		// env parses on first access and caches per module instance, so the
+		// var must be absent while a freshly imported client makes its call.
+		async function callWithout(
+			name: "CORE_GO_URL" | "CORE_GO_SERVICE_TOKEN",
+			call: (mod: typeof import("./client")) => Promise<unknown>,
+		) {
+			vi.resetModules();
+			const saved = process.env[name];
+			delete process.env[name];
+			try {
+				const mod = await import("./client");
+				const err: unknown = await call(mod).catch((e: unknown) => e);
+				return { mod, err };
+			} finally {
+				process.env[name] = saved;
+			}
+		}
+
+		it("throws CoreGoConfigError naming CORE_GO_URL before any fetch", async () => {
+			const { mod, err } = await callWithout("CORE_GO_URL", (m) =>
+				m.releaseBuild(EVENT_ID, WALLET, []),
+			);
+
+			expect(err).toBeInstanceOf(mod.CoreGoConfigError);
+			expect((err as Error).message).toBe("CORE_GO_URL is not configured");
+			expect(fetchMock).not.toHaveBeenCalled();
+		});
+
+		it("throws CoreGoConfigError naming CORE_GO_SERVICE_TOKEN before any fetch", async () => {
+			const { mod, err } = await callWithout("CORE_GO_SERVICE_TOKEN", (m) =>
+				m.releaseSubmit(EVENT_ID, WALLET, "BBBB"),
+			);
+
+			expect(err).toBeInstanceOf(mod.CoreGoConfigError);
+			expect((err as Error).message).toBe(
+				"CORE_GO_SERVICE_TOKEN is not configured",
+			);
+			expect(fetchMock).not.toHaveBeenCalled();
+		});
+	});
 });
