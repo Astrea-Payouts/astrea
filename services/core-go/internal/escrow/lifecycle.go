@@ -254,6 +254,49 @@ func QuoteGoLiveFee(ctx context.Context, rpc RPCClient, contract xdr.ScAddress, 
 	return DecodeI128ToInt64(returnVal)
 }
 
+// GetDefaultResolver simulates get_default_resolver() -- a read-only call,
+// same as QuoteGoLiveFee -- and returns the contract's governance-set
+// DefaultResolver address, without ever submitting anything. source only
+// sources the simulated transaction; it is never charged or signed for.
+// create_event's build step calls this to fill the resolver argument
+// whenever the organizer path doesn't ask for a per-event custom resolver
+// (out of scope for #11 PR 1). Modeled on QuoteGoLiveFee's exact pattern.
+func GetDefaultResolver(ctx context.Context, rpc RPCClient, contract xdr.ScAddress, source string, cfg Config) (string, error) {
+	cfg = cfg.withDefaults()
+
+	hf := invokeContractHF(contract, "get_default_resolver")
+
+	account, err := rpc.LoadAccount(ctx, source)
+	if err != nil {
+		return "", fmt.Errorf("escrow: loading source account: %w", err)
+	}
+	simTx, err := buildTx(account, source, hf, nil, nil, cfg.TxTimeout)
+	if err != nil {
+		return "", fmt.Errorf("escrow: building simulation transaction: %w", err)
+	}
+	simB64, err := simTx.Base64()
+	if err != nil {
+		return "", fmt.Errorf("escrow: encoding simulation transaction: %w", err)
+	}
+
+	simResp, err := rpc.SimulateTransaction(ctx, protocol.SimulateTransactionRequest{Transaction: simB64})
+	if err != nil {
+		return "", fmt.Errorf("escrow: calling simulateTransaction: %w", err)
+	}
+	if simResp.Error != "" {
+		return "", &SimulationError{Message: simResp.Error}
+	}
+	if len(simResp.Results) == 0 || simResp.Results[0].ReturnValueXDR == nil {
+		return "", fmt.Errorf("escrow: get_default_resolver simulation returned no value")
+	}
+
+	var returnVal xdr.ScVal
+	if err := xdr.SafeUnmarshalBase64(*simResp.Results[0].ReturnValueXDR, &returnVal); err != nil {
+		return "", fmt.Errorf("escrow: decoding simulated return value: %w", err)
+	}
+	return DecodeAddressToString(returnVal)
+}
+
 // ResolveDisputeHostFunction builds the host function for
 // resolve_dispute(resolver, event_id, winners). resolver -- named on the
 // event at create_event time, defaulting to Astrea's own governance

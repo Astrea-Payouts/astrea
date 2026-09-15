@@ -77,6 +77,29 @@ func TestEncodeAddress_Invalid(t *testing.T) {
 	}
 }
 
+func TestDecodeAddressToString_RoundTripsEncodeAddress(t *testing.T) {
+	for _, addr := range []string{testAccountAddress, testContractAddress} {
+		scVal, err := EncodeAddress(addr)
+		if err != nil {
+			t.Fatalf("EncodeAddress(%q) returned error: %v", addr, err)
+		}
+		got, err := DecodeAddressToString(scVal)
+		if err != nil {
+			t.Fatalf("DecodeAddressToString round-trip of %q returned error: %v", addr, err)
+		}
+		if got != addr {
+			t.Fatalf("DecodeAddressToString round-trip = %q, want %q", got, addr)
+		}
+	}
+}
+
+func TestDecodeAddressToString_WrongScValType(t *testing.T) {
+	_, err := DecodeAddressToString(xdr.ScVal{Type: xdr.ScValTypeScvI128, I128: &xdr.Int128Parts{}})
+	if err == nil {
+		t.Fatal("expected an error for a non-Address ScVal, got nil")
+	}
+}
+
 // --- pipeline.go --------------------------------------------------------
 
 // mockRPC is a network-free stand-in for RPCClient. Each field defaults to

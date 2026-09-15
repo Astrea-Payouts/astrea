@@ -60,6 +60,42 @@ func (p *Postgres) Close() {
 	p.pool.Close()
 }
 
+// loadJudgesAndPrizes runs the two reads LoadEventForRelease and
+// LoadEventForCreate both need after their own event-row query: every
+// ACTIVE judge's wallet address, and every prize ordered by rank. Shared
+// so the organizer path's read doesn't reimplement the release path's.
+func loadJudgesAndPrizes(ctx context.Context, db querier, eventID string) ([]string, []Prize, error) {
+	judgeRows, err := db.Query(ctx,
+		`SELECT "walletAddress" FROM judges WHERE "eventId" = $1 AND status = 'ACTIVE'`,
+		eventID,
+	)
+	if err != nil {
+		return nil, nil, fmt.Errorf("store: load judges: %w", err)
+	}
+	judges, err := pgx.CollectRows(judgeRows, pgx.RowTo[string])
+	if err != nil {
+		return nil, nil, fmt.Errorf("store: scan judges: %w", err)
+	}
+
+	// id::text, amount::text: both are Postgres types (uuid, numeric) that
+	// pgx's binary codecs can't scan directly into a plain Go string —
+	// casting in the SELECT list is what gets an ordinary string back out.
+	// amount also keeps the exact Decimal(18,7) text Postgres renders, on
+	// purpose: the Decimal->i128 conversion is PR 2's job, not this one's.
+	prizeRows, err := db.Query(ctx,
+		`SELECT id::text, rank, amount::text FROM prizes WHERE "eventId" = $1 ORDER BY rank`,
+		eventID,
+	)
+	if err != nil {
+		return nil, nil, fmt.Errorf("store: load prizes: %w", err)
+	}
+	prizes, err := pgx.CollectRows(prizeRows, pgx.RowToStructByPos[Prize])
+	if err != nil {
+		return nil, nil, fmt.Errorf("store: scan prizes: %w", err)
+	}
+	return judges, prizes, nil
+}
+
 func (p *Postgres) LoadEventForRelease(ctx context.Context, eventID string) (*EventForRelease, error) {
 	event := &EventForRelease{ID: eventID}
 	err := p.db.QueryRow(ctx,
@@ -76,33 +112,9 @@ func (p *Postgres) LoadEventForRelease(ctx context.Context, eventID string) (*Ev
 		return nil, fmt.Errorf("store: load event: %w", err)
 	}
 
-	judgeRows, err := p.db.Query(ctx,
-		`SELECT "walletAddress" FROM judges WHERE "eventId" = $1 AND status = 'ACTIVE'`,
-		eventID,
-	)
+	event.Judges, event.Prizes, err = loadJudgesAndPrizes(ctx, p.db, eventID)
 	if err != nil {
-		return nil, fmt.Errorf("store: load judges: %w", err)
-	}
-	event.Judges, err = pgx.CollectRows(judgeRows, pgx.RowTo[string])
-	if err != nil {
-		return nil, fmt.Errorf("store: scan judges: %w", err)
-	}
-
-	// id::text, amount::text: both are Postgres types (uuid, numeric) that
-	// pgx's binary codecs can't scan directly into a plain Go string —
-	// casting in the SELECT list is what gets an ordinary string back out.
-	// amount also keeps the exact Decimal(18,7) text Postgres renders, on
-	// purpose: the Decimal->i128 conversion is PR 2's job, not this one's.
-	prizeRows, err := p.db.Query(ctx,
-		`SELECT id::text, rank, amount::text FROM prizes WHERE "eventId" = $1 ORDER BY rank`,
-		eventID,
-	)
-	if err != nil {
-		return nil, fmt.Errorf("store: load prizes: %w", err)
-	}
-	event.Prizes, err = pgx.CollectRows(prizeRows, pgx.RowToStructByPos[Prize])
-	if err != nil {
-		return nil, fmt.Errorf("store: scan prizes: %w", err)
+		return nil, err
 	}
 
 	// One join for teams + members + wallet address, ordered so members of

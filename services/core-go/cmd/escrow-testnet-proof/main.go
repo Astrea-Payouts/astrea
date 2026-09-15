@@ -752,17 +752,9 @@ func resolveToken(raw, networkPassphrase string) (asset, error) {
 		return asset{}, fmt.Errorf("TOKEN must be \"native\" or \"CODE:ISSUER\" (e.g. \"USDC:GBBD47IF...\"), got %q", raw)
 	}
 	classic := txnbuild.CreditAsset{Code: code, Issuer: issuer}
-	xdrAsset, err := classic.ToXDR()
+	contractID, err := escrow.ClassicAssetContractID(code, issuer, networkPassphrase)
 	if err != nil {
-		return asset{}, fmt.Errorf("building classic asset %s:%s: %w", code, issuer, err)
-	}
-	id, err := xdrAsset.ContractID(networkPassphrase)
-	if err != nil {
-		return asset{}, fmt.Errorf("deriving %s SAC contract id: %w", code, err)
-	}
-	contractID, err := strkey.Encode(strkey.VersionByteContract, id[:])
-	if err != nil {
-		return asset{}, fmt.Errorf("encoding %s SAC contract id: %w", code, err)
+		return asset{}, err
 	}
 	return asset{code: code, classic: classic, contractID: contractID}, nil
 }

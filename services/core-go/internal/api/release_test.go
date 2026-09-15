@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -70,6 +71,33 @@ type fakeStore struct {
 
 	succeededCalls []succeededCall
 	failedCalls    []failedCall
+
+	// --- organizer path: create_event ------------------------------------
+
+	createEvents map[string]*store.EventForCreate
+	createOps    map[string]*store.CreateOp
+
+	loadEventForCreateErr  error
+	saveCreateBuildErr     error
+	loadCreateOpErr        error
+	markCreateSucceededErr error
+	markCreateFailedErr    error
+
+	createSucceededCalls []createSucceededCall
+	createFailedCalls    []failedCall
+
+	// --- organizer path: deposit_funds -----------------------------------
+
+	depositOps       map[string]*store.DepositOp
+	depositOpCounter int
+
+	saveDepositBuildErr     error
+	loadDepositOpErr        error
+	markDepositSucceededErr error
+	markDepositFailedErr    error
+
+	depositSucceededCalls []string
+	depositFailedCalls    []depositFailedCall
 }
 
 type succeededCall struct {
@@ -81,6 +109,17 @@ type succeededCall struct {
 type failedCall struct {
 	eventID string
 	reason  string
+}
+
+type createSucceededCall struct {
+	eventID       string
+	escrowEventID string
+	confirmedAt   time.Time
+}
+
+type depositFailedCall struct {
+	opID   string
+	reason string
 }
 
 func (f *fakeStore) LoadEventForRelease(_ context.Context, eventID string) (*store.EventForRelease, error) {
@@ -137,6 +176,124 @@ func (f *fakeStore) MarkReleaseFailed(_ context.Context, eventID, reason string)
 	}
 	f.failedCalls = append(f.failedCalls, failedCall{eventID: eventID, reason: reason})
 	if op, ok := f.releaseOps[eventID]; ok {
+		op.Status = store.OpStatusFailed
+	}
+	return nil
+}
+
+// --- fakeStore: organizer path (create_event) ----------------------------
+
+func (f *fakeStore) LoadEventForCreate(_ context.Context, eventID string) (*store.EventForCreate, error) {
+	if f.loadEventForCreateErr != nil {
+		return nil, f.loadEventForCreateErr
+	}
+	ev, ok := f.createEvents[eventID]
+	if !ok {
+		return nil, store.ErrNotFound
+	}
+	return ev, nil
+}
+
+func (f *fakeStore) SaveCreateBuild(_ context.Context, eventID string, build store.CreateBuild) error {
+	if f.saveCreateBuildErr != nil {
+		return f.saveCreateBuildErr
+	}
+	if op, ok := f.createOps[eventID]; ok && op.Status == store.OpStatusSucceeded {
+		return store.ErrAlreadySucceeded
+	}
+	if f.createOps == nil {
+		f.createOps = map[string]*store.CreateOp{}
+	}
+	f.createOps[eventID] = &store.CreateOp{Status: store.OpStatusPending, Build: build}
+	return nil
+}
+
+func (f *fakeStore) LoadCreateOp(_ context.Context, eventID string) (*store.CreateOp, error) {
+	if f.loadCreateOpErr != nil {
+		return nil, f.loadCreateOpErr
+	}
+	op, ok := f.createOps[eventID]
+	if !ok {
+		return nil, store.ErrNotFound
+	}
+	return op, nil
+}
+
+func (f *fakeStore) MarkCreateSucceeded(_ context.Context, eventID, escrowEventID string, confirmedAt time.Time) error {
+	if f.markCreateSucceededErr != nil {
+		return f.markCreateSucceededErr
+	}
+	op, ok := f.createOps[eventID]
+	if !ok || op.Status != store.OpStatusPending || op.Build.EscrowEventID != escrowEventID {
+		return store.ErrCreateBuildReplaced
+	}
+	op.Status = store.OpStatusSucceeded
+	f.createSucceededCalls = append(f.createSucceededCalls, createSucceededCall{eventID: eventID, escrowEventID: escrowEventID, confirmedAt: confirmedAt})
+	if ev, ok := f.createEvents[eventID]; ok {
+		ev.EscrowEventID = &escrowEventID
+		ev.Status = "CREATED"
+	}
+	return nil
+}
+
+func (f *fakeStore) MarkCreateFailed(_ context.Context, eventID, reason string) error {
+	if f.markCreateFailedErr != nil {
+		return f.markCreateFailedErr
+	}
+	f.createFailedCalls = append(f.createFailedCalls, failedCall{eventID: eventID, reason: reason})
+	if op, ok := f.createOps[eventID]; ok {
+		op.Status = store.OpStatusFailed
+	}
+	return nil
+}
+
+// --- fakeStore: organizer path (deposit_funds) ----------------------------
+
+func (f *fakeStore) SaveDepositBuild(_ context.Context, build store.DepositBuild) (string, error) {
+	if f.saveDepositBuildErr != nil {
+		return "", f.saveDepositBuildErr
+	}
+	if f.depositOps == nil {
+		f.depositOps = map[string]*store.DepositOp{}
+	}
+	f.depositOpCounter++
+	// 32 lowercase hex chars, the shape newOpID() (postgres_organizer.go)
+	// actually generates -- opIDPattern rejects anything else.
+	opID := fmt.Sprintf("%032x", f.depositOpCounter)
+	f.depositOps[opID] = &store.DepositOp{Status: store.OpStatusPending, Build: build}
+	return opID, nil
+}
+
+func (f *fakeStore) LoadDepositOp(_ context.Context, opID string) (*store.DepositOp, error) {
+	if f.loadDepositOpErr != nil {
+		return nil, f.loadDepositOpErr
+	}
+	op, ok := f.depositOps[opID]
+	if !ok {
+		return nil, store.ErrNotFound
+	}
+	return op, nil
+}
+
+func (f *fakeStore) MarkDepositSucceeded(_ context.Context, opID string) error {
+	if f.markDepositSucceededErr != nil {
+		return f.markDepositSucceededErr
+	}
+	op, ok := f.depositOps[opID]
+	if !ok || op.Status != store.OpStatusPending {
+		return store.ErrDepositNotPending
+	}
+	op.Status = store.OpStatusSucceeded
+	f.depositSucceededCalls = append(f.depositSucceededCalls, opID)
+	return nil
+}
+
+func (f *fakeStore) MarkDepositFailed(_ context.Context, opID, reason string) error {
+	if f.markDepositFailedErr != nil {
+		return f.markDepositFailedErr
+	}
+	f.depositFailedCalls = append(f.depositFailedCalls, depositFailedCall{opID: opID, reason: reason})
+	if op, ok := f.depositOps[opID]; ok {
 		op.Status = store.OpStatusFailed
 	}
 	return nil
@@ -888,11 +1045,11 @@ func TestVerifySignedEnvelope(t *testing.T) {
 	if err != nil {
 		t.Fatalf("MarshalBase64: %v", err)
 	}
-	build := store.ReleaseBuild{HostFunctionXDR: wantHF, SourceAccount: judge.Address()}
+	wantSource := judge.Address()
 	signedXDR := signTx(t, unsigned.XDR, judge)
 
 	t.Run("matches", func(t *testing.T) {
-		if err := verifySignedEnvelope(signedXDR, build); err != nil {
+		if err := verifySignedEnvelope(signedXDR, wantSource, wantHF); err != nil {
 			t.Errorf("verifySignedEnvelope = %v, want nil", err)
 		}
 	})
@@ -904,27 +1061,25 @@ func TestVerifySignedEnvelope(t *testing.T) {
 			t.Fatalf("BuildReleaseReward: %v", err)
 		}
 		otherSigned := signTx(t, otherUnsigned.XDR, other)
-		if err := verifySignedEnvelope(otherSigned, build); err == nil {
+		if err := verifySignedEnvelope(otherSigned, wantSource, wantHF); err == nil {
 			t.Error("verifySignedEnvelope = nil, want an error for a mismatched source account")
 		}
 	})
 
 	t.Run("no signatures", func(t *testing.T) {
-		if err := verifySignedEnvelope(unsigned.XDR, build); err == nil {
+		if err := verifySignedEnvelope(unsigned.XDR, wantSource, wantHF); err == nil {
 			t.Error("verifySignedEnvelope = nil, want an error for an unsigned envelope")
 		}
 	})
 
 	t.Run("host function mismatch", func(t *testing.T) {
-		tampered := build
-		tampered.HostFunctionXDR = "AAAAAQAAAAA="
-		if err := verifySignedEnvelope(signedXDR, tampered); err == nil {
+		if err := verifySignedEnvelope(signedXDR, wantSource, "AAAAAQAAAAA="); err == nil {
 			t.Error("verifySignedEnvelope = nil, want an error for a mismatched host function")
 		}
 	})
 
 	t.Run("malformed xdr", func(t *testing.T) {
-		if err := verifySignedEnvelope("not-valid-xdr", build); err == nil {
+		if err := verifySignedEnvelope("not-valid-xdr", wantSource, wantHF); err == nil {
 			t.Error("verifySignedEnvelope = nil, want an error for malformed XDR")
 		}
 	})
