@@ -76,33 +76,68 @@ func checkStartPreconditions(w http.ResponseWriter, r *http.Request, st store.St
 	return event, true
 }
 
+// loadStartContext runs the prologue quote and build share: the id shape
+// check, checkStartPreconditions, escrow event id parsing, fee quote, and
+// balance lookup. extra runs right after preconditions pass and before the
+// event id is even parsed -- handleStartBuild uses it for the judging
+// deadline checks, which must reject before this helper ever calls the RPC
+// for a fee/balance a broken build wouldn't need anyway. Pass nil for
+// quote's plain case.
+func loadStartContext(w http.ResponseWriter, r *http.Request, deps Deps, extra func(*store.EventForStart) bool) (event *store.EventForStart, eid escrow.EventID, fee, balance int64, ok bool) {
+	eventID := r.PathValue("id")
+	if !uuidPattern.MatchString(eventID) {
+		writeError(w, http.StatusNotFound, "event_not_found", "no event with that id")
+		return nil, eid, 0, 0, false
+	}
+
+	event, ok = checkStartPreconditions(w, r, deps.Store, eventID)
+	if !ok {
+		return nil, eid, 0, 0, false
+	}
+
+	if extra != nil && !extra(event) {
+		return nil, eid, 0, 0, false
+	}
+
+	eid, err := escrow.ParseEventID(*event.EscrowEventID)
+	if err != nil {
+		log.Printf("api: event %s: parsing escrowEventId: %v", eventID, err)
+		writeError(w, http.StatusInternalServerError, "internal", "internal error")
+		return nil, eid, 0, 0, false
+	}
+
+	fee, ok = quoteGoLiveFee(w, deps, r.Context(), eventID, eid, event.OrganizerWalletAddress)
+	if !ok {
+		return nil, eid, 0, 0, false
+	}
+	balance, ok = getOrganizerBalance(w, deps, r.Context(), eventID, event.OrganizerWalletAddress)
+	if !ok {
+		return nil, eid, 0, 0, false
+	}
+
+	return event, eid, fee, balance, true
+}
+
+// checkStartDeadline is handleStartBuild's loadStartContext hook: the
+// judging deadline only matters to build, so it has no place in
+// checkStartPreconditions, which quote also runs through.
+func checkStartDeadline(w http.ResponseWriter, event *store.EventForStart) bool {
+	if event.JudgingDeadlineAt == nil {
+		writeError(w, http.StatusConflict, "deadline_missing", "event has no judging deadline set")
+		return false
+	}
+	if !event.JudgingDeadlineAt.After(time.Now()) {
+		writeError(w, http.StatusConflict, "deadline_past", "judging deadline is in the past")
+		return false
+	}
+	return true
+}
+
 // handleStartQuote reads the go-live fee and the organizer's free balance
 // via simulation only -- no op_log row, since nothing is built or submitted.
 func handleStartQuote(deps Deps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		eventID := r.PathValue("id")
-		if !uuidPattern.MatchString(eventID) {
-			writeError(w, http.StatusNotFound, "event_not_found", "no event with that id")
-			return
-		}
-
-		event, ok := checkStartPreconditions(w, r, deps.Store, eventID)
-		if !ok {
-			return
-		}
-
-		eid, err := escrow.ParseEventID(*event.EscrowEventID)
-		if err != nil {
-			log.Printf("api: event %s: parsing escrowEventId: %v", eventID, err)
-			writeError(w, http.StatusInternalServerError, "internal", "internal error")
-			return
-		}
-
-		fee, ok := quoteGoLiveFee(w, deps, r.Context(), eventID, eid, event.OrganizerWalletAddress)
-		if !ok {
-			return
-		}
-		balance, ok := getOrganizerBalance(w, deps, r.Context(), eventID, event.OrganizerWalletAddress)
+		_, _, fee, balance, ok := loadStartContext(w, r, deps, nil)
 		if !ok {
 			return
 		}
@@ -122,38 +157,9 @@ func handleStartQuote(deps Deps) http.HandlerFunc {
 // /submit will later compare a signed envelope against.
 func handleStartBuild(deps Deps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		eventID := r.PathValue("id")
-		if !uuidPattern.MatchString(eventID) {
-			writeError(w, http.StatusNotFound, "event_not_found", "no event with that id")
-			return
-		}
-
-		event, ok := checkStartPreconditions(w, r, deps.Store, eventID)
-		if !ok {
-			return
-		}
-
-		if event.JudgingDeadlineAt == nil {
-			writeError(w, http.StatusConflict, "deadline_missing", "event has no judging deadline set")
-			return
-		}
-		if !event.JudgingDeadlineAt.After(time.Now()) {
-			writeError(w, http.StatusConflict, "deadline_past", "judging deadline is in the past")
-			return
-		}
-
-		eid, err := escrow.ParseEventID(*event.EscrowEventID)
-		if err != nil {
-			log.Printf("api: event %s: parsing escrowEventId: %v", eventID, err)
-			writeError(w, http.StatusInternalServerError, "internal", "internal error")
-			return
-		}
-
-		fee, ok := quoteGoLiveFee(w, deps, r.Context(), eventID, eid, event.OrganizerWalletAddress)
-		if !ok {
-			return
-		}
-		balance, ok := getOrganizerBalance(w, deps, r.Context(), eventID, event.OrganizerWalletAddress)
+		event, eid, fee, balance, ok := loadStartContext(w, r, deps, func(e *store.EventForStart) bool {
+			return checkStartDeadline(w, e)
+		})
 		if !ok {
 			return
 		}
@@ -172,19 +178,19 @@ func handleStartBuild(deps Deps) http.HandlerFunc {
 				writeError(w, http.StatusBadGateway, "simulation_failed", simErr.Error())
 				return
 			}
-			log.Printf("api: event %s: BuildSetEventInProgress: %v", eventID, err)
+			log.Printf("api: event %s: BuildSetEventInProgress: %v", event.ID, err)
 			writeError(w, http.StatusInternalServerError, "internal", "internal error")
 			return
 		}
 
 		hostFunctionXDR, err := hostFunctionXDRFrom(unsignedTx.XDR)
 		if err != nil {
-			log.Printf("api: event %s: %v", eventID, err)
+			log.Printf("api: event %s: %v", event.ID, err)
 			writeError(w, http.StatusInternalServerError, "internal", "internal error")
 			return
 		}
 
-		err = deps.Store.SaveStartBuild(r.Context(), eventID, store.StartBuild{
+		err = deps.Store.SaveStartBuild(r.Context(), event.ID, store.StartBuild{
 			HostFunctionXDR: hostFunctionXDR,
 			SourceAccount:   event.OrganizerWalletAddress,
 			JudgingDeadline: judgingDeadline,
@@ -197,7 +203,7 @@ func handleStartBuild(deps Deps) http.HandlerFunc {
 			case err == store.ErrNotFound:
 				writeError(w, http.StatusNotFound, "event_not_found", "no event with that id")
 			default:
-				log.Printf("api: event %s: SaveStartBuild: %v", eventID, err)
+				log.Printf("api: event %s: SaveStartBuild: %v", event.ID, err)
 				writeError(w, http.StatusInternalServerError, "internal", "internal error")
 			}
 			return
