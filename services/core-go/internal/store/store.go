@@ -23,10 +23,15 @@ var ErrAlreadySucceeded = errors.New("store: release already succeeded")
 // SUCCEEDED, or FAILED).
 var ErrReleaseNotPending = errors.New("store: release op is not pending")
 
-// ErrCreateNotPending is returned by MarkCreateSucceeded when the event's
-// create_event op_log row is not currently PENDING (missing, already
-// SUCCEEDED, or FAILED).
-var ErrCreateNotPending = errors.New("store: create op is not pending")
+// ErrCreateBuildReplaced is returned by MarkCreateSucceeded when the
+// create_event op_log row it tried to confirm is no longer the build this
+// call is confirming -- either because it is not PENDING at all (missing,
+// already SUCCEEDED, or FAILED), or because a later /create/build call
+// overwrote it with a fresh escrowEventId while this call's RPC submission
+// was still in flight. Either way, writing the confirmation now would
+// attach the wrong on-chain event id to the events row, so the caller must
+// not retry blindly -- see MarkCreateSucceeded's own doc comment.
+var ErrCreateBuildReplaced = errors.New("create build was replaced while the submit was in flight")
 
 // ErrDepositNotPending is returned by MarkDepositSucceeded when the
 // deposit's op_log row is not currently PENDING (missing, already
@@ -219,11 +224,18 @@ type Store interface {
 
 	// MarkCreateSucceeded transitions a PENDING create_event op_log row to
 	// SUCCEEDED and, in the same transaction, sets the event's
-	// escrowEventId (from the op's own payload), moves status DRAFT ->
-	// CREATED via a conditional update, and stamps conditionsMetAt —
-	// "startable", never itself LIVE (issue #11 decision 4). Returns
-	// ErrCreateNotPending if the op_log row is not currently PENDING.
-	MarkCreateSucceeded(ctx context.Context, eventID string, confirmedAt time.Time) error
+	// escrowEventId (the caller's own, already verified against the signed
+	// envelope -- see handleCreateSubmit), moves status DRAFT -> CREATED
+	// via a conditional update, and stamps conditionsMetAt — "startable",
+	// never itself LIVE (issue #11 decision 4). The op_log UPDATE is
+	// conditioned on the row's payload still naming escrowEventID: a
+	// rebuild (a fresh /create/build call) can overwrite that PENDING row
+	// with a different escrowEventId while this call's RPC submission was
+	// in flight, and confirming against the wrong one would silently
+	// attach an unconfirmed on-chain event id to the events row. Returns
+	// ErrCreateBuildReplaced if the row no longer matches -- not PENDING
+	// at all, or PENDING for a different build.
+	MarkCreateSucceeded(ctx context.Context, eventID, escrowEventID string, confirmedAt time.Time) error
 
 	// MarkCreateFailed transitions the create_event op_log row to FAILED and
 	// merges reason into its payload under "lastError". The event is left

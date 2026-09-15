@@ -160,7 +160,7 @@ func TestPostgres_OrganizerWrites(t *testing.T) {
 	}
 
 	confirmedAt := time.Now().UTC().Truncate(time.Microsecond)
-	if err := pg.MarkCreateSucceeded(ctx, eventOC1, confirmedAt); err != nil {
+	if err := pg.MarkCreateSucceeded(ctx, eventOC1, buildV2.EscrowEventID, confirmedAt); err != nil {
 		t.Fatalf("MarkCreateSucceeded: %v", err)
 	}
 
@@ -184,8 +184,8 @@ func TestPostgres_OrganizerWrites(t *testing.T) {
 		t.Errorf("SaveCreateBuild after success: err = %v, want ErrAlreadySucceeded", err)
 	}
 	// A second success-marking must also refuse.
-	if err := pg.MarkCreateSucceeded(ctx, eventOC1, time.Now()); err != ErrCreateNotPending {
-		t.Errorf("MarkCreateSucceeded twice: err = %v, want ErrCreateNotPending", err)
+	if err := pg.MarkCreateSucceeded(ctx, eventOC1, buildV2.EscrowEventID, time.Now()); err != ErrCreateBuildReplaced {
+		t.Errorf("MarkCreateSucceeded twice: err = %v, want ErrCreateBuildReplaced", err)
 	}
 
 	// --- Event OC2: FAILED, then a successful rebuild --------------------
@@ -283,7 +283,7 @@ func TestPostgres_OrganizerWrites(t *testing.T) {
 	exec(`INSERT INTO op_log (id, "idempotencyKey", operation, payload, status, "createdAt", "updatedAt")
 	      VALUES (gen_random_uuid(), $1, 'create_event', $2::jsonb, 'PENDING', now(), now())`,
 		createIdempotencyKey(eventOC6), payloadOC6)
-	if err := pg.MarkCreateSucceeded(ctx, eventOC6, time.Now()); err == nil {
+	if err := pg.MarkCreateSucceeded(ctx, eventOC6, buildOC6.EscrowEventID, time.Now()); err == nil {
 		t.Errorf("MarkCreateSucceeded(event not DRAFT, race): err = nil, want a race error")
 	}
 

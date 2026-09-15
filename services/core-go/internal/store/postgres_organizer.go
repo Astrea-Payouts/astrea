@@ -159,42 +159,37 @@ func (p *Postgres) LoadCreateOp(ctx context.Context, eventID string) (*CreateOp,
 	return &CreateOp{Status: status, Build: build}, nil
 }
 
-// MarkCreateSucceeded reads the PENDING op_log row's own payload to learn
-// the on-chain event id create_event was built with, the same reasoning
-// MarkReleaseSucceeded uses for its winners: the payload SaveCreateBuild
-// persisted is the only place that id lives.
-func (p *Postgres) MarkCreateSucceeded(ctx context.Context, eventID string, confirmedAt time.Time) error {
+// MarkCreateSucceeded confirms the op_log row for escrowEventID specifically
+// -- not just whatever's currently PENDING. A rebuild (/create/build called
+// again while an earlier submit's RPC call is still in flight) overwrites
+// the same row with a new escrowEventId, so matching on status alone would
+// let a slow, stale submit confirm a build that was never the one it
+// verified against the signed envelope. See ErrCreateBuildReplaced.
+func (p *Postgres) MarkCreateSucceeded(ctx context.Context, eventID, escrowEventID string, confirmedAt time.Time) error {
 	tx, err := p.begin.Begin(ctx)
 	if err != nil {
 		return fmt.Errorf("store: begin: %w", err)
 	}
 	defer func() { _ = tx.Rollback(ctx) }()
 
-	var payload []byte
-	err = tx.QueryRow(ctx, `
+	tag, err := tx.Exec(ctx, `
 		UPDATE op_log SET status = 'SUCCEEDED', "updatedAt" = now()
-		WHERE "idempotencyKey" = $1 AND status = 'PENDING'
-		RETURNING payload
-	`, createIdempotencyKey(eventID)).Scan(&payload)
+		WHERE "idempotencyKey" = $1 AND status = 'PENDING' AND payload->>'escrowEventId' = $2
+	`, createIdempotencyKey(eventID), escrowEventID)
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			return ErrCreateNotPending
-		}
 		return fmt.Errorf("store: mark create op succeeded: %w", err)
 	}
-
-	var build CreateBuild
-	if err := json.Unmarshal(payload, &build); err != nil {
-		return fmt.Errorf("store: decode create op payload: %w", err)
+	if tag.RowsAffected() != 1 {
+		return ErrCreateBuildReplaced
 	}
 
 	// Conditional on status = 'DRAFT': every status transition reports
 	// whether it matched rather than silently no-opping (issue #11 scope).
-	tag, err := tx.Exec(ctx, `
+	tag, err = tx.Exec(ctx, `
 		UPDATE events
 		SET "escrowEventId" = $1, status = 'CREATED', "conditionsMetAt" = $2, "updatedAt" = now()
 		WHERE id = $3 AND status = 'DRAFT'
-	`, build.EscrowEventID, confirmedAt, eventID)
+	`, escrowEventID, confirmedAt, eventID)
 	if err != nil {
 		return fmt.Errorf("store: mark event %s created: %w", eventID, err)
 	}

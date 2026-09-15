@@ -35,12 +35,10 @@ type createSubmitResponse struct {
 	EscrowEventID string `json:"escrowEventId"`
 }
 
-// checkCreatePreconditions runs the checks both create endpoints share, in
-// the order the underlying facts can actually be resolved: whether the
-// event is still DRAFT, whether it has already gone on-chain, whether it
-// has at least one prize and exactly one ACTIVE judge, and finally whether
-// the caller's wallet is the event's organizer. It writes the appropriate
-// error response and returns ok=false on the first check that fails.
+// checkCreatePreconditions runs the checks both create endpoints share. The
+// organizer check runs immediately after the load, before any check that
+// would otherwise leak the event's internal state (DRAFT/on-chain/prize/judge
+// counts) to a caller who isn't even allowed to act on this event.
 func checkCreatePreconditions(w http.ResponseWriter, r *http.Request, st store.Store, eventID string) (event *store.EventForCreate, ok bool) {
 	event, err := st.LoadEventForCreate(r.Context(), eventID)
 	if err != nil {
@@ -50,6 +48,12 @@ func checkCreatePreconditions(w http.ResponseWriter, r *http.Request, st store.S
 		}
 		log.Printf("api: event %s: LoadEventForCreate: %v", eventID, err)
 		writeError(w, http.StatusInternalServerError, "internal", "internal error")
+		return nil, false
+	}
+
+	wallet, _ := WalletFrom(r.Context())
+	if wallet != event.OrganizerWalletAddress {
+		writeError(w, http.StatusForbidden, "not_organizer", "caller is not this event's organizer")
 		return nil, false
 	}
 
@@ -67,12 +71,6 @@ func checkCreatePreconditions(w http.ResponseWriter, r *http.Request, st store.S
 	}
 	if len(event.Judges) != 1 {
 		writeError(w, http.StatusConflict, "judge_ambiguous", "event does not have exactly one ACTIVE judge")
-		return nil, false
-	}
-
-	wallet, _ := WalletFrom(r.Context())
-	if wallet != event.OrganizerWalletAddress {
-		writeError(w, http.StatusForbidden, "not_organizer", "caller is not this event's organizer")
 		return nil, false
 	}
 
@@ -247,7 +245,12 @@ func handleCreateSubmit(deps Deps) http.HandlerFunc {
 		}
 		result := outcome.Result
 
-		if err := deps.Store.MarkCreateSucceeded(ctx, eventID, time.Now().UTC()); err != nil {
+		if err := deps.Store.MarkCreateSucceeded(ctx, eventID, op.Build.EscrowEventID, time.Now().UTC()); err != nil {
+			if err == store.ErrCreateBuildReplaced {
+				log.Printf("api: event %s: MarkCreateSucceeded: build replaced while submit was in flight (escrowEventId %s, tx %s)", eventID, op.Build.EscrowEventID, result.Hash)
+				writeError(w, http.StatusConflict, "create_build_replaced", err.Error())
+				return
+			}
 			log.Printf("api: event %s: MarkCreateSucceeded (tx %s): %v", eventID, result.Hash, err)
 			writeError(w, http.StatusInternalServerError, "internal", "internal error")
 			return

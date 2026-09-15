@@ -504,3 +504,58 @@ func TestCreateSubmit_Success(t *testing.T) {
 		t.Errorf("event.EscrowEventID = %v, want %q", event.EscrowEventID, built.EscrowEventID)
 	}
 }
+
+// TestCreateSubmit_BuildReplacedWhileSubmitInFlight reproduces the race
+// MarkCreateSucceeded guards against: build A, start submitting it against a
+// slow RPC, and while that submission is still polling for confirmation, a
+// rebuild (build B) lands and overwrites the event's single create_event
+// op_log row. When A's slow poll finally reports success, confirming must
+// fail -- the row it would confirm is no longer A's build -- leaving the
+// event in DRAFT and the op_log row PENDING with B's data untouched.
+func TestCreateSubmit_BuildReplacedWhileSubmitInFlight(t *testing.T) {
+	organizer := mustRandomKeypair(t)
+	event := baseCreateEvent(t, organizer.Address())
+	fs := &fakeStore{createEvents: map[string]*store.EventForCreate{event.ID: event}}
+	rpc := happyCreateMockRPC(t)
+	router := New(newCreateDeps(t, fs, rpc))
+
+	buildA := buildCreateOp(t, router, event)
+	signedA := signTx(t, buildA.UnsignedTransactionXDR, organizer)
+
+	var buildB createBuildResponse
+	rpc.getFn = func(_ context.Context, _ protocol.GetTransactionRequest) (protocol.GetTransactionResponse, error) {
+		// A's confirmation poll is "slow" -- while it's still in flight, a
+		// rebuild happens and overwrites the shared op_log row.
+		buildB = buildCreateOp(t, router, event)
+		return protocol.GetTransactionResponse{
+			TransactionDetails: protocol.TransactionDetails{Status: protocol.TransactionStatusSuccess},
+		}, nil
+	}
+
+	rec := doJSON(t, router, http.MethodPost, "/events/"+event.ID+"/create/submit", organizer.Address(), createSubmitRequest{SignedTransactionXDR: signedA})
+	assertErrorStatus(t, rec, http.StatusConflict, "create_build_replaced")
+
+	if buildB.EscrowEventID == "" || buildB.EscrowEventID == buildA.EscrowEventID {
+		t.Fatalf("build B did not produce a fresh escrowEventId distinct from A's: A=%q B=%q", buildA.EscrowEventID, buildB.EscrowEventID)
+	}
+	if len(fs.createSucceededCalls) != 0 {
+		t.Errorf("MarkCreateSucceeded must not have recorded a success, got %+v", fs.createSucceededCalls)
+	}
+	if event.Status != "DRAFT" {
+		t.Errorf("event status = %q, want DRAFT (A's stale confirmation must not move it)", event.Status)
+	}
+	if event.EscrowEventID != nil {
+		t.Errorf("event.EscrowEventID = %v, want nil", event.EscrowEventID)
+	}
+
+	op, ok := fs.createOps[event.ID]
+	if !ok {
+		t.Fatalf("no create op left for event %s", event.ID)
+	}
+	if op.Status != store.OpStatusPending {
+		t.Errorf("op status = %q, want PENDING (still B's unconfirmed build)", op.Status)
+	}
+	if op.Build.EscrowEventID != buildB.EscrowEventID {
+		t.Errorf("op.Build.EscrowEventID = %q, want B's %q", op.Build.EscrowEventID, buildB.EscrowEventID)
+	}
+}

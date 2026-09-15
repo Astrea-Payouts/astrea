@@ -112,8 +112,9 @@ type failedCall struct {
 }
 
 type createSucceededCall struct {
-	eventID     string
-	confirmedAt time.Time
+	eventID       string
+	escrowEventID string
+	confirmedAt   time.Time
 }
 
 type depositFailedCall struct {
@@ -218,18 +219,17 @@ func (f *fakeStore) LoadCreateOp(_ context.Context, eventID string) (*store.Crea
 	return op, nil
 }
 
-func (f *fakeStore) MarkCreateSucceeded(_ context.Context, eventID string, confirmedAt time.Time) error {
+func (f *fakeStore) MarkCreateSucceeded(_ context.Context, eventID, escrowEventID string, confirmedAt time.Time) error {
 	if f.markCreateSucceededErr != nil {
 		return f.markCreateSucceededErr
 	}
 	op, ok := f.createOps[eventID]
-	if !ok || op.Status != store.OpStatusPending {
-		return store.ErrCreateNotPending
+	if !ok || op.Status != store.OpStatusPending || op.Build.EscrowEventID != escrowEventID {
+		return store.ErrCreateBuildReplaced
 	}
 	op.Status = store.OpStatusSucceeded
-	f.createSucceededCalls = append(f.createSucceededCalls, createSucceededCall{eventID: eventID, confirmedAt: confirmedAt})
+	f.createSucceededCalls = append(f.createSucceededCalls, createSucceededCall{eventID: eventID, escrowEventID: escrowEventID, confirmedAt: confirmedAt})
 	if ev, ok := f.createEvents[eventID]; ok {
-		escrowEventID := op.Build.EscrowEventID
 		ev.EscrowEventID = &escrowEventID
 		ev.Status = "CREATED"
 	}
