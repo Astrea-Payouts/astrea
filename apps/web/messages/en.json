@@ -222,7 +222,13 @@
 		"sign": "Sign and release",
 		"rebuild": "Change assignments",
 		"released": "Prizes released.",
-		"pending": "Submitted — confirmation timed out, outcome unknown. Check the hash."
+		"pending": "Submitted — confirmation timed out, outcome unknown. Check the hash.",
+		"done": {
+			"title": "Prizes released.",
+			"hint": "This event is complete. The release is on-chain; nothing is left to assign.",
+			"winner": "Winner: {team}",
+			"backToEvent": "Back to the event"
+		}
 	},
 	"SignStep": {
 		"sign": "Sign with wallet",

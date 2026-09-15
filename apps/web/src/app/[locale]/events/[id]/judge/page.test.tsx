@@ -65,8 +65,18 @@ const event = {
 	name: "Vertical slice A",
 	status: "JUDGING",
 	prizes: [
-		{ rank: 1, amount: { toString: () => "0.2" } },
-		{ rank: 2, amount: { toString: () => "0.1" } },
+		{
+			rank: 1,
+			amount: { toString: () => "0.2" },
+			releaseTxHash: null,
+			winnerTeam: null,
+		},
+		{
+			rank: 2,
+			amount: { toString: () => "0.1" },
+			releaseTxHash: null,
+			winnerTeam: null,
+		},
 	],
 	judges: [{ walletAddress: JUDGE }],
 	teams: [{ id: "team-a", name: "Team Winner One" }],
@@ -164,6 +174,85 @@ describe("JudgePage", () => {
 			screen.getByRole("link", { name: /Vertical slice A/ }),
 		).toHaveAttribute("href", `/events/${EVENT_ID}`);
 		expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+	});
+});
+
+describe("JudgePage after release", () => {
+	const TX_HASH =
+		"0941dbcdd6958dae1c9606f225d7a8c4e8dc1a7ec9c5595eecb1a8a633e13bc5";
+	const completed = {
+		...event,
+		status: "COMPLETED",
+		prizes: [
+			{
+				rank: 1,
+				amount: { toString: () => "0.2" },
+				releaseTxHash: TX_HASH,
+				winnerTeam: { name: "Team Winner One" },
+			},
+			{
+				rank: 2,
+				amount: { toString: () => "0.1" },
+				releaseTxHash: TX_HASH,
+				winnerTeam: { name: "Team Winner Two" },
+			},
+		],
+	};
+
+	beforeEach(() => {
+		vi.clearAllMocks();
+		mockDb.event.findUnique.mockResolvedValue(completed);
+	});
+
+	afterEach(() => {
+		cleanup();
+	});
+
+	it("shows the released outcome with winners and the hash instead of a 403, even to the judge", async () => {
+		mockSession.mockResolvedValue({ id: "w-judge", address: JUDGE });
+
+		await renderPage();
+
+		const status = screen.getByRole("status");
+		expect(status).toHaveTextContent(messages.JudgePage.done.title);
+		expect(status).toHaveTextContent("Winner: Team Winner One");
+		expect(status).toHaveTextContent("Winner: Team Winner Two");
+		expect(screen.getByRole("link", { name: /0941dbcdd6/ })).toHaveAttribute(
+			"href",
+			expect.stringContaining(TX_HASH),
+		);
+		expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+		expect(screen.queryByTestId("release-form")).not.toBeInTheDocument();
+	});
+
+	it("shows the same outcome without a session", async () => {
+		mockSession.mockResolvedValue(null);
+
+		await renderPage();
+
+		expect(screen.getByRole("status")).toHaveTextContent(
+			messages.JudgePage.done.title,
+		);
+		expect(
+			screen.queryByRole("button", { name: "connect-wallet" }),
+		).not.toBeInTheDocument();
+	});
+
+	it("falls back to a dash when a prize has no winner recorded", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			...completed,
+			prizes: [
+				{ ...completed.prizes[0], winnerTeam: null, releaseTxHash: null },
+			],
+		});
+		mockSession.mockResolvedValue(null);
+
+		await renderPage();
+
+		expect(screen.getByRole("status")).toHaveTextContent("Winner: —");
+		expect(
+			screen.queryByRole("link", { name: /0941/ }),
+		).not.toBeInTheDocument();
 	});
 });
 
