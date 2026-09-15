@@ -18,6 +18,10 @@ const validDatabaseURL = "postgresql://postgres:postgres@localhost:5432/postgres
 // secret.
 const validServiceToken = "01234567890123456789012345678901"
 
+// validUSDCIssuer passes strkey's checksum validation — an arbitrary
+// generated G-address, not any real issuer.
+const validUSDCIssuer = "GCXUEC4FDHEMOEUJQ5IZ7FENALKLHXHWGUALK3KD6IUEPKKHGYYNUPM3"
+
 // validVars is the base set every test below builds on, so each test only
 // overrides or deletes what it means to exercise.
 func validVars() map[string]string {
@@ -25,6 +29,7 @@ func validVars() map[string]string {
 		"ESCROW_CONTRACT_ID":    validContractID,
 		"DATABASE_URL":          validDatabaseURL,
 		"CORE_GO_SERVICE_TOKEN": validServiceToken,
+		"USDC_ISSUER":           validUSDCIssuer,
 	}
 }
 
@@ -75,6 +80,9 @@ func TestLoad_ValidTestnetConfig(t *testing.T) {
 	}
 	if cfg.ServiceToken != validServiceToken {
 		t.Errorf("ServiceToken = %q, want %q", cfg.ServiceToken, validServiceToken)
+	}
+	if cfg.USDCIssuer != validUSDCIssuer {
+		t.Errorf("USDCIssuer = %q, want %q", cfg.USDCIssuer, validUSDCIssuer)
 	}
 }
 
@@ -169,6 +177,16 @@ func TestLoad_ShortServiceToken(t *testing.T) {
 	assertErrorNames(t, err, "CORE_GO_SERVICE_TOKEN")
 }
 
+func TestLoad_MissingUSDCIssuer(t *testing.T) {
+	_, err := Load(lookup(withVars(map[string]string{"USDC_ISSUER": ""})))
+	assertErrorNames(t, err, "USDC_ISSUER")
+}
+
+func TestLoad_MalformedUSDCIssuer(t *testing.T) {
+	_, err := Load(lookup(withVars(map[string]string{"USDC_ISSUER": "not-an-address"})))
+	assertErrorNames(t, err, "USDC_ISSUER")
+}
+
 // TestLoad_CollectsEveryProblemAtOnce is the multi-error case the issue
 // asks for: an operator fixing a broken .env should see every problem in
 // one error, not discover them one restart at a time.
@@ -176,11 +194,11 @@ func TestLoad_CollectsEveryProblemAtOnce(t *testing.T) {
 	_, err := Load(lookup(map[string]string{
 		"STELLAR_NETWORK": NetworkMainnet,
 		// ALLOW_MAINNET, SOROBAN_RPC_URL, ESCROW_CONTRACT_ID, DATABASE_URL,
-		// CORE_GO_SERVICE_TOKEN all left unset.
+		// CORE_GO_SERVICE_TOKEN, USDC_ISSUER all left unset.
 	}))
 	assertErrorNames(t, err,
 		"ALLOW_MAINNET", "SOROBAN_RPC_URL", "ESCROW_CONTRACT_ID",
-		"DATABASE_URL", "CORE_GO_SERVICE_TOKEN",
+		"DATABASE_URL", "CORE_GO_SERVICE_TOKEN", "USDC_ISSUER",
 	)
 }
 

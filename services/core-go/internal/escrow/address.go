@@ -43,3 +43,27 @@ func ContractAddress(contractID string) (xdr.ScAddress, error) {
 	copy(cid[:], raw)
 	return xdr.ScAddress{Type: xdr.ScAddressTypeScAddressTypeContract, ContractId: &cid}, nil
 }
+
+// DecodeAddressToString is EncodeAddress's inverse: given an ScVal a
+// contract call returned (e.g. get_default_resolver's Address), it produces
+// the G... or C... strkey a caller would recognize, whichever kind the
+// value actually holds.
+func DecodeAddressToString(sv xdr.ScVal) (string, error) {
+	if sv.Type != xdr.ScValTypeScvAddress || sv.Address == nil {
+		return "", fmt.Errorf("escrow: expected an Address value, got %v", sv.Type)
+	}
+	switch sv.Address.Type {
+	case xdr.ScAddressTypeScAddressTypeAccount:
+		if sv.Address.AccountId == nil {
+			return "", fmt.Errorf("escrow: address value has no account id")
+		}
+		return sv.Address.AccountId.Address(), nil
+	case xdr.ScAddressTypeScAddressTypeContract:
+		if sv.Address.ContractId == nil {
+			return "", fmt.Errorf("escrow: address value has no contract id")
+		}
+		return strkey.Encode(strkey.VersionByteContract, sv.Address.ContractId[:])
+	default:
+		return "", fmt.Errorf("escrow: unsupported address type %v", sv.Address.Type)
+	}
+}

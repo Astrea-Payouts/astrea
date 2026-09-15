@@ -774,6 +774,226 @@ func TestQuoteGoLiveFee_DecodeReturnValueError(t *testing.T) {
 	}
 }
 
+// --- get_default_resolver -------------------------------------------------
+
+func TestGetDefaultResolver_NeverSubmits(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	resolverAccountID, err := xdr.AddressToAccountId(testAccountAddress)
+	if err != nil {
+		t.Fatalf("AddressToAccountId: %v", err)
+	}
+	sorobanDataB64, err := xdr.MarshalBase64(xdr.SorobanTransactionData{})
+	if err != nil {
+		t.Fatalf("marshaling empty SorobanTransactionData: %v", err)
+	}
+	returnValB64, err := xdr.MarshalBase64(xdr.ScVal{
+		Type: xdr.ScValTypeScvAddress,
+		Address: &xdr.ScAddress{
+			Type:      xdr.ScAddressTypeScAddressTypeAccount,
+			AccountId: &resolverAccountID,
+		},
+	})
+	if err != nil {
+		t.Fatalf("marshaling test return value: %v", err)
+	}
+
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{
+				TransactionDataXDR: sorobanDataB64,
+				MinResourceFee:     100,
+				Results: []protocol.SimulateHostFunctionResult{
+					{ReturnValueXDR: &returnValB64},
+				},
+			}, nil
+		},
+		// sendFn and getFn are deliberately nil, same reasoning as
+		// TestQuoteGoLiveFee_NeverSubmits.
+	}
+
+	resolver, err := GetDefaultResolver(context.Background(), rpc, contract, testAccountAddress, Config{})
+	if err != nil {
+		t.Fatalf("GetDefaultResolver returned error: %v", err)
+	}
+	if resolver != testAccountAddress {
+		t.Fatalf("resolver = %q, want %q", resolver, testAccountAddress)
+	}
+}
+
+func TestGetDefaultResolver_LoadAccountError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, _ string) (txnbuild.Account, error) {
+			return nil, errors.New("rpc: getAccount failed")
+		},
+	}
+
+	_, err = GetDefaultResolver(context.Background(), rpc, contract, testAccountAddress, Config{})
+	if err == nil {
+		t.Fatal("expected an error when LoadAccount fails, got nil")
+	}
+}
+
+func TestGetDefaultResolver_BuildTxError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+	}
+
+	_, err = GetDefaultResolver(context.Background(), rpc, contract, "not-a-real-strkey", Config{})
+	if err == nil {
+		t.Fatal("expected an error for a malformed source address, got nil")
+	}
+}
+
+func TestGetDefaultResolver_SimulateTransactionRPCError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{}, errors.New("rpc: simulateTransaction transport error")
+		},
+	}
+
+	_, err = GetDefaultResolver(context.Background(), rpc, contract, testAccountAddress, Config{})
+	if err == nil {
+		t.Fatal("expected an error when SimulateTransaction itself fails, got nil")
+	}
+}
+
+func TestGetDefaultResolver_SimulationHostError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{Error: "HostError: Error(Contract, #4)"}, nil
+		},
+	}
+
+	_, err = GetDefaultResolver(context.Background(), rpc, contract, testAccountAddress, Config{})
+	var simErr *SimulationError
+	if !errors.As(err, &simErr) {
+		t.Fatalf("GetDefaultResolver error = %v (%T), want *SimulationError", err, err)
+	}
+}
+
+func TestGetDefaultResolver_NoReturnValue(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	sorobanDataB64, err := xdr.MarshalBase64(xdr.SorobanTransactionData{})
+	if err != nil {
+		t.Fatalf("marshaling empty SorobanTransactionData: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{
+				TransactionDataXDR: sorobanDataB64,
+				MinResourceFee:     100,
+				Results:            nil,
+			}, nil
+		},
+	}
+
+	_, err = GetDefaultResolver(context.Background(), rpc, contract, testAccountAddress, Config{})
+	if err == nil {
+		t.Fatal("expected an error when simulation returns no results, got nil")
+	}
+}
+
+func TestGetDefaultResolver_DecodeReturnValueError(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	sorobanDataB64, err := xdr.MarshalBase64(xdr.SorobanTransactionData{})
+	if err != nil {
+		t.Fatalf("marshaling empty SorobanTransactionData: %v", err)
+	}
+	garbage := "not-valid-base64-xdr!!"
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{
+				TransactionDataXDR: sorobanDataB64,
+				MinResourceFee:     100,
+				Results: []protocol.SimulateHostFunctionResult{
+					{ReturnValueXDR: &garbage},
+				},
+			}, nil
+		},
+	}
+
+	_, err = GetDefaultResolver(context.Background(), rpc, contract, testAccountAddress, Config{})
+	if err == nil {
+		t.Fatal("expected an error decoding a malformed return value, got nil")
+	}
+}
+
+func TestGetDefaultResolver_WrongReturnValueType(t *testing.T) {
+	contract, err := ContractAddress(testContractAddress)
+	if err != nil {
+		t.Fatalf("ContractAddress: %v", err)
+	}
+	sorobanDataB64, err := xdr.MarshalBase64(xdr.SorobanTransactionData{})
+	if err != nil {
+		t.Fatalf("marshaling empty SorobanTransactionData: %v", err)
+	}
+	returnValB64, err := xdr.MarshalBase64(xdr.ScVal{Type: xdr.ScValTypeScvI128, I128: &xdr.Int128Parts{Hi: 0, Lo: 15_000}})
+	if err != nil {
+		t.Fatalf("marshaling test return value: %v", err)
+	}
+	rpc := &mockRPC{
+		loadAccountFn: func(_ context.Context, address string) (txnbuild.Account, error) {
+			return &txnbuild.SimpleAccount{AccountID: address, Sequence: 1}, nil
+		},
+		simulateFn: func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+			return protocol.SimulateTransactionResponse{
+				TransactionDataXDR: sorobanDataB64,
+				MinResourceFee:     100,
+				Results: []protocol.SimulateHostFunctionResult{
+					{ReturnValueXDR: &returnValB64},
+				},
+			}, nil
+		},
+	}
+
+	_, err = GetDefaultResolver(context.Background(), rpc, contract, testAccountAddress, Config{})
+	if err == nil {
+		t.Fatal("expected an error when get_default_resolver returns a non-Address value, got nil")
+	}
+}
+
 // --- resolve_dispute -----------------------------------------------------
 
 func TestResolveDisputeHostFunction(t *testing.T) {

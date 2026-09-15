@@ -10,6 +10,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stellar/go/network"
+	"github.com/stellar/go/strkey"
 
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/escrow"
 )
@@ -55,6 +56,11 @@ type Config struct {
 	DatabaseURL       string
 	// ServiceToken is never logged — see README.md's Configuration section.
 	ServiceToken string
+	// USDCIssuer is the classic-asset issuer of the organizer-path deposit
+	// token; internal/escrow.ClassicAssetContractID derives its SAC address
+	// from this plus NetworkPassphrase. Not part of Chain — the harness
+	// takes its own raw TOKEN env var instead (see cmd/escrow-testnet-proof).
+	USDCIssuer string
 }
 
 // LoadChain reads and validates just the four environment variables that
@@ -178,6 +184,13 @@ func Load(getenv func(string) string) (Config, error) {
 		))
 	}
 
+	usdcIssuer := getenv("USDC_ISSUER")
+	if usdcIssuer == "" {
+		problems = append(problems, "USDC_ISSUER: required")
+	} else if _, err := strkey.Decode(strkey.VersionByteAccountID, usdcIssuer); err != nil {
+		problems = append(problems, fmt.Sprintf("USDC_ISSUER: invalid account address %q: %v", usdcIssuer, err))
+	}
+
 	if len(problems) > 0 {
 		return Config{}, formatProblems(problems)
 	}
@@ -191,6 +204,7 @@ func Load(getenv func(string) string) (Config, error) {
 		Port:              port,
 		DatabaseURL:       databaseURL,
 		ServiceToken:      serviceToken,
+		USDCIssuer:        usdcIssuer,
 	}, nil
 }
 
