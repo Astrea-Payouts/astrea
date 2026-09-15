@@ -12,10 +12,10 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"regexp"
 	"strconv"
 
 	"github.com/stellar/go/strkey"
-	"github.com/stellar/go/xdr"
 
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/escrow"
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/store"
@@ -26,6 +26,12 @@ import (
 // organizer-path call where the amount comes from the client rather than
 // being derived from Prize rows, so this is the floor of trust it gets.
 const maxDepositStroops = 1_000_000 * 10_000_000
+
+// opIDPattern matches the shape newOpID() (store/postgres_organizer.go)
+// generates: 16 CSPRNG bytes, hex-encoded. Rejecting anything else before
+// it reaches LoadDepositOp or a log line is what keeps a junk opId a 400
+// instead of a store lookup (or a log entry) built from raw client input.
+var opIDPattern = regexp.MustCompile(`^[0-9a-f]{32}$`)
 
 type walletBalanceResponse struct {
 	Address string `json:"address"`
@@ -133,15 +139,9 @@ func handleDepositBuild(deps Deps) http.HandlerFunc {
 			return
 		}
 
-		_, op, err := escrow.DecodeSingleOpInvokeHostFunction(unsignedTx.XDR)
+		hostFunctionXDR, err := hostFunctionXDRFrom(unsignedTx.XDR)
 		if err != nil {
-			log.Printf("api: wallet %s: decoding built unsigned tx: %v", address, err)
-			writeError(w, http.StatusInternalServerError, "internal", "internal error")
-			return
-		}
-		hostFunctionXDR, err := xdr.MarshalBase64(op.HostFunction)
-		if err != nil {
-			log.Printf("api: wallet %s: marshaling built host function: %v", address, err)
+			log.Printf("api: wallet %s: %v", address, err)
 			writeError(w, http.StatusInternalServerError, "internal", "internal error")
 			return
 		}
@@ -175,8 +175,12 @@ func handleDepositSubmit(deps Deps) http.HandlerFunc {
 		}
 
 		var req depositSubmitRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.OpID == "" || req.SignedTransactionXDR == "" {
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.SignedTransactionXDR == "" {
 			writeError(w, http.StatusBadRequest, "invalid_request", "body must be JSON with a non-empty opId and signedTransactionXdr")
+			return
+		}
+		if !opIDPattern.MatchString(req.OpID) {
+			writeError(w, http.StatusBadRequest, "invalid_request", "opId is not a value this service issued")
 			return
 		}
 
@@ -218,28 +222,19 @@ func handleDepositSubmit(deps Deps) http.HandlerFunc {
 		// From here on the transaction may already be on the network -- see
 		// handleReleaseSubmit's identical reasoning in release.go.
 		ctx := context.WithoutCancel(r.Context())
-		result, err := escrow.SubmitSigned(ctx, deps.RPC, req.SignedTransactionXDR, deps.EscrowCfg)
-		if err != nil {
-			var submissionErr *escrow.SubmissionError
-			var onChainErr *escrow.OnChainError
-			var timeoutErr *escrow.TimeoutError
-			switch {
-			case errors.As(err, &submissionErr):
-				markDepositFailedBestEffort(ctx, deps.Store, req.OpID, err)
-				writeError(w, http.StatusBadGateway, "submission_failed", submissionErr.Error())
-			case errors.As(err, &onChainErr):
-				markDepositFailedBestEffort(ctx, deps.Store, req.OpID, err)
-				writeError(w, http.StatusBadGateway, "on_chain_failed", onChainErr.Error())
-			case errors.As(err, &timeoutErr):
-				w.Header().Set("Content-Type", "application/json")
-				w.WriteHeader(http.StatusAccepted)
-				json.NewEncoder(w).Encode(depositSubmitResponse{TxHash: timeoutErr.Hash, Status: "pending"})
-			default:
-				log.Printf("api: wallet %s: SubmitSigned: %v", address, err)
-				writeError(w, http.StatusInternalServerError, "internal", "internal error")
-			}
+		outcome, ok := submitAndClassify(ctx, w, deps.RPC, req.SignedTransactionXDR, deps.EscrowCfg, "wallet "+address, func(err error) {
+			markDepositFailedBestEffort(ctx, deps.Store, req.OpID, err)
+		})
+		if !ok {
 			return
 		}
+		if outcome.PendingHash != "" {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusAccepted)
+			json.NewEncoder(w).Encode(depositSubmitResponse{TxHash: outcome.PendingHash, Status: "pending"})
+			return
+		}
+		result := outcome.Result
 
 		if err := deps.Store.MarkDepositSucceeded(ctx, req.OpID); err != nil {
 			log.Printf("api: wallet %s: MarkDepositSucceeded (tx %s): %v", address, result.Hash, err)

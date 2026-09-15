@@ -26,6 +26,13 @@ import (
 // touch the network.
 const testUSDCContractAddressStr = "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA"
 
+// testOpID and testMissingOpID are stand-ins for what newOpID()
+// (store/postgres_organizer.go) actually generates -- 32 lowercase hex
+// characters -- since opIDPattern now rejects anything else before a
+// submit handler ever logs or looks up an opId a client sent.
+const testOpID = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+const testMissingOpID = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+
 func newWalletDeps(t *testing.T, fs *fakeStore, rpc *mockRPC) Deps {
 	t.Helper()
 	return Deps{
@@ -227,7 +234,7 @@ func TestDepositSubmit_WalletMismatch(t *testing.T) {
 	address := mustRandomAddress(t)
 	other := mustRandomAddress(t)
 
-	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", other, depositSubmitRequest{OpID: "op-1", SignedTransactionXDR: "AAAA"})
+	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", other, depositSubmitRequest{OpID: testOpID, SignedTransactionXDR: "AAAA"})
 	assertErrorStatus(t, rec, http.StatusForbidden, "not_wallet_owner")
 }
 
@@ -248,7 +255,7 @@ func TestDepositSubmit_InvalidRequest(t *testing.T) {
 		assertErrorStatus(t, rec, http.StatusBadRequest, "invalid_request")
 	})
 	t.Run("missing signed xdr", func(t *testing.T) {
-		rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: "op-1"})
+		rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: testOpID})
 		assertErrorStatus(t, rec, http.StatusBadRequest, "invalid_request")
 	})
 }
@@ -257,29 +264,29 @@ func TestDepositSubmit_DepositNotFound(t *testing.T) {
 	router := New(Deps{ServiceToken: testServiceToken, Store: &fakeStore{}})
 	address := mustRandomAddress(t)
 
-	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: "does-not-exist", SignedTransactionXDR: "AAAA"})
+	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: testMissingOpID, SignedTransactionXDR: "AAAA"})
 	assertErrorStatus(t, rec, http.StatusNotFound, "deposit_not_found")
 }
 
 func TestDepositSubmit_AlreadySucceeded(t *testing.T) {
 	address := mustRandomAddress(t)
 	fs := &fakeStore{depositOps: map[string]*store.DepositOp{
-		"op-1": {Status: store.OpStatusSucceeded, Build: store.DepositBuild{SourceAccount: address}},
+		testOpID: {Status: store.OpStatusSucceeded, Build: store.DepositBuild{SourceAccount: address}},
 	}}
 	router := New(Deps{ServiceToken: testServiceToken, Store: fs})
 
-	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: "op-1", SignedTransactionXDR: "AAAA"})
+	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: testOpID, SignedTransactionXDR: "AAAA"})
 	assertErrorStatus(t, rec, http.StatusConflict, "deposit_already_succeeded")
 }
 
 func TestDepositSubmit_PreviousAttemptFailed(t *testing.T) {
 	address := mustRandomAddress(t)
 	fs := &fakeStore{depositOps: map[string]*store.DepositOp{
-		"op-1": {Status: store.OpStatusFailed, Build: store.DepositBuild{SourceAccount: address}},
+		testOpID: {Status: store.OpStatusFailed, Build: store.DepositBuild{SourceAccount: address}},
 	}}
 	router := New(Deps{ServiceToken: testServiceToken, Store: fs})
 
-	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: "op-1", SignedTransactionXDR: "AAAA"})
+	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: testOpID, SignedTransactionXDR: "AAAA"})
 	assertErrorStatus(t, rec, http.StatusConflict, "no_pending_deposit")
 }
 
@@ -287,22 +294,22 @@ func TestDepositSubmit_OpBuiltForOtherWallet(t *testing.T) {
 	address := mustRandomAddress(t)
 	otherAddress := mustRandomAddress(t)
 	fs := &fakeStore{depositOps: map[string]*store.DepositOp{
-		"op-1": {Status: store.OpStatusPending, Build: store.DepositBuild{SourceAccount: otherAddress}},
+		testOpID: {Status: store.OpStatusPending, Build: store.DepositBuild{SourceAccount: otherAddress}},
 	}}
 	router := New(Deps{ServiceToken: testServiceToken, Store: fs})
 
-	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: "op-1", SignedTransactionXDR: "AAAA"})
+	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: testOpID, SignedTransactionXDR: "AAAA"})
 	assertErrorStatus(t, rec, http.StatusForbidden, "not_wallet_owner")
 }
 
 func TestDepositSubmit_UnexpectedOpStatus(t *testing.T) {
 	address := mustRandomAddress(t)
 	fs := &fakeStore{depositOps: map[string]*store.DepositOp{
-		"op-1": {Status: "SOMETHING_ELSE", Build: store.DepositBuild{SourceAccount: address}},
+		testOpID: {Status: "SOMETHING_ELSE", Build: store.DepositBuild{SourceAccount: address}},
 	}}
 	router := New(Deps{ServiceToken: testServiceToken, Store: fs})
 
-	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: "op-1", SignedTransactionXDR: "AAAA"})
+	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: testOpID, SignedTransactionXDR: "AAAA"})
 	assertErrorStatus(t, rec, http.StatusInternalServerError, "internal")
 }
 
@@ -311,7 +318,7 @@ func TestDepositSubmit_LoadDepositOpInternalError(t *testing.T) {
 	fs := &fakeStore{loadDepositOpErr: errors.New("connection reset")}
 	router := New(Deps{ServiceToken: testServiceToken, Store: fs})
 
-	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: "op-1", SignedTransactionXDR: "AAAA"})
+	rec := doJSON(t, router, http.MethodPost, "/wallets/"+address+"/deposit/submit", address, depositSubmitRequest{OpID: testOpID, SignedTransactionXDR: "AAAA"})
 	assertErrorStatus(t, rec, http.StatusInternalServerError, "internal")
 }
 
