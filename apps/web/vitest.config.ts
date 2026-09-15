@@ -5,6 +5,12 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
+			// Next.js resolves the `server-only` marker itself at bundle time
+			// (it isn't an installed package); tests import its no-op build.
+			"server-only": path.resolve(
+				__dirname,
+				"./node_modules/next/dist/compiled/server-only/empty.js",
+			),
 		},
 	},
 	test: {

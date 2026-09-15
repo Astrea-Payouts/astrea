@@ -1,3 +1,4 @@
+// DEPRECATED: predates services/core-go, which now owns op_log — use lib/core-go for every contract operation (issue #15, decision 1).
 import type { Prisma } from "@/generated/prisma/client";
 import { OpStatus } from "@/generated/prisma/enums";
 import { PrismaClientKnownRequestError } from "@/generated/prisma/internal/prismaNamespace";
