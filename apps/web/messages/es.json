@@ -71,7 +71,8 @@
 		"card3Desc": "Transferí premios a las billeteras de los ganadores con validación automática de trustlines.",
 		"ctaTitle": "¿Listo para lanzar tu evento?",
 		"ctaDesc": "Creá tu primer hackathon o desafío con escrow en la red de pruebas de Stellar hoy mismo.",
-		"backToHome": "Volver al inicio"
+		"backToHome": "Volver al inicio",
+		"createEvent": "Crear un evento"
 	},
 	"SiteHeader": {
 		"githubAriaLabel": "Astrea en GitHub",
@@ -192,7 +193,8 @@
 		"organizer": {
 			"closeHint": "Cerrar el registro pasa el evento a evaluación; el juez puede entonces asignar ganadores y liberar los premios.",
 			"close": "Cerrar registro, iniciar evaluación",
-			"closing": "Cerrando…"
+			"closing": "Cerrando…",
+			"goLiveNext": "El go-live viene después (#11 PR 2)."
 		},
 		"errors": {
 			"notConnected": "Conectá tu wallet primero.",
@@ -239,5 +241,79 @@
 		"pending": "Enviada — confirmación pendiente.",
 		"signRejected": "La wallet no firmó la transacción.",
 		"submitFailed": "El envío falló."
+	},
+	"OrganizerNew": {
+		"title": "Crear un evento",
+		"intro": "Poné el nombre, listá los premios y nombrá al juez. Nada toca la cadena todavía: el fondeo y la creación on-chain vienen después.",
+		"connect": "Conectá la wallet del organizador para crear un evento.",
+		"name": "Nombre del evento",
+		"description": "Descripción (opcional)",
+		"prizes": "Premios ({symbol})",
+		"prizesHint": "Un monto por puesto, en orden. Hasta 7 decimales.",
+		"prizeAmount": "Monto del premio #{rank}",
+		"removePrize": "Quitar premio #{rank}",
+		"addPrize": "Agregar premio",
+		"judgeAddress": "Dirección de la wallet del juez",
+		"judgeAddressHint": "Una wallet distinta a la del organizador ({organizer}).",
+		"judgeName": "Nombre visible del juez",
+		"deadline": "Fecha límite de evaluación",
+		"deadlineHint": "En tu hora local; se guarda en UTC. Pasada esa fecha, cualquiera puede expirar el evento y la reserva vuelve a vos.",
+		"submit": "Guardar borrador y pasar al fondeo",
+		"submitting": "Guardando…",
+		"errors": {
+			"notConnected": "Primero conectá tu wallet.",
+			"invalidName": "El nombre debe tener entre 1 y 120 caracteres.",
+			"noPrizes": "Agregá al menos un premio.",
+			"invalidPrize": "Cada premio debe ser un monto positivo con hasta 7 decimales. Revisá el premio",
+			"invalidJudgeAddress": "La wallet del juez debe ser una dirección Stellar válida (G…, 56 caracteres).",
+			"judgeIsOrganizer": "El juez no puede ser la wallet del organizador.",
+			"invalidJudgeName": "El nombre del juez debe tener entre 1 y 80 caracteres.",
+			"invalidDeadline": "Elegí una fecha límite de evaluación.",
+			"deadlinePast": "La fecha límite debe ser futura.",
+			"writeFailed": "No se pudo guardar el borrador:"
+		}
+	},
+	"FundPage": {
+		"title": "Fondear y crear",
+		"connect": "Conectá la wallet del organizador para fondear este evento.",
+		"forbidden": {
+			"notOrganizer": "Tu wallet no es la del organizador de este evento."
+		},
+		"prizes": {
+			"title": "Premios a reservar",
+			"rank": "#{rank}",
+			"total": "Total"
+		},
+		"balanceFailed": "No se pudo leer tu saldo en el escrow desde el servicio:",
+		"balance": "Tu saldo en el escrow",
+		"required": "Necesario para este evento",
+		"checkAgain": "Verificar de nuevo",
+		"checking": "Verificando…",
+		"deposit": {
+			"title": "Paso 1 — Depósito",
+			"hint": "A tu saldo en el escrow le faltan {shortfall} {symbol}. Depositá al menos eso desde tu wallet.",
+			"amount": "Monto a depositar ({symbol})",
+			"belowShortfall": "Ingresá al menos {shortfall} {symbol}.",
+			"build": "Depositar {amount} {symbol}",
+			"building": "Armando…",
+			"signHint": "Tu wallet firma exactamente este depósito. El servicio rechaza cualquier envelope distinto al que armó.",
+			"sign": "Firmar el depósito",
+			"changeAmount": "Cambiar monto",
+			"pending": "Depósito enviado — la confirmación expiró, resultado desconocido. Revisá el hash y después verificá tu saldo de nuevo."
+		},
+		"create": {
+			"title": "Paso 2 — Reservar y crear",
+			"hint": "El saldo cubre los premios. Crear el evento mueve el total desde tu saldo en el escrow a la reserva de este evento.",
+			"build": "Reservar {amount} {symbol} y crear el evento",
+			"building": "Armando…",
+			"reward": "Reserva (según el servicio)",
+			"escrowEventId": "Id del evento en el escrow",
+			"rewardMismatch": "El servicio calculó una reserva de {go} {symbol}; esta página suma los premios en {page} {symbol}. Tienen que coincidir antes de firmar — no sigas, reportá ambos números.",
+			"signHint": "Tu wallet firma exactamente este create_event. No se reserva nada hasta que la red lo confirme.",
+			"sign": "Firmar y crear",
+			"discard": "Descartar este armado",
+			"pending": "Enviado — la confirmación expiró, resultado desconocido. Revisá el hash y después verificá el evento de nuevo.",
+			"buildReplaced": "La transacción se confirmó pero el armado fue reemplazado mientras tanto; no reintentes, contactá a soporte con el hash {hash}."
+		}
 	}
 }

@@ -2,8 +2,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	CoreGoError,
 	CoreGoTransportError,
+	createBuild,
+	createSubmit,
+	depositBuild,
+	depositSubmit,
 	releaseBuild,
 	releaseSubmit,
+	walletBalance,
 } from "./client";
 
 const EVENT_ID = "11111111-2222-3333-4444-555555555555";
@@ -151,6 +156,159 @@ describe("core-go client", () => {
 
 		expect(err).toBeInstanceOf(CoreGoTransportError);
 		expect(err.status).toBe(500);
+	});
+
+	describe("organizer path", () => {
+		function lastCall() {
+			const [url, init] = fetchMock.mock.calls[0];
+			return {
+				url: url instanceof URL ? url.toString() : String(url),
+				init,
+				headers: init?.headers as Record<string, string>,
+			};
+		}
+
+		it("walletBalance GETs /wallets/{address}/balance with the wallet header and no body", async () => {
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(200, { address: WALLET, balance: "25000000" }),
+			);
+
+			const res = await walletBalance(WALLET, WALLET);
+
+			expect(res).toEqual({ address: WALLET, balance: "25000000" });
+			const { url, init, headers } = lastCall();
+			expect(url).toBe(`http://localhost:8080/wallets/${WALLET}/balance`);
+			expect(url).not.toContain(TOKEN);
+			expect(init?.method).toBe("GET");
+			expect(init?.body).toBeUndefined();
+			expect(headers.Authorization).toBe(`Bearer ${TOKEN}`);
+			expect(headers["X-Astrea-Wallet"]).toBe(WALLET);
+			expect(headers["Content-Type"]).toBeUndefined();
+		});
+
+		it("depositBuild posts the decimal amount and returns opId + XDR", async () => {
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(200, {
+					opId: "0123456789abcdef0123456789abcdef",
+					unsignedTransactionXdr: "DDDD",
+				}),
+			);
+
+			const res = await depositBuild(WALLET, WALLET, "2.5");
+
+			expect(res.opId).toBe("0123456789abcdef0123456789abcdef");
+			expect(res.unsignedTransactionXdr).toBe("DDDD");
+			const { url, init, headers } = lastCall();
+			expect(url).toBe(`http://localhost:8080/wallets/${WALLET}/deposit/build`);
+			expect(init?.method).toBe("POST");
+			expect(headers["Content-Type"]).toBe("application/json");
+			expect(JSON.parse(String(init?.body))).toEqual({ amount: "2.5" });
+		});
+
+		it("depositSubmit posts opId and signed XDR, passing a 202 through", async () => {
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(202, { txHash: "dep123", status: "pending" }),
+			);
+
+			const res = await depositSubmit(
+				WALLET,
+				WALLET,
+				"0123456789abcdef0123456789abcdef",
+				"EEEE",
+			);
+
+			expect(res).toEqual({ txHash: "dep123", status: "pending" });
+			const { url, init } = lastCall();
+			expect(url).toBe(
+				`http://localhost:8080/wallets/${WALLET}/deposit/submit`,
+			);
+			expect(JSON.parse(String(init?.body))).toEqual({
+				opId: "0123456789abcdef0123456789abcdef",
+				signedTransactionXdr: "EEEE",
+			});
+		});
+
+		it("createBuild posts an empty object and returns reward + escrowEventId", async () => {
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(200, {
+					unsignedTransactionXdr: "FFFF",
+					reward: 25000000,
+					escrowEventId: "58e01828eeeba7090fc21c878f8d28da",
+				}),
+			);
+
+			const res = await createBuild(EVENT_ID, WALLET);
+
+			expect(res.reward).toBe(25000000);
+			expect(res.escrowEventId).toBe("58e01828eeeba7090fc21c878f8d28da");
+			const { url, init, headers } = lastCall();
+			expect(url).toBe(`http://localhost:8080/events/${EVENT_ID}/create/build`);
+			expect(init?.method).toBe("POST");
+			expect(headers["X-Astrea-Wallet"]).toBe(WALLET);
+			expect(JSON.parse(String(init?.body))).toEqual({});
+		});
+
+		it("createSubmit posts the signed XDR and returns hash, status and escrowEventId", async () => {
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(200, {
+					txHash: "cre123",
+					status: "succeeded",
+					escrowEventId: "58e01828eeeba7090fc21c878f8d28da",
+				}),
+			);
+
+			const res = await createSubmit(EVENT_ID, WALLET, "GGGG");
+
+			expect(res).toEqual({
+				txHash: "cre123",
+				status: "succeeded",
+				escrowEventId: "58e01828eeeba7090fc21c878f8d28da",
+			});
+			const { url, init } = lastCall();
+			expect(url).toBe(
+				`http://localhost:8080/events/${EVENT_ID}/create/submit`,
+			);
+			expect(JSON.parse(String(init?.body))).toEqual({
+				signedTransactionXdr: "GGGG",
+			});
+		});
+
+		it("maps the organizer-path envelopes (403 not_wallet_owner, 409 create_build_replaced) to CoreGoError", async () => {
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(403, {
+					error: { code: "not_wallet_owner", message: "not the caller" },
+				}),
+			);
+			const e1 = await walletBalance(WALLET, "GOTHER").catch((e) => e);
+			expect(e1).toBeInstanceOf(CoreGoError);
+			expect(e1.status).toBe(403);
+			expect(e1.code).toBe("not_wallet_owner");
+
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(409, {
+					error: {
+						code: "create_build_replaced",
+						message: "confirmed against a replaced build",
+					},
+				}),
+			);
+			const e2 = await createSubmit(EVENT_ID, WALLET, "GGGG").catch((e) => e);
+			expect(e2).toBeInstanceOf(CoreGoError);
+			expect(e2.status).toBe(409);
+			expect(e2.code).toBe("create_build_replaced");
+			expect(e2.message).toContain("replaced");
+		});
+
+		it("throws CoreGoTransportError on a non-JSON balance response", async () => {
+			fetchMock.mockResolvedValueOnce(
+				new Response("upstream down", { status: 503 }),
+			);
+
+			const err = await walletBalance(WALLET, WALLET).catch((e) => e);
+
+			expect(err).toBeInstanceOf(CoreGoTransportError);
+			expect(err.status).toBe(503);
+		});
 	});
 
 	describe("without CORE_GO_URL / CORE_GO_SERVICE_TOKEN", () => {
