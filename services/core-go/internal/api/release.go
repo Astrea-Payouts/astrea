@@ -16,8 +16,6 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/stellar/go/xdr"
-
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/escrow"
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/store"
 )
@@ -136,15 +134,9 @@ func handleReleaseBuild(deps Deps) http.HandlerFunc {
 			return
 		}
 
-		_, op, err := escrow.DecodeSingleOpInvokeHostFunction(unsignedTx.XDR)
+		hostFunctionXDR, err := hostFunctionXDRFrom(unsignedTx.XDR)
 		if err != nil {
-			log.Printf("api: event %s: decoding built unsigned tx: %v", eventID, err)
-			writeError(w, http.StatusInternalServerError, "internal", "internal error")
-			return
-		}
-		hostFunctionXDR, err := xdr.MarshalBase64(op.HostFunction)
-		if err != nil {
-			log.Printf("api: event %s: marshaling built host function: %v", eventID, err)
+			log.Printf("api: event %s: %v", eventID, err)
 			writeError(w, http.StatusInternalServerError, "internal", "internal error")
 			return
 		}
@@ -240,31 +232,22 @@ func handleReleaseSubmit(deps Deps) http.HandlerFunc {
 		// writes that record the outcome -- that would leave a paid release
 		// stuck at PENDING/ASSIGNED.
 		ctx := context.WithoutCancel(r.Context())
-		result, err := escrow.SubmitSigned(ctx, deps.RPC, req.SignedTransactionXDR, deps.EscrowCfg)
-		if err != nil {
-			var submissionErr *escrow.SubmissionError
-			var onChainErr *escrow.OnChainError
-			var timeoutErr *escrow.TimeoutError
-			switch {
-			case errors.As(err, &submissionErr):
-				markReleaseFailedBestEffort(ctx, deps.Store, eventID, err)
-				writeError(w, http.StatusBadGateway, "submission_failed", submissionErr.Error())
-			case errors.As(err, &onChainErr):
-				markReleaseFailedBestEffort(ctx, deps.Store, eventID, err)
-				writeError(w, http.StatusBadGateway, "on_chain_failed", onChainErr.Error())
-			case errors.As(err, &timeoutErr):
-				// Op stays PENDING -- the outcome is unknown, not failed; a
-				// later /submit retry (or manual reconciliation) still has
-				// a PENDING row to work with.
-				w.Header().Set("Content-Type", "application/json")
-				w.WriteHeader(http.StatusAccepted)
-				json.NewEncoder(w).Encode(releaseSubmitResponse{TxHash: timeoutErr.Hash, Status: "pending"})
-			default:
-				log.Printf("api: event %s: SubmitSigned: %v", eventID, err)
-				writeError(w, http.StatusInternalServerError, "internal", "internal error")
-			}
+		outcome, ok := submitAndClassify(ctx, w, deps.RPC, req.SignedTransactionXDR, deps.EscrowCfg, "event "+eventID, func(err error) {
+			markReleaseFailedBestEffort(ctx, deps.Store, eventID, err)
+		})
+		if !ok {
 			return
 		}
+		if outcome.PendingHash != "" {
+			// Op stays PENDING -- the outcome is unknown, not failed; a
+			// later /submit retry (or manual reconciliation) still has a
+			// PENDING row to work with.
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusAccepted)
+			json.NewEncoder(w).Encode(releaseSubmitResponse{TxHash: outcome.PendingHash, Status: "pending"})
+			return
+		}
+		result := outcome.Result
 
 		if err := deps.Store.MarkReleaseSucceeded(ctx, eventID, result.Hash, time.Now().UTC()); err != nil {
 			log.Printf("api: event %s: MarkReleaseSucceeded (tx %s): %v", eventID, result.Hash, err)

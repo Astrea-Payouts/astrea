@@ -257,7 +257,9 @@ func (f *fakeStore) SaveDepositBuild(_ context.Context, build store.DepositBuild
 		f.depositOps = map[string]*store.DepositOp{}
 	}
 	f.depositOpCounter++
-	opID := fmt.Sprintf("test-op-%d", f.depositOpCounter)
+	// 32 lowercase hex chars, the shape newOpID() (postgres_organizer.go)
+	// actually generates -- opIDPattern rejects anything else.
+	opID := fmt.Sprintf("%032x", f.depositOpCounter)
 	f.depositOps[opID] = &store.DepositOp{Status: store.OpStatusPending, Build: build}
 	return opID, nil
 }

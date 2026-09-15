@@ -63,28 +63,9 @@ func (p *Postgres) LoadEventForCreate(ctx context.Context, eventID string) (*Eve
 		return nil, fmt.Errorf("store: load event: %w", err)
 	}
 
-	judgeRows, err := p.db.Query(ctx,
-		`SELECT "walletAddress" FROM judges WHERE "eventId" = $1 AND status = 'ACTIVE'`,
-		eventID,
-	)
+	event.Judges, event.Prizes, err = loadJudgesAndPrizes(ctx, p.db, eventID)
 	if err != nil {
-		return nil, fmt.Errorf("store: load judges: %w", err)
-	}
-	event.Judges, err = pgx.CollectRows(judgeRows, pgx.RowTo[string])
-	if err != nil {
-		return nil, fmt.Errorf("store: scan judges: %w", err)
-	}
-
-	prizeRows, err := p.db.Query(ctx,
-		`SELECT id::text, rank, amount::text FROM prizes WHERE "eventId" = $1 ORDER BY rank`,
-		eventID,
-	)
-	if err != nil {
-		return nil, fmt.Errorf("store: load prizes: %w", err)
-	}
-	event.Prizes, err = pgx.CollectRows(prizeRows, pgx.RowToStructByPos[Prize])
-	if err != nil {
-		return nil, fmt.Errorf("store: scan prizes: %w", err)
+		return nil, err
 	}
 
 	return event, nil
