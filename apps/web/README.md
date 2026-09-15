@@ -54,8 +54,9 @@ you need Go, a local Postgres, and a wallet extension.
    without a USDC trustline is refused before any row is written), connect
    the organizer wallet and close registration, then open
    `/en/events/<id>/judge` with the judge wallet, assign a team per prize,
-   build, sign, and watch the hash land. Go logs `/release/build` and
-   `/release/submit` per request.
+   build, sign, and watch the hash land. Go on `develop` only logs failures
+   on this path; a clean run shows nothing past the boot line, so verify
+   through the hash and the `op_log` row instead.
 
 Nothing in the browser ever holds the service token or calls Soroban RPC
 for a write; the one direct RPC call is the read-only `get_event`
