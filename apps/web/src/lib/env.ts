@@ -37,7 +37,11 @@ const serverSchema = z.object({
 	// Optional override; defaults to the public testnet RPC (stellar-network.ts).
 	// No free public mainnet Soroban RPC exists, so this becomes required
 	// below when NEXT_PUBLIC_STELLAR_NETWORK=mainnet.
-	SOROBAN_RPC_URL: z.url().optional(),
+	// A blank `SOROBAN_RPC_URL=` line (what .env.example ships) means unset.
+	SOROBAN_RPC_URL: z.preprocess(
+		(v) => (v === "" ? undefined : v),
+		z.url().optional(),
+	),
 	USDC_ISSUER: z
 		.string()
 		.regex(
@@ -45,6 +49,12 @@ const serverSchema = z.object({
 			"USDC_ISSUER must be a Stellar account ID (starts with G, 56 chars)",
 		),
 	USDC_SYMBOL: z.string().min(1).default("USDC"),
+	// services/core-go — the only writer of transactional state. Server-only:
+	// every /build and /submit goes through a server action (issue #15,
+	// decision 1). The token is the shared bearer secret Go checks with a
+	// constant-time compare; it is never NEXT_PUBLIC_ and never logged.
+	CORE_GO_URL: z.url(),
+	CORE_GO_SERVICE_TOKEN: z.string().min(32),
 });
 
 function parseEnv() {
@@ -82,8 +92,33 @@ function parseEnv() {
 	};
 }
 
-// Parsed once at module load — any invalid/missing var fails the boot
-// immediately (a Next.js server action, route handler, or script importing
-// this module) rather than surfacing as a confusing runtime error deep in
-// an escrow call.
-export const env = parseEnv();
+type Env = ReturnType<typeof parseEnv>;
+
+let parsed: Env | undefined;
+
+// Parsed once, on first property access, and cached — any invalid/missing
+// var fails the first server action, route handler, page render or script
+// that touches it, with the full list of problems, rather than surfacing as
+// a confusing runtime error deep in an escrow call. Not at module load:
+// `next build` imports every page module to collect its config, with no
+// runtime env present in CI, and a throw there fails the build instead of
+// the request.
+export const env: Env = new Proxy({} as Env, {
+	get(_target, prop) {
+		parsed ??= parseEnv();
+		return parsed[prop as keyof Env];
+	},
+	has(_target, prop) {
+		parsed ??= parseEnv();
+		return prop in parsed;
+	},
+	ownKeys() {
+		parsed ??= parseEnv();
+		return Reflect.ownKeys(parsed);
+	},
+	getOwnPropertyDescriptor(_target, prop) {
+		parsed ??= parseEnv();
+		const desc = Object.getOwnPropertyDescriptor(parsed, prop);
+		return desc ? { ...desc, configurable: true } : undefined;
+	},
+});

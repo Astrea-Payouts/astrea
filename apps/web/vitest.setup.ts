@@ -8,3 +8,5 @@ process.env.USDC_ISSUER ??=
 	"GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5";
 process.env.DATABASE_URL ??=
 	"postgresql://postgres:postgres@localhost:5432/postgres";
+process.env.CORE_GO_URL ??= "http://localhost:8080";
+process.env.CORE_GO_SERVICE_TOKEN ??= "test-token-".repeat(4);

@@ -6,6 +6,8 @@ const VALID_CONTRACT_ID = `C${"A".repeat(55)}`;
 const baseEnv = {
 	NEXT_PUBLIC_ESCROW_CONTRACT_ID: VALID_CONTRACT_ID,
 	USDC_ISSUER: VALID_ISSUER,
+	CORE_GO_URL: "http://localhost:8080",
+	CORE_GO_SERVICE_TOKEN: "t".repeat(32),
 };
 
 async function loadEnvWith(overrides: Record<string, string | undefined>) {
@@ -18,7 +20,9 @@ async function loadEnvWith(overrides: Record<string, string | undefined>) {
 			key === "ALLOW_MAINNET" ||
 			key === "SOROBAN_RPC_URL" ||
 			key === "USDC_ISSUER" ||
-			key === "USDC_SYMBOL"
+			key === "USDC_SYMBOL" ||
+			key === "CORE_GO_URL" ||
+			key === "CORE_GO_SERVICE_TOKEN"
 		) {
 			delete process.env[key];
 		}
@@ -32,7 +36,11 @@ async function loadEnvWith(overrides: Record<string, string | undefined>) {
 		}
 	}
 	try {
-		return await import("./env");
+		const mod = await import("./env");
+		// env parses lazily on first access; force it here so a bad config
+		// rejects this call, the way the tests below expect.
+		void mod.env.NEXT_PUBLIC_STELLAR_NETWORK;
+		return mod;
 	} finally {
 		process.env = original;
 	}
@@ -59,6 +67,43 @@ describe("env", () => {
 		await expect(
 			loadEnvWith({ USDC_ISSUER: "not-an-address" }),
 		).rejects.toThrow(/USDC_ISSUER/);
+	});
+
+	it("does not parse at import time — only on first access", async () => {
+		vi.resetModules();
+		const original = { ...process.env };
+		delete process.env.NEXT_PUBLIC_ESCROW_CONTRACT_ID;
+		try {
+			const mod = await import("./env");
+			expect(() => mod.env.horizonUrl).toThrow(
+				/NEXT_PUBLIC_ESCROW_CONTRACT_ID/,
+			);
+		} finally {
+			process.env = original;
+		}
+	});
+
+	it("treats a blank SOROBAN_RPC_URL as unset and falls back to the default", async () => {
+		const { env } = await loadEnvWith({ SOROBAN_RPC_URL: "" });
+		expect(env.sorobanRpcUrl).toBe("https://soroban-testnet.stellar.org");
+	});
+
+	it("throws when CORE_GO_URL is missing or not a URL", async () => {
+		await expect(loadEnvWith({ CORE_GO_URL: undefined })).rejects.toThrow(
+			/CORE_GO_URL/,
+		);
+		await expect(loadEnvWith({ CORE_GO_URL: "localhost" })).rejects.toThrow(
+			/CORE_GO_URL/,
+		);
+	});
+
+	it("throws when CORE_GO_SERVICE_TOKEN is missing or shorter than 32 chars", async () => {
+		await expect(
+			loadEnvWith({ CORE_GO_SERVICE_TOKEN: undefined }),
+		).rejects.toThrow(/CORE_GO_SERVICE_TOKEN/);
+		await expect(
+			loadEnvWith({ CORE_GO_SERVICE_TOKEN: "short" }),
+		).rejects.toThrow(/CORE_GO_SERVICE_TOKEN/);
 	});
 
 	it("defaults to testnet with the correct Horizon/Soroban RPC URL and passphrase", async () => {

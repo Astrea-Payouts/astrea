@@ -141,5 +141,97 @@
 		"txProof": "Prueba",
 		"guaranteeTitle": "Liquidación Directa No Custodial",
 		"guaranteeDesc": "Todos los pagos se ejecutan directamente desde los contratos inteligentes Soroban de Stellar hacia la dirección del ganador. Astrea nunca retiene ni demora los fondos de los participantes."
+	},
+	"EventStatus": {
+		"DRAFT": "Borrador",
+		"CREATED": "Creado",
+		"FUNDED": "Fondeado",
+		"LIVE": "En curso",
+		"JUDGING": "En evaluación",
+		"COMPLETED": "Completado",
+		"DISPUTED": "En disputa",
+		"CANCELLED": "Cancelado"
+	},
+	"EventPage": {
+		"escrow": {
+			"title": "Reservado on-chain",
+			"onChainState": "estado del contrato: {state}",
+			"readFailed": "No se pudo leer el escrow desde el contrato:",
+			"eventId": "Id del evento en el escrow",
+			"contract": "Contrato",
+			"notOnChain": "Este evento todavía no fue creado on-chain."
+		},
+		"prizes": {
+			"title": "Premios",
+			"none": "No hay premios definidos.",
+			"rank": "#{rank}",
+			"winner": "Ganador: {team}"
+		},
+		"people": {
+			"organizer": "Organizador",
+			"judge": "Juez",
+			"noJudge": "{count, plural, =0 {Sin juez activo} other {# jueces activos — se esperaba exactamente uno}}"
+		},
+		"teams": {
+			"title": "Equipos registrados ({count})",
+			"none": "Todavía no hay equipos registrados."
+		},
+		"cta": {
+			"connect": "Conectá tu wallet para registrarte o evaluar este evento.",
+			"register": "Registrá tu equipo. Una wallet por equipo; tu wallet recibe el premio completo si ganás.",
+			"registered": "Tu wallet está registrada en este evento.",
+			"registrationClosed": "El registro está cerrado.",
+			"judge": "Evaluar este evento"
+		},
+		"register": {
+			"teamName": "Nombre del equipo",
+			"submissionUrl": "URL de la entrega",
+			"submit": "Registrarse",
+			"submitting": "Registrando…"
+		},
+		"organizer": {
+			"closeHint": "Cerrar el registro pasa el evento a evaluación; el juez puede entonces asignar ganadores y liberar los premios.",
+			"close": "Cerrar registro, iniciar evaluación",
+			"closing": "Cerrando…"
+		},
+		"errors": {
+			"notConnected": "Conectá tu wallet primero.",
+			"eventNotFound": "Evento no encontrado.",
+			"notLive": "Este evento no está en curso.",
+			"missingTrustline": "Tu wallet no tiene trustline para el activo del premio. Agregá la trustline y volvé a intentar:",
+			"alreadyRegistered": "Esta wallet ya pertenece a un equipo en este evento.",
+			"invalidTeamName": "El nombre del equipo debe tener entre 1 y 80 caracteres.",
+			"invalidSubmissionUrl": "La URL de la entrega debe ser un enlace http(s).",
+			"notOrganizer": "Solo la wallet del organizador puede hacer esto.",
+			"transition": "No se pudo pasar el evento a evaluación:"
+		}
+	},
+	"JudgePage": {
+		"title": "Panel del juez",
+		"connect": "Conectá la wallet del juez para asignar ganadores.",
+		"forbidden": {
+			"notJudge": "Tu wallet no es el juez activo de este evento.",
+			"notJudging": "Este evento no está en evaluación. El organizador cierra el registro primero."
+		},
+		"rank": "Premio #{rank}",
+		"pickTeam": "Elegí un equipo…",
+		"build": "Construir liberación",
+		"building": "Construyendo…",
+		"winnersTitle": "Ganadores en la transacción construida",
+		"signHint": "Tu wallet firma exactamente esta transacción. Go rechaza cualquier envelope distinto del que construyó.",
+		"sign": "Firmar y liberar",
+		"rebuild": "Cambiar asignaciones",
+		"released": "Premios liberados.",
+		"pending": "Enviada — la confirmación expiró, resultado desconocido. Revisá el hash."
+	},
+	"SignStep": {
+		"sign": "Firmar con la wallet",
+		"signing": "Esperando la firma de la wallet…",
+		"submitting": "Enviando a la red…",
+		"retry": "Reintentar",
+		"confirmed": "Confirmada on-chain.",
+		"pending": "Enviada — confirmación pendiente.",
+		"signRejected": "La wallet no firmó la transacción.",
+		"submitFailed": "El envío falló."
 	}
 }
