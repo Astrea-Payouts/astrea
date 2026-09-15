@@ -71,7 +71,8 @@
 		"card3Desc": "Release milestone payouts to verified recipient wallets with automated trustline validation.",
 		"ctaTitle": "Ready to launch your event?",
 		"ctaDesc": "Create your first escrow-backed hackathon or bounty track on Stellar testnet today.",
-		"backToHome": "Back to overview"
+		"backToHome": "Back to overview",
+		"createEvent": "Create an event"
 	},
 	"SiteHeader": {
 		"githubAriaLabel": "Astrea on GitHub",
@@ -192,7 +193,8 @@
 		"organizer": {
 			"closeHint": "Closing registration moves the event to judging; the judge can then assign winners and release the prizes.",
 			"close": "Close registration, start judging",
-			"closing": "Closing…"
+			"closing": "Closing…",
+			"goLiveNext": "Go-live comes next (#11 PR 2)."
 		},
 		"errors": {
 			"notConnected": "Connect your wallet first.",
@@ -239,5 +241,79 @@
 		"pending": "Submitted — confirmation pending.",
 		"signRejected": "The wallet did not sign the transaction.",
 		"submitFailed": "Submission failed."
+	},
+	"OrganizerNew": {
+		"title": "Create an event",
+		"intro": "Name the event, list the prizes, name the judge. Nothing touches the chain yet: funding and the on-chain create come next.",
+		"connect": "Connect the organizer's wallet to create an event.",
+		"name": "Event name",
+		"description": "Description (optional)",
+		"prizes": "Prizes ({symbol})",
+		"prizesHint": "One amount per rank, in order. Up to 7 decimals.",
+		"prizeAmount": "Prize #{rank} amount",
+		"removePrize": "Remove prize #{rank}",
+		"addPrize": "Add a prize",
+		"judgeAddress": "Judge wallet address",
+		"judgeAddressHint": "A different wallet than the organizer's ({organizer}).",
+		"judgeName": "Judge display name",
+		"deadline": "Judging deadline",
+		"deadlineHint": "In your local time; stored as UTC. After it passes, anyone can expire the event and the reserve refunds to you.",
+		"submit": "Save draft and continue to funding",
+		"submitting": "Saving…",
+		"errors": {
+			"notConnected": "Connect your wallet first.",
+			"invalidName": "Event name must be 1–120 characters.",
+			"noPrizes": "Add at least one prize.",
+			"invalidPrize": "Each prize must be a positive amount with at most 7 decimals. Check prize",
+			"invalidJudgeAddress": "Judge wallet must be a valid Stellar address (G…, 56 characters).",
+			"judgeIsOrganizer": "The judge cannot be the organizer's wallet.",
+			"invalidJudgeName": "Judge name must be 1–80 characters.",
+			"invalidDeadline": "Pick a judging deadline.",
+			"deadlinePast": "The judging deadline must be in the future.",
+			"writeFailed": "The draft could not be saved:"
+		}
+	},
+	"FundPage": {
+		"title": "Fund and create",
+		"connect": "Connect the organizer's wallet to fund this event.",
+		"forbidden": {
+			"notOrganizer": "Your wallet is not this event's organizer."
+		},
+		"prizes": {
+			"title": "Prizes to reserve",
+			"rank": "#{rank}",
+			"total": "Total"
+		},
+		"balanceFailed": "Could not read your escrow balance from the service:",
+		"balance": "Your balance in the escrow",
+		"required": "Required for this event",
+		"checkAgain": "Check again",
+		"checking": "Checking…",
+		"deposit": {
+			"title": "Step 1 — Deposit",
+			"hint": "Your escrow balance is {shortfall} {symbol} short. Deposit at least that much from your wallet.",
+			"amount": "Amount to deposit ({symbol})",
+			"belowShortfall": "Enter at least {shortfall} {symbol}.",
+			"build": "Deposit {amount} {symbol}",
+			"building": "Building…",
+			"signHint": "Your wallet signs exactly this deposit. The service refuses any envelope that differs from the one it built.",
+			"sign": "Sign the deposit",
+			"changeAmount": "Change amount",
+			"pending": "Deposit submitted — confirmation timed out, outcome unknown. Check the hash, then check your balance again."
+		},
+		"create": {
+			"title": "Step 2 — Reserve and create",
+			"hint": "The balance covers the prizes. Creating the event moves the total from your escrow balance into this event's reserve.",
+			"build": "Reserve {amount} {symbol} and create the event",
+			"building": "Building…",
+			"reward": "Reserve (from the service)",
+			"escrowEventId": "Escrow event id",
+			"rewardMismatch": "The service computed a reserve of {go} {symbol}; this page sums the prizes to {page} {symbol}. They must match before signing — do not continue, report both numbers.",
+			"signHint": "Your wallet signs exactly this create_event. Nothing is reserved until the network confirms it.",
+			"sign": "Sign and create",
+			"discard": "Discard this build",
+			"pending": "Submitted — confirmation timed out, outcome unknown. Check the hash, then check the event again.",
+			"buildReplaced": "The transaction confirmed but the build was replaced meanwhile; do not retry, contact support with hash {hash}."
+		}
 	}
 }

@@ -256,6 +256,14 @@ export default async function EventPage({ params }: { params: Params }) {
 								<JudgingToggle eventId={event.id} />
 							) : null}
 
+							{isOrganizer && event.status === "CREATED" ? (
+								// The reserve is on-chain (see the escrow section above);
+								// set_event_in_progress is #11 PR 2, so nothing to press yet.
+								<p className="text-sm text-zinc-500">
+									{t("organizer.goLiveNext")}
+								</p>
+							) : null}
+
 							{isJudge ? (
 								<Link
 									href={`/events/${event.id}/judge`}

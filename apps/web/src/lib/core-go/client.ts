@@ -4,11 +4,19 @@ import { env } from "@/lib/env";
 import type {
 	CoreGoErrorBody,
 	CoreGoErrorCode,
+	CreateBuildResponse,
+	CreateSubmitRequest,
+	CreateSubmitResponse,
+	DepositBuildRequest,
+	DepositBuildResponse,
+	DepositSubmitRequest,
+	DepositSubmitResponse,
 	ReleaseAssignment,
 	ReleaseBuildRequest,
 	ReleaseBuildResponse,
 	ReleaseSubmitRequest,
 	ReleaseSubmitResponse,
+	WalletBalanceResponse,
 } from "./types";
 
 // Go's `{ error: { code, message } }` envelope, surfaced so screens can show
@@ -72,23 +80,25 @@ function isErrorBody(value: unknown): value is CoreGoErrorBody {
 	);
 }
 
-async function post<TRes>(
+async function request<TRes>(
+	method: "GET" | "POST",
 	path: string,
 	wallet: string,
-	body: unknown,
+	body?: unknown,
 ): Promise<TRes> {
 	const { url, token } = config();
 	// The token travels only in the Authorization header — never in the URL,
 	// never in a log line, never in a client component's props.
+	const headers: Record<string, string> = {
+		Authorization: `Bearer ${token}`,
+		"X-Astrea-Wallet": wallet,
+		Accept: "application/json",
+	};
+	if (method === "POST") headers["Content-Type"] = "application/json";
 	const res = await fetch(new URL(path, url), {
-		method: "POST",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"X-Astrea-Wallet": wallet,
-			"Content-Type": "application/json",
-			Accept: "application/json",
-		},
-		body: JSON.stringify(body),
+		method,
+		headers,
+		body: method === "POST" ? JSON.stringify(body ?? {}) : undefined,
 		cache: "no-store",
 	});
 
@@ -108,6 +118,14 @@ async function post<TRes>(
 	}
 
 	return json as TRes;
+}
+
+function post<TRes>(path: string, wallet: string, body: unknown) {
+	return request<TRes>("POST", path, wallet, body);
+}
+
+function get<TRes>(path: string, wallet: string) {
+	return request<TRes>("GET", path, wallet);
 }
 
 export async function releaseBuild(
@@ -131,6 +149,71 @@ export async function releaseSubmit(
 	const body: ReleaseSubmitRequest = { signedTransactionXdr };
 	return post<ReleaseSubmitResponse>(
 		`/events/${encodeURIComponent(eventId)}/release/submit`,
+		wallet,
+		body,
+	);
+}
+
+// Organizer path (#199). Go authorizes every call against X-Astrea-Wallet:
+// the balance and deposit routes require the path address to be the caller,
+// create requires the caller to be the event's organizer wallet.
+
+export async function walletBalance(
+	address: string,
+	wallet: string,
+): Promise<WalletBalanceResponse> {
+	return get<WalletBalanceResponse>(
+		`/wallets/${encodeURIComponent(address)}/balance`,
+		wallet,
+	);
+}
+
+export async function depositBuild(
+	address: string,
+	wallet: string,
+	amount: string,
+): Promise<DepositBuildResponse> {
+	const body: DepositBuildRequest = { amount };
+	return post<DepositBuildResponse>(
+		`/wallets/${encodeURIComponent(address)}/deposit/build`,
+		wallet,
+		body,
+	);
+}
+
+export async function depositSubmit(
+	address: string,
+	wallet: string,
+	opId: string,
+	signedTransactionXdr: string,
+): Promise<DepositSubmitResponse> {
+	const body: DepositSubmitRequest = { opId, signedTransactionXdr };
+	return post<DepositSubmitResponse>(
+		`/wallets/${encodeURIComponent(address)}/deposit/submit`,
+		wallet,
+		body,
+	);
+}
+
+export async function createBuild(
+	eventId: string,
+	wallet: string,
+): Promise<CreateBuildResponse> {
+	return post<CreateBuildResponse>(
+		`/events/${encodeURIComponent(eventId)}/create/build`,
+		wallet,
+		{},
+	);
+}
+
+export async function createSubmit(
+	eventId: string,
+	wallet: string,
+	signedTransactionXdr: string,
+): Promise<CreateSubmitResponse> {
+	const body: CreateSubmitRequest = { signedTransactionXdr };
+	return post<CreateSubmitResponse>(
+		`/events/${encodeURIComponent(eventId)}/create/submit`,
 		wallet,
 		body,
 	);
