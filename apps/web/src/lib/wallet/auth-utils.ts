@@ -62,6 +62,15 @@ export async function consumeAuthNonce(
 	return true;
 }
 
+const SEP53_PREFIX = Buffer.from("Stellar Signed Message:\n", "utf-8");
+
+function sep53Digest(message: Buffer): Buffer {
+	return crypto
+		.createHash("sha256")
+		.update(Buffer.concat([SEP53_PREFIX, message]))
+		.digest();
+}
+
 export function verifyStellarSignature(
 	address: string,
 	message: string,
@@ -87,7 +96,14 @@ export function verifyStellarSignature(
 			return false;
 		}
 
-		return verifier.verify(Buffer.from(message, "utf-8"), sigBuffer);
+		// SEP-0053 first: Freighter (and any wallet following it) signs
+		// sha256("Stellar Signed Message:\n" + message), never the raw bytes.
+		// The raw form stays as a fallback for wallets that predate SEP-0053.
+		const raw = Buffer.from(message, "utf-8");
+		return (
+			verifier.verify(sep53Digest(raw), sigBuffer) ||
+			verifier.verify(raw, sigBuffer)
+		);
 	} catch {
 		return false;
 	}
