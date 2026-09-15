@@ -4,7 +4,7 @@ Go backend: event/prize state machine, participant registration, real-time track
 
 ## Status
 
-`S01` (module scaffold) and `S04` (env config) done — builds, runs, `GET /healthz` returns 200, and refuses to start with missing/malformed config (see Configuration below). `#185 PR 1` adds a Postgres store (`internal/store`), the service-to-service auth middleware, and the router (`internal/api`). `#185 PR 2` (done) adds the judge release path — `POST /events/{id}/release/build` and `POST /events/{id}/release/submit` — see [Release path](#release-path) below. Everything else is still ahead: `S02` (CI), `E01-E06` (business logic besides the release path). See [docs/build-plan.md](../../docs/build-plan.md).
+`S01` (module scaffold) and `S04` (env config) done — builds, runs, `GET /healthz` returns 200, and refuses to start with missing/malformed config (see Configuration below). `#185 PR 1` adds a Postgres store (`internal/store`), the service-to-service auth middleware, and the router (`internal/api`). `#185 PR 2` (done) adds the judge release path — `POST /events/{id}/release/build` and `POST /events/{id}/release/submit` — see [Release path](#release-path) below. `#11 PR 1` (done) adds the organizer path's wallet and create_event endpoints — `GET /wallets/{address}/balance`, `POST /wallets/{address}/deposit/build|submit`, `POST /events/{id}/create/build|submit` — see `internal/api/wallet.go` and `internal/api/create.go`; `#11 PR 2` (the `/start/*` go-live endpoints) is still ahead. Everything else is still ahead: `S02` (CI), the rest of `E01-E06`. See [docs/build-plan.md](../../docs/build-plan.md).
 
 ## Run locally
 
@@ -37,9 +37,9 @@ go vet ./...
 
 ## Configuration
 
-`S04` (done): `internal/config.Load` validates seven environment variables —
+`S04` (done): `internal/config.Load` validates eight environment variables —
 `STELLAR_NETWORK`, `ALLOW_MAINNET`, `SOROBAN_RPC_URL`, `ESCROW_CONTRACT_ID`,
-`PORT`, `DATABASE_URL`, `CORE_GO_SERVICE_TOKEN` — and `main` calls it before
+`PORT`, `DATABASE_URL`, `CORE_GO_SERVICE_TOKEN`, `USDC_ISSUER` — and `main` calls it before
 opening the database pool or building the mux, so a missing or malformed
 variable fails the process at boot (non-zero exit, one line per problem)
 instead of surfacing as a confusing error on the first real request. See
@@ -71,6 +71,13 @@ for the session's wallet address (`apps/web` authenticates via its own
 SEP-0043 session; this service only authorizes the service-to-service call
 and checks the wallet is a real Stellar account address — see
 `internal/api/auth.go`). Never logged.
+
+**`USDC_ISSUER`.** The classic-asset issuer account of the organizer path's
+deposit token. `main` derives the token's Soroban Asset Contract (SAC)
+address from this plus the network passphrase via
+`internal/escrow.ClassicAssetContractID` once at boot — the SAC address
+itself is never configured directly, so it can never drift out of step
+with `STELLAR_NETWORK`.
 
 **Key handling.** This service holds no signing key, plaintext or
 otherwise. Organizer and judge keys never leave their own wallets — every
@@ -148,6 +155,17 @@ wallet on the request context (`WalletFrom`) for handlers to read.
 below for the full contract. The placeholder `GET /whoami` PR 1 shipped to
 exercise `RequireAuth` end to end is gone; these two handlers are the real
 thing.
+
+`#11 PR 1` (done): the organizer path's own build/submit pairs, on the
+same envelope-comparison trust boundary as `release.go` (`envelope.go`'s
+`verifySignedEnvelope`, shared rather than duplicated). `wallet.go` adds
+`GET /wallets/{address}/balance` (a read-only simulate, no `op_log` row)
+and `POST /wallets/{address}/deposit/build|submit`. `create.go` adds
+`POST /events/{id}/create/build|submit` — reward is always
+`sum(Prize.amount)`, never client-supplied, and a successful submit moves
+the event `DRAFT -> CREATED` ("startable"), never straight to `LIVE`. The
+full organizer-path narrative — including `#11 PR 2`'s `/start/*` go-live
+endpoints — belongs to that PR's own README section, not this one.
 
 ## Release path
 
