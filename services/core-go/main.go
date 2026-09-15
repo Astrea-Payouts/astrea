@@ -43,6 +43,13 @@ func main() {
 		log.Fatalf("escrow contract address: %v", err)
 	}
 
+	usdcContractID, err := escrow.ClassicAssetContractID("USDC", cfg.USDCIssuer, cfg.NetworkPassphrase)
+	if err != nil {
+		// config.Load already validates USDC_ISSUER, so this would mean
+		// that validation and this derivation have drifted apart.
+		log.Fatalf("usdc contract address: %v", err)
+	}
+
 	mux := api.New(api.Deps{
 		ServiceToken:      cfg.ServiceToken,
 		Store:             pg,
@@ -50,6 +57,7 @@ func main() {
 		Contract:          contract,
 		NetworkPassphrase: cfg.NetworkPassphrase,
 		EscrowCfg:         escrow.Config{},
+		USDCContractID:    usdcContractID,
 	})
 
 	srv := &http.Server{

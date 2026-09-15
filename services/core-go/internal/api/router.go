@@ -22,6 +22,10 @@ type Deps struct {
 	Contract          xdr.ScAddress
 	NetworkPassphrase string
 	EscrowCfg         escrow.Config
+	// USDCContractID is the USDC SAC's contract address, derived once at
+	// boot from cfg.USDCIssuer -- deposit_funds needs it as the token
+	// argument (see main.go).
+	USDCContractID string
 }
 
 // New mounts the service's HTTP surface. GET /healthz is the only
@@ -33,6 +37,9 @@ func New(deps Deps) http.Handler {
 	authed := http.NewServeMux()
 	authed.HandleFunc("POST /events/{id}/release/build", handleReleaseBuild(deps))
 	authed.HandleFunc("POST /events/{id}/release/submit", handleReleaseSubmit(deps))
+	authed.HandleFunc("GET /wallets/{address}/balance", handleWalletBalance(deps))
+	authed.HandleFunc("POST /wallets/{address}/deposit/build", handleDepositBuild(deps))
+	authed.HandleFunc("POST /wallets/{address}/deposit/submit", handleDepositSubmit(deps))
 	mux.Handle("/", RequireAuth(deps.ServiceToken)(authed))
 
 	return mux
