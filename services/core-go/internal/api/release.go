@@ -230,7 +230,7 @@ func handleReleaseSubmit(deps Deps) http.HandlerFunc {
 			return
 		}
 
-		if err := verifySignedEnvelope(req.SignedTransactionXDR, op.Build); err != nil {
+		if err := verifySignedEnvelope(req.SignedTransactionXDR, op.Build.SourceAccount, op.Build.HostFunctionXDR); err != nil {
 			writeError(w, http.StatusConflict, "envelope_mismatch", err.Error())
 			return
 		}
@@ -442,36 +442,4 @@ func mapWinners(event *store.EventForRelease, winners []escrow.Winner) ([]store.
 		}
 	}
 	return out, nil
-}
-
-// verifySignedEnvelope is #185 decision 3's guard: it decodes signedXDR,
-// requires a V1 single-op InvokeHostFunction envelope with at least one
-// signature and a source account matching the judge who built this
-// release, and requires its host function to marshal to exactly the bytes
-// SaveReleaseBuild stored. Any failure here means the signed transaction a
-// judge's wallet returned is not the one /build asked it to sign, and the
-// caller must map it to 409 envelope_mismatch -- never call the RPC on it.
-func verifySignedEnvelope(signedXDR string, build store.ReleaseBuild) error {
-	envelope, op, err := escrow.DecodeSingleOpInvokeHostFunction(signedXDR)
-	if err != nil {
-		return err
-	}
-	if envelope.V1 == nil || len(envelope.V1.Signatures) < 1 {
-		return fmt.Errorf("escrow: signed envelope has no signatures")
-	}
-	source, err := envelope.V1.Tx.SourceAccount.GetAddress()
-	if err != nil {
-		return fmt.Errorf("escrow: reading envelope source account: %w", err)
-	}
-	if source != build.SourceAccount {
-		return fmt.Errorf("escrow: envelope source account %s does not match the judge who built this release", source)
-	}
-	gotHostFunctionXDR, err := xdr.MarshalBase64(op.HostFunction)
-	if err != nil {
-		return fmt.Errorf("escrow: marshaling signed host function: %w", err)
-	}
-	if gotHostFunctionXDR != build.HostFunctionXDR {
-		return fmt.Errorf("escrow: signed host function does not match the one /build produced")
-	}
-	return nil
 }

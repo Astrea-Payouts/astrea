@@ -888,11 +888,11 @@ func TestVerifySignedEnvelope(t *testing.T) {
 	if err != nil {
 		t.Fatalf("MarshalBase64: %v", err)
 	}
-	build := store.ReleaseBuild{HostFunctionXDR: wantHF, SourceAccount: judge.Address()}
+	wantSource := judge.Address()
 	signedXDR := signTx(t, unsigned.XDR, judge)
 
 	t.Run("matches", func(t *testing.T) {
-		if err := verifySignedEnvelope(signedXDR, build); err != nil {
+		if err := verifySignedEnvelope(signedXDR, wantSource, wantHF); err != nil {
 			t.Errorf("verifySignedEnvelope = %v, want nil", err)
 		}
 	})
@@ -904,27 +904,25 @@ func TestVerifySignedEnvelope(t *testing.T) {
 			t.Fatalf("BuildReleaseReward: %v", err)
 		}
 		otherSigned := signTx(t, otherUnsigned.XDR, other)
-		if err := verifySignedEnvelope(otherSigned, build); err == nil {
+		if err := verifySignedEnvelope(otherSigned, wantSource, wantHF); err == nil {
 			t.Error("verifySignedEnvelope = nil, want an error for a mismatched source account")
 		}
 	})
 
 	t.Run("no signatures", func(t *testing.T) {
-		if err := verifySignedEnvelope(unsigned.XDR, build); err == nil {
+		if err := verifySignedEnvelope(unsigned.XDR, wantSource, wantHF); err == nil {
 			t.Error("verifySignedEnvelope = nil, want an error for an unsigned envelope")
 		}
 	})
 
 	t.Run("host function mismatch", func(t *testing.T) {
-		tampered := build
-		tampered.HostFunctionXDR = "AAAAAQAAAAA="
-		if err := verifySignedEnvelope(signedXDR, tampered); err == nil {
+		if err := verifySignedEnvelope(signedXDR, wantSource, "AAAAAQAAAAA="); err == nil {
 			t.Error("verifySignedEnvelope = nil, want an error for a mismatched host function")
 		}
 	})
 
 	t.Run("malformed xdr", func(t *testing.T) {
-		if err := verifySignedEnvelope("not-valid-xdr", build); err == nil {
+		if err := verifySignedEnvelope("not-valid-xdr", wantSource, wantHF); err == nil {
 			t.Error("verifySignedEnvelope = nil, want an error for malformed XDR")
 		}
 	})
