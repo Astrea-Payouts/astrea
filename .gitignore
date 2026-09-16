@@ -75,9 +75,48 @@ spikes/k01-trustless-work/
 # scratch
 *.bak
 
-# Graphify_out Manifest
-graphify-out/
-/graphify_out/manifest.json
+# graphify.
+#
+# Almost all of graphify-out/ is ignored: the graph is published, not committed
+# (https://astrea-payouts.github.io/astrea/, rebuilt by CI on every merge to
+# develop). Only cache/semantic/ is tracked - see the note at the end of this
+# block. Do NOT blanket-ignore graphify-out/ itself: that hides the one
+# directory that must stay visible, and it is how this file ended up telling
+# contributors to run a `git add graphify-out/` that could not work.
+#
+# manifest.json and cache/stat-index.json store wall-clock mtimes for the local
+# incremental-update cache and never match between any two checkouts; tracking
+# them guaranteed a permanently dirty working tree and merge conflicts on
+# generated files (2 of the 4 conflicting paths in #153). last_query_stamp is
+# written by `graphify query`.
+graphify-out/manifest.json
+graphify-out/cache/stat-index.json
+graphify-out/cache/last_query_stamp
+#
+# Absolute path to whichever Python has graphify installed, recorded at hook
+# install time. Machine-specific by definition - graphify falls back to PATH
+# detection when it is absent.
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+#
+# The graph itself. Regenerating all of this costs zero tokens (structural AST
+# extraction, no LLM) and about a minute, so committing it bought nothing and
+# cost 7.8 MB - while guaranteeing a stale copy, since branch protection stops
+# CI from pushing a refreshed one back to develop. A stale graph is worse than
+# no graph: the graphify skill fast-paths onto graphify-out/graph.json when it
+# exists and answers from it without noticing it is out of date.
+#
+# The current graph is published instead: https://astrea-payouts.github.io/astrea/
+graphify-out/graph.json
+graphify-out/graph.html
+graphify-out/GRAPH_REPORT.md
+graphify-out/.graphify_labels.json
+graphify-out/.graphify_labels.json.sig
+graphify-out/cache/ast/
+#
+# NOT ignored, deliberately: graphify-out/cache/semantic/. That one is the
+# LLM-derived extraction over the .md files (236 KB, 37 files). Regenerating it
+# costs real tokens, so it stays in git and doc-driven updates stay cheap.
 
 /apps/web/src/generated/prisma
 
@@ -89,3 +128,6 @@ graphify-out/
 .agents/skills
 .windsurf/skills
 skills-lock.json
+
+# GitHub Pages staging dir, assembled by the graphify-rebuild job in CI
+_site/

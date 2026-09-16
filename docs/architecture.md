@@ -13,14 +13,14 @@
 - **Frontend** — Next.js App Router (`apps/web`), TypeScript strict, Tailwind + shadcn/ui. Wallet connectivity through Stellar Wallets Kit. Signs XDR client-side. Renders public event pages (SSR for shareability/SEO — see build-plan.md U09/U10).
 - **Backend** — Go service (`services/core-go`). Owns the event/prize state machine, participant registration, real-time tracking, the build-sign-submit transaction pipeline, and reconciliation. The only service that writes transactional state or calls the escrow contract.
 - **Database** — Postgres. Mirror tables for events, prizes, participants, wallets, payouts, and an append-only op log for idempotency/auditability.
-- **Escrow layer** — a single custom Soroban smart contract (`smart-contracts/astrea/contracts/event-escrow`) shared across all organizers, not one instance deployed per event (see ADR-006). Each organizer holds a balance inside the contract (`AdminWallet`); they deposit into it, then create events against it. Functions: `deposit_funds`, `withdraw_funds`, `create_event`, `cancel_event`, `close_event` (pays one or more winners in a single call — see ADR-002), `dispute`, `resolve_dispute`. The winner's address is supplied at `close_event` time, not fixed when the event is funded — release pays the winner directly, with no separate forwarding step.
+- **Escrow layer** — a single custom Soroban smart contract (`smart-contracts/astrea/contracts/event-escrow`) shared across all organizers, not one instance deployed per event (see ADR-006). Each organizer holds a balance inside the contract (`AdminWallet`); they deposit into it, then create events against it. Functions: `deposit_funds`, `withdraw_funds`, `create_event`, `cancel_event`, `close_event` (pays one or more winners in a single call — see ADR-002), `dispute`, `resolve_dispute`. The winner's address is supplied at `close_event` time, not fixed when the event is funded — release pays the winner directly, with no separate forwarding step. Going live charges a go-live fee of `FeeBps` (default 50 bps, ceiling `MAX_FEE_BPS` = 500) from the organizer's free balance to `Treasury`, on top of the prize, never out of it.
 
-  > **Design name → implemented name.** The ADRs below use the conceptual names above; the contract as built uses different ones. Current mapping: `close_event` → `release_reward`, `cancel_event` → `set_event_cancelled` (pre-launch states only — cancelling a live event is rejected, see ADR-006), `dispute`/`resolve_dispute` → **not implemented yet** (issue #22). The contract also has functions the ADRs don't describe: `expire_event` (deadline passed with nothing happening — refund), `release_compensation` (pay participants after a cancellation), the state machine (`set_event_waiting_for_start` / `set_event_in_progress`), event pagination, and a governance layer (emergency pause, per-admin pause, token whitelist).
+  > **Design name → implemented name.** The ADRs below use the conceptual names above; the contract as built uses different ones. Current mapping: `close_event` → `release_reward`, `cancel_event` → `set_event_cancelled` (pre-launch states only — cancelling a live event is rejected, see ADR-006), `resolve_dispute` → implemented as `resolve_dispute` (resolver-signed release of a live event's funds once `judging_deadline` passes without the judge releasing; no separate `dispute` call — the resolver's signature is the dispute resolution, issue #22). The contract also has functions the ADRs don't describe: `expire_event` (deadline passed with nothing happening — refund), `release_compensation` (pay participants after a cancellation), the state machine (`set_event_waiting_for_start` / `set_event_in_progress`), event pagination, and a governance layer (emergency pause, per-admin pause, token whitelist).
 
 ## Domain model (Postgres sketch)
 
 ```
-Event       — id, organizerId, name, dates, status, escrowContractId, network, conditionsMetAt
+Event       — id, organizerId, name, dates, status, escrowContractId, escrowEventId, network, conditionsMetAt
 Prize       — id, eventId, rank, amountUsdc, milestoneIndex, status, winnerWalletId, releaseTxHash
 Judge       — id, eventId, walletAddress, displayName, status
 Participant — id, eventId, walletId, submissionUrl, registeredAt
@@ -67,7 +67,7 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 **Why:**
 1. The winner's address is supplied at `release` time, not fixed when the escrow is funded — release pays the winner directly, with no separate forwarding transaction and no custody window.
-2. No third-party protocol fee on releases — the only fee, if any, is Astrea's own, visible in the contract's own logic rather than an external deduction.
+2. No third-party protocol fee on releases — the only fee is Astrea's own go-live fee, charged at `set_event_in_progress` (never at release), non-refundable once charged, and capped on-chain by `MAX_FEE_BPS`.
 3. Real-time tracking and other product-specific logic are built directly against the contract via an owned backend service, not constrained by a generic escrow API's feature set.
 4. No dependency on a third party's uptime, pricing, or API stability for the money-critical path.
 
@@ -79,9 +79,14 @@ Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row
 
 ### ADR-002 — Multi-release escrow, one milestone per prize
 
-**Decision:** each event can carry more than one prize (a list of milestones on the `Event`, not a single fixed amount), and each prize is independently payable — a single-winner event is simply the N=1 case of this list, not a separate code path.
+**Original decision:** each event can carry more than one prize (a list of milestones on the `Event`, not a single fixed amount), and each prize is independently payable — a single-winner event is simply the N=1 case of this list, not a separate code path.
 **Why:** prizes resolve at different times or in different shapes (judging per category, a dispute on one prize must not block another). A list-of-prizes model maps 1:1 to this reality without a special case for "just one winner."
-**Status:** target design for the production contract (`E01`, [docs/contracts-build-plan.md](contracts-build-plan.md)), implemented as a list of prizes on a single `Event` record inside the shared contract (ADR-006), not as a separate contract per multi-winner event. K01 validated the role model on a single-milestone contract.
+
+**Status — superseded by what was actually built (corrected 2026-09-06).** The shipped contract does **not** implement independently payable milestones. `Event` carries a single `reward: i128` (one lump sum), and `release_reward` takes a `Vec<Winner>` whose amounts must sum exactly to that reward, paying every winner in one atomic call and then flipping the whole event to `Ended`. Cancel, expiry and (eventually) dispute act on the whole event, never on one prize.
+
+So the multi-recipient goal survived, but the *independence* property did not: winners are **shares of one payout released together**, not milestones that resolve separately. A dispute on one prize blocking another is not a scenario the current data model can express — there is only ever one payout event to block.
+
+This is recorded rather than quietly rewritten because the gap was live for a while: issue #4's acceptance criteria asked for "multi-milestone independence" tests that could never pass, since they described a model the code never had. If independent milestones are wanted later, that is a real contract redesign (a list of prize entries with per-entry state), not a test to add — and it would ripple into the dispute design (#22), which currently assumes one dispute per event.
 
 **Verified (K06, 2026-08, in-process test):** a single `close_event()` call paying multiple winners scales linearly at ~168k CPU instructions per additional winner — ~1.2% of Stellar Mainnet's per-invocation instruction budget even at 25 winners in one call, far more than any realistic event needs. No separate contract is warranted for the multi-winner case. See [spikes/k06-multi-release-budget](../spikes/k06-multi-release-budget/README.md).
 

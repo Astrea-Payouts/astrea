@@ -9,27 +9,64 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	rpcclient "github.com/stellar/go/clients/rpcclient"
+
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/api"
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/config"
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/escrow"
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/store"
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	// Fails fast, at boot, before the mux is even built — a validator that
+	// exists but isn't called before ListenAndServe doesn't satisfy #8/S04.
+	cfg, err := config.Load(os.Getenv)
+	if err != nil {
+		log.Fatalf("invalid configuration: %v", err)
 	}
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok"))
+	// New pings the pool itself, so a bad DATABASE_URL or an unreachable
+	// database fails boot here too, not on the first request.
+	ctx, cancelBoot := context.WithTimeout(context.Background(), 10*time.Second)
+	pg, err := store.New(ctx, cfg.DatabaseURL)
+	cancelBoot()
+	if err != nil {
+		log.Fatalf("database: %v", err)
+	}
+	defer pg.Close()
+
+	contract, err := escrow.ContractAddress(cfg.EscrowContractID)
+	if err != nil {
+		// config.Load already validates ESCROW_CONTRACT_ID, so this would
+		// mean that validation and this decoding have drifted apart.
+		log.Fatalf("escrow contract address: %v", err)
+	}
+
+	usdcContractID, err := escrow.ClassicAssetContractID("USDC", cfg.USDCIssuer, cfg.NetworkPassphrase)
+	if err != nil {
+		// config.Load already validates USDC_ISSUER, so this would mean
+		// that validation and this derivation have drifted apart.
+		log.Fatalf("usdc contract address: %v", err)
+	}
+
+	mux := api.New(api.Deps{
+		ServiceToken:      cfg.ServiceToken,
+		Store:             pg,
+		RPC:               rpcclient.NewClient(cfg.SorobanRPCURL, nil),
+		Contract:          contract,
+		NetworkPassphrase: cfg.NetworkPassphrase,
+		EscrowCfg:         escrow.Config{},
+		USDCContractID:    usdcContractID,
 	})
 
 	srv := &http.Server{
-		Addr:    ":" + port,
+		Addr:    ":" + cfg.Port,
 		Handler: mux,
 	}
 
 	go func() {
-		log.Printf("core-go listening on :%s", port)
+		log.Printf("core-go listening on :%s (network=%s)", cfg.Port, cfg.Network)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("server error: %v", err)
 		}

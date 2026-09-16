@@ -23,12 +23,12 @@ npm install
 cp .env.example .env
 ```
 
-The `upstream` remote is so you can pull in new work before starting a task:
+The `upstream` remote is so you can pull in new work before starting a task. Note that `develop` is the branch everything is built on — `main` only receives promoted releases, so branching off it will put you behind:
 
 ```bash
 git fetch upstream
-git checkout main
-git merge upstream/main
+git checkout develop
+git merge upstream/develop
 ```
 
 Fill in `.env` following the comments in `.env.example` and [apps/web/prisma/README.md](apps/web/prisma/README.md):
@@ -59,23 +59,21 @@ This repo uses [Biome](https://biomejs.dev) for linting/formatting and [Husky](h
 
 If a check fails and you're not sure why, the error output is usually specific enough to act on directly — Biome and `tsc` both point at exact lines.
 
-## Keeping the knowledge graph updated
+## The knowledge graph — you don't have to do anything
 
-The repo has a [graphify](https://github.com/safishamsi/graphify) knowledge graph at [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md) (interactive view: `graphify-out/graph.html`). A `post-commit` Husky hook auto-rebuilds it after every commit — **but only for code file changes**, without needing an LLM.
+There's a [graphify](https://github.com/safishamsi/graphify) knowledge graph indexing code, docs, ADRs and task definitions together — useful when you're new here and want to see how a piece fits before changing it.
 
-**Doc changes are not covered by the hook.** If your PR touches a `.md` file (README, `docs/`, any `CONTRIBUTING.md`-style guide), the hook won't pick it up — semantic extraction from docs needs an LLM pass. Run this yourself before opening the PR:
+**Browse it at [astrea-payouts.github.io/astrea](https://astrea-payouts.github.io/astrea/)** — no clone, no install. CI rebuilds and republishes it on every merge to `develop`, so the published copy is always current.
 
-```
-/graphify --update
-```
+**It is published, not committed.** A fresh clone has no `graphify-out/graph.json`, and that's deliberate: regenerating the whole graph costs zero tokens and about a minute, so committing 7.8 MB of it bought nothing — and guaranteed a stale copy, because branch protection stops CI from pushing a refreshed one back. A stale graph is worse than none, since tools read it without noticing its age. The one exception is `graphify-out/cache/semantic/`, which stays in git: that part is LLM-derived and costs real tokens to rebuild.
 
-from a Claude Code session at the repo root (or any agent host that can run the graphify skill). If for whatever reason the hook doesn't fire, or you're not sure it ran, running `/graphify --update` manually is always safe — it only re-extracts what actually changed.
+**Nothing about this is your responsibility.** Don't install graphify, don't run it, don't commit `graphify-out/`. There is no hook and no CI check enforcing anything about the graph, by design — the previous setup demanded a byte-identical rebuild from every contributor's machine, which is not something a parallel floating-point build can guarantee across operating systems.
 
-**CI enforces this for code.** The `graphify-out/` files in your PR must match a fresh `graphify update .` run against your code changes — if they don't, the `Knowledge graph in sync (code)` job fails and tells you what to run. It only checks code, not docs, since it has no LLM available; a stale doc-driven graph won't fail CI, so don't rely on green CI as proof the graph reflects your doc changes.
+If you do want to query it locally, `pip install graphifyy==0.9.45` then `graphify update .` builds it, and [AGENTS.md](AGENTS.md) documents what it answers well and where it will confidently mislead you.
 
 ## Opening a PR
 
-1. **Branch off your fork's `main`**, push it to your fork, then open the PR from there against `Astrea-Payouts/astrea:main` — GitHub does this automatically when you push a branch to your fork and click "Compare & pull request."
+1. **Branch off your fork's `develop`**, push it to your fork, then open the PR from there against `Astrea-Payouts/astrea:develop` — GitHub targets `develop` by default when you push a branch to your fork and click "Compare & pull request," since it is this repo's default branch. Don't retarget it at `main`: that branch only receives promoted releases, and a PR opened against it will show unrelated commits in the diff.
 2. **Reference the issue** you're working on in the PR description (`Closes #123`).
 3. **Keep it scoped** to the linked task — if you find something else worth fixing along the way, open a separate issue rather than bundling it in.
 4. **If your change touches money movement** (anything under `E0*`, escrow calls, signing, the reconciliation job) — say so explicitly in the PR description and how you verified it on testnet. These get extra review; see the `security` label.

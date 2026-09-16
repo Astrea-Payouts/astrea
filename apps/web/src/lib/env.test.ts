@@ -1,10 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const VALID_ISSUER = "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5";
+const VALID_CONTRACT_ID = `C${"A".repeat(55)}`;
 
 const baseEnv = {
-	TW_API_KEY: "test-key",
+	NEXT_PUBLIC_ESCROW_CONTRACT_ID: VALID_CONTRACT_ID,
 	USDC_ISSUER: VALID_ISSUER,
+	CORE_GO_URL: "http://localhost:8080",
+	CORE_GO_SERVICE_TOKEN: "t".repeat(32),
 };
 
 async function loadEnvWith(overrides: Record<string, string | undefined>) {
@@ -13,11 +16,13 @@ async function loadEnvWith(overrides: Record<string, string | undefined>) {
 	for (const key of Object.keys(process.env)) {
 		if (
 			key.startsWith("NEXT_PUBLIC_STELLAR_") ||
+			key === "NEXT_PUBLIC_ESCROW_CONTRACT_ID" ||
 			key === "ALLOW_MAINNET" ||
-			key === "TW_API_KEY" ||
-			key === "TW_API_URL" ||
+			key === "SOROBAN_RPC_URL" ||
 			key === "USDC_ISSUER" ||
-			key === "USDC_SYMBOL"
+			key === "USDC_SYMBOL" ||
+			key === "CORE_GO_URL" ||
+			key === "CORE_GO_SERVICE_TOKEN"
 		) {
 			delete process.env[key];
 		}
@@ -31,7 +36,11 @@ async function loadEnvWith(overrides: Record<string, string | undefined>) {
 		}
 	}
 	try {
-		return await import("./env");
+		const mod = await import("./env");
+		// env parses lazily on first access; force it here so a bad config
+		// rejects this call, the way the tests below expect.
+		void mod.env.NEXT_PUBLIC_STELLAR_NETWORK;
+		return mod;
 	} finally {
 		process.env = original;
 	}
@@ -42,10 +51,16 @@ describe("env", () => {
 		vi.resetModules();
 	});
 
-	it("throws when TW_API_KEY is missing", async () => {
-		await expect(loadEnvWith({ TW_API_KEY: undefined })).rejects.toThrow(
-			/TW_API_KEY/,
-		);
+	it("throws when NEXT_PUBLIC_ESCROW_CONTRACT_ID is missing", async () => {
+		await expect(
+			loadEnvWith({ NEXT_PUBLIC_ESCROW_CONTRACT_ID: undefined }),
+		).rejects.toThrow(/NEXT_PUBLIC_ESCROW_CONTRACT_ID/);
+	});
+
+	it("throws when NEXT_PUBLIC_ESCROW_CONTRACT_ID is malformed", async () => {
+		await expect(
+			loadEnvWith({ NEXT_PUBLIC_ESCROW_CONTRACT_ID: "not-a-contract-id" }),
+		).rejects.toThrow(/NEXT_PUBLIC_ESCROW_CONTRACT_ID/);
 	});
 
 	it("throws when USDC_ISSUER is not a valid Stellar account ID", async () => {
@@ -54,10 +69,65 @@ describe("env", () => {
 		).rejects.toThrow(/USDC_ISSUER/);
 	});
 
-	it("defaults to testnet with the correct Horizon URL and passphrase", async () => {
+	it("does not parse at import time — only on first access", async () => {
+		vi.resetModules();
+		const original = { ...process.env };
+		delete process.env.NEXT_PUBLIC_ESCROW_CONTRACT_ID;
+		try {
+			const mod = await import("./env");
+			expect(() => mod.env.horizonUrl).toThrow(
+				/NEXT_PUBLIC_ESCROW_CONTRACT_ID/,
+			);
+		} finally {
+			process.env = original;
+		}
+	});
+
+	it("treats a blank SOROBAN_RPC_URL as unset and falls back to the default", async () => {
+		const { env } = await loadEnvWith({ SOROBAN_RPC_URL: "" });
+		expect(env.sorobanRpcUrl).toBe("https://soroban-testnet.stellar.org");
+	});
+
+	it("leaves CORE_GO_URL and CORE_GO_SERVICE_TOKEN undefined when missing or blank", async () => {
+		const missing = await loadEnvWith({
+			CORE_GO_URL: undefined,
+			CORE_GO_SERVICE_TOKEN: undefined,
+		});
+		expect(missing.env.CORE_GO_URL).toBeUndefined();
+		expect(missing.env.CORE_GO_SERVICE_TOKEN).toBeUndefined();
+
+		// .env.example ships `CORE_GO_SERVICE_TOKEN=` with no value.
+		const blank = await loadEnvWith({
+			CORE_GO_URL: "",
+			CORE_GO_SERVICE_TOKEN: "",
+		});
+		expect(blank.env.CORE_GO_URL).toBeUndefined();
+		expect(blank.env.CORE_GO_SERVICE_TOKEN).toBeUndefined();
+	});
+
+	it("still rejects a CORE_GO_URL that is not a URL", async () => {
+		await expect(loadEnvWith({ CORE_GO_URL: "localhost" })).rejects.toThrow(
+			/CORE_GO_URL/,
+		);
+	});
+
+	it("still rejects a CORE_GO_SERVICE_TOKEN shorter than 32 chars", async () => {
+		await expect(
+			loadEnvWith({ CORE_GO_SERVICE_TOKEN: "short" }),
+		).rejects.toThrow(/CORE_GO_SERVICE_TOKEN/);
+	});
+
+	it("exposes CORE_GO_URL and CORE_GO_SERVICE_TOKEN when both are set", async () => {
+		const { env } = await loadEnvWith({});
+		expect(env.CORE_GO_URL).toBe("http://localhost:8080");
+		expect(env.CORE_GO_SERVICE_TOKEN).toBe("t".repeat(32));
+	});
+
+	it("defaults to testnet with the correct Horizon/Soroban RPC URL and passphrase", async () => {
 		const { env } = await loadEnvWith({});
 		expect(env.NEXT_PUBLIC_STELLAR_NETWORK).toBe("testnet");
 		expect(env.horizonUrl).toBe("https://horizon-testnet.stellar.org");
+		expect(env.sorobanRpcUrl).toBe("https://soroban-testnet.stellar.org");
 		expect(env.networkPassphrase).toContain("Test SDF Network");
 	});
 
@@ -67,12 +137,25 @@ describe("env", () => {
 		).rejects.toThrow(/ALLOW_MAINNET/);
 	});
 
-	it("allows mainnet once ALLOW_MAINNET=true is set, with the mainnet Horizon URL", async () => {
+	it("blocks mainnet without an explicit SOROBAN_RPC_URL, even with ALLOW_MAINNET=true", async () => {
+		await expect(
+			loadEnvWith({
+				NEXT_PUBLIC_STELLAR_NETWORK: "mainnet",
+				ALLOW_MAINNET: "true",
+			}),
+		).rejects.toThrow(/SOROBAN_RPC_URL/);
+	});
+
+	it("allows mainnet once ALLOW_MAINNET=true and SOROBAN_RPC_URL are set, with the mainnet Horizon URL", async () => {
 		const { env } = await loadEnvWith({
 			NEXT_PUBLIC_STELLAR_NETWORK: "mainnet",
 			ALLOW_MAINNET: "true",
+			SOROBAN_RPC_URL: "https://mainnet.sorobanrpc.example/soroban/rpc",
 		});
 		expect(env.horizonUrl).toBe("https://horizon.stellar.org");
+		expect(env.sorobanRpcUrl).toBe(
+			"https://mainnet.sorobanrpc.example/soroban/rpc",
+		);
 		expect(env.networkPassphrase).toContain("Public Global Stellar Network");
 	});
 });

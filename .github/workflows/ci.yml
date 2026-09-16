@@ -30,19 +30,64 @@ jobs:
         working-directory: apps/web
         run: npm run typecheck
 
+      # --coverage works without extra flags in Vitest as long as
+      # @vitest/coverage-v8 is already installed; if not, add it as a
+      # devDependency. lcov is the format Sonar expects.
       - name: Test (Vitest)
         working-directory: apps/web
-        run: npm run test
+        run: npm run test -- --coverage --coverage.reporter=lcov
 
       - name: Build
         working-directory: apps/web
         run: npm run build
 
-  graphify-drift-check:
-    name: Knowledge graph in sync (code)
+      # Upload lcov.info as an artifact so the sonarcloud job can consume
+      # it without having to re-run the tests.
+      - name: Upload web coverage
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage-web
+          path: apps/web/coverage/lcov.info
+          retention-days: 1
+
+  graphify-rebuild:
+    name: Rebuild knowledge graph (develop only)
+    # CI is the only thing that builds the knowledge graph. Contributors do not
+    # rebuild it, do not commit it, and do not install graphify at all - the
+    # husky hooks that used to enforce that were removed alongside this job's
+    # predecessor, `graphify-drift-check`.
+    #
+    # Why that job is gone: it demanded a byte-identical rebuild from every
+    # contributor's machine. That is a determinism guarantee a floating-point,
+    # parallel graph build does not offer across operating systems - it failed
+    # on #151 over edge ordering and betweenness rounding with no actual drift -
+    # and generated output was the ONLY conflicting file in #139, #153 and #158.
+    #
+    # The graph output is no longer committed either (see .gitignore): it costs
+    # nothing to regenerate, and a committed copy could only go stale, since
+    # branch protection makes it impossible for this job to push to develop.
+    # The published site below IS the graph. Only cache/semantic/ stays in git,
+    # because that one is LLM-derived and expensive to rebuild.
+    #
+    # Runs ONLY on a push to develop (i.e. after a merge), never on a PR.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
+    permissions:
+      # Read-only on contents: this job publishes, it no longer pushes.
+      contents: read
+      # pages/id-token are what actions/deploy-pages needs to publish and to
+      # prove the deployment came from this run.
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy-graph.outputs.page_url }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          # Nothing is pushed from here, so the job has no use for a token in
+          # .git/config.
+          persist-credentials: false
 
       - uses: actions/setup-node@v5
         with:
@@ -51,8 +96,7 @@ jobs:
           cache-dependency-path: apps/web/package-lock.json
 
       # postinstall runs `prisma generate`, producing apps/web/src/generated/prisma.
-      # graphify indexes that output, so it must exist before the rebuild below -
-      # without it this job would flag drift that's just the generated client missing.
+      # graphify indexes that output, so it must exist before the rebuild below.
       - working-directory: apps/web
         run: npm ci --legacy-peer-deps
 
@@ -60,51 +104,75 @@ jobs:
         with:
           python-version: "3.12"
 
-      # Pinned - an unpinned install drifts to whatever's latest on PyPI, and a
-      # version bump (different manifest-parsing behavior, etc.) can silently
-      # desync CI's rebuild from what contributors run locally. Bump deliberately
-      # and re-run `graphify update .` locally with the new version when needed.
+      # Pinned deliberately - a version bump can change manifest-parsing
+      # behaviour and silently reshape the graph. Bump on purpose, not by drift.
       - name: Install graphify
         run: pip install graphifyy==0.9.45
 
-      # Code-only rebuild - no LLM, no API key. Doc/paper/image changes aren't
-      # covered here; see CONTRIBUTING.md ("Keeping the knowledge graph updated").
+      # Code-only rebuild - no LLM, no API key. Doc-driven changes still need a
+      # `/graphify --update` from an agent session; see CONTRIBUTING.md.
       #
-      # Both env vars are required for a reproducible rebuild - confirmed by
-      # testing locally: PYTHONHASHSEED alone still produced a different graph
-      # on every run (parallel AST workers finish in a random order, which
-      # feeds Louvain clustering non-deterministically); pinning workers to 1
-      # made back-to-back reruns byte-identical. Without both, this job would
-      # flag unrelated PRs as "stale" at random.
+      # Both env vars pin determinism: PYTHONHASHSEED alone still produced a
+      # different graph per run, because parallel AST workers finish in a random
+      # order and feed Louvain clustering non-deterministically. The old job set
+      # only PYTHONHASHSEED despite its own comment saying both were needed,
+      # which is the likeliest source of the phantom drift that failed #151.
       - name: Rebuild code graph
         env:
           PYTHONHASHSEED: "0"
           GRAPHIFY_MAX_WORKERS: "1"
         run: graphify update .
 
-      # Scoped to the actual graph output + the content-hash-keyed AST cache.
-      # graphify-out/manifest.json and cache/stat-index.json store wall-clock
-      # mtimes for the local incremental-update cache - those never match
-      # between any two checkouts (confirmed: they were the only diff left
-      # after fixing the real content drift), so comparing them here would
-      # fail every run regardless of whether the graph itself is stale.
-      - name: Fail if graphify-out/ is stale
+      # Publish the interactive graph so it can be read without cloning the
+      # repo. graph.html is a self-contained 1 MB page - no external assets, no
+      # build step - so "publishing" is a copy. Runs whether or not the commit
+      # the commit step below succeeds: a blocked push must not leave the site stale.
+      - name: Assemble the Pages site
         run: |
-          if ! git diff --quiet -- graphify-out/graph.json graphify-out/graph.html graphify-out/GRAPH_REPORT.md graphify-out/cache/ast/; then
-            echo "::error::graphify-out/ is out of sync with the code in this PR."
-            echo "Run 'graphify update .' locally, review the diff, and commit graphify-out/."
-            echo "Or download the 'graphify-out-rebuilt' artifact from this run and commit that instead."
-            git diff --stat -- graphify-out/graph.json graphify-out/graph.html graphify-out/GRAPH_REPORT.md graphify-out/cache/ast/
-            exit 1
-          fi
+          mkdir -p _site
+          cp graphify-out/graph.html _site/index.html
+          cp graphify-out/GRAPH_REPORT.md _site/GRAPH_REPORT.md
 
-      - name: Upload rebuilt graph (only runs if the check above failed)
-        if: failure()
+      # NOTE: no `enablement: true` here. Creating a Pages site is a repository
+      # administration operation and GITHUB_TOKEN cannot do it - it fails with
+      # "Resource not accessible by integration", which reads like a workflow
+      # permissions bug and sends you looking in the wrong place. Pages is
+      # enabled once, by hand, at Settings -> Pages -> Source: GitHub Actions.
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deploy-graph
+        uses: actions/deploy-pages@v4
+
+      # Attempted LAST, deliberately. Pushing to develop is the only step here
+      # that can fail for reasons outside this workflow, and publishing must
+      # not depend on it - in the first run of this job it did, and a rejected
+      # push took the Pages deploy down with it.
+      #
+      # Why it gets rejected: branch protection requires every required status
+      # check to be green ON the commit being pushed. A bot commit carrying
+      # [skip ci] can never satisfy that. Dropping [skip ci] does not help
+      # either - at push time the checks have not run yet. Direct pushes to
+      # develop are simply not possible while required checks exist.
+      #
+      # So this is best-effort. If the push is refused the job stays green, the
+      # rebuilt graph is uploaded as an artifact, and the published site above
+      # is already current - only the copy committed in git lags, and a
+      # maintainer refreshes that. To make it commit automatically,
+      # github-actions[bot] needs a bypass on develop's required status checks
+      # (a repository ruleset with a bypass actor); this step then starts
+      # working with no change here.
+      - name: Upload the rebuilt graph
+        if: always()
         uses: actions/upload-artifact@v5
         with:
           name: graphify-out-rebuilt
           path: graphify-out/
-          retention-days: 7
+          retention-days: 14
 
   contracts:
     name: Test + build (contracts)
@@ -149,6 +217,104 @@ jobs:
 
       - name: Build (wasm release artifact)
         run: cargo build --release --target wasm32v1-none
+
+      # cargo-tarpaulin runs the crate's native test suite (same tests as the
+      # "Test" step above) and produces a Cobertura XML report, which is the
+      # format the Sonar Rust analyzer accepts. This does not touch the wasm
+      # build above - tarpaulin instruments and runs the native target only.
+      - name: Install cargo-tarpaulin
+        run: cargo install --locked cargo-tarpaulin
+
+      - name: Test with coverage (tarpaulin)
+        run: cargo tarpaulin --out Xml --output-dir .
+
+      - name: Upload contracts coverage
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage-contracts
+          path: smart-contracts/astrea/cobertura.xml
+          retention-days: 1
+
+  core-go:
+    name: Build, vet, test (core-go)
+    runs-on: ubuntu-latest
+    # Deliberately NOT gated on a `paths:` filter for services/core-go/**.
+    # This context is intended to become a required status check on main, and
+    # GitHub counts a *skipped* required check as not-passing - the same trap
+    # the commitlint job fell into, which left every develop -> main promotion
+    # BLOCKED with all checks green. See the `contracts` job above for the
+    # same reasoning. Don't "optimize" this back to a paths filter.
+    #
+    # Postgres service container (#185 PR 1): internal/store's integration
+    # test is gated on TEST_DATABASE_URL and needs a real Postgres to run
+    # against, or it never gets coverage in CI and the SonarCloud new-code
+    # gate fails on this job's own PR. The migrations applied below are
+    # Prisma's (apps/web) — this service never runs a migration itself,
+    # only reads/writes through the schema Prisma already owns.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: services/core-go
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.26.5"
+          # No go.sum yet (no external deps) - hashing go.sum here would make
+          # actions/setup-go's cache step fail outright (it errors when the
+          # glob matches nothing), so key the cache on go.mod instead.
+          cache-dependency-path: services/core-go/go.mod
+
+      - name: Build
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      # Applies every apps/web/prisma/migrations/*/migration.sql in lexical
+      # (i.e. chronological, since each directory is timestamp-prefixed)
+      # order against the service container above with the same psql the
+      # runner already ships. Runs from the repo root since the migrations
+      # live under apps/web, outside this job's services/core-go default
+      # working directory.
+      - name: Apply Prisma migrations (for the store integration test only)
+        working-directory: .
+        env:
+          PGPASSWORD: postgres
+        run: |
+          for f in $(ls apps/web/prisma/migrations/*/migration.sql | sort); do
+            echo "Applying $f"
+            psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 -f "$f"
+          done
+
+      # -coverprofile added so the sonarcloud job below has a Go coverage
+      # report to consume; the profile is uploaded as an artifact right after.
+      # TEST_DATABASE_URL points at the service container migrated above,
+      # so internal/store's gated integration test runs instead of skipping.
+      - name: Test
+        env:
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+        run: go test ./... -coverprofile=coverage.out
+
+      - name: Upload core-go coverage
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage-core-go
+          path: services/core-go/coverage.out
+          retention-days: 1
+
   commitlint:
     name: Commit messages (Conventional Commits)
     runs-on: ubuntu-latest
@@ -168,3 +334,54 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           node-version: 24
+
+  # New job: runs after the three coverage-producing jobs and feeds their
+  # artifacts into the SonarCloud scan, instead of re-running tests here.
+  sonarcloud:
+    name: SonarCloud analysis
+    runs-on: ubuntu-latest
+    # Depends on the three jobs that produce coverage. If one fails, the
+    # analysis still runs (with whatever coverage does exist) instead of
+    # blocking the report over a failure unrelated to Sonar.
+    needs: [build-lint-test, core-go, contracts]
+    if: always() && (needs.build-lint-test.result != 'cancelled' && needs.core-go.result != 'cancelled' && needs.contracts.result != 'cancelled')
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # SonarCloud needs the full git history to blame new vs.
+          # pre-existing issues.
+          fetch-depth: 0
+
+      # The Sonar Rust analyzer invokes cargo and clippy itself during the
+      # scan, so both need to be on PATH on this machine - not just on the
+      # `contracts` job's runner where the coverage report was generated.
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Download web coverage
+        uses: actions/download-artifact@v6
+        with:
+          name: coverage-web
+          path: apps/web/coverage
+        continue-on-error: true
+
+      - name: Download core-go coverage
+        uses: actions/download-artifact@v6
+        with:
+          name: coverage-core-go
+          path: services/core-go
+        continue-on-error: true
+
+      - name: Download contracts coverage
+        uses: actions/download-artifact@v6
+        with:
+          name: coverage-contracts
+          path: smart-contracts/astrea
+        continue-on-error: true
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
