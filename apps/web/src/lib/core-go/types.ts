@@ -68,6 +68,14 @@ export type CoreGoErrorCode =
 	| "create_already_succeeded"
 	| "no_pending_create"
 	| "create_build_replaced"
+	// Go-live (#11 PR 2).
+	| "event_not_created"
+	| "deadline_missing"
+	| "deadline_past"
+	| "insufficient_balance"
+	| "start_already_succeeded"
+	| "no_pending_start"
+	| "start_build_replaced"
 	| (string & {});
 
 export interface CoreGoErrorBody {
@@ -119,4 +127,34 @@ export interface CreateSubmitResponse {
 	txHash: string;
 	status: "succeeded" | "pending";
 	escrowEventId: string;
+}
+
+// Go-live (#11 PR 2): quote, build, submit of set_event_in_progress — the
+// only path that moves an event CREATED → LIVE. Read-only quote first, so a
+// screen can show the shortfall before ever building.
+
+export interface StartQuoteResponse {
+	/** Go-live fee in stroops, as a decimal string. */
+	fee: string;
+	/** Organizer's free escrow balance in stroops, as a decimal string. */
+	balance: string;
+	/** max(fee - balance, 0) in stroops, as a decimal string. */
+	shortfall: string;
+}
+
+export interface StartBuildResponse {
+	unsignedTransactionXdr: string;
+	/** Event.judgingDeadlineAt as Unix seconds, what the contract stores. */
+	judgingDeadline: number;
+	/** Fee in stroops at build time — re-quoted, may differ from an earlier quote. */
+	fee: number;
+}
+
+export interface StartSubmitRequest {
+	signedTransactionXdr: string;
+}
+
+export interface StartSubmitResponse {
+	txHash: string;
+	status: "succeeded" | "pending";
 }

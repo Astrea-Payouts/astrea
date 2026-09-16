@@ -8,6 +8,9 @@ import {
 	depositSubmit,
 	releaseBuild,
 	releaseSubmit,
+	startBuild,
+	startQuote,
+	startSubmit,
 	walletBalance,
 } from "./client";
 
@@ -297,6 +300,83 @@ describe("core-go client", () => {
 			expect(e2.status).toBe(409);
 			expect(e2.code).toBe("create_build_replaced");
 			expect(e2.message).toContain("replaced");
+		});
+
+		it("startQuote GETs /events/{id}/start/quote and returns the three stroop strings", async () => {
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(200, { fee: "500", balance: "200", shortfall: "300" }),
+			);
+
+			const res = await startQuote(EVENT_ID, WALLET);
+
+			expect(res).toEqual({ fee: "500", balance: "200", shortfall: "300" });
+			const { url, init, headers } = lastCall();
+			expect(url).toBe(`http://localhost:8080/events/${EVENT_ID}/start/quote`);
+			expect(init?.method).toBe("GET");
+			expect(init?.body).toBeUndefined();
+			expect(headers["X-Astrea-Wallet"]).toBe(WALLET);
+		});
+
+		it("startBuild posts an empty object and returns XDR, judgingDeadline and fee", async () => {
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(200, {
+					unsignedTransactionXdr: "HHHH",
+					judgingDeadline: 1780000000,
+					fee: 500,
+				}),
+			);
+
+			const res = await startBuild(EVENT_ID, WALLET);
+
+			expect(res).toEqual({
+				unsignedTransactionXdr: "HHHH",
+				judgingDeadline: 1780000000,
+				fee: 500,
+			});
+			const { url, init } = lastCall();
+			expect(url).toBe(`http://localhost:8080/events/${EVENT_ID}/start/build`);
+			expect(init?.method).toBe("POST");
+			expect(JSON.parse(String(init?.body))).toEqual({});
+		});
+
+		it("startSubmit posts the signed XDR and passes a 202 through", async () => {
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(202, { txHash: "sta123", status: "pending" }),
+			);
+
+			const res = await startSubmit(EVENT_ID, WALLET, "IIII");
+
+			expect(res).toEqual({ txHash: "sta123", status: "pending" });
+			const { url, init } = lastCall();
+			expect(url).toBe(`http://localhost:8080/events/${EVENT_ID}/start/submit`);
+			expect(JSON.parse(String(init?.body))).toEqual({
+				signedTransactionXdr: "IIII",
+			});
+		});
+
+		it("maps the go-live envelopes (409 insufficient_balance, deadline_past) to CoreGoError", async () => {
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(409, {
+					error: {
+						code: "insufficient_balance",
+						message: "fee 500, balance 200, shortfall 300",
+					},
+				}),
+			);
+			const e1 = await startBuild(EVENT_ID, WALLET).catch((e) => e);
+			expect(e1).toBeInstanceOf(CoreGoError);
+			expect(e1.status).toBe(409);
+			expect(e1.code).toBe("insufficient_balance");
+			expect(e1.message).toContain("shortfall 300");
+
+			fetchMock.mockResolvedValueOnce(
+				jsonResponse(409, {
+					error: { code: "deadline_past", message: "deadline is in the past" },
+				}),
+			);
+			const e2 = await startBuild(EVENT_ID, WALLET).catch((e) => e);
+			expect(e2).toBeInstanceOf(CoreGoError);
+			expect(e2.code).toBe("deadline_past");
 		});
 
 		it("throws CoreGoTransportError on a non-JSON balance response", async () => {

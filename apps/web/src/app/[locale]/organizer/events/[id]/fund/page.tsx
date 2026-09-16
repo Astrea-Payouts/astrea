@@ -1,20 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { EventStatusBadge } from "@/components/events/status-badge";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
-import type { EventStatus } from "@/generated/prisma/enums";
-import { Link, redirect } from "@/i18n/navigation";
-import {
-	CoreGoError,
-	CoreGoTransportError,
-	walletBalance,
-} from "@/lib/core-go/client";
+import { redirect } from "@/i18n/navigation";
+import { walletBalance } from "@/lib/core-go/client";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { sumUsdcAmounts } from "@/lib/escrow/amount";
 import { formatSmallestUnits } from "@/lib/explorer";
 import { getSessionWallet } from "@/lib/wallet/session";
+import { failure } from "../action-result";
+import { ServiceFailure, OrganizerShell as Shell } from "../shell";
 import { FundAndCreate } from "./fund-and-create";
 
 export const dynamic = "force-dynamic";
@@ -102,21 +98,10 @@ export default async function FundPage({ params }: { params: Params }) {
 	}));
 	const required = sumUsdcAmounts(prizes.map((p) => p.amount)).toString();
 
-	let balance: string | null = null;
-	let balanceError: { code: string; message: string } | null = null;
-	try {
-		balance = (await walletBalance(session.address, session.address)).balance;
-	} catch (err) {
-		balanceError =
-			err instanceof CoreGoError
-				? { code: err.code, message: err.message }
-				: err instanceof CoreGoTransportError
-					? { code: "transport", message: err.message }
-					: {
-							code: "unknown",
-							message: err instanceof Error ? err.message : String(err),
-						};
-	}
+	const read = await walletBalance(session.address, session.address).then(
+		(res) => ({ ok: true as const, balance: res.balance }),
+		(err: unknown) => failure(err),
+	);
 
 	return (
 		<Shell title={t("title")} event={event}>
@@ -145,56 +130,17 @@ export default async function FundPage({ params }: { params: Params }) {
 				</p>
 			</section>
 
-			{balance === null ? (
-				<p
-					role="alert"
-					className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300 break-words"
-				>
-					{t("balanceFailed")}{" "}
-					<span className="font-mono text-xs">
-						{balanceError?.code}
-						{balanceError?.message ? ` — ${balanceError.message}` : ""}
-					</span>
-				</p>
+			{!read.ok ? (
+				<ServiceFailure label={t("balanceFailed")} failure={read} />
 			) : (
 				<FundAndCreate
 					eventId={event.id}
 					address={session.address}
-					initialBalance={balance}
+					initialBalance={read.balance}
 					required={required}
 					symbol={symbol}
 				/>
 			)}
 		</Shell>
-	);
-}
-
-function Shell({
-	title,
-	event,
-	children,
-}: {
-	title: string;
-	event: { id: string; name: string; status: EventStatus };
-	children: React.ReactNode;
-}) {
-	return (
-		<main className="min-h-screen bg-black text-white pt-28 pb-16 px-4 sm:px-6 md:py-12 md:px-12">
-			<div className="mx-auto max-w-2xl flex flex-col gap-6">
-				<header className="flex flex-col gap-3">
-					<EventStatusBadge status={event.status} className="w-fit" />
-					<h1 className="font-serif text-3xl font-bold tracking-tight md:text-4xl">
-						{title}
-					</h1>
-					<Link
-						href={`/events/${event.id}`}
-						className="text-sm text-zinc-400 underline-offset-4 hover:underline break-words"
-					>
-						{event.name}
-					</Link>
-				</header>
-				{children}
-			</div>
-		</main>
 	);
 }

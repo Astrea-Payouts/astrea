@@ -258,10 +258,13 @@ export default async function EventPage({ params }: { params: Params }) {
 
 							{isOrganizer && event.status === "CREATED" ? (
 								// The reserve is on-chain (see the escrow section above);
-								// set_event_in_progress is #11 PR 2, so nothing to press yet.
-								<p className="text-sm text-zinc-500">
-									{t("organizer.goLiveNext")}
-								</p>
+								// /start pays the go-live fee and signs set_event_in_progress.
+								<Link
+									href={`/organizer/events/${event.id}/start`}
+									className="inline-flex w-full items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-medium text-black hover:bg-white/90 sm:w-auto"
+								>
+									{t("organizer.goLive")}
+								</Link>
 							) : null}
 
 							{isJudge ? (
