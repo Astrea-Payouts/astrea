@@ -106,6 +106,7 @@ export default async function StartPage({ params }: { params: Params }) {
 						shortfall: quote.shortfall,
 					}}
 					judgingDeadline={judgingDeadline}
+					timezone={event.timezone}
 					symbol={env.USDC_SYMBOL}
 				/>
 			)}

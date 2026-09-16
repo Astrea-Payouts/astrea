@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { SignStep, type SignStepResult } from "@/components/events/sign-step";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,8 @@ export interface GoLiveProps {
 	initialQuote: Quote;
 	/** Event.judgingDeadlineAt formatted by the page in the event's timezone; null when unset. */
 	judgingDeadline: string | null;
+	/** IANA zone the organizer picked; the built deadline is shown in it too. */
+	timezone: string;
 	symbol: string;
 }
 
@@ -51,9 +53,11 @@ export function GoLive({
 	address,
 	initialQuote,
 	judgingDeadline,
+	timezone,
 	symbol,
 }: GoLiveProps) {
 	const t = useTranslations("GoLivePage");
+	const locale = useLocale();
 	const router = useRouter();
 	const [quote, setQuote] = useState(initialQuote);
 	const [pending, startTransition] = useTransition();
@@ -213,8 +217,14 @@ export function GoLive({
 									{formatSmallestUnits(built.fee)} {symbol}
 								</dd>
 								<dt className="text-zinc-400">{t("start.deadline")}</dt>
-								<dd className="font-mono text-xs">
-									{new Date(built.judgingDeadline * 1000).toISOString()}
+								<dd data-testid="built-deadline">
+									{/* Go's unix seconds, in the same zone and style as the quote
+									    above. Client-only (after a click), so no hydration concern. */}
+									{new Intl.DateTimeFormat(locale, {
+										dateStyle: "medium",
+										timeStyle: "short",
+										timeZone: timezone,
+									}).format(new Date(built.judgingDeadline * 1000))}
 								</dd>
 							</dl>
 							<p className="text-xs text-zinc-400">{t("start.signHint")}</p>

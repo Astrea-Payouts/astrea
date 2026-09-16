@@ -157,6 +157,7 @@ describe("StartPage", () => {
 			},
 			// 23:59 UTC is 17:59 in Costa Rica (UTC-6, no DST).
 			judgingDeadline: expect.stringMatching(/Dec 31, 2026.*5:59/),
+			timezone: "America/Costa_Rica",
 			symbol: "USDC",
 		});
 		expect(screen.getByText(messages.EventStatus.CREATED)).toBeInTheDocument();

@@ -73,6 +73,7 @@ function render(quote: typeof covered, deadline: string | null = DEADLINE) {
 			address={ADDRESS}
 			initialQuote={quote}
 			judgingDeadline={deadline}
+			timezone="America/Costa_Rica"
 			symbol="USDC"
 		/>,
 	);
@@ -132,6 +133,11 @@ describe("GoLive — quote covers the fee", () => {
 		expect(mockBuildStart).toHaveBeenCalledWith(EVENT_ID);
 		expect(sign).toHaveAttribute("data-xdr", "START-XDR");
 		expect(screen.getByTestId("built-fee")).toHaveTextContent("0.5 USDC");
+		// Go's unix seconds (2026-12-31T23:59:00Z), shown like the quote above:
+		// same style, event timezone (UTC-6).
+		expect(screen.getByTestId("built-deadline")).toHaveTextContent(
+			/Dec 31, 2026.*5:59/,
+		);
 
 		fireEvent.click(sign);
 
