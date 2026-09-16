@@ -28,6 +28,21 @@ curl -i localhost:8080/events/<event-id>/release/build \
   -d '{"assignments":[{"rank":1,"teamId":"..."}]}'
 ```
 
+## Deploy (Vercel)
+
+`vercel.json` sets the `go` framework preset: Vercel builds `main.go` and
+runs it as a plain `net/http` server on the `PORT` it injects, on Fluid
+compute (300 s max per request on Hobby — the 30 s confirmation poll in
+`/submit` fits). The Vercel project's *Root Directory* is `services/core-go`,
+so `go.mod` is at its root as the preset requires.
+
+Instances are reused but can scale out, so `DATABASE_URL` must be Supabase's
+pooled URL (port `6543`, the same one `apps/web/.env.example` marks as
+pgbouncer), never the direct one. `PORT` is set by Vercel; every other
+variable from Configuration below is set in the project's environment
+variables. `apps/web` then points `CORE_GO_URL` at the deployment and shares
+`CORE_GO_SERVICE_TOKEN`.
+
 ## Build
 
 ```bash
