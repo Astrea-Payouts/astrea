@@ -4,54 +4,37 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const EVENT_ID = "11111111-2222-3333-4444-555555555555";
 const ORGANIZER = "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5";
 const OTHER = "GDLWMKYOJYXW4EIE6DNE2K354RTWDDBXDJCZMPICRBPHO3OBIUDWJSNC";
-const OP_ID = "0123456789abcdef0123456789abcdef";
 const WALLET = { id: "wallet-1", userId: "user-1", address: ORGANIZER };
 
 const {
-	mockDb,
 	mockSession,
 	mockRevalidate,
 	mockWalletBalance,
-	mockDepositBuild,
-	mockDepositSubmit,
 	mockCreateBuild,
 	mockCreateSubmit,
 } = vi.hoisted(() => ({
-	mockDb: { event: { findUnique: vi.fn() } },
 	mockSession: vi.fn(),
 	mockRevalidate: vi.fn(),
 	mockWalletBalance: vi.fn(),
-	mockDepositBuild: vi.fn(),
-	mockDepositSubmit: vi.fn(),
 	mockCreateBuild: vi.fn(),
 	mockCreateSubmit: vi.fn(),
 }));
 
-vi.mock("@/lib/db", () => ({ db: mockDb }));
 vi.mock("@/lib/wallet/session", () => ({ getSessionWallet: mockSession }));
 vi.mock("next/cache", () => ({ revalidatePath: mockRevalidate }));
 // Keep the real error classes so `instanceof` in failure() holds.
 vi.mock("@/lib/core-go/client", async (importOriginal) => ({
 	...(await importOriginal<typeof import("@/lib/core-go/client")>()),
 	walletBalance: mockWalletBalance,
-	depositBuild: mockDepositBuild,
-	depositSubmit: mockDepositSubmit,
 	createBuild: mockCreateBuild,
 	createSubmit: mockCreateSubmit,
 }));
 
-const { CoreGoError, CoreGoTransportError } = await import(
-	"@/lib/core-go/client"
-);
-const {
-	readBalance,
-	buildDeposit,
-	submitDeposit,
-	buildCreate,
-	submitCreate,
-	readEventStatus,
-} = await import("./actions");
+const { CoreGoError } = await import("@/lib/core-go/client");
+const { readBalance, buildCreate, submitCreate } = await import("./actions");
 
+// The deposit step's actions and readEventStatus are tested one level up
+// (../actions.test.ts).
 describe("fund actions", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
@@ -61,11 +44,8 @@ describe("fund actions", () => {
 	describe("session and ownership gates", () => {
 		it.each([
 			["readBalance", () => readBalance(ORGANIZER)],
-			["buildDeposit", () => buildDeposit(ORGANIZER, "1")],
-			["submitDeposit", () => submitDeposit(ORGANIZER, OP_ID, "XDR")],
 			["buildCreate", () => buildCreate(EVENT_ID)],
 			["submitCreate", () => submitCreate(EVENT_ID, "XDR")],
-			["readEventStatus", () => readEventStatus(EVENT_ID)],
 		])("%s answers 401 not_connected without a session", async (_n, call) => {
 			mockSession.mockResolvedValue(null);
 
@@ -78,29 +58,19 @@ describe("fund actions", () => {
 				message: "",
 			});
 			expect(mockWalletBalance).not.toHaveBeenCalled();
-			expect(mockDepositBuild).not.toHaveBeenCalled();
 			expect(mockCreateBuild).not.toHaveBeenCalled();
 		});
 
-		it.each([
-			["readBalance", () => readBalance(OTHER)],
-			["buildDeposit", () => buildDeposit(OTHER, "1")],
-			["submitDeposit", () => submitDeposit(OTHER, OP_ID, "XDR")],
-		])(
-			"%s refuses an address that is not the session wallet without calling Go",
-			async (_n, call) => {
-				const res = await call();
+		it("readBalance refuses an address that is not the session wallet without calling Go", async () => {
+			const res = await readBalance(OTHER);
 
-				expect(res).toMatchObject({
-					ok: false,
-					status: 403,
-					code: "not_wallet_owner",
-				});
-				expect(mockWalletBalance).not.toHaveBeenCalled();
-				expect(mockDepositBuild).not.toHaveBeenCalled();
-				expect(mockDepositSubmit).not.toHaveBeenCalled();
-			},
-		);
+			expect(res).toMatchObject({
+				ok: false,
+				status: 403,
+				code: "not_wallet_owner",
+			});
+			expect(mockWalletBalance).not.toHaveBeenCalled();
+		});
 	});
 
 	describe("readBalance", () => {
@@ -127,79 +97,6 @@ describe("fund actions", () => {
 				code: "invalid_wallet",
 				message: "bad address",
 			});
-		});
-	});
-
-	describe("buildDeposit / submitDeposit", () => {
-		it("builds with the decimal amount and returns opId + XDR", async () => {
-			mockDepositBuild.mockResolvedValue({
-				opId: OP_ID,
-				unsignedTransactionXdr: "DDDD",
-			});
-
-			const res = await buildDeposit(ORGANIZER, "2.5");
-
-			expect(res).toEqual({
-				ok: true,
-				opId: OP_ID,
-				unsignedTransactionXdr: "DDDD",
-			});
-			expect(mockDepositBuild).toHaveBeenCalledWith(
-				ORGANIZER,
-				ORGANIZER,
-				"2.5",
-			);
-		});
-
-		it("maps invalid_amount verbatim", async () => {
-			mockDepositBuild.mockRejectedValue(
-				new CoreGoError(400, "invalid_amount", "amount must be > 0"),
-			);
-
-			expect(await buildDeposit(ORGANIZER, "0")).toEqual({
-				ok: false,
-				status: 400,
-				code: "invalid_amount",
-				message: "amount must be > 0",
-			});
-		});
-
-		it("submits opId + signed XDR and passes 200/202 through", async () => {
-			mockDepositSubmit.mockResolvedValueOnce({
-				txHash: "dep1",
-				status: "succeeded",
-			});
-			expect(await submitDeposit(ORGANIZER, OP_ID, "SIGNED")).toEqual({
-				ok: true,
-				txHash: "dep1",
-				status: "succeeded",
-			});
-			expect(mockDepositSubmit).toHaveBeenCalledWith(
-				ORGANIZER,
-				ORGANIZER,
-				OP_ID,
-				"SIGNED",
-			);
-
-			mockDepositSubmit.mockResolvedValueOnce({
-				txHash: "dep2",
-				status: "pending",
-			});
-			expect(await submitDeposit(ORGANIZER, OP_ID, "SIGNED")).toEqual({
-				ok: true,
-				txHash: "dep2",
-				status: "pending",
-			});
-		});
-
-		it("maps a transport error to code transport", async () => {
-			mockDepositSubmit.mockRejectedValue(
-				new CoreGoTransportError(502, "<html>"),
-			);
-
-			const res = await submitDeposit(ORGANIZER, OP_ID, "SIGNED");
-
-			expect(res).toMatchObject({ ok: false, status: 502, code: "transport" });
 		});
 	});
 
@@ -337,61 +234,6 @@ describe("fund actions", () => {
 
 			expect(res).toMatchObject({ ok: false, code: "create_build_replaced" });
 			expect((res as { txHash?: string }).txHash).toBeUndefined();
-		});
-	});
-
-	describe("readEventStatus", () => {
-		it("returns the row for the organizer and revalidates once CREATED", async () => {
-			mockDb.event.findUnique.mockResolvedValue({
-				status: "CREATED",
-				escrowEventId: "58e01828eeeba7090fc21c878f8d28da",
-				organizerWalletId: "wallet-1",
-			});
-
-			const res = await readEventStatus(EVENT_ID);
-
-			expect(res).toEqual({
-				ok: true,
-				status: "CREATED",
-				escrowEventId: "58e01828eeeba7090fc21c878f8d28da",
-			});
-			expect(mockRevalidate).toHaveBeenCalledWith(
-				`/[locale]/events/${EVENT_ID}`,
-				"page",
-			);
-		});
-
-		it("does not revalidate while still DRAFT", async () => {
-			mockDb.event.findUnique.mockResolvedValue({
-				status: "DRAFT",
-				escrowEventId: null,
-				organizerWalletId: "wallet-1",
-			});
-
-			const res = await readEventStatus(EVENT_ID);
-
-			expect(res).toEqual({ ok: true, status: "DRAFT", escrowEventId: null });
-			expect(mockRevalidate).not.toHaveBeenCalled();
-		});
-
-		it("answers 404 for an unknown event and 403 for another organizer", async () => {
-			mockDb.event.findUnique.mockResolvedValueOnce(null);
-			expect(await readEventStatus(EVENT_ID)).toMatchObject({
-				ok: false,
-				status: 404,
-				code: "event_not_found",
-			});
-
-			mockDb.event.findUnique.mockResolvedValueOnce({
-				status: "DRAFT",
-				escrowEventId: null,
-				organizerWalletId: "wallet-9",
-			});
-			expect(await readEventStatus(EVENT_ID)).toMatchObject({
-				ok: false,
-				status: 403,
-				code: "not_organizer",
-			});
 		});
 	});
 });

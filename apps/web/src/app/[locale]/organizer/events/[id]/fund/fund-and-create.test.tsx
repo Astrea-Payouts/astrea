@@ -33,10 +33,13 @@ const {
 
 vi.mock("./actions", () => ({
 	readBalance: mockReadBalance,
-	buildDeposit: mockBuildDeposit,
-	submitDeposit: mockSubmitDeposit,
 	buildCreate: mockBuildCreate,
 	submitCreate: mockSubmitCreate,
+}));
+// The deposit step and the status read are shared with /start (../actions).
+vi.mock("../actions", () => ({
+	buildDeposit: mockBuildDeposit,
+	submitDeposit: mockSubmitDeposit,
 	readEventStatus: mockReadEventStatus,
 }));
 vi.mock("@/i18n/navigation", () => ({
@@ -73,6 +76,7 @@ function render(initialBalance: string) {
 }
 
 const fund = messages.FundPage;
+const deposit = messages.DepositStep;
 
 describe("FundAndCreate — step 2 (balance covers the prizes)", () => {
 	beforeEach(() => {
@@ -94,7 +98,7 @@ describe("FundAndCreate — step 2 (balance covers the prizes)", () => {
 
 		expect(screen.getByTestId("balance")).toHaveTextContent("3 USDC");
 		expect(screen.getByText("2.5 USDC")).toBeInTheDocument();
-		expect(screen.queryByText(fund.deposit.title)).not.toBeInTheDocument();
+		expect(screen.queryByText(deposit.title)).not.toBeInTheDocument();
 		expect(
 			screen.getByRole("button", {
 				name: "Reserve 2.5 USDC and create the event",
@@ -297,7 +301,7 @@ describe("FundAndCreate — step 1 (balance short)", () => {
 	it("defaults the amount to the shortfall and hides step 2", () => {
 		render("10000000"); // 1 USDC of 2.5
 
-		expect(screen.getByText(fund.deposit.title)).toBeInTheDocument();
+		expect(screen.getByText(deposit.title)).toBeInTheDocument();
 		expect(screen.queryByText(fund.create.title)).not.toBeInTheDocument();
 		expect(
 			screen.getByRole("textbox", { name: /Amount to deposit/ }),
@@ -342,7 +346,7 @@ describe("FundAndCreate — step 1 (balance short)", () => {
 
 		fireEvent.click(screen.getByRole("button", { name: "Deposit 1.5 USDC" }));
 
-		const sign = await screen.findByRole("button", { name: fund.deposit.sign });
+		const sign = await screen.findByRole("button", { name: deposit.sign });
 		expect(mockBuildDeposit).toHaveBeenCalledWith(ADDRESS, "1.5");
 		expect(sign).toHaveAttribute("data-xdr", "DEPOSIT-XDR");
 
@@ -354,7 +358,7 @@ describe("FundAndCreate — step 1 (balance short)", () => {
 		await waitFor(() => expect(mockReadBalance).toHaveBeenCalledWith(ADDRESS));
 		await screen.findByText(fund.create.title);
 		expect(screen.getByTestId("balance")).toHaveTextContent("2.5 USDC");
-		expect(screen.queryByText(fund.deposit.title)).not.toBeInTheDocument();
+		expect(screen.queryByText(deposit.title)).not.toBeInTheDocument();
 		expect(mockBuildCreate).not.toHaveBeenCalled();
 	});
 
@@ -370,23 +374,21 @@ describe("FundAndCreate — step 1 (balance short)", () => {
 		render("10000000");
 
 		fireEvent.click(screen.getByRole("button", { name: "Deposit 1.5 USDC" }));
-		fireEvent.click(
-			await screen.findByRole("button", { name: fund.deposit.sign }),
-		);
+		fireEvent.click(await screen.findByRole("button", { name: deposit.sign }));
 
 		const status = await screen.findByRole("status");
-		expect(status).toHaveTextContent(fund.deposit.pending);
+		expect(status).toHaveTextContent(deposit.pending);
 		expect(
 			screen.getByRole("link", { name: /0941dbcdd6/ }),
 		).toBeInTheDocument();
 
-		fireEvent.click(screen.getByRole("button", { name: fund.checkAgain }));
+		fireEvent.click(screen.getByRole("button", { name: deposit.checkAgain }));
 		await waitFor(() => expect(mockReadBalance).toHaveBeenCalledTimes(1));
 		expect(screen.getByRole("status")).toBeInTheDocument();
 		expect(screen.queryByText(fund.create.title)).not.toBeInTheDocument();
 
 		fireEvent.click(
-			await screen.findByRole("button", { name: fund.checkAgain }),
+			await screen.findByRole("button", { name: deposit.checkAgain }),
 		);
 		await screen.findByText(fund.create.title);
 		expect(screen.getByTestId("balance")).toHaveTextContent("2.6 USDC");
@@ -407,7 +409,7 @@ describe("FundAndCreate — step 1 (balance short)", () => {
 		expect(alert).toHaveTextContent("403 not_wallet_owner");
 		expect(alert).toHaveTextContent("address is not the caller");
 		expect(
-			screen.queryByRole("button", { name: fund.deposit.sign }),
+			screen.queryByRole("button", { name: deposit.sign }),
 		).not.toBeInTheDocument();
 	});
 
@@ -421,9 +423,7 @@ describe("FundAndCreate — step 1 (balance short)", () => {
 		render("10000000");
 
 		fireEvent.click(screen.getByRole("button", { name: "Deposit 1.5 USDC" }));
-		fireEvent.click(
-			await screen.findByRole("button", { name: fund.deposit.sign }),
-		);
+		fireEvent.click(await screen.findByRole("button", { name: deposit.sign }));
 
 		const alert = await screen.findByRole("alert");
 		expect(alert).toHaveTextContent("409 envelope_mismatch");
@@ -435,17 +435,15 @@ describe("FundAndCreate — step 1 (balance short)", () => {
 		render("10000000");
 
 		fireEvent.click(screen.getByRole("button", { name: "Deposit 1.5 USDC" }));
-		await screen.findByRole("button", { name: fund.deposit.sign });
+		await screen.findByRole("button", { name: deposit.sign });
 
-		fireEvent.click(
-			screen.getByRole("button", { name: fund.deposit.changeAmount }),
-		);
+		fireEvent.click(screen.getByRole("button", { name: deposit.changeAmount }));
 
 		expect(
 			screen.getByRole("textbox", { name: /Amount to deposit/ }),
 		).toHaveValue("1.5");
 		expect(
-			screen.queryByRole("button", { name: fund.deposit.sign }),
+			screen.queryByRole("button", { name: deposit.sign }),
 		).not.toBeInTheDocument();
 	});
 });

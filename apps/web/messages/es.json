@@ -194,7 +194,7 @@
 			"closeHint": "Cerrar el registro pasa el evento a evaluación; el juez puede entonces asignar ganadores y liberar los premios.",
 			"close": "Cerrar registro, iniciar evaluación",
 			"closing": "Cerrando…",
-			"goLiveNext": "El go-live viene después (#11 PR 2)."
+			"goLive": "Poner en vivo"
 		},
 		"errors": {
 			"notConnected": "Conectá tu wallet primero.",
@@ -289,18 +289,6 @@
 		"required": "Necesario para este evento",
 		"checkAgain": "Verificar de nuevo",
 		"checking": "Verificando…",
-		"deposit": {
-			"title": "Paso 1 — Depósito",
-			"hint": "A tu saldo en el escrow le faltan {shortfall} {symbol}. Depositá al menos eso desde tu wallet.",
-			"amount": "Monto a depositar ({symbol})",
-			"belowShortfall": "Ingresá al menos {shortfall} {symbol}.",
-			"build": "Depositar {amount} {symbol}",
-			"building": "Armando…",
-			"signHint": "Tu wallet firma exactamente este depósito. El servicio rechaza cualquier envelope distinto al que armó.",
-			"sign": "Firmar el depósito",
-			"changeAmount": "Cambiar monto",
-			"pending": "Depósito enviado — la confirmación expiró, resultado desconocido. Revisá el hash y después verificá tu saldo de nuevo."
-		},
 		"create": {
 			"title": "Paso 2 — Reservar y crear",
 			"hint": "El saldo cubre los premios. Crear el evento mueve el total desde tu saldo en el escrow a la reserva de este evento.",
@@ -314,6 +302,52 @@
 			"discard": "Descartar este armado",
 			"pending": "Enviado — la confirmación expiró, resultado desconocido. Revisá el hash y después verificá el evento de nuevo.",
 			"buildReplaced": "La transacción se confirmó pero el armado fue reemplazado mientras tanto; no reintentes, contactá a soporte con el hash {hash}."
+		}
+	},
+	"DepositStep": {
+		"title": "Paso 1 — Depósito",
+		"hint": "A tu saldo en el escrow le faltan {shortfall} {symbol}. Depositá al menos eso desde tu wallet.",
+		"amount": "Monto a depositar ({symbol})",
+		"belowShortfall": "Ingresá al menos {shortfall} {symbol}.",
+		"build": "Depositar {amount} {symbol}",
+		"building": "Armando…",
+		"signHint": "Tu wallet firma exactamente este depósito. El servicio rechaza cualquier envelope distinto al que armó.",
+		"sign": "Firmar el depósito",
+		"changeAmount": "Cambiar monto",
+		"pending": "Depósito enviado — la confirmación expiró, resultado desconocido. Revisá el hash y después verificá tu saldo de nuevo.",
+		"checkAgain": "Verificar de nuevo",
+		"checking": "Verificando…"
+	},
+	"GoLivePage": {
+		"title": "Poner en vivo",
+		"connect": "Conectá la wallet del organizador para poner este evento en vivo.",
+		"forbidden": {
+			"notOrganizer": "Tu wallet no es la del organizador de este evento."
+		},
+		"quoteFailed": "No se pudo leer la cotización del go-live desde el servicio:",
+		"fee": "Tarifa de go-live",
+		"balance": "Tu saldo en el escrow",
+		"shortfall": "Faltante",
+		"deadline": "Fecha límite de evaluación",
+		"deadlineUnset": "Sin definir",
+		"feeHint": "La tarifa sale de tu saldo en el escrow y va a la tesorería; la reserva de premios del evento no se toca.",
+		"checkAgain": "Verificar de nuevo",
+		"checking": "Verificando…",
+		"start": {
+			"title": "Paso 2 — Poner en vivo",
+			"hint": "El saldo cubre la tarifa. Poner en vivo abre la inscripción y guarda la fecha límite de evaluación on-chain.",
+			"build": "Poner en vivo",
+			"building": "Armando…",
+			"fee": "Tarifa (según el servicio)",
+			"deadline": "Fecha límite que guardará el contrato",
+			"signHint": "Tu wallet firma exactamente este set_event_in_progress. El evento sigue CREATED hasta que la red lo confirme.",
+			"sign": "Firmar y poner en vivo",
+			"discard": "Descartar este armado",
+			"confirmed": "Confirmado — el evento debería leerse LIVE en breve. Verificá el evento de nuevo.",
+			"pending": "Enviado — la confirmación expiró, resultado desconocido. Revisá el hash y después verificá el evento de nuevo.",
+			"buildReplaced": "La transacción se confirmó pero el armado fue reemplazado mientras tanto; guardá el hash {hash} para soporte y armá de nuevo.",
+			"deadlineMissing": "Este evento no tiene fecha límite de evaluación, así que no puede ponerse en vivo. Editar la fecha límite queda fuera del alcance de esta pantalla.",
+			"deadlinePast": "La fecha límite de evaluación ({deadline}) ya pasó, así que este evento no puede ponerse en vivo. Editar la fecha límite queda fuera del alcance de esta pantalla."
 		}
 	}
 }

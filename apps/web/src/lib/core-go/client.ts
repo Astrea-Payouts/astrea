@@ -16,6 +16,10 @@ import type {
 	ReleaseBuildResponse,
 	ReleaseSubmitRequest,
 	ReleaseSubmitResponse,
+	StartBuildResponse,
+	StartQuoteResponse,
+	StartSubmitRequest,
+	StartSubmitResponse,
 	WalletBalanceResponse,
 } from "./types";
 
@@ -214,6 +218,43 @@ export async function createSubmit(
 	const body: CreateSubmitRequest = { signedTransactionXdr };
 	return post<CreateSubmitResponse>(
 		`/events/${encodeURIComponent(eventId)}/create/submit`,
+		wallet,
+		body,
+	);
+}
+
+// Go-live (#11 PR 2). Same authorization as create: the caller must be the
+// event's organizer wallet, the event CREATED with an escrowEventId.
+
+export async function startQuote(
+	eventId: string,
+	wallet: string,
+): Promise<StartQuoteResponse> {
+	return get<StartQuoteResponse>(
+		`/events/${encodeURIComponent(eventId)}/start/quote`,
+		wallet,
+	);
+}
+
+export async function startBuild(
+	eventId: string,
+	wallet: string,
+): Promise<StartBuildResponse> {
+	return post<StartBuildResponse>(
+		`/events/${encodeURIComponent(eventId)}/start/build`,
+		wallet,
+		{},
+	);
+}
+
+export async function startSubmit(
+	eventId: string,
+	wallet: string,
+	signedTransactionXdr: string,
+): Promise<StartSubmitResponse> {
+	const body: StartSubmitRequest = { signedTransactionXdr };
+	return post<StartSubmitResponse>(
+		`/events/${encodeURIComponent(eventId)}/start/submit`,
 		wallet,
 		body,
 	);
