@@ -16,6 +16,7 @@ const { mockDb, mockSession, mockTrustline, mockRevalidate } = vi.hoisted(
 			event: { findUnique: vi.fn(), updateMany: vi.fn() },
 			teamMember: { findUnique: vi.fn() },
 			team: { create: vi.fn() },
+			linkedAccount: { findUnique: vi.fn() },
 		},
 		mockSession: vi.fn(),
 		mockTrustline: vi.fn(),
@@ -41,10 +42,15 @@ describe("registerTeam", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockSession.mockResolvedValue(WALLET);
-		mockDb.event.findUnique.mockResolvedValue({ id: EVENT_ID, status: "LIVE" });
+		mockDb.event.findUnique.mockResolvedValue({
+			id: EVENT_ID,
+			status: "LIVE",
+			requireGithub: false,
+		});
 		mockTrustline.mockResolvedValue(true);
 		mockDb.teamMember.findUnique.mockResolvedValue(null);
 		mockDb.team.create.mockResolvedValue({ id: "team-1" });
+		mockDb.linkedAccount.findUnique.mockResolvedValue(null);
 	});
 
 	it("refuses without a session wallet, touching nothing", async () => {
@@ -126,6 +132,7 @@ describe("registerTeam", () => {
 				eventId: EVENT_ID,
 				name: "Team Rocket",
 				submissionUrl: "https://github.com/example/repo",
+				submissionVerifiedAt: null,
 				members: {
 					create: [
 						{
@@ -139,6 +146,95 @@ describe("registerTeam", () => {
 			},
 		});
 		expect(mockRevalidate).toHaveBeenCalled();
+	});
+
+	it("refuses when event requires GitHub but wallet has no linked GitHub account", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			id: EVENT_ID,
+			status: "LIVE",
+			requireGithub: true,
+		});
+		mockDb.linkedAccount.findUnique.mockResolvedValue(null);
+
+		const res = await registerTeam(EVENT_ID, validInput);
+		expect(res).toEqual({ ok: false, code: "githubRequired" });
+		expect(mockDb.team.create).not.toHaveBeenCalled();
+	});
+
+	it("refuses when event requires GitHub but submission URL is not a GitHub repo", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			id: EVENT_ID,
+			status: "LIVE",
+			requireGithub: true,
+		});
+		mockDb.linkedAccount.findUnique.mockResolvedValue({
+			username: "alice",
+			provider: "GITHUB",
+		});
+
+		const res = await registerTeam(EVENT_ID, {
+			...validInput,
+			submissionUrl: "https://gitlab.com/alice/project",
+		});
+		expect(res).toEqual({ ok: false, code: "invalidGithubUrl" });
+		expect(mockDb.team.create).not.toHaveBeenCalled();
+	});
+
+	it("refuses when event requires GitHub but user does not own the repo", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			id: EVENT_ID,
+			status: "LIVE",
+			requireGithub: true,
+		});
+		mockDb.linkedAccount.findUnique.mockResolvedValue({
+			username: "alice",
+			provider: "GITHUB",
+		});
+
+		const res = await registerTeam(EVENT_ID, {
+			...validInput,
+			submissionUrl: "https://github.com/bob/other-repo",
+		});
+		expect(res.ok).toBe(false);
+		if (res.ok) throw new Error("unreachable");
+		expect(res.code).toBe("notRepoOwner");
+		expect(mockDb.team.create).not.toHaveBeenCalled();
+	});
+
+	it("records submissionVerifiedAt timestamp when event requires GitHub and user owns repo", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			id: EVENT_ID,
+			status: "LIVE",
+			requireGithub: true,
+		});
+		mockDb.linkedAccount.findUnique.mockResolvedValue({
+			username: "alice",
+			provider: "GITHUB",
+		});
+
+		const res = await registerTeam(EVENT_ID, {
+			teamName: "Alice Team",
+			submissionUrl: "https://github.com/alice/my-repo",
+		});
+		expect(res).toEqual({ ok: true });
+		expect(mockDb.team.create).toHaveBeenCalledWith({
+			data: {
+				eventId: EVENT_ID,
+				name: "Alice Team",
+				submissionUrl: "https://github.com/alice/my-repo",
+				submissionVerifiedAt: expect.any(Date),
+				members: {
+					create: [
+						{
+							eventId: EVENT_ID,
+							walletId: WALLET.id,
+							shareBasisPoints: 10000,
+							ordinal: 0,
+						},
+					],
+				},
+			},
+		});
 	});
 });
 

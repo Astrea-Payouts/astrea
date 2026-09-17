@@ -166,7 +166,8 @@
 			"title": "Prizes",
 			"none": "No prizes defined.",
 			"rank": "#{rank}",
-			"winner": "Winner: {team}"
+			"winner": "Winner: {team}",
+			"paidTx": "Paid on-chain"
 		},
 		"people": {
 			"organizer": "Organizer",
@@ -205,7 +206,10 @@
 			"invalidTeamName": "Team name must be 1–80 characters.",
 			"invalidSubmissionUrl": "Submission URL must be an http(s) link.",
 			"notOrganizer": "Only the organizer's wallet can do this.",
-			"transition": "The event could not be moved to judging:"
+			"transition": "The event could not be moved to judging:",
+			"githubRequired": "This event requires a linked GitHub account. Please link your GitHub account before registering.",
+			"invalidGithubUrl": "Submission URL must be a valid GitHub repository (e.g. https://github.com/owner/repo).",
+			"notRepoOwner": "GitHub repository ownership check failed."
 		}
 	},
 	"JudgePage": {
@@ -349,5 +353,18 @@
 			"deadlineMissing": "This event has no judging deadline, so it cannot go live. Editing the deadline is out of scope for this screen.",
 			"deadlinePast": "The judging deadline ({deadline}) has already passed, so this event cannot go live. Editing the deadline is out of scope for this screen."
 		}
+	},
+	"Profile": {
+		"title": "Public Profile",
+		"githubAccount": "GitHub Account",
+		"stellarWallet": "Stellar Wallet",
+		"participations": "Participations & Submissions",
+		"noParticipations": "No public event participations recorded yet.",
+		"team": "Team",
+		"event": "Event",
+		"prizesWon": "Prizes Won",
+		"payoutConfirmed": "Payout confirmed on-chain",
+		"verifiedSubmission": "Verified Submission",
+		"viewRepo": "View Repository"
 	}
 }

@@ -63,6 +63,16 @@ const serverSchema = z.object({
 		(v) => (v === "" ? undefined : v),
 		z.string().min(32).optional(),
 	),
+	// GitHub OAuth credentials (U18). Optional so deploys/local dev without
+	// GitHub app configured can still run non-GitHub flows.
+	GITHUB_CLIENT_ID: z.preprocess(
+		(v) => (v === "" ? undefined : v),
+		z.string().min(1).optional(),
+	),
+	GITHUB_CLIENT_SECRET: z.preprocess(
+		(v) => (v === "" ? undefined : v),
+		z.string().min(1).optional(),
+	),
 });
 
 function parseEnv() {

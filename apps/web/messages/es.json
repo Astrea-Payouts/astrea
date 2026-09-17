@@ -166,7 +166,8 @@
 			"title": "Premios",
 			"none": "No hay premios definidos.",
 			"rank": "#{rank}",
-			"winner": "Ganador: {team}"
+			"winner": "Ganador: {team}",
+			"paidTx": "Pagado on-chain"
 		},
 		"people": {
 			"organizer": "Organizador",
@@ -205,7 +206,10 @@
 			"invalidTeamName": "El nombre del equipo debe tener entre 1 y 80 caracteres.",
 			"invalidSubmissionUrl": "La URL de la entrega debe ser un enlace http(s).",
 			"notOrganizer": "Solo la wallet del organizador puede hacer esto.",
-			"transition": "No se pudo pasar el evento a evaluación:"
+			"transition": "No se pudo pasar el evento a evaluación:",
+			"githubRequired": "Este evento requiere una cuenta de GitHub vinculada. Por favor vinculá tu cuenta de GitHub antes de registrarte.",
+			"invalidGithubUrl": "La URL de entrega debe ser un repositorio de GitHub válido (ej. https://github.com/owner/repo).",
+			"notRepoOwner": "Falló la verificación de propiedad del repositorio de GitHub."
 		}
 	},
 	"JudgePage": {
@@ -349,5 +353,18 @@
 			"deadlineMissing": "Este evento no tiene fecha límite de evaluación, así que no puede ponerse en vivo. Editar la fecha límite queda fuera del alcance de esta pantalla.",
 			"deadlinePast": "La fecha límite de evaluación ({deadline}) ya pasó, así que este evento no puede ponerse en vivo. Editar la fecha límite queda fuera del alcance de esta pantalla."
 		}
+	},
+	"Profile": {
+		"title": "Perfil Público",
+		"githubAccount": "Cuenta de GitHub",
+		"stellarWallet": "Wallet de Stellar",
+		"participations": "Participaciones y Entregas",
+		"noParticipations": "Aún no hay participaciones públicas registradas.",
+		"team": "Equipo",
+		"event": "Evento",
+		"prizesWon": "Premios Ganados",
+		"payoutConfirmed": "Pago confirmado en red",
+		"verifiedSubmission": "Entrega Verificada",
+		"viewRepo": "Ver Repositorio"
 	}
 }

@@ -126,11 +126,26 @@ export default async function LocaleLayout({
 	}
 
 	return (
+		// suppressHydrationWarning: @creit.tech/stellar-wallets-kit writes its
+		// theme as --swk-* custom properties on <html> from a module-level
+		// signal effect (esm/state/effects.js), i.e. at import time, before
+		// React hydrates. The server never renders that style attribute, so
+		// dev logs a mismatch on every page. The flag only covers this
+		// element's own attributes, not its children.
+		// Every page paints its own bg-black, but the shadcn tokens in globals.css
+		// only flip to their dark values under .dark. Without it, <Button
+		// variant="outline"> renders white-on-white and "default" near-black on
+		// black. There is no light theme to preserve, so the class is static.
+		//
+		// bg-black on <body>: pages paint their own black <main>, but the sticky
+		// header sits above it and is transparent until scrolled, so without it
+		// a grey strip of the token background shows through at the top.
 		<html
 			lang={locale}
-			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+			className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
+			suppressHydrationWarning
 		>
-			<body className="relative min-h-full flex flex-col">
+			<body className="relative min-h-full flex flex-col bg-black">
 				<NextIntlClientProvider>
 					<MotionPreferenceProvider>
 						<WalletProvider>

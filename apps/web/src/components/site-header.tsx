@@ -24,10 +24,10 @@ function GithubIcon() {
 	);
 }
 
-// Just past the header's own height (113px at md), so the background arrives
-// when content actually starts passing behind it rather than on the first flick
-// of the wheel.
-const OPAQUE_AFTER_PX = 130;
+// When the glass background arrives. Over the hero the header is fixed, so
+// content only reaches it after ~113px (its own height at md); in flow it is
+// sticky and content slides under it from the first pixel.
+const GLASS_AFTER_PX = { transparent: 130, solid: 8 } as const;
 
 export interface SiteHeaderProps {
 	variant?: "transparent" | "solid";
@@ -39,16 +39,14 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 	const pathname = usePathname();
 
 	const resolvedVariant = resolveHeaderVariant(variant, pathname);
-	const scrolled = useScrolledPast(OPAQUE_AFTER_PX);
-
-	// The solid variant is opaque from the start; the transparent one earns its
-	// background once the hero stops being what sits behind it.
-	const opaque = resolvedVariant === "solid" || scrolled;
+	// Both variants start with no background and pick up the frosted bar on
+	// scroll; the variant only decides how the header is positioned.
+	const glass = useScrolledPast(GLASS_AFTER_PX[resolvedVariant]);
 
 	return (
 		<header
 			className={cn(
-				"z-40 transition-colors duration-300",
+				"z-40 transition-[background-color,border-color,backdrop-filter] duration-300",
 				// The transparent variant overlays the hero, so it is out of flow and
 				// has to be fixed to survive scrolling. The solid variant stays sticky:
 				// it is the first element in the flow, so top-0 pins it from the very
@@ -64,8 +62,12 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 				//
 				// The transparent border reserves the same 1px in both states, so
 				// gaining it on scroll does not nudge the header contents down.
-				opaque
-					? "md:border-b md:border-white/10 md:bg-zinc-950/95 md:backdrop-blur-md"
+				//
+				// Frosted rather than opaque: content stays visible through the bar.
+				// The denser fallback is for engines without backdrop-filter, where
+				// black/40 alone would leave the nav sitting on raw page content.
+				glass
+					? "md:border-b md:border-white/10 md:bg-black/80 md:backdrop-blur-xl md:supports-[backdrop-filter]:bg-black/40"
 					: "md:border-b md:border-transparent",
 				className,
 			)}
@@ -110,7 +112,7 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 					>
 						<GithubIcon />
 					</a>
-					<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
+					<WalletConnectButton />
 				</nav>
 			</div>
 

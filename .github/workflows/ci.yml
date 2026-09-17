@@ -344,7 +344,23 @@ jobs:
     # analysis still runs (with whatever coverage does exist) instead of
     # blocking the report over a failure unrelated to Sonar.
     needs: [build-lint-test, core-go, contracts]
-    if: always() && (needs.build-lint-test.result != 'cancelled' && needs.core-go.result != 'cancelled' && needs.contracts.result != 'cancelled')
+    # Skipped on pull requests from forks. GitHub does not expose repository
+    # secrets to workflows triggered by a fork's pull_request event, so
+    # SONAR_TOKEN is empty there and the scan fails with "Not authorized or
+    # project not found" on every external contribution (#213, #214) - a red
+    # check the contributor can do nothing about. The alternatives are worse:
+    # pull_request_target would hand the secret to a job that runs cargo and
+    # clippy on untrusted code, and SonarCloud's automatic analysis cannot
+    # coexist with CI-based analysis and ignores the coverage reports above.
+    # The analysis still runs on the merge commit (push to develop), so the
+    # quality gate is checked before anything reaches main. This context is
+    # not a required status check, so skipping does not block the merge.
+    if: >-
+      always()
+      && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+      && needs.build-lint-test.result != 'cancelled'
+      && needs.core-go.result != 'cancelled'
+      && needs.contracts.result != 'cancelled'
     steps:
       - uses: actions/checkout@v5
         with:

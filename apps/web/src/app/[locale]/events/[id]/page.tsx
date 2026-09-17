@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { EventStatusBadge } from "@/components/events/status-badge";
+import { TxHashLink } from "@/components/tx-hash-link";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
@@ -186,6 +187,17 @@ export default async function EventPage({ params }: { params: Params }) {
 											<span className="w-full text-xs text-zinc-400">
 												{t("prizes.winner", { team: winner.name })}
 											</span>
+										) : null}
+										{prize.releaseTxHash ? (
+											<div className="w-full flex flex-wrap items-center gap-1.5 text-xs text-zinc-400">
+												<span>{t("prizes.paidTx")}:</span>
+												<TxHashLink
+													hash={prize.releaseTxHash}
+													network={STELLAR_NETWORK}
+													leadingChars={8}
+													trailingChars={8}
+												/>
+											</div>
 										) : null}
 									</li>
 								);

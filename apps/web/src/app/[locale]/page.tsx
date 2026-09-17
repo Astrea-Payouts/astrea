@@ -46,7 +46,7 @@ export default function Home() {
 									<span>{t("createEventCta")}</span>
 								</SpecularButton>
 							</Link>
-							<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
+							<WalletConnectButton />
 						</div>
 						<p className="mt-6 text-sm text-white/55">
 							{t.rich("mvpNotice", {
