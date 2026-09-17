@@ -72,7 +72,13 @@ const completedEvent = {
 		{
 			id: "team-a",
 			name: "Team Solvers",
-			members: [{ walletId: "w-mem", ordinal: 1, wallet: { id: "w-mem", address: "GAA..." } }],
+			members: [
+				{
+					walletId: "w-mem",
+					ordinal: 1,
+					wallet: { id: "w-mem", address: "GAA..." },
+				},
+			],
 		},
 	],
 	prizes: [
@@ -136,7 +142,9 @@ describe("EventPage - Payout TxHashLink (Issue #211)", () => {
 		await renderPage();
 
 		expect(screen.queryByText(/Paid on-chain/i)).not.toBeInTheDocument();
-		expect(screen.queryByRole("link", { name: /0941/i })).not.toBeInTheDocument();
+		expect(
+			screen.queryByRole("link", { name: /0941/i }),
+		).not.toBeInTheDocument();
 	});
 });
 
