@@ -8,25 +8,74 @@ Go backend: event/prize state machine, participant registration, real-time track
 
 ## Run locally
 
-Requires `ESCROW_CONTRACT_ID`, `DATABASE_URL`, and `CORE_GO_SERVICE_TOKEN`
-at minimum — see Configuration below and `.env.example`. A local Postgres
-with `apps/web`'s Prisma migrations applied is required; there is no
-in-memory fallback.
+The service reads plain environment variables. It does **not** load a
+`.env` file, so a filled-in `services/core-go/.env` does nothing on its own:
+you load it into the shell first, then start the process. That is why
+`go run .` reports `ESCROW_CONTRACT_ID: required` and friends even when the
+file is complete.
 
-```bash
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres \
-CORE_GO_SERVICE_TOKEN=$(openssl rand -hex 32) \
-ESCROW_CONTRACT_ID=<your-testnet-contract-id> \
-go run .
-curl localhost:8080/healthz
-curl -i localhost:8080/events/<event-id>/release/build   # 401 — no bearer
-curl -i localhost:8080/events/<event-id>/release/build \
-  -X POST \
-  -H "Authorization: Bearer $CORE_GO_SERVICE_TOKEN" \
-  -H "X-Astrea-Wallet: G..." \
-  -H "Content-Type: application/json" \
-  -d '{"assignments":[{"rank":1,"teamId":"..."}]}'
-```
+1. Copy `.env.example` to `.env` and fill in the blanks (see Configuration
+   below for what each variable means).
+
+   - `DATABASE_URL`: the same database `apps/web`'s Prisma migrations run
+     against. Either a local Postgres with those migrations applied, or
+     Supabase's **session** pooler (port `5432` on
+     `aws-0-<region>.pooler.supabase.com`, the URL `apps/web/.env.example`
+     uses as `DIRECT_URL`). Not `db.<project-ref>.supabase.co` (IPv6 only;
+     fails to resolve on most home networks) and not `apps/web`'s runtime
+     URL with `?pgbouncer=true` (refused at boot). There is no in-memory
+     fallback.
+   - `CORE_GO_SERVICE_TOKEN`: at least 32 bytes, and the **same value** as
+     `apps/web`'s `CORE_GO_SERVICE_TOKEN`. Generate one with
+     `openssl rand -hex 32`, or in PowerShell:
+
+     ```powershell
+     $b = New-Object byte[] 32
+     [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b)
+     ($b | ForEach-Object { $_.ToString('x2') }) -join ''
+     ```
+
+   - `ESCROW_CONTRACT_ID`: the deployed testnet contract (the one
+     `apps/web` points at).
+
+2. Load `.env` into the current shell and start the server.
+
+   bash / Git Bash:
+
+   ```bash
+   set -a; source .env; set +a
+   go run .
+   ```
+
+   PowerShell:
+
+   ```powershell
+   Get-Content .env | Where-Object { $_ -match '^\s*[^#].*=' } | ForEach-Object {
+     $name, $value = $_ -split '=', 2
+     Set-Item -Path "Env:$($name.Trim())" -Value $value.Trim().Trim('"')
+   }
+   go run .
+   ```
+
+   Variables set this way live in that shell session only; run the loader
+   again in a new terminal.
+
+3. Check it is up. On PowerShell use `curl.exe`: bare `curl` is an alias
+   for `Invoke-WebRequest` and prompts for arguments.
+
+   ```bash
+   curl -i localhost:8080/healthz                          # 200
+   curl -i localhost:8080/events/<event-id>/release/build  # 401 — no bearer
+   curl -i localhost:8080/events/<event-id>/release/build \
+     -X POST \
+     -H "Authorization: Bearer $CORE_GO_SERVICE_TOKEN" \
+     -H "X-Astrea-Wallet: G..." \
+     -H "Content-Type: application/json" \
+     -d '{"assignments":[{"rank":1,"teamId":"..."}]}'
+   ```
+
+4. Point `apps/web` at it: `CORE_GO_URL=http://localhost:8080` in
+   `apps/web/.env`, with the shared `CORE_GO_SERVICE_TOKEN`.
 
 ## Deploy (Vercel)
 
@@ -37,8 +86,13 @@ compute (300 s max per request on Hobby — the 30 s confirmation poll in
 so `go.mod` is at its root as the preset requires.
 
 Instances are reused but can scale out, so `DATABASE_URL` must be Supabase's
-pooled URL (port `6543`, the same one `apps/web/.env.example` marks as
-pgbouncer), never the direct one. `PORT` is set by Vercel; every other
+transaction pooler (port `6543`), never the direct one. Two things differ
+from `apps/web`'s copy of that URL: drop `?pgbouncer=true` (pgx forwards it
+as a server setting and Postgres refuses it) and add
+`?default_query_exec_mode=describe_exec`, because the transaction pooler
+does not keep named prepared statements between requests (pgx's default
+mode fails with `SQLSTATE 26000`; `simple_protocol` breaks the `jsonb`
+payload writes with `SQLSTATE 22P02`). `PORT` is set by Vercel; every other
 variable from Configuration below is set in the project's environment
 variables. `apps/web` then points `CORE_GO_URL` at the deployment and shares
 `CORE_GO_SERVICE_TOKEN`.
