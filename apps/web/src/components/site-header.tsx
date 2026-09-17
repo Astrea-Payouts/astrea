@@ -112,7 +112,7 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 					>
 						<GithubIcon />
 					</a>
-					<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
+					<WalletConnectButton />
 				</nav>
 			</div>
 
