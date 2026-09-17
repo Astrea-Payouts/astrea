@@ -132,9 +132,13 @@ export default async function LocaleLayout({
 		// React hydrates. The server never renders that style attribute, so
 		// dev logs a mismatch on every page. The flag only covers this
 		// element's own attributes, not its children.
+		// Every page paints its own bg-black, but the shadcn tokens in globals.css
+		// only flip to their dark values under .dark. Without it, <Button
+		// variant="outline"> renders white-on-white and "default" near-black on
+		// black. There is no light theme to preserve, so the class is static.
 		<html
 			lang={locale}
-			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+			className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
 			suppressHydrationWarning
 		>
 			<body className="relative min-h-full flex flex-col">
