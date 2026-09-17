@@ -73,16 +73,18 @@ model User {
 /// on Judge.walletAddress instead (they may be a multisig the platform has no
 /// Wallet row for — see docs/architecture.md ADR-003, multi-judge note).
 model Wallet {
-  id                      String    @id @default(uuid())
+  id                      String          @id @default(uuid())
   userId                  String
-  address                 String    @unique
+  address                 String          @unique
   email                   String?
+  profilePublic           Boolean         @default(false)
   usdcTrustlineVerifiedAt DateTime?
-  createdAt               DateTime  @default(now())
+  createdAt               DateTime        @default(now())
 
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organizedEvents Event[]      @relation("EventOrganizerWallet")
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizedEvents Event[]         @relation("EventOrganizerWallet")
   teamMemberships TeamMember[]
+  linkedAccounts  LinkedAccount[]
 
   @@index([userId])
   @@map("wallets")
@@ -113,6 +115,7 @@ model Event {
   judgingDeadlineAt    DateTime?
   status               EventStatus    @default(DRAFT)
   conditionsMetAt      DateTime?
+  requireGithub        Boolean        @default(false)
   network              StellarNetwork @default(TESTNET)
   /// Predates ADR-006 (one shared escrow contract per network, whose address
   /// lives in env config, not per row). Unused by the app; kept because
@@ -202,10 +205,11 @@ model Judge {
 model Team {
   id            String   @id @default(uuid())
   eventId       String
-  name          String
-  submissionUrl String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  name                 String
+  submissionUrl        String
+  submissionVerifiedAt DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   event     Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
   members   TeamMember[]
@@ -315,3 +319,26 @@ model AuthNonce {
   @@index([address])
   @@map("auth_nonces")
 }
+
+/// A third-party account linked to a platform wallet (e.g. GitHub).
+/// Enforces unique (provider, providerId) globally, and unique (walletId, provider)
+/// so a wallet has at most one linked account per provider.
+model LinkedAccount {
+  id         String   @id @default(uuid())
+  walletId   String
+  provider   String
+  providerId String
+  username   String
+  avatarUrl  String?
+  profileUrl String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  wallet Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerId])
+  @@unique([walletId, provider])
+  @@index([walletId])
+  @@map("linked_accounts")
+}
+

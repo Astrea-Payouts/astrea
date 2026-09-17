@@ -117,9 +117,38 @@ export async function clearWalletSession() {
 	cookieStore.delete(SESSION_COOKIE);
 }
 
+export async function updateProfileVisibility(profilePublic: boolean) {
+	const sessionWallet = await getSessionWallet();
+	if (!sessionWallet) {
+		throw new Error("Not authenticated");
+	}
+
+	const updated = await db.wallet.update({
+		where: { id: sessionWallet.id },
+		data: { profilePublic },
+	});
+
+	return {
+		success: true,
+		profilePublic: updated.profilePublic,
+	};
+}
+
 export async function getSessionWallet() {
 	const cookieStore = await cookies();
 	const walletId = cookieStore.get(SESSION_COOKIE)?.value;
 	if (!walletId) return null;
-	return db.wallet.findUnique({ where: { id: walletId } });
+	return db.wallet.findUnique({
+		where: { id: walletId },
+		include: { linkedAccounts: true },
+	});
+}
+
+export async function getWalletLinkedAccount(
+	walletId: string,
+	provider = "GITHUB",
+) {
+	return db.linkedAccount.findUnique({
+		where: { walletId_provider: { walletId, provider } },
+	});
 }
