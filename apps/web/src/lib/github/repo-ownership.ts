@@ -45,6 +45,14 @@ export function parseGitHubRepoUrl(
 		return null;
 	}
 
+	// Handle SSH clone URLs (e.g. git@github.com:owner/repo.git)
+	const sshMatch = trimmed.match(
+		/^git@github\.com:([a-zA-Z0-9._-]+)\/([a-zA-Z0-9._-]+?)(?:\.git)?\/?$/i,
+	);
+	if (sshMatch?.[1] && sshMatch?.[2]) {
+		return { owner: sshMatch[1], repo: sshMatch[2] };
+	}
+
 	let urlToParse = trimmed;
 	if (!/^https?:\/\//i.test(urlToParse)) {
 		urlToParse = `https://${urlToParse}`;

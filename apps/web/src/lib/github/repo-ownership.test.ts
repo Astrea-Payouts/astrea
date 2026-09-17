@@ -41,6 +41,19 @@ describe("parseGitHubRepoUrl", () => {
 		});
 	});
 
+	it("parses SSH clone URLs", () => {
+		expect(
+			parseGitHubRepoUrl("git@github.com:Astrea-Payouts/astrea.git"),
+		).toEqual({
+			owner: "Astrea-Payouts",
+			repo: "astrea",
+		});
+		expect(parseGitHubRepoUrl("git@github.com:alice/repo")).toEqual({
+			owner: "alice",
+			repo: "repo",
+		});
+	});
+
 	it("rejects non-GitHub domains", () => {
 		expect(parseGitHubRepoUrl("https://gitlab.com/alice/repo")).toBeNull();
 		expect(parseGitHubRepoUrl("https://bitbucket.org/alice/repo")).toBeNull();

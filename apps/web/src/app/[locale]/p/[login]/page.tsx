@@ -31,7 +31,17 @@ function GithubIcon({ className = "size-5" }: { className?: string }) {
 }
 
 function shortAddress(address: string) {
+	if (!address) return "";
+	if (address.length <= 12) return address;
 	return `${address.slice(0, 6)}…${address.slice(-6)}`;
+}
+
+function normalizeLogin(raw: string): string {
+	try {
+		return decodeURIComponent(raw).trim().replace(/^@/, "");
+	} catch {
+		return raw.trim().replace(/^@/, "");
+	}
 }
 
 export async function generateMetadata({
@@ -39,7 +49,8 @@ export async function generateMetadata({
 }: {
 	params: Params;
 }): Promise<Metadata> {
-	const { login } = await params;
+	const { login: rawLogin } = await params;
+	const login = normalizeLogin(rawLogin);
 	return {
 		title: `${login} — Public Profile | Astrea`,
 		description: `Verified builder profile for ${login} on Astrea.`,
@@ -51,7 +62,8 @@ export default async function PublicProfilePage({
 }: {
 	params: Params;
 }) {
-	const { login } = await params;
+	const { login: rawLogin } = await params;
+	const login = normalizeLogin(rawLogin);
 
 	const linkedAccount = await db.linkedAccount.findFirst({
 		where: {

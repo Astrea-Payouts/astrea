@@ -26,10 +26,31 @@ export async function GET(request: NextRequest) {
 	const searchParams = request.nextUrl.searchParams;
 	const code = searchParams.get("code");
 	const state = searchParams.get("state");
+	const ghError = searchParams.get("error");
 	const cookieState = cookieStore.get(GITHUB_OAUTH_COOKIE)?.value;
 
 	// Always clear the state cookie once callback is reached
 	cookieStore.delete(GITHUB_OAUTH_COOKIE);
+
+	if (ghError) {
+		const statePayload =
+			state && cookieState && state === cookieState
+				? verifyOAuthState(state, session.id)
+				: null;
+		const returnTo = statePayload?.returnTo;
+		const targetPath =
+			returnTo?.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/";
+		const redirectUrl = new URL(targetPath, request.nextUrl.origin);
+		redirectUrl.searchParams.set(
+			"error",
+			ghError === "access_denied" ? "github_cancelled" : "github_error",
+		);
+		const desc = searchParams.get("error_description");
+		if (desc) {
+			redirectUrl.searchParams.set("detail", desc);
+		}
+		return NextResponse.redirect(redirectUrl);
+	}
 
 	if (!code || !state || !cookieState || state !== cookieState) {
 		const redirectUrl = new URL(
@@ -85,10 +106,11 @@ export async function GET(request: NextRequest) {
 		redirectUrl.searchParams.set("github", "linked");
 		return NextResponse.redirect(redirectUrl);
 	} catch (err) {
-		const redirectUrl = new URL(
-			"/?error=github_link_failed",
-			request.nextUrl.origin,
-		);
+		const returnTo = statePayload?.returnTo;
+		const targetPath =
+			returnTo?.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/";
+		const redirectUrl = new URL(targetPath, request.nextUrl.origin);
+		redirectUrl.searchParams.set("error", "github_link_failed");
 		if (err instanceof Error) {
 			redirectUrl.searchParams.set("detail", err.message);
 		}

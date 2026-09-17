@@ -150,10 +150,35 @@ describe("PublicProfilePage", () => {
 		);
 	});
 
-	it("generates correct metadata", async () => {
+	it("generates correct metadata and normalizes @ prefix", async () => {
 		const meta = await generateMetadata({
-			params: Promise.resolve({ locale: "en", login: "rodrigodev" }),
+			params: Promise.resolve({ locale: "en", login: "@rodrigodev" }),
 		});
 		expect(meta.title).toBe("rodrigodev — Public Profile | Astrea");
+	});
+
+	it("normalizes @-prefixed login when querying database", async () => {
+		mockDb.linkedAccount.findFirst.mockResolvedValue({
+			id: "la-3",
+			username: "rodrigodev",
+			wallet: {
+				id: "w-3",
+				address: "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+				profilePublic: true,
+				teamMemberships: [],
+			},
+		});
+
+		await PublicProfilePage({
+			params: Promise.resolve({ locale: "en", login: "@rodrigodev" }),
+		});
+
+		expect(mockDb.linkedAccount.findFirst).toHaveBeenCalledWith({
+			where: {
+				provider: "GITHUB",
+				username: { equals: "rodrigodev", mode: "insensitive" },
+			},
+			include: expect.any(Object),
+		});
 	});
 });
