@@ -126,9 +126,16 @@ export default async function LocaleLayout({
 	}
 
 	return (
+		// suppressHydrationWarning: @creit.tech/stellar-wallets-kit writes its
+		// theme as --swk-* custom properties on <html> from a module-level
+		// signal effect (esm/state/effects.js), i.e. at import time, before
+		// React hydrates. The server never renders that style attribute, so
+		// dev logs a mismatch on every page. The flag only covers this
+		// element's own attributes, not its children.
 		<html
 			lang={locale}
 			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+			suppressHydrationWarning
 		>
 			<body className="relative min-h-full flex flex-col">
 				<NextIntlClientProvider>
