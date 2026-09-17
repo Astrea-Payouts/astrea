@@ -120,7 +120,7 @@ describe("EventPage - Payout TxHashLink (Issue #211)", () => {
 		await renderPage();
 
 		expect(screen.getByText(/Paid on-chain/i)).toBeInTheDocument();
-		const link = screen.getByRole("link", { name: /0941dbcdd6/i });
+		const link = screen.getByRole("link", { name: /0941dbcd/i });
 		expect(link).toBeInTheDocument();
 		expect(link).toHaveAttribute("href", expect.stringContaining(TX_HASH));
 	});
