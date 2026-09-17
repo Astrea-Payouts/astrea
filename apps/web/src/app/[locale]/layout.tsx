@@ -136,12 +136,16 @@ export default async function LocaleLayout({
 		// only flip to their dark values under .dark. Without it, <Button
 		// variant="outline"> renders white-on-white and "default" near-black on
 		// black. There is no light theme to preserve, so the class is static.
+		//
+		// bg-black on <body>: pages paint their own black <main>, but the sticky
+		// header sits above it and is transparent until scrolled, so without it
+		// a grey strip of the token background shows through at the top.
 		<html
 			lang={locale}
 			className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
 			suppressHydrationWarning
 		>
-			<body className="relative min-h-full flex flex-col">
+			<body className="relative min-h-full flex flex-col bg-black">
 				<NextIntlClientProvider>
 					<MotionPreferenceProvider>
 						<WalletProvider>
