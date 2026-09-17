@@ -166,7 +166,8 @@
 			"title": "Premios",
 			"none": "No hay premios definidos.",
 			"rank": "#{rank}",
-			"winner": "Ganador: {team}"
+			"winner": "Ganador: {team}",
+			"paidTx": "Pagado on-chain"
 		},
 		"people": {
 			"organizer": "Organizador",
