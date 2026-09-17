@@ -3,6 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
+import {
+	checkRepoOwnership,
+	parseGitHubRepoUrl,
+} from "@/lib/github/repo-ownership";
 import { transitionEvent } from "@/lib/state-machines/apply";
 import { verifyAndRecordTrustline } from "@/lib/trustline/verify-and-record";
 import { getSessionWallet } from "@/lib/wallet/session";
@@ -26,7 +30,10 @@ export type ActionResult =
 				| "invalidTeamName"
 				| "invalidSubmissionUrl"
 				| "notOrganizer"
-				| "transition";
+				| "transition"
+				| "githubRequired"
+				| "invalidGithubUrl"
+				| "notRepoOwner";
 			detail?: string;
 	  };
 
@@ -65,10 +72,40 @@ export async function registerTeam(
 
 	const event = await db.event.findUnique({
 		where: { id: eventId },
-		select: { id: true, status: true },
+		select: { id: true, status: true, requireGithub: true },
 	});
 	if (!event) return { ok: false, code: "eventNotFound" };
 	if (event.status !== "LIVE") return { ok: false, code: "notLive" };
+
+	let submissionVerifiedAt: Date | null = null;
+	if (event.requireGithub) {
+		const linkedAccount = await db.linkedAccount.findUnique({
+			where: {
+				walletId_provider: { walletId: session.id, provider: "GITHUB" },
+			},
+		});
+		if (!linkedAccount) {
+			return { ok: false, code: "githubRequired" };
+		}
+
+		const parsedRepo = parseGitHubRepoUrl(submissionUrl);
+		if (!parsedRepo) {
+			return { ok: false, code: "invalidGithubUrl" };
+		}
+
+		const ownership = checkRepoOwnership({
+			userLogin: linkedAccount.username,
+			repoOwner: parsedRepo.owner,
+		});
+		if (!ownership.isOwner) {
+			return {
+				ok: false,
+				code: "notRepoOwner",
+				detail: ownership.reason,
+			};
+		}
+		submissionVerifiedAt = new Date();
+	}
 
 	// ADR-004: the trustline check happens before any row is written, and
 	// the refusal names the asset so the participant knows what to add.
@@ -98,6 +135,7 @@ export async function registerTeam(
 			eventId,
 			name: teamName,
 			submissionUrl,
+			submissionVerifiedAt,
 			members: {
 				create: [
 					{
