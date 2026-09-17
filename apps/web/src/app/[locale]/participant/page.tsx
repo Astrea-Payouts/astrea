@@ -59,7 +59,7 @@ export default function ParticipantPage() {
 						</p>
 					</div>
 					<div className="flex flex-wrap items-center gap-4">
-						<WalletConnectButton className="bg-white text-black hover:bg-white/90" />
+						<WalletConnectButton />
 						<Link
 							href="/"
 							className="inline-flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white"
