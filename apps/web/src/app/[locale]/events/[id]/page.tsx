@@ -53,7 +53,21 @@ export async function generateMetadata({
 		select: { name: true, description: true },
 	});
 	if (!event) return {};
-	return { title: event.name, description: event.description ?? undefined };
+	const description =
+		event.description ?? "Escrow-backed prize payouts on Stellar Soroban";
+	return {
+		title: event.name,
+		description,
+		openGraph: {
+			title: event.name,
+			description,
+		},
+		twitter: {
+			card: "summary_large_image",
+			title: event.name,
+			description,
+		},
+	};
 }
 
 function shortAddress(address: string) {
@@ -75,7 +89,7 @@ function AddressLink({ address }: { address: string }) {
 }
 
 export default async function EventPage({ params }: { params: Params }) {
-	const { id } = await params;
+	const { id, locale } = await params;
 	const event = await loadEvent(id);
 	if (!event) notFound();
 
@@ -108,7 +122,29 @@ export default async function EventPage({ params }: { params: Params }) {
 		<main className="min-h-screen bg-black text-white pt-28 pb-16 px-4 sm:px-6 md:py-12 md:px-12">
 			<div className="mx-auto max-w-3xl flex flex-col gap-8">
 				<header className="flex flex-col gap-3">
-					<EventStatusBadge status={event.status} className="w-fit" />
+					<div className="flex flex-wrap items-center justify-between gap-2">
+						<EventStatusBadge status={event.status} className="w-fit" />
+						<div className="flex items-center gap-4 text-xs font-medium">
+							{event.status === "LIVE" || event.status === "JUDGING" ? (
+								<a
+									href={`/${locale}/events/${id}/display.png`}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-emerald-400 hover:text-emerald-300 underline-offset-4 hover:underline"
+								>
+									{t("display.showOnScreen")}
+								</a>
+							) : null}
+							{event.status === "COMPLETED" ? (
+								<Link
+									href={`/events/${event.id}/print`}
+									className="text-zinc-400 hover:text-zinc-200 underline-offset-4 hover:underline"
+								>
+									{t("print.receipt")}
+								</Link>
+							) : null}
+						</div>
+					</div>
 					<h1 className="font-serif text-3xl font-bold tracking-tight md:text-5xl break-words">
 						{event.name}
 					</h1>

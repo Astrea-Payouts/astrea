@@ -154,6 +154,12 @@
 		"CANCELLED": "Cancelado"
 	},
 	"EventPage": {
+		"display": {
+			"showOnScreen": "Mostrar en pantalla"
+		},
+		"print": {
+			"receipt": "Imprimir recibo (A4)"
+		},
 		"escrow": {
 			"title": "Reservado on-chain",
 			"onChainState": "estado del contrato: {state}",
