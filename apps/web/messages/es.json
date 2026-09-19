@@ -95,7 +95,11 @@
 		"buildPlan": "Plan de construcción",
 		"architecture": "Arquitectura",
 		"contributing": "Cómo contribuir",
-		"license": "Licencia MIT"
+		"license": "Licencia MIT",
+		"tagline": "Pagos de código abierto sobre Stellar.",
+		"resources": "Recursos",
+		"community": "Comunidad",
+		"preferences": "Preferencias"
 	},
 	"WalletConnect": {
 		"connecting": "Conectando…",

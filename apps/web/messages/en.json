@@ -95,7 +95,11 @@
 		"buildPlan": "Build plan",
 		"architecture": "Architecture",
 		"contributing": "Contributing",
-		"license": "MIT License"
+		"license": "MIT License",
+		"tagline": "Open-source payouts on Stellar.",
+		"resources": "Resources",
+		"community": "Community",
+		"preferences": "Preferences"
 	},
 	"WalletConnect": {
 		"connecting": "Connecting…",
