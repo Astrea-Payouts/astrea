@@ -143,7 +143,7 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 **Domain dependency:** sending to arbitrary recipients requires a verified custom domain (SPF/DKIM/DMARC) — Astrea currently only has the Vercel-assigned subdomain (`astrea-payouts.vercel.app`), not a domain it owns. Buying and verifying one is cheap and has no engineering dependency, so it should happen whenever convenient, not be discovered as a blocker the day T03 is picked up.
 
 **Testing strategy:**
-- **Unit:** mock the Resend client, same pattern as the Trustless Work/Horizon mocks elsewhere in the codebase — assert the right notification fires with the right data, never hit the real API.
+- **Unit:** mock the Resend client, same pattern as the Horizon mocks elsewhere in the codebase — assert the right notification fires with the right data, never hit the real API.
 - **Manual:** Resend's sandbox sender (`onboarding@resend.dev`) works without any domain and can send to the account owner's own verified address — enough to eyeball real templates before a custom domain exists.
 - **Production:** requires the verified custom domain above.
 
