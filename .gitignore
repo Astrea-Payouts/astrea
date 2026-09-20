@@ -131,3 +131,6 @@ skills-lock.json
 
 # GitHub Pages staging dir, assembled by the graphify-rebuild job in CI
 _site/
+
+# Claude Code per-machine notes (private, never shared)
+CLAUDE.local.md
