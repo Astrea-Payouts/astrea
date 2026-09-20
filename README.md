@@ -69,7 +69,7 @@ Astrea inverts the usual trust model:
 ┌───────▼────────────┐   ┌─────────────▼─────────────────────┐
 │ Postgres            │   │ Stellar network (testnet)         │
 │ (Supabase + Prisma) │   │ Custom Soroban escrow contract    │
-│ Events, Prizes,     │◄──┤ (contracts/soroban) · USDC        │
+│ Events, Prizes,     │◄──┤ (event-escrow) · USDC             │
 │ Judges, Payouts —   │   │ Reconciliation against Horizon    │
 │ mirror state        │   │                                  │
 └────────────────────┘   └───────────────────────────────────┘
@@ -87,7 +87,7 @@ The chain is the source of truth; the database is a mirror kept honest by a reco
 | Backend | Go (`services/core-go`) |
 | UI | Tailwind CSS + shadcn/ui |
 | Wallets | Stellar Wallets Kit (Freighter, Albedo, xBull, LOBSTR) |
-| Escrows | Custom Soroban smart contract (`contracts/soroban`, Rust) |
+| Escrows | Custom Soroban smart contract (`smart-contracts/astrea/contracts/event-escrow`, Rust) |
 | ORM | Prisma + PostgreSQL |
 | Database hosting | Supabase |
 | Blockchain | Stellar testnet · USDC |
@@ -97,12 +97,10 @@ The chain is the source of truth; the database is a mirror kept honest by a reco
 
 ## Getting Started
 
-Note: the project scaffold currently ships with task **S01** of the [build plan](docs/build-plan.md). The steps below describe the target setup.
-
 ### Prerequisites
 
 - Node.js 20+ and npm
-- Go 1.22+ (for `services/core-go`)
+- Go 1.26+ (for `services/core-go`)
 - A Supabase project with PostgreSQL (`DATABASE_URL` and `DIRECT_URL`)
 - One of the supported wallets installed (see below)
 
@@ -137,16 +135,18 @@ DIRECT_URL=         # direct connection, used only by the Prisma CLI for migrati
 NEXT_PUBLIC_STELLAR_NETWORK=testnet
 ALLOW_MAINNET=false # explicit gate; testnet is refused into mainnet without this
 
-# TRUSTLESS WORK — server-side only, NEVER expose with NEXT_PUBLIC_
-TW_API_URL=https://dev.api.trustlesswork.com
-TW_API_KEY=
+# ESCROW CONTRACT
+NEXT_PUBLIC_ESCROW_CONTRACT_ID= # deployed event-escrow contract id
+SOROBAN_RPC_URL=                # optional on testnet, defaults to the public RPC
 
 # TESTNET USDC
 USDC_SYMBOL=USDC
 USDC_ISSUER=
-```
 
-Note: the Trustless Work variables above are what the running app reads today (`apps/web`). The custom Soroban escrow contract described under [Architecture](#architecture) is the direction the backend is moving toward — see task `E01` in [docs/build-plan.md](docs/build-plan.md) for that migration's status.
+# CORE-GO — server-only, must match services/core-go's own token
+CORE_GO_URL=http://localhost:8080
+CORE_GO_SERVICE_TOKEN=
+```
 
 ## Wallet Requirements
 
