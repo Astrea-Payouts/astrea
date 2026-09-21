@@ -10,7 +10,7 @@ Astrea locks hackathon prize money in a Soroban escrow on Stellar testnet before
 | Backend | `services/core-go` | Go 1.26, `net/http`, pgx, stellar/go | Vercel Go preset (`astrea-core-go.vercel.app`), root dir `services/core-go` |
 | Contract | `smart-contracts/astrea/contracts/event-escrow` | Rust, soroban-sdk 27, target `wasm32v1-none` | Testnet instance referenced by `NEXT_PUBLIC_ESCROW_CONTRACT_ID` / `ESCROW_CONTRACT_ID` |
 
-`develop` is the default branch and where all work lands; `main` only receives develop → main release PRs. The README's setup section still mentions Trustless Work and `contracts/soroban`; both are superseded (ADR-001) by the custom contract above.
+`develop` is the default branch and where all work lands; `main` only receives develop → main release PRs.
 
 ## Commands
 
