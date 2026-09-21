@@ -85,8 +85,9 @@ before changing anything in the payout path:
 - **The organizer is never in the payout path.** `release_reward` requires the
   event's `judge`, never `admin`.
 - **A live event cannot be cancelled for a refund.** `set_event_cancelled`
-  accepts only pre-launch states; unwinding a started event goes through the
-  dispute flow (not implemented yet — issue #22).
+  accepts only pre-launch states; unwinding a started event goes through
+  `resolve_dispute` (resolver-signed, only after `judging_deadline` passes —
+  issue #22, done).
 
 Validate every amount that moves: a missing `> 0` check on a value used in
 `balance -= value` inflates a wallet balance with no deposit. That bug reached

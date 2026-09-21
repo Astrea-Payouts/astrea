@@ -18,9 +18,10 @@ contract, and this run does not implement it. The actual model in
   event.
 - `release_reward` takes a `Vec<Winner>` whose `amount`s must sum **exactly**
   to `reward`, and pays every winner in a single atomic call before flipping
-  the event to `Ended`. There is no independent per-milestone release and no
-  `dispute`/`resolve_dispute` function anywhere in the contract (that's
-  separate, unbuilt issue #22).
+  the event to `Ended`. There is no independent per-milestone release. The
+  contract does have a `resolve_dispute` function (resolver-signed release
+  after `judging_deadline` passes, issue #22) but this run does not exercise
+  it.
 
 This run proves the atomic multi-winner split that the shipped contract
 actually implements, plus a second terminal path (cancel + refund), against

@@ -138,8 +138,8 @@ Dereck: 6 items. Christopher: 8 items, weighted up per his own request since Der
 | Issue | Task | Status |
 | --- | --- | --- |
 | [#121](https://github.com/Astrea-Payouts/astrea/issues/121) | Submit the SCF interest form (Round #46) | Christopher — the lighter first step, waits for Increment 1's MVP as evidence rather than going out unprepared |
-| [#22](https://github.com/Astrea-Payouts/astrea/issues/22) | E01d contract — dispute / resolve-dispute | Deferred from Increment 1, unassigned — pick up if capacity allows once Increment 1 lands |
-| [#26](https://github.com/Astrea-Payouts/astrea/issues/26) | Go EscrowClient — dispute wrapper + emergency withdraw | Deferred, unassigned — blocked on #22 regardless |
+| [#22](https://github.com/Astrea-Payouts/astrea/issues/22) | E01d contract — dispute / resolve-dispute | Done — `resolve_dispute` merged to develop |
+| [#26](https://github.com/Astrea-Payouts/astrea/issues/26) | Go EscrowClient — dispute wrapper + emergency withdraw | Done — see `services/core-go/README.md` |
 | [#12](https://github.com/Astrea-Payouts/astrea/issues/12) | E04 — real-time tracking (full push, beyond Increment 1's polling) | Deferred, unassigned |
 
 Plus whatever the campaign slate (#118) actually publishes — that work belongs to contributors, not a named maintainer, per this document's own two-lane model.
