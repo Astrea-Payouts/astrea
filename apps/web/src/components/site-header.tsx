@@ -6,8 +6,10 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { ReduceMotionToggle } from "@/components/reduce-motion-toggle";
 import { resolveHeaderVariant } from "@/components/resolve-header-variant";
 import { StaggeredMenu } from "@/components/staggered-menu";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 import { useScrolledPast } from "@/hooks/use-scrolled-past";
+import { useTheme } from "@/hooks/use-theme";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +31,14 @@ function GithubIcon() {
 // sticky and content slides under it from the first pixel.
 const GLASS_AFTER_PX = { transparent: 130, solid: 8 } as const;
 
+// The hover shared by every control in the row.
+const NAV_HOVER =
+	"hover:text-sky-400 dark:hover:text-sky-300 hover:duration-300 hover:ease-in-out";
+// Shared by every text link in the row: dark text in the light theme, white in
+// the dark one.
+const NAV_LINK =
+	"text-sm font-medium text-zinc-900/70 transition-colors hover:text-sky-400 dark:text-white/70 dark:hover:text-sky-300 hover:duration-300 hover:ease-in-out";
+
 export interface SiteHeaderProps {
 	variant?: "transparent" | "solid";
 	className?: string;
@@ -37,6 +47,7 @@ export interface SiteHeaderProps {
 export function SiteHeader({ variant, className }: SiteHeaderProps) {
 	const t = useTranslations("SiteHeader");
 	const pathname = usePathname();
+	const { theme } = useTheme();
 
 	const resolvedVariant = resolveHeaderVariant(variant, pathname);
 	// Both variants start with no background and pick up the frosted bar on
@@ -65,49 +76,45 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 				//
 				// Frosted rather than opaque: content stays visible through the bar.
 				// The denser fallback is for engines without backdrop-filter, where
-				// black/40 alone would leave the nav sitting on raw page content.
+				// the translucent fill alone would leave the nav sitting on raw page
+				// content. The bar matches the theme: white glass in light, black in
+				// dark.
 				glass
-					? "md:border-b md:border-white/10 md:bg-black/80 md:backdrop-blur-xl md:supports-[backdrop-filter]:bg-black/40"
+					? "md:border-b md:border-black/10 md:bg-white/80 md:backdrop-blur-xl md:supports-[backdrop-filter]:bg-white/60 md:dark:border-white/10 md:dark:bg-black/80 md:dark:supports-[backdrop-filter]:bg-black/40"
 					: "md:border-b md:border-transparent",
 				className,
 			)}
 		>
 			<div className="hidden items-center justify-between gap-4 px-6 py-4 md:flex md:px-12">
 				<Link href="/" className="flex items-center">
+					{/* The file is a dark logo (it is named for light backgrounds), so
+					it is inverted to white only in the dark theme. */}
 					<Image
 						src="/astrea-sided-logo-light-trimmed.png"
 						alt="Astrea"
 						width={1053}
 						height={381}
-						className="h-14 w-auto invert md:h-20"
+						className="h-14 w-auto md:h-20 dark:invert"
 						priority
 					/>
 				</Link>
 
 				<nav className="flex items-center gap-6">
-					<Link
-						href="/earnings"
-						className="text-sm font-medium text-white/70 transition-colors hover:text-white"
-					>
+					<Link href="/earnings" className={NAV_LINK}>
 						{t("earningsNav")}
 					</Link>
-					<Link
-						href="/participant"
-						className="text-sm font-medium text-white/70 transition-colors hover:text-white"
-					>
+					<Link href="/participant" className={NAV_LINK}>
 						{t("participantNav")}
 					</Link>
-					<Link
-						href="/organizer"
-						className="text-sm font-medium text-white/70 transition-colors hover:text-white"
-					>
+					<Link href="/organizer" className={NAV_LINK}>
 						{t("organizerNav")}
 					</Link>
-					<LanguageSwitcher />
-					<ReduceMotionToggle />
+					<ReduceMotionToggle className={NAV_HOVER} />
+					<LanguageSwitcher className={NAV_LINK} />
+					<ThemeToggle className={NAV_LINK} />
 					<a
 						href="https://github.com/Astrea-Payouts/astrea"
-						className="text-white/70 hover:text-white"
+						className={NAV_LINK}
 						aria-label={t("githubAriaLabel")}
 					>
 						<GithubIcon />
@@ -116,8 +123,12 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 				</nav>
 			</div>
 
+			{/* Mobile: StaggeredMenu draws the whole bar. Its logo is a white mark,
+			inverted to black in the light theme (the menu's own CSS already inverts
+			it while the white panel is open, and that rule wins over this one). The
+			menu button colour goes through GSAP, so it takes the theme as a prop. */}
 			<StaggeredMenu
-				className="md:hidden"
+				className="md:hidden [&_.sm-logo-img]:invert dark:[&_.sm-logo-img]:invert-0"
 				isFixed
 				position="right"
 				items={[
@@ -149,7 +160,7 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 				logoUrl="/astrea-logo-mark.png"
 				colors={["#0a0a0a", "#000000"]}
 				accentColor="#000000"
-				menuButtonColor="#fff"
+				menuButtonColor={theme === "light" ? "#09090b" : "#fff"}
 				openMenuButtonColor="#000"
 				openAriaLabel={t("openMenu")}
 				closeAriaLabel={t("closeMenu")}
@@ -157,11 +168,12 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 				closeLabel={t("closeLabel")}
 				panelExtra={
 					<>
-						<LanguageSwitcher variant="light" />
 						<ReduceMotionToggle
 							variant="labelled"
 							className="w-full text-black"
 						/>
+						<LanguageSwitcher variant="light" />
+						<ThemeToggle variant="labelled" className="w-full text-black" />
 						<WalletConnectButton className="w-full justify-center bg-black text-white hover:bg-black/90" />
 					</>
 				}

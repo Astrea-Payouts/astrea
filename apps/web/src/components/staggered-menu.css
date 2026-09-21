@@ -2,7 +2,32 @@
    copy-paste source per docs/ui-motion.md. Verbatim except for the
    `.sm-panel-extra` rule at the bottom, added to style the panelExtra slot
    (see staggered-menu.tsx) that hosts Astrea's language switcher + wallet
-   connect button inside the panel. */
+   connect button inside the panel. Also local: the --sm-* theme variables
+   right below, which let the panel follow the light/dark theme. */
+
+/* The panel's colours. Light is the original white panel; dark is a near-black
+   one (zinc-950, the same surface the cards use). They live in variables so the
+   theme can flip them from the <html> class alone, with no JS and no flash.
+
+   This has to be plain CSS rather than Tailwind classes on the component: this
+   sheet is unlayered, and unlayered rules beat Tailwind's layered utilities
+   whatever their specificity. */
+.staggered-menu-wrapper {
+	--sm-panel-bg: #fff;
+	--sm-panel-fg: #000;
+	--sm-panel-fg-soft: #111;
+	/* The logo is a white mark. While the panel is open it sits over the panel,
+	   so it has to contrast with it: inverted to black over the white panel,
+	   left white over the dark one. */
+	--sm-logo-open-filter: invert(100%);
+}
+
+.dark .staggered-menu-wrapper {
+	--sm-panel-bg: #09090b;
+	--sm-panel-fg: #fff;
+	--sm-panel-fg-soft: #f4f4f5;
+	--sm-logo-open-filter: none;
+}
 
 .staggered-menu-wrapper {
 	position: relative;
@@ -68,7 +93,7 @@
 }
 
 .sm-toggle:focus-visible {
-	outline: 2px solid #ffffffaa;
+	outline: 2px solid currentColor;
 	outline-offset: 4px;
 	border-radius: 4px;
 }
@@ -138,7 +163,7 @@
 	right: 0;
 	width: clamp(260px, 38vw, 420px);
 	height: 100%;
-	background: white;
+	background: var(--sm-panel-bg);
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
 	display: flex;
@@ -206,7 +231,7 @@
 .sm-socials-link {
 	font-size: 1.2rem;
 	font-weight: 500;
-	color: #111;
+	color: var(--sm-panel-fg-soft);
 	text-decoration: none;
 	position: relative;
 	padding: 2px 0;
@@ -275,7 +300,7 @@
 
 .sm-panel-item {
 	position: relative;
-	color: #000;
+	color: var(--sm-panel-fg);
 	font-weight: 600;
 	/* Fluid rather than a fixed 3.5rem: at 56px, "PARTICIPANTS" overflowed
 	   the panel on every phone narrower than ~440px and got clipped. The
@@ -366,7 +391,7 @@
 	}
 
 	.staggered-menu-wrapper[data-open] .sm-logo-img {
-		filter: invert(100%);
+		filter: var(--sm-logo-open-filter);
 	}
 }
 
@@ -381,6 +406,6 @@
 	}
 
 	.staggered-menu-wrapper[data-open] .sm-logo-img {
-		filter: invert(100%);
+		filter: var(--sm-logo-open-filter);
 	}
 }

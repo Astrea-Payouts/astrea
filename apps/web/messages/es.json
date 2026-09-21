@@ -99,7 +99,8 @@
 		"tagline": "Pagos de código abierto sobre Stellar.",
 		"resources": "Recursos",
 		"community": "Comunidad",
-		"preferences": "Preferencias"
+		"preferences": "Preferencias",
+		"grantfox": "GrantFox"
 	},
 	"WalletConnect": {
 		"connecting": "Conectando…",
@@ -107,6 +108,9 @@
 	},
 	"LanguageSwitcher": {
 		"label": "Idioma"
+	},
+	"Theme": {
+		"label": "Modo oscuro"
 	},
 	"Motion": {
 		"label": "Reducir animaciones",

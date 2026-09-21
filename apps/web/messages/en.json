@@ -99,7 +99,8 @@
 		"tagline": "Open-source payouts on Stellar.",
 		"resources": "Resources",
 		"community": "Community",
-		"preferences": "Preferences"
+		"preferences": "Preferences",
+		"grantfox": "GrantFox"
 	},
 	"WalletConnect": {
 		"connecting": "Connecting…",
@@ -107,6 +108,9 @@
 	},
 	"LanguageSwitcher": {
 		"label": "Language"
+	},
+	"Theme": {
+		"label": "Dark mode"
 	},
 	"Motion": {
 		"label": "Reduce animations",

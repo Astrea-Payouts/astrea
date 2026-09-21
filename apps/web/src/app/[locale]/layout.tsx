@@ -7,6 +7,7 @@ import { PwaRegister } from "@/components/pwa-register";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { MotionPreferenceProvider } from "@/hooks/use-reduced-motion";
+import { ThemeProvider } from "@/hooks/use-theme";
 import { routing } from "@/i18n/routing";
 import { WalletProvider } from "@/lib/wallet/provider";
 import "../globals.css";
@@ -147,13 +148,15 @@ export default async function LocaleLayout({
 		>
 			<body className="relative min-h-full flex flex-col bg-black">
 				<NextIntlClientProvider>
-					<MotionPreferenceProvider>
-						<WalletProvider>
-							<SiteHeader />
-							{children}
-							<SiteFooter />
-						</WalletProvider>
-					</MotionPreferenceProvider>
+					<ThemeProvider>
+						<MotionPreferenceProvider>
+							<WalletProvider>
+								<SiteHeader />
+								{children}
+								<SiteFooter />
+							</WalletProvider>
+						</MotionPreferenceProvider>
+					</ThemeProvider>
 				</NextIntlClientProvider>
 				<PwaRegister />
 			</body>
