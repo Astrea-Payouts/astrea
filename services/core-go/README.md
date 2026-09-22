@@ -21,8 +21,8 @@ file is complete.
      against. Either a local Postgres with those migrations applied, or
      Supabase's **session** pooler (port `5432` on
      `aws-0-<region>.pooler.supabase.com`, the URL `apps/web/.env.example`
-     uses as `DIRECT_URL`). Not `db.<project-ref>.supabase.co` (IPv6 only;
-     fails to resolve on most home networks) and not `apps/web`'s runtime
+     uses as `DIRECT_URL`). Not `db.<project-ref>.supabase.co` (IPv6 only,
+     so an IPv4-only network cannot reach it) and not `apps/web`'s runtime
      URL with `?pgbouncer=true` (refused at boot). There is no in-memory
      fallback.
    - `CORE_GO_SERVICE_TOKEN`: at least 32 bytes, and the **same value** as
@@ -130,8 +130,9 @@ depends on where this service runs:
 
 - **Locally**: a local Postgres, or Supabase's **session** pooler (port
   `5432`, the URL `apps/web/.env.example` uses as `DIRECT_URL`). Not
-  `db.<project-ref>.supabase.co` — it is IPv6-only and fails to resolve on
-  most networks.
+  `db.<project-ref>.supabase.co` — it publishes an AAAA record and no A
+  record, so an IPv4-only network cannot reach it without Supabase's paid
+  IPv4 add-on.
 - **On Vercel**: the **transaction** pooler (port `6543`) with
   `?default_query_exec_mode=describe_exec`, because instances scale out and
   the pooler does not keep named prepared statements between requests. See
