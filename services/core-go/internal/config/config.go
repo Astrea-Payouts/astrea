@@ -168,9 +168,10 @@ func Load(getenv func(string) string) (Config, error) {
 		// "pgbouncer" — this is also apps/web/.env.example's pooled
 		// (port 6543) URL, which is the single most likely operator mistake.
 		problems = append(problems, "DATABASE_URL: must not carry pgbouncer=true — "+
-			"use the direct (port 5432) connection here, not the pooled one "+
-			"apps/web uses. The transaction-mode pooler also breaks pgx's "+
-			"prepared statements")
+			"drop the parameter. Locally, use Supabase's session pooler "+
+			"(port 5432); on Vercel, keep the transaction pooler (port 6543) "+
+			"and add default_query_exec_mode=describe_exec, since it does not "+
+			"keep prepared statements between requests")
 	}
 
 	serviceToken := getenv("CORE_GO_SERVICE_TOKEN")
