@@ -19,13 +19,15 @@ export default async function NewEventPage() {
 	const session = await getSessionWallet();
 
 	return (
-		<main className="min-h-screen bg-black text-white pt-28 pb-16 px-4 sm:px-6 md:py-12 md:px-12">
-			<div className="mx-auto max-w-2xl flex flex-col gap-6">
+		<main className="min-h-screen bg-white px-4 pt-28 pb-16 text-zinc-950 sm:px-6 md:px-12 md:py-12 dark:bg-black dark:text-white">
+			<div className="mx-auto flex max-w-2xl flex-col gap-6">
 				<header className="flex flex-col gap-2">
 					<h1 className="font-serif text-3xl font-bold tracking-tight md:text-4xl">
 						{t("title")}
 					</h1>
-					<p className="text-sm text-zinc-400">{t("intro")}</p>
+					<p className="text-sm text-zinc-600 dark:text-zinc-400">
+						{t("intro")}
+					</p>
 				</header>
 
 				{session ? (
@@ -34,8 +36,10 @@ export default async function NewEventPage() {
 						symbol={env.USDC_SYMBOL}
 					/>
 				) : (
-					<section className="rounded-2xl border border-emerald-500/20 bg-zinc-900/40 p-5 flex flex-col gap-3">
-						<p className="text-sm text-zinc-300">{t("connect")}</p>
+					<section className="flex flex-col gap-3 rounded-2xl border border-emerald-500/20 bg-zinc-50/80 p-5 dark:bg-zinc-900/40">
+						<p className="text-sm text-zinc-700 dark:text-zinc-300">
+							{t("connect")}
+						</p>
 						<WalletConnectButton className="w-full sm:w-auto" />
 					</section>
 				)}

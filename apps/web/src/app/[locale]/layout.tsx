@@ -146,7 +146,7 @@ export default async function LocaleLayout({
 			className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
 			suppressHydrationWarning
 		>
-			<body className="relative min-h-full flex flex-col bg-black">
+			<body className="relative min-h-full flex flex-col bg-white dark:bg-black">
 				<NextIntlClientProvider>
 					<ThemeProvider>
 						<MotionPreferenceProvider>

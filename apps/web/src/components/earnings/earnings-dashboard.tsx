@@ -61,14 +61,14 @@ export function EarningsDashboard({
 		<div className="space-y-8">
 			{/* Top Summary Metrics */}
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-				<div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-5 backdrop-blur">
-					<div className="flex items-center justify-between text-zinc-400">
+				<div className="rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 backdrop-blur dark:border-white/10 dark:bg-zinc-900/60">
+					<div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400">
 						<span className="text-xs font-semibold uppercase tracking-wider">
 							{t("metricTotalEarnings")}
 						</span>
-						<Coins className="size-4 text-emerald-400" />
+						<Coins className="size-4 text-emerald-700 dark:text-emerald-400" />
 					</div>
-					<div className="mt-3 text-3xl font-bold text-emerald-400">
+					<div className="mt-3 text-3xl font-bold text-emerald-700 dark:text-emerald-400">
 						${summary.totalUsdc}
 					</div>
 					<div className="mt-1 text-xs text-zinc-500">
@@ -76,14 +76,14 @@ export function EarningsDashboard({
 					</div>
 				</div>
 
-				<div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-5 backdrop-blur">
-					<div className="flex items-center justify-between text-zinc-400">
+				<div className="rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 backdrop-blur dark:border-white/10 dark:bg-zinc-900/60">
+					<div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400">
 						<span className="text-xs font-semibold uppercase tracking-wider">
 							{t("metricEventsWon")}
 						</span>
-						<Trophy className="size-4 text-amber-400" />
+						<Trophy className="size-4 text-amber-600 dark:text-amber-400" />
 					</div>
-					<div className="mt-3 text-3xl font-bold text-white">
+					<div className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
 						{summary.totalEventsCount}
 					</div>
 					<div className="mt-1 text-xs text-zinc-500">
@@ -91,14 +91,14 @@ export function EarningsDashboard({
 					</div>
 				</div>
 
-				<div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-5 backdrop-blur">
-					<div className="flex items-center justify-between text-zinc-400">
+				<div className="rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 backdrop-blur dark:border-white/10 dark:bg-zinc-900/60">
+					<div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400">
 						<span className="text-xs font-semibold uppercase tracking-wider">
 							{t("metricPrizesWon")}
 						</span>
-						<Medal className="size-4 text-blue-400" />
+						<Medal className="size-4 text-blue-700 dark:text-blue-400" />
 					</div>
-					<div className="mt-3 text-3xl font-bold text-white">
+					<div className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
 						{summary.totalPrizesCount}
 					</div>
 					<div className="mt-1 text-xs text-zinc-500">
@@ -106,14 +106,14 @@ export function EarningsDashboard({
 					</div>
 				</div>
 
-				<div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-5 backdrop-blur">
-					<div className="flex items-center justify-between text-zinc-400">
+				<div className="rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 backdrop-blur dark:border-white/10 dark:bg-zinc-900/60">
+					<div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400">
 						<span className="text-xs font-semibold uppercase tracking-wider">
 							{t("metricAveragePayout")}
 						</span>
-						<Award className="size-4 text-purple-400" />
+						<Award className="size-4 text-purple-700 dark:text-purple-400" />
 					</div>
-					<div className="mt-3 text-3xl font-bold text-white">
+					<div className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
 						${summary.averageUsdc}
 					</div>
 					<div className="mt-1 text-xs text-zinc-500">{t("metricAvgDesc")}</div>
@@ -121,15 +121,15 @@ export function EarningsDashboard({
 			</div>
 
 			{/* Search & Sort Filter Bar */}
-			<div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-zinc-900/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+			<div className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-zinc-50/60 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:bg-zinc-900/40">
 				<div className="relative flex-1 sm:max-w-md">
-					<Search className="absolute left-3 top-2.5 size-4 text-zinc-500" />
+					<Search className="absolute top-2.5 left-3 size-4 text-zinc-500" />
 					<input
 						type="text"
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 						placeholder={t("searchPlaceholder")}
-						className="w-full rounded-xl border border-white/10 bg-black/40 pl-9 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
+						className="w-full rounded-xl border border-zinc-200 bg-white py-1.5 pr-3 pl-9 text-xs text-zinc-950 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none dark:border-white/10 dark:bg-black/40 dark:text-white"
 					/>
 				</div>
 
@@ -139,11 +139,11 @@ export function EarningsDashboard({
 					</span>
 
 					<div className="relative flex items-center">
-						<ArrowUpDown className="absolute left-3 size-3 text-zinc-500 pointer-events-none" />
+						<ArrowUpDown className="pointer-events-none absolute left-3 size-3 text-zinc-500" />
 						<select
 							value={sortBy}
 							onChange={(e) => setSortBy(e.target.value as EarningsSortOption)}
-							className="rounded-xl border border-white/10 bg-black/40 pl-8 pr-3 py-1.5 text-xs text-zinc-300 focus:border-emerald-500 focus:outline-none cursor-pointer"
+							className="cursor-pointer rounded-xl border border-zinc-200 bg-white py-1.5 pr-3 pl-8 text-xs text-zinc-700 focus:border-emerald-500 focus:outline-none dark:border-white/10 dark:bg-black/40 dark:text-zinc-300"
 						>
 							<option value="date-desc">{t("sortNewest")}</option>
 							<option value="date-asc">{t("sortOldest")}</option>
@@ -166,10 +166,10 @@ export function EarningsDashboard({
 			)}
 
 			{/* Non-Custodial Guarantee Footnote */}
-			<div className="flex items-start gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-950/20 p-4 text-xs text-zinc-400">
-				<ShieldCheck className="size-5 shrink-0 text-emerald-400 mt-0.5" />
+			<div className="flex items-start gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-50 p-4 text-xs text-zinc-600 dark:bg-emerald-950/20 dark:text-zinc-400">
+				<ShieldCheck className="mt-0.5 size-5 shrink-0 text-emerald-700 dark:text-emerald-400" />
 				<div>
-					<span className="font-semibold text-white">
+					<span className="font-semibold text-zinc-950 dark:text-white">
 						{t("guaranteeTitle")}:
 					</span>{" "}
 					{t("guaranteeDesc")}
@@ -183,7 +183,7 @@ function PayoutRow({ item }: { item: EarningsItem }) {
 	const t = useTranslations("Earnings");
 
 	return (
-		<div className="flex flex-col justify-between gap-4 rounded-2xl border border-white/10 bg-zinc-900/60 p-5 backdrop-blur transition-all hover:border-white/20 sm:flex-row sm:items-center">
+		<div className="flex flex-col justify-between gap-4 rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 backdrop-blur transition-all hover:border-zinc-300 sm:flex-row sm:items-center dark:border-white/10 dark:bg-zinc-900/60 dark:hover:border-white/20">
 			{/* Left Details: Rank, Event, Date */}
 			<div className="flex items-start gap-4">
 				<RankBadge rank={item.prizeRank} />
@@ -192,7 +192,7 @@ function PayoutRow({ item }: { item: EarningsItem }) {
 					<div className="flex items-center gap-2">
 						<Link
 							href={`/events/${item.eventId}`}
-							className="font-serif text-base font-bold text-white transition-colors hover:text-emerald-400 flex items-center gap-1.5"
+							className="flex items-center gap-1.5 font-serif text-base font-bold text-zinc-950 transition-colors hover:text-emerald-700 dark:text-white dark:hover:text-emerald-400"
 						>
 							{item.eventName}
 							<ExternalLink className="size-3 text-zinc-500" />
@@ -204,8 +204,8 @@ function PayoutRow({ item }: { item: EarningsItem }) {
 						<span>•</span>
 						<span>{t("milestoneTag", { index: item.prizeRank })}</span>
 						<span>•</span>
-						<span className="inline-flex items-center gap-1 text-emerald-400/90 font-medium">
-							<CheckCircle2 className="size-3 text-emerald-400" />
+						<span className="inline-flex items-center gap-1 font-medium text-emerald-700/90 dark:text-emerald-400/90">
+							<CheckCircle2 className="size-3 text-emerald-700 dark:text-emerald-400" />
 							{t("confirmedStatus")}
 						</span>
 					</div>
@@ -213,16 +213,18 @@ function PayoutRow({ item }: { item: EarningsItem }) {
 			</div>
 
 			{/* Right Details: Amount & On-Chain Proof */}
-			<div className="flex flex-row items-center justify-between gap-6 border-t border-white/5 pt-3 sm:border-t-0 sm:pt-0 sm:flex-col sm:items-end">
+			<div className="flex flex-row items-center justify-between gap-6 border-t border-zinc-200 pt-3 sm:flex-col sm:items-end sm:border-t-0 sm:pt-0 dark:border-white/5">
 				<div className="flex items-baseline gap-1.5">
-					<span className="font-mono text-xl font-bold text-emerald-400">
+					<span className="font-mono text-xl font-bold text-emerald-700 dark:text-emerald-400">
 						${item.amountUsdc}
 					</span>
-					<span className="text-xs font-semibold text-zinc-400">USDC</span>
+					<span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
+						USDC
+					</span>
 				</div>
 
 				<div className="flex items-center gap-1.5">
-					<span className="text-[11px] text-zinc-500 font-sans">
+					<span className="font-sans text-[11px] text-zinc-500">
 						{t("txProof")}:
 					</span>
 					<TxHashLink
@@ -232,7 +234,7 @@ function PayoutRow({ item }: { item: EarningsItem }) {
 						trailingChars={6}
 						showCopy={true}
 						showExplorerIcon={true}
-						className="text-xs text-zinc-400 hover:text-white"
+						className="text-xs text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
 					/>
 				</div>
 			</div>
@@ -243,7 +245,7 @@ function PayoutRow({ item }: { item: EarningsItem }) {
 function RankBadge({ rank }: { rank: number }) {
 	if (rank === 1) {
 		return (
-			<div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-400 shadow-sm">
+			<div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-700 shadow-sm dark:text-amber-400">
 				<Trophy className="size-5" />
 			</div>
 		);
@@ -251,7 +253,7 @@ function RankBadge({ rank }: { rank: number }) {
 
 	if (rank === 2) {
 		return (
-			<div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-zinc-400/30 bg-zinc-400/10 text-zinc-300 shadow-sm">
+			<div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-zinc-400/30 bg-zinc-400/10 text-zinc-600 shadow-sm dark:text-zinc-300">
 				<Award className="size-5" />
 			</div>
 		);
@@ -259,14 +261,14 @@ function RankBadge({ rank }: { rank: number }) {
 
 	if (rank === 3) {
 		return (
-			<div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-amber-700/30 bg-amber-700/10 text-amber-500 shadow-sm">
+			<div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-amber-700/30 bg-amber-700/10 text-amber-700 shadow-sm dark:text-amber-500">
 				<Medal className="size-5" />
 			</div>
 		);
 	}
 
 	return (
-		<div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-400 font-mono font-bold text-sm">
+		<div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/10 font-mono text-sm font-bold text-blue-700 dark:text-blue-400">
 			#{rank}
 		</div>
 	);

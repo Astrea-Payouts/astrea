@@ -28,7 +28,7 @@ export function SiteFooter() {
 	];
 
 	return (
-		<footer className="w-full border-t text-muted-foreground bg-gray-300 text-gray-900 dark:text-white dark:bg-gray-950">
+		<footer className="w-full border-t text-muted-foreground bg-gray-100 text-gray-900 dark:text-white dark:bg-gray-950">
 			<div className="mx-auto max-w-5xl px-6 pt-10 md:px-8">
 				<div className="flex w-full flex-col justify-between gap-10 border-b border-border pb-8 md:flex-row">
 					{/* Brand & description */}
@@ -38,7 +38,7 @@ export function SiteFooter() {
 							alt="Astrea"
 							width={1053}
 							height={381}
-							className="h-10 w-auto invert md:h-12"
+							className="h-10 w-auto md:h-12 dark:invert"
 						/>
 						<p className="mt-6 text-sm">{t("tagline")}</p>
 					</div>

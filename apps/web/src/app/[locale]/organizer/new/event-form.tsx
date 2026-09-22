@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import { type CreateDraftResult, createDraftEventAction } from "./actions";
 
 const inputClass =
-	"w-full rounded-lg border border-white/10 bg-zinc-900/60 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:border-emerald-500/50 focus:outline-none";
+	"w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-950 placeholder:text-zinc-400 focus:border-emerald-500/50 focus:outline-none dark:border-white/10 dark:bg-zinc-900/60 dark:text-white dark:placeholder:text-zinc-500";
+
+const labelClass =
+	"flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300";
 
 export interface EventFormProps {
 	organizerAddress: string;
@@ -44,7 +47,7 @@ export function EventForm({ organizerAddress, symbol }: EventFormProps) {
 		<form action={action} className="flex flex-col gap-6">
 			<input type="hidden" name="timezone" value={browserTimezone()} />
 
-			<label className="flex flex-col gap-1 text-sm text-zinc-300">
+			<label className={labelClass}>
 				{t("name")}
 				<input
 					name="name"
@@ -55,7 +58,7 @@ export function EventForm({ organizerAddress, symbol }: EventFormProps) {
 				/>
 			</label>
 
-			<label className="flex flex-col gap-1 text-sm text-zinc-300">
+			<label className={labelClass}>
 				{t("description")}
 				<textarea
 					name="description"
@@ -66,7 +69,7 @@ export function EventForm({ organizerAddress, symbol }: EventFormProps) {
 			</label>
 
 			<fieldset className="flex flex-col gap-2">
-				<legend className="text-sm text-zinc-300">
+				<legend className="text-sm text-zinc-700 dark:text-zinc-300">
 					{t("prizes", { symbol })}
 				</legend>
 				<p className="text-xs text-zinc-500">{t("prizesHint")}</p>
@@ -77,7 +80,7 @@ export function EventForm({ organizerAddress, symbol }: EventFormProps) {
 						key={i}
 						className="flex items-center gap-2"
 					>
-						<span className="w-8 shrink-0 font-mono text-xs text-zinc-400">
+						<span className="w-8 shrink-0 font-mono text-xs text-zinc-500 dark:text-zinc-400">
 							#{i + 1}
 						</span>
 						<input
@@ -116,7 +119,7 @@ export function EventForm({ organizerAddress, symbol }: EventFormProps) {
 				</Button>
 			</fieldset>
 
-			<label className="flex flex-col gap-1 text-sm text-zinc-300">
+			<label className={labelClass}>
 				{t("judgeAddress")}
 				<input
 					name="judgeAddress"
@@ -131,7 +134,7 @@ export function EventForm({ organizerAddress, symbol }: EventFormProps) {
 				</span>
 			</label>
 
-			<label className="flex flex-col gap-1 text-sm text-zinc-300">
+			<label className={labelClass}>
 				{t("judgeName")}
 				<input
 					name="judgeName"
@@ -142,7 +145,7 @@ export function EventForm({ organizerAddress, symbol }: EventFormProps) {
 				/>
 			</label>
 
-			<label className="flex flex-col gap-1 text-sm text-zinc-300">
+			<label className={labelClass}>
 				{t("deadline")}
 				<input
 					type="datetime-local"
@@ -174,7 +177,7 @@ function FormError({ result }: { result: CreateDraftResult | null }) {
 	return (
 		<p
 			role="alert"
-			className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300 break-words"
+			className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm break-words text-red-700 dark:text-red-300"
 		>
 			{t(result.code)}
 			{result.detail ? (

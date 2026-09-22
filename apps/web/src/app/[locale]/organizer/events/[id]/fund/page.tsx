@@ -68,8 +68,10 @@ export default async function FundPage({ params }: { params: Params }) {
 	if (!session) {
 		return (
 			<Shell title={t("title")} event={event}>
-				<section className="rounded-2xl border border-emerald-500/20 bg-zinc-900/40 p-5 flex flex-col gap-3">
-					<p className="text-sm text-zinc-300">{t("connect")}</p>
+				<section className="flex flex-col gap-3 rounded-2xl border border-emerald-500/20 bg-zinc-50/80 p-5 dark:bg-zinc-900/40">
+					<p className="text-sm text-zinc-700 dark:text-zinc-300">
+						{t("connect")}
+					</p>
 					<WalletConnectButton className="w-full sm:w-auto" />
 				</section>
 			</Shell>
@@ -81,7 +83,7 @@ export default async function FundPage({ params }: { params: Params }) {
 			<Shell title={t("title")} event={event}>
 				<p
 					role="alert"
-					className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300 break-words"
+					className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm break-words text-red-700 dark:text-red-300"
 				>
 					<span className="font-mono text-xs">403</span>{" "}
 					{t("forbidden.notOrganizer")}
@@ -105,11 +107,11 @@ export default async function FundPage({ params }: { params: Params }) {
 
 	return (
 		<Shell title={t("title")} event={event}>
-			<section className="rounded-2xl border border-white/10 bg-zinc-900/60 p-5 flex flex-col gap-3">
-				<h2 className="text-sm font-semibold text-zinc-400">
+			<section className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 dark:border-white/10 dark:bg-zinc-900/60">
+				<h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
 					{t("prizes.title")}
 				</h2>
-				<ul className="divide-y divide-white/10 text-sm">
+				<ul className="divide-y divide-zinc-200 text-sm dark:divide-white/10">
 					{prizes.map((prize) => (
 						<li
 							key={prize.rank}
