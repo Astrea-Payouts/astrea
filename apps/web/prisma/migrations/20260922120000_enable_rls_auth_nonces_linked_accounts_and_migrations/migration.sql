@@ -23,4 +23,6 @@
 
 ALTER TABLE "auth_nonces" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "linked_accounts" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "_prisma_migrations" ENABLE ROW LEVEL SECURITY;
+-- `IF EXISTS` because CI replays every migration with plain psql against an
+-- empty database, where Prisma has not created its bookkeeping table yet.
+ALTER TABLE IF EXISTS "_prisma_migrations" ENABLE ROW LEVEL SECURITY;
