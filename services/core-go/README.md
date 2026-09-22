@@ -21,8 +21,8 @@ file is complete.
      against. Either a local Postgres with those migrations applied, or
      Supabase's **session** pooler (port `5432` on
      `aws-0-<region>.pooler.supabase.com`, the URL `apps/web/.env.example`
-     uses as `DIRECT_URL`). Not `db.<project-ref>.supabase.co` (IPv6 only;
-     fails to resolve on most home networks) and not `apps/web`'s runtime
+     uses as `DIRECT_URL`). Not `db.<project-ref>.supabase.co` (IPv6 only,
+     so an IPv4-only network cannot reach it) and not `apps/web`'s runtime
      URL with `?pgbouncer=true` (refused at boot). There is no in-memory
      fallback.
    - `CORE_GO_SERVICE_TOKEN`: at least 32 bytes, and the **same value** as
@@ -125,13 +125,25 @@ parsing here. `ALLOW_MAINNET` mirrors the web app's gate: setting
 
 **`DATABASE_URL`.** This service reads Postgres directly (`internal/store`,
 `github.com/jackc/pgx/v5` — hand-written SQL, no ORM); Prisma (`apps/web`)
-keeps sole ownership of every migration. The URL must be the **direct**
-connection (port 5432), not `apps/web/.env.example`'s pooled Supabase URL
-(port 6543, `?pgbouncer=true`) — pgx forwards `pgbouncer=true` to Postgres
-as a server runtime setting, which Postgres refuses outright, and the
-transaction-mode pooler also breaks pgx's prepared statements. `Load`
-parses it with `pgxpool.ParseConfig` and refuses to boot if `pgbouncer=true`
-is present, rather than failing confusingly on the first query.
+keeps sole ownership of every migration. Which connection string to use
+depends on where this service runs:
+
+- **Locally**: a local Postgres, or Supabase's **session** pooler (port
+  `5432`, the URL `apps/web/.env.example` uses as `DIRECT_URL`). Not
+  `db.<project-ref>.supabase.co` — it publishes an AAAA record and no A
+  record, so an IPv4-only network cannot reach it without Supabase's paid
+  IPv4 add-on.
+- **On Vercel**: the **transaction** pooler (port `6543`) with
+  `?default_query_exec_mode=describe_exec`, because instances scale out and
+  the pooler does not keep named prepared statements between requests. See
+  "Deploy (Vercel)" above.
+
+What never works in either case is `apps/web`'s runtime URL as-is: pgx
+forwards `?pgbouncer=true` to Postgres as a server runtime setting, which
+Postgres refuses outright. `Load` parses the URL with
+`pgxpool.ParseConfig` and refuses to boot if `pgbouncer=true` is present,
+rather than failing confusingly on the first query. Nothing enforces a
+port, so the two cases above are conventions, not validation.
 
 **`CORE_GO_SERVICE_TOKEN`.** A shared secret this service and `apps/web`
 both hold, at least 32 bytes. `apps/web` sends it as
