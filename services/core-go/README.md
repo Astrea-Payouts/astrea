@@ -89,10 +89,14 @@ Instances are reused but can scale out, so `DATABASE_URL` must be Supabase's
 transaction pooler (port `6543`), never the direct one. Two things differ
 from `apps/web`'s copy of that URL: drop `?pgbouncer=true` (pgx forwards it
 as a server setting and Postgres refuses it) and add
-`?default_query_exec_mode=describe_exec`, because the transaction pooler
-does not keep named prepared statements between requests (pgx's default
-mode fails with `SQLSTATE 26000`; `simple_protocol` breaks the `jsonb`
-payload writes with `SQLSTATE 22P02`). `PORT` is set by Vercel; every other
+`?default_query_exec_mode=exec`, because the transaction pooler does not
+keep named prepared statements between requests — pgx's default mode fails
+with `SQLSTATE 26000`. The other two modes that survive a pooler are worse
+fits: `simple_protocol` breaks the `jsonb` payload writes with
+`SQLSTATE 22P02`, and `describe_exec` is unsafe here by pgx's own
+documentation, because it describes and executes in separate round trips
+that transaction pooling can route to different server connections
+(`pgx@v5.11.0/doc.go`, "PgBouncer"). `PORT` is set by Vercel; every other
 variable from Configuration below is set in the project's environment
 variables. `apps/web` then points `CORE_GO_URL` at the deployment and shares
 `CORE_GO_SERVICE_TOKEN`.
@@ -134,9 +138,10 @@ depends on where this service runs:
   record, so an IPv4-only network cannot reach it without Supabase's paid
   IPv4 add-on.
 - **On Vercel**: the **transaction** pooler (port `6543`) with
-  `?default_query_exec_mode=describe_exec`, because instances scale out and
-  the pooler does not keep named prepared statements between requests. See
-  "Deploy (Vercel)" above.
+  `?default_query_exec_mode=exec`, because instances scale out and the
+  pooler does not keep named prepared statements between requests. Not
+  `describe_exec` — see "Deploy (Vercel)" above for why that mode is unsafe
+  behind a transaction pooler.
 
 What never works in either case is `apps/web`'s runtime URL as-is: pgx
 forwards `?pgbouncer=true` to Postgres as a server runtime setting, which
