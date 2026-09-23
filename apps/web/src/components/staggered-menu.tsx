@@ -94,6 +94,18 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 	const busyRef = useRef(false);
 	const itemEntranceTweenRef = useRef<gsap.core.Tween | null>(null);
 
+	// Runs once on mount (and again only if `position` ever flips, which it
+	// doesn't at runtime today): puts the panel and its decorative layers
+	// offscreen and the icon/text in their closed state.
+	//
+	// menuButtonColor must NOT be a dependency here. The effect further down
+	// already keeps the button's colour in sync on every theme change; having
+	// it here too meant that switching theme re-ran this whole effect and
+	// snapped the panel straight back to its closed transform with gsap.set
+	// (no animation) — even while the panel was open and React's `open` state
+	// still said so. The toggle then thought it needed to close a menu that
+	// had already been yanked offscreen, which is what showed up as the menu
+	// "reloading" and getting stuck.
 	useLayoutEffect(() => {
 		const ctx = gsap.context(() => {
 			const panel = panelRef.current;
@@ -121,11 +133,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 			gsap.set(plusV, { transformOrigin: "50% 50%", rotate: 90 });
 			gsap.set(icon, { rotate: 0, transformOrigin: "50% 50%" });
 			gsap.set(textInner, { yPercent: 0 });
-			if (toggleBtnRef.current)
-				gsap.set(toggleBtnRef.current, { color: menuButtonColor });
 		});
 		return () => ctx.revert();
-	}, [menuButtonColor, position]);
+	}, [position]);
 
 	const buildOpenTimeline = useCallback(() => {
 		const panel = panelRef.current;

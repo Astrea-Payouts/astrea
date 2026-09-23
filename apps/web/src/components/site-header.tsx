@@ -161,7 +161,7 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 				colors={["#0a0a0a", "#000000"]}
 				accentColor="#000000"
 				menuButtonColor={theme === "light" ? "#09090b" : "#fff"}
-				openMenuButtonColor="#000"
+				openMenuButtonColor={theme === "light" ? "#000" : "#fff"}
 				openAriaLabel={t("openMenu")}
 				closeAriaLabel={t("closeMenu")}
 				menuLabel={t("menuLabel")}
@@ -170,11 +170,14 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 					<>
 						<ReduceMotionToggle
 							variant="labelled"
-							className="w-full text-black"
+							className="w-full text-black dark:text-white"
 						/>
-						<LanguageSwitcher variant="light" />
-						<ThemeToggle variant="labelled" className="w-full text-black" />
-						<WalletConnectButton className="w-full justify-center bg-black text-white hover:bg-black/90" />
+						<LanguageSwitcher />
+						<ThemeToggle
+							variant="labelled"
+							className="w-full text-black dark:text-white"
+						/>
+						<WalletConnectButton className="w-full justify-center" />
 					</>
 				}
 			/>
