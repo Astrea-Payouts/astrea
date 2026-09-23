@@ -48,7 +48,12 @@
 
 .sm-logo-img {
 	display: block;
-	height: 32px;
+	/* Sized against astrea-logo-mark-trimmed.png, which is ~89% glyph. The
+	   untrimmed mark is a 1024x1024 canvas holding a 415x397 drawing (38.8%
+	   fill), so the old 32px box rendered a mark only ~12px tall — the same
+	   trap documented for the header lockup in docs/ui-motion.md. Measure the
+	   asset's real content bounds before changing this number. */
+	height: 44px;
 	width: auto;
 	object-fit: contain;
 }

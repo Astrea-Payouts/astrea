@@ -146,7 +146,7 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 				]}
 				displaySocials
 				displayItemNumbering={false}
-				logoUrl="/astrea-logo-mark.png"
+				logoUrl="/astrea-logo-mark-trimmed.png"
 				colors={["#0a0a0a", "#000000"]}
 				accentColor="#000000"
 				menuButtonColor="#fff"
