@@ -1,3 +1,9 @@
+// @vitest-environment jsdom
+//
+// The project's default Vitest environment is "node" (see vitest.config.ts) —
+// most lib tests never touch a real DOM. This file does (document.cookie,
+// window.localStorage), so it opts into jsdom just for itself instead of
+// flipping the environment for the whole suite.
 import { afterEach, describe, expect, it } from "vitest";
 import {
 	DEFAULT_THEME,
@@ -68,8 +74,15 @@ describe("THEME_INIT_SCRIPT", () => {
 });
 
 describe("shouldAnimateThemeChange", () => {
-	it("is false without a DOM (SSR, the node test environment)", () => {
-		expect(shouldAnimateThemeChange()).toBe(false);
+	it("is true in a browser-like environment with the API present", () => {
+		// jsdom implements document.startViewTransition as of jsdom 30, so this
+		// asserts the happy path here; the SSR/no-DOM path is covered by
+		// running the same function under the node environment elsewhere.
+		if (typeof document.startViewTransition === "function") {
+			expect(shouldAnimateThemeChange()).toBe(true);
+		} else {
+			expect(shouldAnimateThemeChange()).toBe(false);
+		}
 	});
 });
 
