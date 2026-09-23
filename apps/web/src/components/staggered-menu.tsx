@@ -498,8 +498,12 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 						alt="Logo"
 						className="sm-logo-img"
 						draggable={false}
-						width={110}
-						height={24}
+						// The intrinsic size of astrea-logo-mark-trimmed.png. next/image reserves
+						// the box from this ratio before the file loads, so a stale 110x24 made
+						// the 44px-tall slot 201px wide until the image arrived and collapsed it
+						// to 46px. CSS still drives the painted size (.sm-logo-img).
+						width={465}
+						height={447}
 						priority
 					/>
 				</div>
