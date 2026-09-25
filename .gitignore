@@ -131,3 +131,14 @@ skills-lock.json
 
 # GitHub Pages staging dir, assembled by the graphify-rebuild job in CI
 _site/
+
+# Claude Code per-machine notes (private, never shared)
+CLAUDE.local.md
+
+# Claude Code per-machine workspace state. Scoped to these paths rather than
+# all of `.claude/`, which the note above deliberately keeps open for project
+# config worth sharing.
+.claude/launch.json
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+.claude/worktrees/

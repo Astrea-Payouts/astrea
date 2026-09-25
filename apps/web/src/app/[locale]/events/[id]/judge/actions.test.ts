@@ -11,16 +11,36 @@ const WALLET = {
 	createdAt: new Date(),
 };
 
-const { mockSession, mockBuild, mockSubmit, mockRevalidate } = vi.hoisted(
-	() => ({
-		mockSession: vi.fn(),
-		mockBuild: vi.fn(),
-		mockSubmit: vi.fn(),
-		mockRevalidate: vi.fn(),
-	}),
-);
+const WINNER_A = "GBXNBZ7Y3KQ2L3M4N5O6P7Q8R9S0T1U2V3W4X5Y6Z7A8B9C0D1E2U27X";
+const WINNER_B = "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5";
+
+const {
+	mockSession,
+	mockBuild,
+	mockSubmit,
+	mockRevalidate,
+	mockDb,
+	mockHasTrustline,
+} = vi.hoisted(() => ({
+	mockSession: vi.fn(),
+	mockBuild: vi.fn(),
+	mockSubmit: vi.fn(),
+	mockRevalidate: vi.fn(),
+	mockDb: {
+		event: { findUnique: vi.fn() },
+		teamMember: { findMany: vi.fn() },
+		wallet: { update: vi.fn() },
+	},
+	mockHasTrustline: vi.fn(),
+}));
 
 vi.mock("@/lib/wallet/session", () => ({ getSessionWallet: mockSession }));
+vi.mock("@/lib/db", () => ({ db: mockDb }));
+// Horizon is the only thing stubbed; verifyAndRecordTrustline runs for real
+// so the recorded usdcTrustlineVerifiedAt is part of what is tested.
+vi.mock("@/lib/trustline/verify-trustline", () => ({
+	hasUsdcTrustline: mockHasTrustline,
+}));
 vi.mock("next/cache", () => ({ revalidatePath: mockRevalidate }));
 // Keep the real error classes: the action's `instanceof` checks are what
 // these tests exercise.
@@ -37,10 +57,23 @@ const { buildRelease, submitRelease } = await import("./actions");
 
 const assignments = [{ rank: 1, teamId: "team-1" }];
 
+const judgingEvent = {
+	status: "JUDGING",
+	judges: [{ walletAddress: JUDGE }],
+};
+const members = [
+	{ wallet: { id: "wallet-a", address: WINNER_A } },
+	{ wallet: { id: "wallet-b", address: WINNER_B } },
+];
+
 describe("buildRelease", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockSession.mockResolvedValue(WALLET);
+		mockDb.event.findUnique.mockResolvedValue(judgingEvent);
+		mockDb.teamMember.findMany.mockResolvedValue(members);
+		mockDb.wallet.update.mockResolvedValue({});
+		mockHasTrustline.mockResolvedValue(true);
 		mockBuild.mockResolvedValue({
 			eventId: EVENT_ID,
 			unsignedTransactionXdr: "AAAA",
@@ -62,7 +95,116 @@ describe("buildRelease", () => {
 			message: "",
 		});
 		expect(mockBuild).not.toHaveBeenCalled();
+		expect(mockDb.event.findUnique).not.toHaveBeenCalled();
+		expect(mockHasTrustline).not.toHaveBeenCalled();
 	});
+
+	it("re-checks every winning member's trustline, recording each verified one, before calling Go", async () => {
+		const res = await buildRelease(EVENT_ID, [
+			{ rank: 1, teamId: "team-1" },
+			{ rank: 2, teamId: "team-2" },
+			{ rank: 3, teamId: "team-1" },
+		]);
+
+		expect(mockDb.teamMember.findMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: { eventId: EVENT_ID, teamId: { in: ["team-1", "team-2"] } },
+			}),
+		);
+		expect(mockHasTrustline).toHaveBeenCalledTimes(2);
+		expect(mockHasTrustline).toHaveBeenCalledWith(WINNER_A);
+		expect(mockHasTrustline).toHaveBeenCalledWith(WINNER_B);
+		expect(mockDb.wallet.update).toHaveBeenCalledWith({
+			where: { id: "wallet-a" },
+			data: { usdcTrustlineVerifiedAt: expect.any(Date) },
+		});
+		expect(mockDb.wallet.update).toHaveBeenCalledWith({
+			where: { id: "wallet-b" },
+			data: { usdcTrustlineVerifiedAt: expect.any(Date) },
+		});
+		expect(mockBuild).toHaveBeenCalledTimes(1);
+		expect(res.ok).toBe(true);
+	});
+
+	it("refuses with missingTrustline naming the asset and the wallet, and never calls Go", async () => {
+		mockHasTrustline.mockImplementation(
+			async (address: string) => address !== WINNER_B,
+		);
+
+		const res = await buildRelease(EVENT_ID, assignments);
+
+		expect(res).toEqual({
+			ok: false,
+			code: "missingTrustline",
+			asset: `USDC:${process.env.USDC_ISSUER as string}`,
+			wallets: [WINNER_B],
+		});
+		expect(mockBuild).not.toHaveBeenCalled();
+		// The member that still has it is recorded; the one without is not.
+		expect(mockDb.wallet.update).toHaveBeenCalledTimes(1);
+		expect(mockDb.wallet.update).toHaveBeenCalledWith(
+			expect.objectContaining({ where: { id: "wallet-a" } }),
+		);
+	});
+
+	it("names every wallet without a trustline, in member order", async () => {
+		mockHasTrustline.mockResolvedValue(false);
+
+		const res = await buildRelease(EVENT_ID, assignments);
+
+		expect(res).toMatchObject({
+			ok: false,
+			code: "missingTrustline",
+			wallets: [WINNER_A, WINNER_B],
+		});
+		expect(mockDb.wallet.update).not.toHaveBeenCalled();
+		expect(mockBuild).not.toHaveBeenCalled();
+	});
+
+	it("maps a Horizon failure during the re-check to code unknown without calling Go", async () => {
+		mockHasTrustline.mockRejectedValue(new Error("horizon 503"));
+
+		const res = await buildRelease(EVENT_ID, assignments);
+
+		expect(res).toEqual({
+			ok: false,
+			status: 0,
+			code: "unknown",
+			message: "horizon 503",
+		});
+		expect(mockBuild).not.toHaveBeenCalled();
+	});
+
+	it.each([
+		[
+			"the caller is not the active judge",
+			judgingEvent,
+			{ ...WALLET, id: "wallet-other", address: WINNER_A },
+		],
+		["the event is not JUDGING", { ...judgingEvent, status: "LIVE" }, WALLET],
+		[
+			"the event has no single active judge",
+			{ ...judgingEvent, judges: [] },
+			WALLET,
+		],
+		["the event does not exist", null, WALLET],
+	])(
+		"skips the re-check and lets Go answer when %s",
+		async (_label, event, session) => {
+			mockDb.event.findUnique.mockResolvedValue(event);
+			mockSession.mockResolvedValue(session);
+			mockBuild.mockRejectedValue(
+				new CoreGoError(403, "not_judge", "wallet is not the event judge"),
+			);
+
+			const res = await buildRelease(EVENT_ID, assignments);
+
+			expect(mockDb.teamMember.findMany).not.toHaveBeenCalled();
+			expect(mockHasTrustline).not.toHaveBeenCalled();
+			expect(mockBuild).toHaveBeenCalledTimes(1);
+			expect(res).toMatchObject({ ok: false, code: "not_judge" });
+		},
+	);
 
 	it("passes the session wallet and assignments to Go and returns the XDR plus winners", async () => {
 		const res = await buildRelease(EVENT_ID, assignments);

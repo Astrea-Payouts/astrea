@@ -3,7 +3,6 @@ import { formatSmallestUnits, truncateHash } from "../explorer";
 export type EventCardStatus =
 	| "DRAFT"
 	| "CREATED"
-	| "FUNDED"
 	| "LIVE"
 	| "JUDGING"
 	| "COMPLETED"

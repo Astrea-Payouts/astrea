@@ -83,6 +83,9 @@ export function HowItWorks() {
 		};
 	}, [syncRunway, reduced]);
 
+	// Each card is opaque in both themes, because they overlap as they stack.
+	// Light cards are zinc-50 on the white section, with the coloured border
+	// doing most of the separating.
 	const steps: Step[] = [
 		{
 			id: "step-wizard",
@@ -90,13 +93,14 @@ export function HowItWorks() {
 			title: t("step1Title"),
 			description: t("step1Desc"),
 			badge: "Step 1: Wizard",
-			icon: <Layers className="size-6 text-blue-400" />,
+			icon: <Layers className="size-6 text-blue-600 dark:text-blue-400" />,
 			details: [
 				"Customizable prize tiers (Ranked & Category bounties)",
 				"Appointed judges and fallback dispute resolver",
 				"Configurable milestone release percentages",
 			],
-			itemClassName: "border border-blue-500/30 bg-zinc-950 text-white",
+			itemClassName:
+				"border border-blue-500/30 bg-zinc-50 text-zinc-950 dark:bg-zinc-950 dark:text-white",
 		},
 		{
 			id: "step-escrow",
@@ -104,13 +108,16 @@ export function HowItWorks() {
 			title: t("step2Title"),
 			description: t("step2Desc"),
 			badge: "Step 2: Smart Escrow",
-			icon: <Wallet className="size-6 text-emerald-400" />,
+			icon: (
+				<Wallet className="size-6 text-emerald-600 dark:text-emerald-400" />
+			),
 			details: [
 				"Locked in Soroban multi-milestone escrow contract",
 				"Instant 'Prizes Verified On-Chain' public badge",
 				"Zero trust needed — organizers cannot pull funds unilaterally",
 			],
-			itemClassName: "border border-emerald-500/30 bg-zinc-950 text-white",
+			itemClassName:
+				"border border-emerald-500/30 bg-zinc-50 text-zinc-950 dark:bg-zinc-950 dark:text-white",
 		},
 		{
 			id: "step-judging",
@@ -118,13 +125,14 @@ export function HowItWorks() {
 			title: t("step3Title"),
 			description: t("step3Desc"),
 			badge: "Step 3: Verifiable Judging",
-			icon: <Gavel className="size-6 text-indigo-400" />,
+			icon: <Gavel className="size-6 text-indigo-600 dark:text-indigo-400" />,
 			details: [
 				"Multi-judge scoring and rubric assessment",
 				"Transparent audit trail preserved in Postgres and OpLog",
 				"Automated dispute handling if milestone criteria disputed",
 			],
-			itemClassName: "border border-indigo-500/30 bg-zinc-950 text-white",
+			itemClassName:
+				"border border-indigo-500/30 bg-zinc-50 text-zinc-950 dark:bg-zinc-950 dark:text-white",
 		},
 		{
 			id: "step-payout",
@@ -132,28 +140,29 @@ export function HowItWorks() {
 			title: t("step4Title"),
 			description: t("step4Desc"),
 			badge: "Step 4: Payout",
-			icon: <Send className="size-6 text-sky-400" />,
+			icon: <Send className="size-6 text-sky-600 dark:text-sky-400" />,
 			details: [
 				"Trustline-verified automated USDC transfer",
 				"Instant settlement via Stellar Horizon RPC",
 				"Public transaction hash and explorer link per prize",
 			],
-			itemClassName: "border border-sky-500/30 bg-zinc-950 text-white",
+			itemClassName:
+				"border border-sky-500/30 bg-zinc-50 text-zinc-950 dark:bg-zinc-950 dark:text-white",
 		},
 	];
 
 	return (
-		<section className="relative bg-black pt-1 pb-0 text-white md:pt-16">
+		<section className="relative bg-white pt-1 pb-0 text-zinc-950 md:pt-16 dark:bg-black dark:text-white">
 			<div className="mx-auto max-w-5xl px-3 md:px-12">
 				<div className="text-center">
-					<div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1 text-xs font-semibold text-white/70">
-						<Sparkles className="size-3.5 text-blue-400" />
+					<div className="inline-flex items-center gap-2 rounded-full border border-zinc-900/10 bg-zinc-900/5 px-3.5 py-1 text-xs font-semibold text-zinc-700 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
+						<Sparkles className="size-3.5 text-blue-600 dark:text-blue-400" />
 						<span>{t("badge")}</span>
 					</div>
 					<h2 className="mt-4 font-serif text-3xl font-bold tracking-tight md:text-5xl">
 						{t("title")}
 					</h2>
-					<p className="mx-auto mt-4 max-w-2xl text-base text-zinc-400 md:text-lg">
+					<p className="mx-auto mt-4 max-w-2xl text-base text-zinc-600 md:text-lg dark:text-zinc-400">
 						{t("subtitle")}
 					</p>
 				</div>
@@ -170,7 +179,7 @@ export function HowItWorks() {
 						{steps.map((step) => (
 							<li
 								key={step.id}
-								className={`${step.itemClassName} rounded-3xl p-8 shadow-2xl md:p-10`}
+								className={`${step.itemClassName} rounded-3xl p-8 shadow-xl md:p-10 dark:shadow-2xl`}
 							>
 								<StepCardBody step={step} />
 							</li>
@@ -202,9 +211,13 @@ export function HowItWorks() {
 							baseScale={BASE_SCALE}
 						>
 							{steps.map((step) => (
+								// The `!` on the shadow is deliberate: ScrollStackItem's own
+								// base classes already set a shadow, concatenated without any
+								// merging, so which one won would otherwise depend on
+								// stylesheet order.
 								<ScrollStackItem
 									key={step.id}
-									itemClassName={`${step.itemClassName} !h-auto !rounded-3xl !p-8 md:!p-10 shadow-2xl`}
+									itemClassName={`${step.itemClassName} !h-auto !rounded-3xl !p-8 md:!p-10 !shadow-xl dark:!shadow-2xl`}
 								>
 									<StepCardBody step={step} />
 								</ScrollStackItem>
@@ -222,17 +235,17 @@ function StepCardBody({ step }: { step: Step }) {
 		<div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
 			<div className="max-w-xl">
 				<div className="flex items-center gap-3">
-					<span className="font-mono text-2xl font-black text-blue-400/80">
+					<span className="font-mono text-2xl font-black text-blue-600/80 dark:text-blue-400/80">
 						{step.number}
 					</span>
-					<span className="rounded-full bg-white/10 px-3 py-0.5 text-xs font-medium text-white/80">
+					<span className="rounded-full bg-zinc-900/10 px-3 py-0.5 text-xs font-medium text-zinc-800 dark:bg-white/10 dark:text-white/80">
 						{step.badge}
 					</span>
 				</div>
-				<h3 className="mt-4 text-2xl font-bold text-white md:text-3xl">
+				<h3 className="mt-4 text-2xl font-bold text-zinc-950 md:text-3xl dark:text-white">
 					{step.title}
 				</h3>
-				<p className="mt-3 text-base leading-relaxed text-zinc-400">
+				<p className="mt-3 text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
 					{step.description}
 				</p>
 
@@ -240,9 +253,9 @@ function StepCardBody({ step }: { step: Step }) {
 					{step.details.map((detail) => (
 						<div
 							key={detail}
-							className="flex items-center gap-2.5 text-sm text-zinc-300"
+							className="flex items-center gap-2.5 text-sm text-zinc-700 dark:text-zinc-300"
 						>
-							<div className="flex size-4.5 items-center justify-center rounded-full bg-white/10 text-white">
+							<div className="flex size-4.5 items-center justify-center rounded-full bg-zinc-900/10 text-zinc-900 dark:bg-white/10 dark:text-white">
 								<Check className="size-3" />
 							</div>
 							<span>{detail}</span>
@@ -251,7 +264,7 @@ function StepCardBody({ step }: { step: Step }) {
 				</div>
 			</div>
 
-			<div className="flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-6 md:size-28">
+			<div className="flex items-center justify-center rounded-2xl border border-zinc-900/10 bg-zinc-900/5 p-6 md:size-28 dark:border-white/10 dark:bg-white/5">
 				{step.icon}
 			</div>
 		</div>

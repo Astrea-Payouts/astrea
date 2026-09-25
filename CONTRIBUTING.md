@@ -34,7 +34,7 @@ git merge upstream/develop
 Fill in `.env` following the comments in `.env.example` and [apps/web/prisma/README.md](apps/web/prisma/README.md):
 
 - **Database**: a free Supabase project gets you `DATABASE_URL`/`DIRECT_URL` — see `apps/web/prisma/README.md` for the exact steps and the migration-baseline gotcha before running `prisma migrate dev` for the first time.
-- **Trustless Work**: request a **testnet** API key at [dapp.trustlesswork.com](https://dapp.trustlesswork.com) (BackOffice → API keys) for `TW_API_KEY`. Never a mainnet key for local dev. This is what the running app calls today — see the note in [README.md](README.md#environment-variables) about where the custom Soroban contract fits in.
+- **Escrow contract**: set `NEXT_PUBLIC_ESCROW_CONTRACT_ID` to the deployed testnet instance (see `smart-contracts/README.md` for the current id) — no third-party API key needed, the app talks to Soroban directly through `services/core-go`.
 - **Stellar network**: leave `NEXT_PUBLIC_STELLAR_NETWORK=testnet` and `ALLOW_MAINNET=false`. See [docs/architecture.md](docs/architecture.md) for why mainnet is gated behind an explicit flag.
 
 ```bash

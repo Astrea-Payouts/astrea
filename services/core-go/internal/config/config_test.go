@@ -162,8 +162,8 @@ func TestLoad_RejectsPooledDatabaseURL(t *testing.T) {
 		"DATABASE_URL": "postgresql://postgres.project:pw@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true",
 	})))
 	assertErrorNames(t, err, "DATABASE_URL")
-	if err == nil || !strings.Contains(err.Error(), "direct") {
-		t.Errorf("expected the error to point at the direct (5432) connection, got: %v", err)
+	if err == nil || !strings.Contains(err.Error(), "default_query_exec_mode=exec") {
+		t.Errorf("expected the error to name the Vercel remedy, got: %v", err)
 	}
 }
 

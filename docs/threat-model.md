@@ -33,7 +33,7 @@ that follow them, not off the ADRs.
 | --- | --- | --- |
 | Organizer (admin) | deposit_funds, withdraw_funds on its own free balance, create_event, the state machine (set_event_waiting_for_start / set_event_in_progress / set_event_cancelled, each asserting event.admin == admin), and release_compensation on a cancelled event | **Move escrowed reward to a winner.** No organizer-callable function pays a winner; ADR-003 makes this structural, and K01/K02 verified on testnet that an organizer-signed release is rejected by the contract's own require_auth. |
 | Judge (event.judge) | release_reward — the sole release path. It asserts event.judge == judge, so it is the named judge only, not any signer. | Release before InProgress; release twice, since state flips to Ended; pay more than the committed reward in total (section 4.4). Cannot touch the free balance. |
-| Resolver (event.resolver) | Co-authorizes emergency_withdraw together with the organizer — dual authorization, both require_auth calls present. | **Unilaterally move funds.** emergency_withdraw needs the organizer's signature too, so a compromised resolver alone drains nothing. Open a dispute on its own escrow — that entry point does not exist yet (section 6). |
+| Resolver (event.resolver) | Co-authorizes emergency_withdraw together with the organizer — dual authorization, both require_auth calls present. Separately holds resolve_dispute, a resolver-only payout: once event.judging_deadline passes with the event still InProgress, the resolver's signature alone picks the winners and pays them through the same validate/transfer loop as release_reward (an organizer refund is expressed as a winner share), ending the event (section 6). | **Move funds unilaterally through emergency_withdraw** — it needs the organizer's signature too, so a compromised resolver alone cannot use that path. Call resolve_dispute before the judging deadline, on an event that is not InProgress, or while paused; distribute anything other than exactly event.reward in total. Note what is *not* prevented: after the deadline, a compromised resolver can direct the whole reward by itself via resolve_dispute. That authority is bounded by the deadline gate, the pause, and the reward cap, not by a second signature. |
 | Anyone | expire_event — permissionless, no require_auth call at all (section 4.5). | — |
 | Winner | Nothing. Receives; never authorizes. | — |
 | Emergency admin | Governance-only calls, each asserting caller == the stored EmergencyAdmin via assert_is_emergency_admin: initialize_default_resolver, set_paused, set_admin_paused, set_token_whitelist_enabled, set_token_allowed, initialize_treasury (init-once), and set_fee_bps. | Raise the go-live fee above MAX_FEE_BPS — a const, not a storage value, so doing so needs a redeploy. Charge the fee at any moment other than set_event_in_progress (go-live) — the charge itself lives in lifecycle.rs, not in any governance call. |
@@ -170,12 +170,13 @@ chosen for the role and how their key is held.
 Naming this explicitly, because the ADRs describe a design the code does not
 fully have, and a threat model that assumed it would be wrong:
 
-- **dispute / resolve_dispute do not exist.** docs/architecture.md records the
-  mapping and issue #22 tracks the work. ADR-003's "judge goes silent, the
-  resolver executes the release on the judge's behalf" is therefore
-  **aspirational, not implemented**: today a silent judge has no resolution
-  path, and emergency_withdraw (organizer plus resolver) is the only
-  dual-signature mechanism that exists.
+- **resolve_dispute is implemented, narrower than ADR-003's design.** It is
+  resolver-signed only, and callable only after event.judging_deadline
+  passes without a release — see docs/architecture.md's mapping. There is no
+  separate `dispute` call; the resolver's signature at that point is the
+  resolution. Issue #22 is done. A silent judge before the judging deadline
+  still has no resolution path other than emergency_withdraw
+  (organizer plus resolver).
 - **Independently payable milestones do not exist.** ADR-002 is recorded as
   superseded by what was actually built: a single reward i128 per event, with
   winners as shares released together. The consequence for this threat model is
@@ -196,7 +197,7 @@ Gaps named in this document and where they are tracked:
 | Gap | Tracked by |
 | --- | --- |
 | Judge can release a split the organizer never declared | #54 (U01b) and #66 (U05) — the enforcement is designed to live in the Go service |
-| Silent judge has no on-chain resolution path | #22 (E01d — dispute and resolve_dispute) |
+| Silent judge before judging_deadline has no on-chain resolution path | #22 (E01d — dispute and resolve_dispute), done for after judging_deadline |
 | Resolver, organizer collusion | No issue. Structural to the resolver role; ADR-006's multisig recommendation is the control |
 | Permissionless expire_event | No issue. Intended behaviour, documented here |
 

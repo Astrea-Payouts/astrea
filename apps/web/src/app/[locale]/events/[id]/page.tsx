@@ -80,7 +80,7 @@ function AddressLink({ address }: { address: string }) {
 			href={getExplorerAccountUrl(address, STELLAR_NETWORK)}
 			target="_blank"
 			rel="noopener noreferrer"
-			className="font-mono text-sm text-zinc-200 underline-offset-4 hover:underline break-all"
+			className="font-mono text-sm break-all text-zinc-700 underline-offset-4 hover:underline dark:text-zinc-200"
 			title={address}
 		>
 			{shortAddress(address)}
@@ -119,8 +119,8 @@ export default async function EventPage({ params }: { params: Params }) {
 	}
 
 	return (
-		<main className="min-h-screen bg-black text-white pt-28 pb-16 px-4 sm:px-6 md:py-12 md:px-12">
-			<div className="mx-auto max-w-3xl flex flex-col gap-8">
+		<main className="min-h-screen bg-white px-4 pt-28 pb-16 text-zinc-950 sm:px-6 md:px-12 md:py-12 dark:bg-black dark:text-white">
+			<div className="mx-auto flex max-w-3xl flex-col gap-8">
 				<header className="flex flex-col gap-3">
 					<div className="flex flex-wrap items-center justify-between gap-2">
 						<EventStatusBadge status={event.status} className="w-fit" />
@@ -130,7 +130,7 @@ export default async function EventPage({ params }: { params: Params }) {
 									href={`/${locale}/events/${id}/display.png`}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-emerald-400 hover:text-emerald-300 underline-offset-4 hover:underline"
+									className="text-emerald-600 underline-offset-4 hover:text-emerald-500 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300"
 								>
 									{t("display.showOnScreen")}
 								</a>
@@ -138,46 +138,53 @@ export default async function EventPage({ params }: { params: Params }) {
 							{event.status === "COMPLETED" ? (
 								<Link
 									href={`/events/${event.id}/print`}
-									className="text-zinc-400 hover:text-zinc-200 underline-offset-4 hover:underline"
+									className="text-zinc-600 underline-offset-4 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-200"
 								>
 									{t("print.receipt")}
 								</Link>
 							) : null}
 						</div>
 					</div>
-					<h1 className="font-serif text-3xl font-bold tracking-tight md:text-5xl break-words">
+					<h1 className="font-serif text-3xl font-bold tracking-tight break-words md:text-5xl">
 						{event.name}
 					</h1>
 					{event.description ? (
-						<p className="text-sm leading-relaxed text-zinc-400 md:text-base whitespace-pre-line">
+						<p className="text-sm leading-relaxed whitespace-pre-line text-zinc-600 md:text-base dark:text-zinc-400">
 							{event.description}
 						</p>
 					) : null}
 				</header>
 
-				<section className="rounded-2xl border border-white/10 bg-zinc-900/60 p-5 flex flex-col gap-3">
+				<section className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 dark:border-white/10 dark:bg-zinc-900/60">
 					<h2 className="text-lg font-bold">{t("escrow.title")}</h2>
 					{event.escrowEventId ? (
 						<>
 							{escrow ? (
-								<p className="text-2xl font-semibold text-emerald-300">
+								<p className="text-2xl font-semibold text-emerald-700 dark:text-emerald-300">
 									{formatSmallestUnits(escrow.reward)} {env.USDC_SYMBOL}
-									<span className="ml-2 text-xs font-normal text-zinc-400">
+									<span className="ml-2 text-xs font-normal text-zinc-600 dark:text-zinc-400">
 										{t("escrow.onChainState", { state: escrow.state })}
 									</span>
 								</p>
 							) : (
-								<p className="text-sm text-red-300 break-words" role="alert">
+								<p
+									className="text-sm break-words text-red-700 dark:text-red-300"
+									role="alert"
+								>
 									{t("escrow.readFailed")}{" "}
 									<code className="font-mono text-xs">{escrowError}</code>
 								</p>
 							)}
 							<dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-[auto_1fr] sm:gap-x-6">
-								<dt className="text-zinc-400">{t("escrow.eventId")}</dt>
+								<dt className="text-zinc-600 dark:text-zinc-400">
+									{t("escrow.eventId")}
+								</dt>
 								<dd className="font-mono text-xs break-all">
 									{event.escrowEventId}
 								</dd>
-								<dt className="text-zinc-400">{t("escrow.contract")}</dt>
+								<dt className="text-zinc-600 dark:text-zinc-400">
+									{t("escrow.contract")}
+								</dt>
 								<dd>
 									<a
 										href={getExplorerContractUrl(
@@ -186,7 +193,7 @@ export default async function EventPage({ params }: { params: Params }) {
 										)}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="font-mono text-xs underline-offset-4 hover:underline break-all"
+										className="font-mono text-xs break-all underline-offset-4 hover:underline"
 									>
 										{env.NEXT_PUBLIC_ESCROW_CONTRACT_ID}
 									</a>
@@ -194,16 +201,20 @@ export default async function EventPage({ params }: { params: Params }) {
 							</dl>
 						</>
 					) : (
-						<p className="text-sm text-zinc-400">{t("escrow.notOnChain")}</p>
+						<p className="text-sm text-zinc-600 dark:text-zinc-400">
+							{t("escrow.notOnChain")}
+						</p>
 					)}
 				</section>
 
 				<section className="flex flex-col gap-3">
 					<h2 className="text-lg font-bold">{t("prizes.title")}</h2>
 					{event.prizes.length === 0 ? (
-						<p className="text-sm text-zinc-400">{t("prizes.none")}</p>
+						<p className="text-sm text-zinc-600 dark:text-zinc-400">
+							{t("prizes.none")}
+						</p>
 					) : (
-						<ul className="divide-y divide-white/10 rounded-2xl border border-white/10">
+						<ul className="divide-y divide-zinc-200 rounded-2xl border border-zinc-200 dark:divide-white/10 dark:border-white/10">
 							{event.prizes.map((prize) => {
 								const winner = prize.winnerTeamId
 									? event.teams.find((team) => team.id === prize.winnerTeamId)
@@ -220,12 +231,12 @@ export default async function EventPage({ params }: { params: Params }) {
 											{prize.amount.toString()} {env.USDC_SYMBOL}
 										</span>
 										{winner ? (
-											<span className="w-full text-xs text-zinc-400">
+											<span className="w-full text-xs text-zinc-600 dark:text-zinc-400">
 												{t("prizes.winner", { team: winner.name })}
 											</span>
 										) : null}
 										{prize.releaseTxHash ? (
-											<div className="w-full flex flex-wrap items-center gap-1.5 text-xs text-zinc-400">
+											<div className="flex w-full flex-wrap items-center gap-1.5 text-xs text-zinc-600 dark:text-zinc-400">
 												<span>{t("prizes.paidTx")}:</span>
 												<TxHashLink
 													hash={prize.releaseTxHash}
@@ -243,14 +254,14 @@ export default async function EventPage({ params }: { params: Params }) {
 				</section>
 
 				<section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-					<div className="rounded-2xl border border-white/10 p-4 flex flex-col gap-1">
-						<h2 className="text-sm font-semibold text-zinc-400">
+					<div className="flex flex-col gap-1 rounded-2xl border border-zinc-200 p-4 dark:border-white/10">
+						<h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
 							{t("people.organizer")}
 						</h2>
 						<AddressLink address={event.organizerWallet.address} />
 					</div>
-					<div className="rounded-2xl border border-white/10 p-4 flex flex-col gap-1">
-						<h2 className="text-sm font-semibold text-zinc-400">
+					<div className="flex flex-col gap-1 rounded-2xl border border-zinc-200 p-4 dark:border-white/10">
+						<h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
 							{t("people.judge")}
 						</h2>
 						{judge ? (
@@ -271,9 +282,11 @@ export default async function EventPage({ params }: { params: Params }) {
 						{t("teams.title", { count: event.teams.length })}
 					</h2>
 					{event.teams.length === 0 ? (
-						<p className="text-sm text-zinc-400">{t("teams.none")}</p>
+						<p className="text-sm text-zinc-600 dark:text-zinc-400">
+							{t("teams.none")}
+						</p>
 					) : (
-						<ul className="divide-y divide-white/10 rounded-2xl border border-white/10">
+						<ul className="divide-y divide-zinc-200 rounded-2xl border border-zinc-200 dark:divide-white/10 dark:border-white/10">
 							{event.teams.map((team) => (
 								<li
 									key={team.id}
@@ -292,10 +305,12 @@ export default async function EventPage({ params }: { params: Params }) {
 					)}
 				</section>
 
-				<section className="rounded-2xl border border-emerald-500/20 bg-zinc-900/40 p-5 flex flex-col gap-3">
+				<section className="flex flex-col gap-3 rounded-2xl border border-emerald-500/20 bg-zinc-50/80 p-5 dark:bg-zinc-900/40">
 					{!session ? (
 						<>
-							<p className="text-sm text-zinc-300">{t("cta.connect")}</p>
+							<p className="text-sm text-zinc-700 dark:text-zinc-300">
+								{t("cta.connect")}
+							</p>
 							<WalletConnectButton className="w-full sm:w-auto" />
 						</>
 					) : (
@@ -309,7 +324,7 @@ export default async function EventPage({ params }: { params: Params }) {
 								// /start pays the go-live fee and signs set_event_in_progress.
 								<Link
 									href={`/organizer/events/${event.id}/start`}
-									className="inline-flex w-full items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-medium text-black hover:bg-white/90 sm:w-auto"
+									className="inline-flex w-full items-center justify-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 sm:w-auto dark:bg-white dark:text-black dark:hover:bg-white/90"
 								>
 									{t("organizer.goLive")}
 								</Link>
@@ -318,7 +333,7 @@ export default async function EventPage({ params }: { params: Params }) {
 							{isJudge ? (
 								<Link
 									href={`/events/${event.id}/judge`}
-									className="inline-flex w-full items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-medium text-black hover:bg-white/90 sm:w-auto"
+									className="inline-flex w-full items-center justify-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 sm:w-auto dark:bg-white dark:text-black dark:hover:bg-white/90"
 								>
 									{t("cta.judge")}
 								</Link>
@@ -326,13 +341,15 @@ export default async function EventPage({ params }: { params: Params }) {
 
 							{event.status === "LIVE" && !isRegistered && !isOrganizer ? (
 								<>
-									<p className="text-sm text-zinc-300">{t("cta.register")}</p>
+									<p className="text-sm text-zinc-700 dark:text-zinc-300">
+										{t("cta.register")}
+									</p>
 									<RegistrationForm eventId={event.id} />
 								</>
 							) : null}
 
 							{isRegistered ? (
-								<p className="text-sm text-emerald-300">
+								<p className="text-sm text-emerald-700 dark:text-emerald-300">
 									{t("cta.registered")}
 								</p>
 							) : null}
@@ -341,7 +358,7 @@ export default async function EventPage({ params }: { params: Params }) {
 							!isJudge &&
 							!isRegistered &&
 							event.status !== "LIVE" ? (
-								<p className="text-sm text-zinc-400">
+								<p className="text-sm text-zinc-600 dark:text-zinc-400">
 									{t("cta.registrationClosed")}
 								</p>
 							) : null}

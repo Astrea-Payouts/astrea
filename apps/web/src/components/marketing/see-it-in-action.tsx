@@ -72,42 +72,46 @@ export function SeeItInAction() {
 	];
 
 	return (
-		<section className="relative overflow-hidden bg-zinc-950 py-12 text-white md:py-16">
+		<section className="relative overflow-hidden bg-zinc-100 py-12 text-zinc-950 md:py-16 dark:bg-zinc-950 dark:text-white">
 			<div className="mx-auto max-w-6xl px-6 md:px-12">
 				<div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
 					<div className="lg:col-span-5">
-						<div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-400">
+						<div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-700 dark:text-blue-400">
 							<ShieldCheck className="size-3.5" />
 							<span>{t("badge")}</span>
 						</div>
 						<h2 className="mt-4 font-serif text-3xl font-bold tracking-tight md:text-4xl">
 							{t("title")}
 						</h2>
-						<p className="mt-4 text-base leading-relaxed text-zinc-400">
+						<p className="mt-4 text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
 							{t("description")}
 						</p>
 
 						<div className="mt-8 space-y-4">
 							<div className="flex items-start gap-3">
-								<div className="rounded-lg border border-white/10 bg-white/5 p-2">
-									<Coins className="size-5 text-blue-400" />
+								<div className="rounded-lg border border-zinc-900/10 bg-zinc-900/5 p-2 dark:border-white/10 dark:bg-white/5">
+									<Coins className="size-5 text-blue-600 dark:text-blue-400" />
 								</div>
 								<div>
-									<h4 className="font-semibold text-white">
+									<h4 className="font-semibold text-zinc-950 dark:text-white">
 										{t("feature1Title")}
 									</h4>
-									<p className="text-sm text-zinc-400">{t("feature1Desc")}</p>
+									<p className="text-sm text-zinc-600 dark:text-zinc-400">
+										{t("feature1Desc")}
+									</p>
 								</div>
 							</div>
 							<div className="flex items-start gap-3">
-								<div className="rounded-lg border border-white/10 bg-white/5 p-2">
-									<Trophy className="size-5 text-indigo-400" />
+								<div className="rounded-lg border border-zinc-900/10 bg-zinc-900/5 p-2 dark:border-white/10 dark:bg-white/5">
+									<Trophy className="size-5 text-indigo-600 dark:text-indigo-400" />
 								</div>
 								<div>
-									<h4 className="font-semibold text-white">
+									<h4 className="font-semibold text-zinc-950 dark:text-white">
 										{t("feature2Title")}
 									</h4>
-									<p className="text-sm text-zinc-400">{t("feature2Desc")}</p>
+									<p className="text-sm text-zinc-600 dark:text-zinc-400">
+										{t("feature2Desc")}
+									</p>
 								</div>
 							</div>
 						</div>
@@ -128,7 +132,7 @@ export function SeeItInAction() {
 							{events.map((evt) => (
 								<li
 									key={evt.id}
-									className="rounded-xl border border-white/10 bg-zinc-900/95 p-6 shadow-2xl"
+									className="rounded-xl border border-zinc-200 bg-white/95 p-6 shadow-xl dark:border-white/10 dark:bg-zinc-900/95 dark:shadow-2xl"
 								>
 									<EventCardBody evt={evt} />
 								</li>
@@ -177,9 +181,14 @@ export function SeeItInAction() {
 									skewAmount={5}
 								>
 									{events.map((evt) => (
+										// The `!` on border and background is deliberate: Card's own
+										// base classes (border-white bg-black) are concatenated with
+										// customClass without any merging, so which one wins would
+										// otherwise depend on stylesheet order. Both themes are marked
+										// so the dark: pair can still override the light one.
 										<Card
 											key={evt.id}
-											customClass="border-white/10 bg-zinc-900/95 p-6 shadow-2xl backdrop-blur-xl"
+											customClass="!border-zinc-200 !bg-white/95 p-6 shadow-xl backdrop-blur-xl dark:!border-white/10 dark:!bg-zinc-900/95 dark:shadow-2xl"
 										>
 											<EventCardBody evt={evt} />
 										</Card>
@@ -196,13 +205,13 @@ export function SeeItInAction() {
 
 function EventCardBody({ evt }: { evt: SampleEvent }) {
 	return (
-		<div className="flex h-full flex-col text-left text-white">
-			<div className="flex items-center justify-between border-b border-white/10 pb-4">
+		<div className="flex h-full flex-col text-left text-zinc-950 dark:text-white">
+			<div className="flex items-center justify-between border-b border-zinc-200 pb-4 dark:border-white/10">
 				<div className="flex items-center gap-2">
-					<span className="rounded-md bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-400">
+					<span className="rounded-md bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-700 dark:text-blue-400">
 						{evt.category}
 					</span>
-					<span className="flex items-center gap-1 text-xs text-emerald-400">
+					<span className="flex items-center gap-1 text-xs text-emerald-700 dark:text-emerald-400">
 						<CheckCircle2 className="size-3.5" />
 						{evt.escrowStatus}
 					</span>
@@ -212,33 +221,33 @@ function EventCardBody({ evt }: { evt: SampleEvent }) {
 
 			<div className="mt-4">
 				<h3 className="text-xl font-bold">{evt.title}</h3>
-				<p className="mt-1 text-xs text-zinc-400">
+				<p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
 					{evt.participants} verified builders registered
 				</p>
 			</div>
 
-			<div className="mt-5 space-y-2 rounded-xl border border-white/5 bg-black/40 p-3.5 font-mono text-xs">
-				<p className="font-sans text-[10px] tracking-wider text-zinc-400 uppercase">
+			<div className="mt-5 space-y-2 rounded-xl border border-zinc-200 bg-zinc-100 p-3.5 font-mono text-xs dark:border-white/5 dark:bg-black/40">
+				<p className="font-sans text-[10px] tracking-wider text-zinc-600 uppercase dark:text-zinc-400">
 					Escrow Milestones
 				</p>
 				{evt.milestones.map((m) => (
 					<div
 						key={m}
-						className="flex items-center justify-between text-zinc-300"
+						className="flex items-center justify-between text-zinc-700 dark:text-zinc-300"
 					>
 						<span>{m}</span>
 					</div>
 				))}
 			</div>
 
-			<div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4 text-xs text-zinc-400">
+			<div className="mt-auto flex items-center justify-between border-t border-zinc-200 pt-4 text-xs text-zinc-600 dark:border-white/5 dark:text-zinc-400">
 				<div className="flex flex-col gap-0.5">
-					<span className="font-sans text-[10px] tracking-wider text-amber-400/90 uppercase">
+					<span className="font-sans text-[10px] tracking-wider text-amber-700 uppercase dark:text-amber-400/90">
 						Illustrative example (not a live tx)
 					</span>
 					<span className="font-mono">Tx: {evt.txHash}</span>
 				</div>
-				<span className="flex items-center gap-1 text-blue-400">
+				<span className="flex items-center gap-1 text-blue-700 dark:text-blue-400">
 					View on Stellar Explorer <ExternalLink className="size-3" />
 				</span>
 			</div>

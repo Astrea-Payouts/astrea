@@ -18,8 +18,8 @@ Use one of these private channels:
 Please include:
 
 - A description of the vulnerability and its potential impact (especially for
-  anything touching `contracts/soroban`, `services/core-go`'s escrow client,
-  or fund-moving flows in `apps/web`).
+  anything touching `smart-contracts/astrea/contracts/event-escrow`,
+  `services/core-go`'s escrow client, or fund-moving flows in `apps/web`).
 - Steps to reproduce, or a proof of concept if you have one.
 - Whether you've tested this on testnet, mainnet, or only read the code.
 
@@ -31,7 +31,7 @@ fix the issue before any public disclosure.
 
 In scope:
 
-- `contracts/soroban` — the escrow smart contract.
+- `smart-contracts/astrea/contracts/event-escrow` — the escrow smart contract.
 - `services/core-go` — the Go backend, especially anything that builds, signs,
   or submits Stellar transactions.
 - `apps/web` — the frontend, especially wallet connection, session handling,

@@ -4,7 +4,7 @@
 
 1. **Non-custodial, always.** The server never touches private keys. Every money-moving operation follows: backend builds unsigned XDR → the owning role signs in their wallet → backend submits.
 2. **The chain is the source of truth.** The database mirrors escrow state for UX and querying; a reconciliation job corrects drift by checking transaction hashes directly against Horizon. No money-related state is marked final without an on-chain confirmation.
-3. **Escrow behind a client interface.** Backend code depends on an `EscrowClient` interface, not on raw contract calls scattered through the codebase — this keeps contract-calling logic testable and mockable without hitting testnet on every test run.
+3. **Escrow behind a client interface.** Backend code depends on an `RPCClient` interface over the raw Soroban RPC (`internal/escrow/pipeline.go`), not scattered network calls — this keeps contract-calling logic testable and mockable without hitting testnet on every test run.
 4. **Idempotent money operations.** Every escrow operation carries an idempotency key; retries are safe; partial failures (tx confirmed, DB write failed) are healed by reconciliation, never by manual fixes.
 5. **Testnet by default.** Network and contract ID are environment configuration. Mainnet is a deliberate, gated change.
 
@@ -21,43 +21,55 @@
 
 ```
 Event       — id, organizerId, name, dates, status, escrowContractId, escrowEventId, network, conditionsMetAt
-Prize       — id, eventId, rank, amountUsdc, milestoneIndex, status, winnerWalletId, releaseTxHash
+Prize       — id, eventId, rank, amount, status, winnerTeamId, releaseTxHash
 Judge       — id, eventId, walletAddress, displayName, status
-Participant — id, eventId, walletId, submissionUrl, registeredAt
+Team        — id, eventId, name, submissionUrl                    (the unit of registration; a solo entrant is a team of one)
+TeamMember  — id, teamId, eventId, walletId, shareBasisPoints, ordinal
 Wallet      — id, userId, address, usdcTrustlineVerifiedAt
-Payout      — id, prizeId, txHash, amountUsdc, confirmedAt        (append-only audit log)
+Payout      — id, prizeId, teamMemberId, txHash, amount, confirmedAt  (append-only; one row per paid team member, all sharing one txHash)
 OpLog       — id, idempotencyKey, operation, payload, status      (idempotency + outbox)
 ```
 
 ## Key sequences
 
-### Deploy + fund (organizer)
+### Deposit + create (organizer) — no deploy step, no separate fund step
+
+There is one shared contract instance (ADR-006); an organizer's deposit and an event's reward are both ledger entries inside it, not a per-event deploy:
 
 ```
+UI → Go service: deposit build/submit (`deposit_funds`) → RPC confirms → AdminWallet.balance credited
 UI → Go service: create event (validated)
-Go service: builds unsigned deploy tx (contract `initialize`, simulated for footprint/fee)
-UI: organizer signs (wallet) → Go service submits → RPC confirms → contractId recorded
-Go service: builds unsigned fund tx (`fund`)
-UI: organizer signs → Go service submits → RPC confirms
-reconciler: confirms escrow balance == prize amount → Event.FUNDED
+Go service: builds unsigned `create_event` tx (reserves the reward from that balance in the same call)
+UI: organizer signs (wallet) → Go service submits → RPC confirms → escrowEventId recorded, Event.CREATED
 ```
 
-### Release (judge approves, then releases directly to the winner)
+There is no separate funded status: `create_event` locks the reward in the same call, so `CREATED` already means funded, and `start/submit` moves `CREATED → LIVE` directly.
 
-Two signed transactions, both by the judge (`approver` + `release_signer`, see ADR-003) — no forwarding step, the winner's address is supplied at release time:
+### Go live (organizer) — charges the go-live fee
 
 ```
-judge assigns winner → backend validates winner trustline
-Go service: builds unsigned `approve` tx
+Go service (start/build): quotes the fee via `quote_go_live_fee`, answers 409 `insufficient_balance` if the free balance doesn't cover it
+Go service: builds unsigned `set_event_in_progress` tx (charges the fee from free balance to Treasury, sets judging_deadline)
+UI: organizer signs → Go service submits → RPC confirms → Event.LIVE
+```
+
+### Release (judge releases directly to every winner, one signed transaction)
+
+A single judge-signed call pays every winner in the same transaction — there is no separate approve step and no forwarding step; winner addresses are supplied at release time:
+
+```
+judge assigns winners → backend allocates each team member's share
+  (trustlines checked off-chain at registration and re-checked for every winning member before build, ADR-004)
+Go service: builds unsigned `release_reward` tx (winners' amounts must sum exactly to the event's reward)
 judge signs → Go service submits → RPC confirms
-Go service: builds unsigned `release` tx, winner's address as an argument
-judge signs → Go service submits → RPC confirms
-reconciler: confirms release tx → Prize.PAID_OUT + Payout row (releaseTxHash)
+reconciler: confirms release tx → Prize.PAID_OUT + one Payout row per paid team member (shared releaseTxHash)
 ```
+
+If the judge never signs, `resolve_dispute` is the resolver-signed fallback once `judging_deadline` passes (ADR-003) — same winners validation and transfer, a different signer.
 
 ### Reconciliation loop
 
-Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row, confirms its `txHash` directly against Horizon rather than trusting any cached state — the chain is the source of truth (Principle 2). Release is a single confirmed transaction per prize; there's no separate forwarding step to track.
+Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row, confirms its `txHash` directly against Horizon rather than trusting any cached state — the chain is the source of truth (Principle 2). Release is a single confirmed transaction per event, not per prize — all of an event's prizes are paid atomically in one `release_reward` call, so there's no separate forwarding step to track.
 
 ## Architecture Decision Records
 
@@ -88,27 +100,28 @@ So the multi-recipient goal survived, but the *independence* property did not: w
 
 This is recorded rather than quietly rewritten because the gap was live for a while: issue #4's acceptance criteria asked for "multi-milestone independence" tests that could never pass, since they described a model the code never had. If independent milestones are wanted later, that is a real contract redesign (a list of prize entries with per-entry state), not a test to add — and it would ripple into the dispute design (#22), which currently assumes one dispute per event.
 
-**Verified (K06, 2026-08, in-process test):** a single `close_event()` call paying multiple winners scales linearly at ~168k CPU instructions per additional winner — ~1.2% of Stellar Mainnet's per-invocation instruction budget even at 25 winners in one call, far more than any realistic event needs. No separate contract is warranted for the multi-winner case. See [spikes/k06-multi-release-budget](../spikes/k06-multi-release-budget/README.md).
+**Verified (K06, 2026-08, in-process test; standalone spike, not the shipped contract):** a single `MultiReleaseSpike::close_event()` call paying multiple winners scales linearly at ~168k CPU instructions per additional winner — ~1.2% of Stellar Mainnet's per-invocation instruction budget even at 25 winners in one call, far more than any realistic event needs. No separate contract is warranted for the multi-winner case. The spike has no `AdminWallet` or event state, so it is not a benchmark of the shipped `release_reward` path. See [spikes/k06-multi-release-budget](../spikes/k06-multi-release-budget/README.md).
 
 **Corollary:** "ranked prizes" (1st/2nd/3rd, or organizer-chosen up to N positions) and "prizes by category" are the same mechanism, not two contract paths — both are just a list of amounts with an off-chain label (`Prize.rank` in the Postgres sketch above) attached to each entry. The organizer choosing how many ranked positions pay out, and how much each pays, needs no new contract capability — it's the existing prize list at a different length.
 
 ### ADR-003 — Organizer is not in the payout path
 
-**Decision:** the judge holds both the `approver` and `release_signer` addresses on the escrow. The organizer's address appears nowhere in the payout path — no function callable by the organizer can move escrowed funds anywhere.
+**Decision:** each event stores one `judge` address, and it is the only signer `release_reward` accepts: the judge signs once and every winner is paid atomically, with no separate approval call. K01's separate `approver` and `release_signer` roles were collapsed into that single address. If `judging_deadline` passes without a release, the resolver signs `resolve_dispute`, which pays the winners directly; there is no separate dispute-opening call. The organizer's address appears nowhere in the payout path. Before the event starts, the organizer can still call `set_event_cancelled` to return the reserved reward to its `AdminWallet`, or co-sign `emergency_withdraw` with the resolver; neither is allowed once the event is `InProgress`.
 **Why:** if the organizer had to co-sign releases, an absent or hostile organizer could strand approved winners — which would make any "the funds are locked and will pay out" claim dishonest. Removing them from the release path is what turns the locked funds into a credible promise.
 **Residual trust:** judges (can go silent or collude) and the dispute resolver (a designated party). Both are mitigated by transparency: judges and resolver are published on the event page before the event starts, and judging deadlines trigger the dispute path.
 
 **Resolver identity:** by default, Astrea's own team acts as resolver — recommended as a multisig, not a single key, given the power this role has (see ADR-006). An organizer may name their own third-party resolver instead at event creation. Whichever applies is published on the event page before the event starts, so participants know who backstops it before they commit their time.
 
-**Judge picks a winner but never signs the release:** every event carries a `judging_deadline`. If it passes without a completed `close_event`, anyone (organizer, a participant, or an automated trigger) can open a dispute, and the resolver can execute the release on the judge's behalf — using whatever winner was already recorded off-chain, or its own review of submissions if none was recorded. This is the same resolver role as above, just triggered by a deadline instead of an open conflict between parties.
+**Judge picks a winner but never signs the release:** going live (`set_event_in_progress`) sets the event's `judging_deadline`. If it passes without a completed `release_reward`, the resolver signs `resolve_dispute` directly and pays the winners itself — using whatever winner was already recorded off-chain, or its own review of submissions if none was recorded. This is the same resolver role as above, just triggered by a deadline instead of an open conflict between parties.
 
-**Multi-judge panels:** the contract takes a single `approver`/`release_signer` address — for a panel of multiple human judges, that address should be a Stellar multisig account with each judge as a signer and a threshold (e.g. 2-of-3), giving genuine multi-judge approval with no contract changes needed. Deferred to Phase 3 (`U05`).
+**Multi-judge panels:** the contract takes a single `judge` address — for a panel of multiple human judges, that address should be a Stellar multisig account with each judge as a signer and a threshold (e.g. 2-of-3), giving genuine multi-judge approval with no contract changes needed. Deferred to Phase 3 (`U05`).
 
 **Verified (K01/K02, 2026-08-06, testnet):** an organizer-signed direct release attempt was rejected — at the client signing-key level in K01, and rejected on-chain by the contract's own `require_auth` check in K02, confirming the guarantee is structural, not a client-side convention.
 
 ### ADR-004 — Trustline validation at registration, not payout
 
 **Decision:** USDC trustline is checked when a participant registers and re-checked at winner assignment.
+**Current status:** both checks are shipped in the web app. Registration refuses a wallet without the trustline; before the judge's `/release/build`, every member of each assigned team is re-checked against Horizon, and any wallet without it blocks the build with `missingTrustline`, naming the wallet(s). The check is off-chain: a trustline closed between build and submit still fails the atomic `release_reward`.
 **Why:** discovering a missing trustline at payout time is the worst possible UX and blocks the release flow.
 
 ### ADR-005 — Wallet connection sets a UX session, not an authorization boundary
@@ -143,7 +156,7 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 **Domain dependency:** sending to arbitrary recipients requires a verified custom domain (SPF/DKIM/DMARC) — Astrea currently only has the Vercel-assigned subdomain (`astrea-payouts.vercel.app`), not a domain it owns. Buying and verifying one is cheap and has no engineering dependency, so it should happen whenever convenient, not be discovered as a blocker the day T03 is picked up.
 
 **Testing strategy:**
-- **Unit:** mock the Resend client, same pattern as the Trustless Work/Horizon mocks elsewhere in the codebase — assert the right notification fires with the right data, never hit the real API.
+- **Unit:** mock the Resend client, same pattern as the Horizon mocks elsewhere in the codebase — assert the right notification fires with the right data, never hit the real API.
 - **Manual:** Resend's sandbox sender (`onboarding@resend.dev`) works without any domain and can send to the account owner's own verified address — enough to eyeball real templates before a custom domain exists.
 - **Production:** requires the verified custom domain above.
 
@@ -198,10 +211,10 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 | Tx confirmed on-chain, DB write lost | Reconciler confirms the `OpLog` txHash directly against Horizon; `Payout` is append-only |
 | Contract/RPC endpoint down | Operations queue in `OpLog`, retry with backoff; UI shows degraded state |
 | Judge unresponsive | Dispute flow with resolver; deadline surfaced in UI |
-| Judge picks a winner but never signs `close_event` | `judging_deadline` passes → resolver executes the release on the judge's behalf (ADR-003) |
+| Judge picks a winner but never signs `release_reward` | `judging_deadline` passes → resolver executes the release on the judge's behalf (ADR-003) |
 | Organizer cancels an event already `Active` | Routes through `resolve_dispute`, not a bare refund — resolver decides the distribution (ADR-006) |
 | Organizer needs an early exit before the event starts | Two-signature override only (organizer + resolver) — never a unilateral `withdraw_funds` on already-assigned funds (ADR-006) |
-| Winner without trustline | Prevented at assignment (ADR-004) |
+| Winner without trustline | Checked at registration and re-checked before the release is built (ADR-004); the judge sees which wallet(s) lack it instead of a failed atomic release |
 | Duplicate submit (double-click / retry) | Idempotency keys on every operation |
 | Testnet/mainnet mix-up | Network is part of Event records; config validated at boot; mainnet behind explicit gate |
 | Contract call fails mid-simulation | Simulation catches most failures before submission; reconciler compares against actual on-chain state, never assumed success |

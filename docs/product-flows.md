@@ -7,14 +7,14 @@ This document defines the roles, core user journeys, and the escrow lifecycle. I
 | Role | Who they are | What they can do |
 | --- | --- | --- |
 | **Organizer** | Hackathon host, community lead, bounty sponsor | Creates events, defines prizes, funds the escrow, manages judges |
-| **Judge** | Trusted reviewer appointed by the organizer | Reviews submissions, approves and releases prizes |
+| **Judge** | Trusted reviewer appointed by the organizer | Reviews submissions, releases prizes |
 | **Participant** | Builder competing in the event | Registers wallet, submits entry, receives prize on win |
 | **Dispute Resolver** | Neutral third party defined at escrow creation | Resolves disputes (e.g., absent judges, contested results) |
 
 Escrow role mapping:
 
 - Organizer → funder (not in the payout path — see ADR-003). No function callable by the organizer moves escrowed funds anywhere.
-- Judges → `approver` and `release_signer`. For a panel of multiple judges, that address is a Stellar multisig account they co-sign (see ADR-003); approval and release are two separate judge-signed transactions. The winner's address is supplied directly at release — the contract pays the winner in the same transaction the judge releases, no intermediate step.
+- Judges → the event's `judge` address, the sole `release_signer` — the contract has no separate `approver` function (see ADR-003). For a panel of multiple judges, that address is a Stellar multisig account they co-sign. Winner addresses are supplied directly at release — one judge-signed `release_reward` call pays every winner, no approval step, no intermediate custody.
 - Winner wallet → receives the release directly from the escrow contract.
 - Dispute resolver → resolves disputes, published on the event page before the event starts. Defaults to Astrea's own resolver address (recommended as a multisig, not a single key) unless the organizer names a third party at event creation.
 
@@ -47,38 +47,52 @@ An event cannot be created unless the organizer's free balance covers the full p
 
 ## Flow 4 — Judging and payout
 
-1. Judges review submissions and select winners per prize.
-2. Winner assignment re-validates the winner wallet + trustline.
-3. Judge signs two transactions per decided prize — **approve**, then **release** (winner's address supplied as an argument to `release`). The organizer is not in this path (ADR-003).
-4. **Release**: USDC lands directly in the winner's wallet — the contract pays the winner in the same transaction the judge signs, no intermediate custody, no second signing step.
-5. Event page updates: winner, amount, transaction hash, explorer link. When all prizes are released the event is `COMPLETED`.
+1. Judges review submissions and select winners for every prize.
+2. Trustlines were verified at registration and are re-checked for every member of each assigned team before the release is built (ADR-004). A wallet without one blocks the build, and the judge sees which wallet(s) to chase.
+3. Judge signs **one** `release_reward` transaction for the whole event — no approve step — whose winner amounts must sum exactly to the event's locked reward. The organizer is not in this path (ADR-003).
+4. **Release**: USDC lands directly in every winner's wallet in that same transaction — no intermediate custody, no second signing step.
+5. Event page updates: winners, amounts, and the transaction hash (shared by every winner paid in that call), explorer link. The event goes straight from `JUDGING` to `COMPLETED` — there is no per-prize release to wait on; all prizes settle atomically together.
 
 ## Flow 5 — Dispute and fallback paths
 
-Triggers: a judge is unresponsive past the event's `judging_deadline`, a result is contested, or the organizer needs to cancel an event that's already `LIVE`.
+On-chain trigger: the event's `judging_deadline` passes while it is still `InProgress` and the judge hasn't called `release_reward`. There is no separate "open a dispute" transaction — `resolve_dispute` is both the eligibility check (it asserts the deadline has already passed) and the resolution, in one resolver-signed call. **Before that deadline, a `LIVE`/`InProgress` event cannot be cancelled on-chain** — `set_event_cancelled` explicitly rejects anything past `Created`/`WaitingForStart`. The judge can still call `release_reward` before the deadline (it has no deadline check), and that is the only way a live event's funds move early. So "the organizer wants to cancel a `LIVE` event" is not a distinct on-chain path — it can only actually be resolved through the same post-deadline `resolve_dispute` call as a silent judge, not on demand.
 
-1. Any involved party — organizer, judge, a participant, or an automated deadline check — opens a dispute on the affected event/milestone. The dispute resolver cannot open a dispute on their own escrow.
-2. Milestone enters `DISPUTED`; the normal approve/release path (Flow 4) is bypassed for that prize.
-3. The dispute resolver reviews the situation and resolves it directly:
-   - **Judge never signed:** releases the prize(s) to whichever winner(s) were already recorded off-chain, or the resolver's own read of the submissions if none was recorded — the winner doesn't need the judge to do anything further.
-   - **Organizer wants to cancel a `LIVE` event:** the resolver decides the distribution — a full refund only if genuinely nothing happened yet, otherwise some split with participants who already invested real work. Never an automatic, unconditional refund to the organizer (see ADR-006) — that would let an organizer extract free labor with no consequence.
-4. Resolution is recorded with its transaction hash.
+1. Once `judging_deadline` passes with the event still `InProgress`, the product is meant to mark it `DISPUTED` off-chain (`Event.status`) so the UI stops offering the normal release flow. The job that does this (T01a, #109) is not built yet; today nothing sets `DISPUTED`. The contract itself has no `Disputed` state — it stays `InProgress` until `resolve_dispute` is actually called.
+2. The dispute resolver reviews the situation and calls `resolve_dispute` with a winners list — same shape and exact-sum-to-`reward` validation as `release_reward`:
+   - **Judge never signed:** pays whichever winner(s) were already recorded off-chain, or the resolver's own read of the submissions if none was recorded.
+   - **Organizer wanted to cancel:** the resolver decides the distribution, including naming the organizer's own address as a "winner" for a refund — a full refund only if genuinely nothing happened yet, otherwise some split with participants who already invested real work. Never an automatic, unconditional refund (see ADR-006) — that would let an organizer extract free labor with no consequence.
+3. `resolve_dispute` pays every recipient atomically and moves the event straight from `InProgress` to `Ended` — the same terminal transition `release_reward` makes, just resolver-signed instead of judge-signed. Resolution is recorded with its transaction hash.
 
-This is separate from the pre-`LIVE` emergency withdraw (Flow 2, step 3): that one needs no contested claim, just the resolver's sign-off on a legitimate reason, and only exists before the event goes live.
+Nothing on-chain stops an organizer from naming themselves as their own resolver, so resolver/organizer collusion is a real gap the contract does not close — the only mitigation is publishing the resolver's identity up front and recommending a multisig (ADR-003, ADR-006; see `docs/threat-model.md` §4.6, "not yet enforced").
+
+This is separate from the pre-`LIVE` emergency withdraw (Flow 2, step 3): that one needs no deadline to have passed, just the resolver's sign-off on a legitimate reason, and only exists before the event goes live.
 
 The dispute resolver must be a genuinely different person from the judge for this to work as a safety net — a judge who is also their own resolver has no one left to override them if they go silent or act in bad faith.
 
 ## Event state machine
 
+The product's `Event.status` (Prisma) and the contract's own `EventState` (`types.rs`) don't map one-to-one — the product splits one on-chain state into two phases and can mark a status the contract itself never sets:
+
+| Product status | Contract `EventState` | Notes |
+| --- | --- | --- |
+| `DRAFT` | *(nothing on-chain yet)* | Nothing exists on-chain until `create_event` confirms |
+| `CREATED` | `Created` (or `WaitingForStart`) | Reward already reserved (Flow 1) — there is no `FUNDED` status, since creating and funding are the same call |
+| `LIVE` | `InProgress` | Set by `set_event_in_progress`, which also charges the go-live fee |
+| `JUDGING` | `InProgress` | Same on-chain state as `LIVE` — "judging" is a product-level phase (past the submission deadline), not a separate contract state |
+| `DISPUTED` | `InProgress` | The product marks this once `judging_deadline` passes with no release; the contract itself stays `InProgress` until `resolve_dispute` is actually called |
+| `COMPLETED` | `Ended` | Reached via either `release_reward` or `resolve_dispute` — the same terminal transition, a different signer |
+| `CANCELLED` | `Cancelled` | Reached via `set_event_cancelled` (pre-launch only) or `expire_event` (deadline passed, pre-launch only) |
+
 ```
-(no deploy step) ──create_event, funded at creation──▶ CREATED ──publish──▶ LIVE
-LIVE ──deadline──▶ JUDGING ──all prizes released──▶ COMPLETED
-JUDGING ──judging_deadline passed, no release──▶ DISPUTED ──resolver releases on judge's behalf──▶ COMPLETED
-LIVE ──organizer wants to cancel──▶ DISPUTED ──resolver decides distribution──▶ CANCELLED or COMPLETED
-Pre-LIVE ──cancel_event (automatic refund) or two-signature emergency withdraw──▶ CANCELLED
+(no deploy step) ──create_event, reward reserved at creation──▶ CREATED
+CREATED ──set_event_in_progress, charges go-live fee──▶ LIVE / JUDGING (same on-chain InProgress state)
+InProgress ──release_reward, every winner paid atomically──▶ COMPLETED
+InProgress ──judging_deadline passes with no release──▶ DISPUTED (product-level only, contract still InProgress) ──resolve_dispute, resolver-signed──▶ COMPLETED
+Pre-launch (Created/WaitingForStart) ──set_event_cancelled (automatic refund) or two-signature emergency withdraw──▶ CANCELLED
+Pre-launch, deadline configured ──expire_event, permissionless refund──▶ CANCELLED
 ```
 
-Prize (milestone) states: `PENDING → ASSIGNED → APPROVED → RELEASED` with `DISPUTED` as a side-state blocking release. `RELEASED` means the winner has been paid directly and confirmed on-chain — there's no separate forwarding state to track. All transitions are validated server-side; money-moving transitions require an on-chain confirmation before the mirror state advances.
+Prize states are off-chain only — the contract pays an event's prizes in one call and has no per-prize model (ADR-002's correction): `PENDING → ASSIGNED → RELEASED → PAID_OUT`, with `DISPUTED` reachable from `ASSIGNED` (skipping `RELEASED`, since a resolved dispute pays the winner directly) and resolving to `PAID_OUT`. There is no `APPROVED` status — the contract has no approval step, so `ASSIGNED` goes straight to `RELEASED` once the judge's `release_reward` confirms. The resolver's path never uses `RELEASED`: it is `ASSIGNED → DISPUTED → PAID_OUT`, and nothing sets `DISPUTED` yet (see Flow 5). All transitions are validated server-side; money-moving transitions require an on-chain confirmation before the mirror state advances.
 
 ## UX principles — perceived performance
 

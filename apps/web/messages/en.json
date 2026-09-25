@@ -95,14 +95,22 @@
 		"buildPlan": "Build plan",
 		"architecture": "Architecture",
 		"contributing": "Contributing",
-		"license": "MIT License"
+		"license": "MIT License",
+		"tagline": "Open-source payouts on Stellar.",
+		"resources": "Resources",
+		"community": "Community",
+		"preferences": "Preferences"
 	},
 	"WalletConnect": {
 		"connecting": "Connecting…",
 		"connect": "Connect wallet"
 	},
 	"LanguageSwitcher": {
-		"label": "Language"
+		"label": "Language",
+		"switchTo": "Switch to {language}"
+	},
+	"Theme": {
+		"label": "Dark mode"
 	},
 	"Motion": {
 		"label": "Reduce animations",
@@ -146,7 +154,6 @@
 	"EventStatus": {
 		"DRAFT": "Draft",
 		"CREATED": "Created",
-		"FUNDED": "Funded",
 		"LIVE": "Live",
 		"JUDGING": "Judging",
 		"COMPLETED": "Completed",
@@ -235,6 +242,9 @@
 		"rebuild": "Change assignments",
 		"released": "Prizes released.",
 		"pending": "Submitted — confirmation timed out, outcome unknown. Check the hash.",
+		"errors": {
+			"missingTrustline": "Some winning wallets have no trustline for the prize asset, and one missing trustline fails the whole release. Ask them to add it, then build again:"
+		},
 		"done": {
 			"title": "Prizes released.",
 			"hint": "This event is complete. The release is on-chain; nothing is left to assign.",
