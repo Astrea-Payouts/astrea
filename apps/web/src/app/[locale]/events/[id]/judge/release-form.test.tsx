@@ -166,6 +166,31 @@ describe("ReleaseForm", () => {
 		);
 	});
 
+	it("renders a missingTrustline refusal in the viewer's locale with the asset and every wallet", async () => {
+		mockBuild.mockResolvedValue({
+			ok: false,
+			code: "missingTrustline",
+			asset: "USDC:GISSUER",
+			wallets: [WINNER_1, JUDGE],
+		});
+		renderForm();
+		assignAll();
+
+		fireEvent.click(screen.getByRole("button", { name: copy.build }));
+
+		const alert = await screen.findByRole("alert");
+		expect(alert).toHaveTextContent(copy.errors.missingTrustline);
+		expect(within(alert).getByText("USDC:GISSUER")).toBeInTheDocument();
+		const listed = within(alert)
+			.getAllByRole("listitem")
+			.map((li) => li.textContent);
+		expect(listed).toEqual([WINNER_1, JUDGE]);
+		expect(screen.queryByText(copy.winnersTitle)).not.toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.getByRole("button", { name: copy.build })).toBeEnabled(),
+		);
+	});
+
 	it("omits the status prefix when the failure has none", async () => {
 		mockBuild.mockResolvedValue({
 			ok: false,
