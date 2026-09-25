@@ -28,7 +28,7 @@ export function SiteFooter() {
 	];
 
 	return (
-		<footer className="w-full border-t text-muted-foreground bg-gray-100 text-gray-900 dark:text-white dark:bg-gray-950">
+		<footer className="w-full border-t bg-gray-100 text-gray-900 dark:text-white dark:bg-gray-950">
 			<div className="mx-auto max-w-5xl px-6 pt-10 md:px-8">
 				<div className="flex w-full flex-col justify-between gap-10 border-b border-border pb-8 md:flex-row">
 					{/* Brand & description */}
@@ -47,7 +47,7 @@ export function SiteFooter() {
 					<div className="flex flex-1 flex-wrap items-start gap-x-20 gap-y-10 md:justify-end">
 						{COLUMNS.map((column) => (
 							<div key={column.heading}>
-								<h2 className="mb-5 font-semibold text-foreground text-gray-900 dark:text-white">
+								<h2 className="mb-5 font-semibold text-gray-900 dark:text-white">
 									{column.heading}
 								</h2>
 								<ul className="space-y-2 text-sm">
@@ -55,7 +55,7 @@ export function SiteFooter() {
 										<li key={link.href}>
 											<a
 												href={link.href}
-												className="transition-colors hover:text-foreground text-gray-900 hover:text-sky-400 dark:text-white dark:hover:text-sky-300"
+												className="transition-colors text-gray-900 hover:text-sky-400 dark:text-white dark:hover:text-sky-300"
 											>
 												{link.label}
 											</a>
@@ -66,7 +66,7 @@ export function SiteFooter() {
 						))}
 
 						<div>
-							<h2 className="mb-5 font-semibold text-foreground text-gray-900 dark:text-white">
+							<h2 className="mb-5 font-semibold text-gray-900 dark:text-white">
 								{t("preferences")}
 							</h2>
 							<ReduceMotionToggle variant="labelled" />

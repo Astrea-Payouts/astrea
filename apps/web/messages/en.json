@@ -107,7 +107,8 @@
 		"connect": "Connect wallet"
 	},
 	"LanguageSwitcher": {
-		"label": "Language"
+		"label": "Language",
+		"switchTo": "Switch to {language}"
 	},
 	"Theme": {
 		"label": "Dark mode"

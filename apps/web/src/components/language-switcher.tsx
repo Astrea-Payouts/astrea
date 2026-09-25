@@ -73,8 +73,9 @@ export function LanguageSwitcher({
 		(locales as readonly string[]).indexOf(active),
 	);
 
+	const next = locales[(activeIndex + 1) % count] ?? locales[0];
+
 	const cycle = () => {
-		const next = locales[(activeIndex + 1) % count] ?? locales[0];
 		setPending({ from: locale, to: next });
 		router.replace(pathname, { locale: next });
 	};
@@ -83,9 +84,10 @@ export function LanguageSwitcher({
 		<button
 			type="button"
 			onClick={cycle}
-			// One control, so its name is the current language; the labels inside
-			// are presentational.
-			aria-label={`${t("label")}: ${languageName(active)}`}
+			// Named after what a click does, since the pill looks like a two-way
+			// switch but acts as a single button; the labels inside are
+			// presentational.
+			aria-label={t("switchTo", { language: languageName(next) })}
 			title={t("label")}
 			className={cn(
 				"relative grid h-7 cursor-pointer rounded-full border border-current/30 p-0.5 focus-visible:outline-2 focus-visible:outline-offset-2",
