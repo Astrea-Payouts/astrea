@@ -9,6 +9,7 @@ import { SiteHeader } from "@/components/site-header";
 import { MotionPreferenceProvider } from "@/hooks/use-reduced-motion";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { routing } from "@/i18n/routing";
+import { getSiteUrl } from "@/lib/site-url";
 import { WalletProvider } from "@/lib/wallet/provider";
 import "../globals.css";
 
@@ -22,7 +23,7 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://astrea.app";
+const siteUrl = getSiteUrl();
 
 export function generateStaticParams() {
 	return routing.locales.map((locale) => ({ locale }));

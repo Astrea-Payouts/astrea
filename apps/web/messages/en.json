@@ -154,7 +154,6 @@
 	"EventStatus": {
 		"DRAFT": "Draft",
 		"CREATED": "Created",
-		"FUNDED": "Funded",
 		"LIVE": "Live",
 		"JUDGING": "Judging",
 		"COMPLETED": "Completed",

@@ -10,7 +10,7 @@ Astrea locks hackathon prize money in a Soroban escrow on Stellar testnet before
 | Backend | `services/core-go` | Go 1.26, `net/http`, pgx, stellar/go | Vercel Go preset (`astrea-core-go.vercel.app`), root dir `services/core-go` |
 | Contract | `smart-contracts/astrea/contracts/event-escrow` | Rust, soroban-sdk 27, target `wasm32v1-none` | Testnet instance referenced by `NEXT_PUBLIC_ESCROW_CONTRACT_ID` / `ESCROW_CONTRACT_ID` |
 
-`develop` is the default branch and where all work lands; `main` only receives develop → main release PRs. The README's setup section still mentions Trustless Work and `contracts/soroban`; both are superseded (ADR-001) by the custom contract above.
+`develop` is the default branch and where all work lands; `main` only receives develop → main release PRs.
 
 ## Commands
 
@@ -84,7 +84,7 @@ Connecting a wallet runs a server action that upserts `User`/`Wallet` and sets a
 
 ### Database
 
-Prisma 7 with `@prisma/adapter-pg` (`src/lib/db.ts`, client cached on `globalThis` in dev, so restart `next dev` after changing `DATABASE_URL`). Two URLs: `DATABASE_URL` is Supabase's transaction pooler (port 6543, `?pgbouncer=true`) for runtime; `DIRECT_URL` is the session pooler (5432) for the Prisma CLI. Pooler user must be `postgres.<project-ref>` (otherwise `XX000 no tenant identifier`); the `db.<ref>.supabase.co` host is IPv6-only and fails with `ENOENT` on most networks. core-go reads the same schema and never migrates it; its `DATABASE_URL` drops `?pgbouncer=true` and adds `?default_query_exec_mode=describe_exec`.
+Prisma 7 with `@prisma/adapter-pg` (`src/lib/db.ts`, client cached on `globalThis` in dev, so restart `next dev` after changing `DATABASE_URL`). Two URLs: `DATABASE_URL` is Supabase's transaction pooler (port 6543, `?pgbouncer=true`) for runtime; `DIRECT_URL` is the session pooler (5432) for the Prisma CLI. Pooler user must be `postgres.<project-ref>` (otherwise `XX000 no tenant identifier`); the `db.<ref>.supabase.co` host is IPv6-only and fails with `ENOENT` on most networks. core-go reads the same schema and never migrates it; its `DATABASE_URL` drops `?pgbouncer=true` and adds `?default_query_exec_mode=exec`.
 
 ### Env and tests
 

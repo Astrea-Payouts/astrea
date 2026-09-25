@@ -2,3 +2,6 @@
 reviews:
   auto_review:
     drafts: true
+    # default branch (develop) is always reviewed; add main so release PRs get one too
+    base_branches:
+      - main

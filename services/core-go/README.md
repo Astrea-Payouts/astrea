@@ -21,8 +21,8 @@ file is complete.
      against. Either a local Postgres with those migrations applied, or
      Supabase's **session** pooler (port `5432` on
      `aws-0-<region>.pooler.supabase.com`, the URL `apps/web/.env.example`
-     uses as `DIRECT_URL`). Not `db.<project-ref>.supabase.co` (IPv6 only;
-     fails to resolve on most home networks) and not `apps/web`'s runtime
+     uses as `DIRECT_URL`). Not `db.<project-ref>.supabase.co` (IPv6 only,
+     so an IPv4-only network cannot reach it) and not `apps/web`'s runtime
      URL with `?pgbouncer=true` (refused at boot). There is no in-memory
      fallback.
    - `CORE_GO_SERVICE_TOKEN`: at least 32 bytes, and the **same value** as
@@ -89,10 +89,14 @@ Instances are reused but can scale out, so `DATABASE_URL` must be Supabase's
 transaction pooler (port `6543`), never the direct one. Two things differ
 from `apps/web`'s copy of that URL: drop `?pgbouncer=true` (pgx forwards it
 as a server setting and Postgres refuses it) and add
-`?default_query_exec_mode=describe_exec`, because the transaction pooler
-does not keep named prepared statements between requests (pgx's default
-mode fails with `SQLSTATE 26000`; `simple_protocol` breaks the `jsonb`
-payload writes with `SQLSTATE 22P02`). `PORT` is set by Vercel; every other
+`?default_query_exec_mode=exec`, because the transaction pooler does not
+keep named prepared statements between requests — pgx's default mode fails
+with `SQLSTATE 26000`. The other two modes that survive a pooler are worse
+fits: `simple_protocol` breaks the `jsonb` payload writes with
+`SQLSTATE 22P02`, and `describe_exec` is unsafe here by pgx's own
+documentation, because it describes and executes in separate round trips
+that transaction pooling can route to different server connections
+(`pgx@v5.11.0/doc.go`, "PgBouncer"). `PORT` is set by Vercel; every other
 variable from Configuration below is set in the project's environment
 variables. `apps/web` then points `CORE_GO_URL` at the deployment and shares
 `CORE_GO_SERVICE_TOKEN`.
@@ -125,13 +129,26 @@ parsing here. `ALLOW_MAINNET` mirrors the web app's gate: setting
 
 **`DATABASE_URL`.** This service reads Postgres directly (`internal/store`,
 `github.com/jackc/pgx/v5` — hand-written SQL, no ORM); Prisma (`apps/web`)
-keeps sole ownership of every migration. The URL must be the **direct**
-connection (port 5432), not `apps/web/.env.example`'s pooled Supabase URL
-(port 6543, `?pgbouncer=true`) — pgx forwards `pgbouncer=true` to Postgres
-as a server runtime setting, which Postgres refuses outright, and the
-transaction-mode pooler also breaks pgx's prepared statements. `Load`
-parses it with `pgxpool.ParseConfig` and refuses to boot if `pgbouncer=true`
-is present, rather than failing confusingly on the first query.
+keeps sole ownership of every migration. Which connection string to use
+depends on where this service runs:
+
+- **Locally**: a local Postgres, or Supabase's **session** pooler (port
+  `5432`, the URL `apps/web/.env.example` uses as `DIRECT_URL`). Not
+  `db.<project-ref>.supabase.co` — it publishes an AAAA record and no A
+  record, so an IPv4-only network cannot reach it without Supabase's paid
+  IPv4 add-on.
+- **On Vercel**: the **transaction** pooler (port `6543`) with
+  `?default_query_exec_mode=exec`, because instances scale out and the
+  pooler does not keep named prepared statements between requests. Not
+  `describe_exec` — see "Deploy (Vercel)" above for why that mode is unsafe
+  behind a transaction pooler.
+
+What never works in either case is `apps/web`'s runtime URL as-is: pgx
+forwards `?pgbouncer=true` to Postgres as a server runtime setting, which
+Postgres refuses outright. `Load` parses the URL with
+`pgxpool.ParseConfig` and refuses to boot if `pgbouncer=true` is present,
+rather than failing confusingly on the first query. Nothing enforces a
+port, so the two cases above are conventions, not validation.
 
 **`CORE_GO_SERVICE_TOKEN`.** A shared secret this service and `apps/web`
 both hold, at least 32 bytes. `apps/web` sends it as
