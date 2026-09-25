@@ -104,7 +104,7 @@ Because Astrea never custodies funds, there is no money-transmission float to fu
 
 ## What BRL 3 needs from here
 
-BRL 3 asks for a draft canvas, a view of competitors and a first market estimate; this set covers those three. The next step, BRL 4, needs the canvas tested against customers. The riskiest assumptions to test first:
+BRL 3 asks for a draft canvas, a view of competitors and a first market estimate; this set covers those three. The next step, BRL 4, needs the canvas tested against customers — see [customer-interviews.md](customer-interviews.md) for the screener, scripts and scoring thresholds. The riskiest assumptions to test first:
 
 1. Organizers see a pre-funded pool as worth paying for, rather than a nice-to-have. Test: interviews with at least 10 organizers who have paid prizes in the last year.
 2. 0.5 % is a price organizers accept without negotiation, and whether small-pool organizers would pay more for onboarding help.
