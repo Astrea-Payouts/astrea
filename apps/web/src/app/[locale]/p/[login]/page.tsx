@@ -110,25 +110,25 @@ export default async function PublicProfilePage({
 	const memberships = wallet.teamMemberships;
 
 	return (
-		<main className="min-h-screen bg-black px-4 py-12 text-white">
+		<main className="min-h-screen bg-white dark:bg-black px-4 py-12 text-zinc-950 dark:text-white">
 			<div className="mx-auto max-w-4xl space-y-8">
 				{/* Profile Header */}
-				<header className="flex flex-col gap-6 rounded-2xl border border-white/10 bg-zinc-950 p-6 sm:flex-row sm:items-center sm:justify-between">
+				<header className="flex flex-col gap-6 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-950 p-6 sm:flex-row sm:items-center sm:justify-between">
 					<div className="flex items-center gap-4">
 						{linkedAccount.avatarUrl ? (
 							// biome-ignore lint/performance/noImgElement: dynamic external avatar URL
 							<img
 								src={linkedAccount.avatarUrl}
 								alt={`${linkedAccount.username}'s avatar`}
-								className="size-16 rounded-full border border-white/10"
+								className="size-16 rounded-full border border-zinc-200 dark:border-white/10"
 							/>
 						) : (
-							<div className="flex size-16 items-center justify-center rounded-full border border-white/10 bg-zinc-900">
-								<GithubIcon className="size-8 text-zinc-400" />
+							<div className="flex size-16 items-center justify-center rounded-full border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-zinc-900">
+								<GithubIcon className="size-8 text-zinc-600 dark:text-zinc-400" />
 							</div>
 						)}
 						<div>
-							<h1 className="text-2xl font-bold tracking-tight text-white">
+							<h1 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-white">
 								{linkedAccount.username}
 							</h1>
 							<a
@@ -138,7 +138,7 @@ export default async function PublicProfilePage({
 								}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="mt-0.5 inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-zinc-200"
+								className="mt-0.5 inline-flex items-center gap-1 text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
 							>
 								<GithubIcon className="size-3.5" />
 								<span>github.com/{linkedAccount.username}</span>
@@ -147,8 +147,8 @@ export default async function PublicProfilePage({
 						</div>
 					</div>
 
-					<div className="rounded-xl border border-white/5 bg-zinc-900/50 p-4">
-						<div className="flex items-center gap-2 text-xs font-medium text-zinc-400">
+					<div className="rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50/80 dark:bg-zinc-900/50 p-4">
+						<div className="flex items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-400">
 							<WalletIcon className="size-3.5" />
 							<span>{t("stellarWallet")}</span>
 						</div>
@@ -156,7 +156,7 @@ export default async function PublicProfilePage({
 							href={getExplorerAccountUrl(wallet.address, STELLAR_NETWORK)}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="mt-1 inline-block font-mono text-sm text-zinc-200 underline-offset-4 hover:underline"
+							className="mt-1 inline-block font-mono text-sm text-zinc-800 dark:text-zinc-200 underline-offset-4 hover:underline"
 							title={wallet.address}
 						>
 							{shortAddress(wallet.address)}
@@ -166,12 +166,12 @@ export default async function PublicProfilePage({
 
 				{/* Participation & Payout History */}
 				<section className="space-y-4">
-					<h2 className="text-lg font-semibold text-zinc-200">
+					<h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
 						{t("participations")}
 					</h2>
 
 					{memberships.length === 0 ? (
-						<div className="rounded-xl border border-white/5 bg-zinc-950 p-8 text-center text-sm text-zinc-400">
+						<div className="rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-950 p-8 text-center text-sm text-zinc-600 dark:text-zinc-400">
 							{t("noParticipations")}
 						</div>
 					) : (
@@ -185,27 +185,29 @@ export default async function PublicProfilePage({
 								return (
 									<div
 										key={membership.id}
-										className="flex flex-col gap-4 rounded-xl border border-white/10 bg-zinc-950 p-5 sm:flex-row sm:items-start sm:justify-between"
+										className="flex flex-col gap-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-950 p-5 sm:flex-row sm:items-start sm:justify-between"
 									>
 										<div className="space-y-2">
 											<div className="flex flex-wrap items-center gap-2">
 												<Link
 													href={`/events/${event.id}`}
-													className="text-base font-semibold text-white hover:underline"
+													className="text-base font-semibold text-zinc-950 dark:text-white hover:underline"
 												>
 													{event.name}
 												</Link>
 												{team.submissionVerifiedAt && (
-													<span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-400 border border-emerald-500/20">
+													<span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
 														<ShieldCheck className="size-3" />
 														{t("verifiedSubmission")}
 													</span>
 												)}
 											</div>
 
-											<div className="text-sm text-zinc-400">
+											<div className="text-sm text-zinc-600 dark:text-zinc-400">
 												<span className="text-zinc-500">{t("team")}:</span>{" "}
-												<span className="text-zinc-300">{team.name}</span>
+												<span className="text-zinc-700 dark:text-zinc-300">
+													{team.name}
+												</span>
 											</div>
 
 											{team.submissionUrl && (
@@ -214,7 +216,7 @@ export default async function PublicProfilePage({
 														href={team.submissionUrl}
 														target="_blank"
 														rel="noopener noreferrer"
-														className="inline-flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-200 underline-offset-4 hover:underline font-mono"
+														className="inline-flex items-center gap-1 text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 underline-offset-4 hover:underline font-mono"
 													>
 														<span>{team.submissionUrl}</span>
 														<ExternalLink className="size-3" />
@@ -225,16 +227,16 @@ export default async function PublicProfilePage({
 
 										{prizes.length > 0 && (
 											<div className="flex flex-col gap-2 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-right sm:min-w-[200px]">
-												<div className="flex items-center gap-1.5 text-xs font-medium text-amber-400 sm:justify-end">
+												<div className="flex items-center gap-1.5 text-xs font-medium text-amber-600 dark:text-amber-400 sm:justify-end">
 													<Trophy className="size-3.5" />
 													<span>{t("prizesWon")}</span>
 												</div>
 												{prizes.map((prize) => (
 													<div key={prize.id} className="text-sm">
-														<span className="font-semibold text-white">
+														<span className="font-semibold text-zinc-950 dark:text-white">
 															{prize.amount.toString()} USDC
 														</span>
-														<span className="text-xs text-zinc-400">
+														<span className="text-xs text-zinc-600 dark:text-zinc-400">
 															{" "}
 															(Rank #{prize.rank})
 														</span>
@@ -242,8 +244,8 @@ export default async function PublicProfilePage({
 												))}
 
 												{payouts.length > 0 && (
-													<div className="pt-2 border-t border-white/5 flex flex-col gap-1 items-end">
-														<span className="text-xs text-zinc-400">
+													<div className="pt-2 border-t border-zinc-200 dark:border-white/5 flex flex-col gap-1 items-end">
+														<span className="text-xs text-zinc-600 dark:text-zinc-400">
 															{t("payoutConfirmed")}:
 														</span>
 														{payouts.map((payout) => (

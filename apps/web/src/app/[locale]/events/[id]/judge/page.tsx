@@ -63,11 +63,11 @@ export default async function JudgePage({ params }: { params: Params }) {
 		event.prizes.find((p) => p.releaseTxHash)?.releaseTxHash ?? null;
 
 	return (
-		<main className="min-h-screen bg-black text-white pt-28 pb-16 px-4 sm:px-6 md:py-12 md:px-12">
+		<main className="min-h-screen bg-white dark:bg-black text-zinc-950 dark:text-white pt-28 pb-16 px-4 sm:px-6 md:py-12 md:px-12">
 			<div className="mx-auto max-w-3xl flex flex-col gap-6">
 				<Link
 					href={`/events/${event.id}`}
-					className="text-xs text-zinc-500 hover:text-zinc-300"
+					className="text-xs text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
 				>
 					← {event.name}
 				</Link>
@@ -83,9 +83,13 @@ export default async function JudgePage({ params }: { params: Params }) {
 						className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5 flex flex-col gap-3"
 						role="status"
 					>
-						<p className="font-semibold text-emerald-300">{t("done.title")}</p>
-						<p className="text-sm text-zinc-300">{t("done.hint")}</p>
-						<ul className="divide-y divide-white/10 text-sm">
+						<p className="font-semibold text-emerald-700 dark:text-emerald-300">
+							{t("done.title")}
+						</p>
+						<p className="text-sm text-zinc-700 dark:text-zinc-300">
+							{t("done.hint")}
+						</p>
+						<ul className="divide-y divide-zinc-200 dark:divide-white/10 text-sm">
 							{event.prizes.map((prize) => (
 								<li
 									key={prize.rank}
@@ -93,11 +97,11 @@ export default async function JudgePage({ params }: { params: Params }) {
 								>
 									<span>
 										{t("rank", { rank: prize.rank })}{" "}
-										<span className="font-mono text-zinc-400">
+										<span className="font-mono text-zinc-600 dark:text-zinc-400">
 											{prize.amount.toString()} {env.USDC_SYMBOL}
 										</span>
 									</span>
-									<span className="text-zinc-300">
+									<span className="text-zinc-700 dark:text-zinc-300">
 										{t("done.winner", {
 											team: prize.winnerTeam?.name ?? "—",
 										})}
@@ -117,14 +121,16 @@ export default async function JudgePage({ params }: { params: Params }) {
 						) : null}
 						<Link
 							href={`/events/${event.id}`}
-							className="text-sm text-zinc-400 underline-offset-4 hover:underline w-fit"
+							className="text-sm text-zinc-600 dark:text-zinc-400 underline-offset-4 hover:underline w-fit"
 						>
 							{t("done.backToEvent")}
 						</Link>
 					</section>
 				) : !session ? (
-					<section className="rounded-2xl border border-white/10 p-5 flex flex-col gap-3">
-						<p className="text-sm text-zinc-300">{t("connect")}</p>
+					<section className="rounded-2xl border border-zinc-200 dark:border-white/10 p-5 flex flex-col gap-3">
+						<p className="text-sm text-zinc-700 dark:text-zinc-300">
+							{t("connect")}
+						</p>
 						<WalletConnectButton className="w-full sm:w-auto" />
 					</section>
 				) : !isJudge || !isJudging ? (
@@ -132,8 +138,10 @@ export default async function JudgePage({ params }: { params: Params }) {
 						className="rounded-2xl border border-red-500/30 bg-red-500/10 p-5 flex flex-col gap-2"
 						role="alert"
 					>
-						<p className="font-mono text-xs text-red-300">403</p>
-						<p className="text-sm text-red-200">
+						<p className="font-mono text-xs text-red-700 dark:text-red-300">
+							403
+						</p>
+						<p className="text-sm text-red-800 dark:text-red-200">
 							{!isJudge ? t("forbidden.notJudge") : t("forbidden.notJudging")}
 						</p>
 					</section>
