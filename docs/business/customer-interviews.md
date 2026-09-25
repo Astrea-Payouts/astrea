@@ -12,7 +12,7 @@ The canvas lists four assumptions Astrea is built on but has not tested against 
 | --- | --- | --- | --- | --- |
 | H1 | Organizers see a pre-funded, verifiable pool as worth paying for | ≥6 of 10 describe a concrete past cost from manual payouts (a delay, a dispute, a participant complaint, staff time chasing a transfer) **and** say a pool they could point to before launch would have avoided or reduced it | ≤3 of 10 | 4–5 of 10 |
 | H2a | 0.5 % is accepted without negotiation | ≥7 of 10 call 0.5 % reasonable once anchored against their own last payout's real cost, without asking to negotiate it down | ≤3 of 10 push back or want a lower rate | 4–6 of 10 |
-| H2b | Small-pool organizers would pay more for onboarding help | Among organizers whose last pool was under $5,000, ≥50 % say they'd pay a flat add-on or a higher percentage for hands-on setup (wallets, trustlines, judge flow) | <25 % | 25–49 % |
+| H2b | Small-pool organizers would pay more for onboarding help | At least 5 organizers whose last pool was under $5,000, and ≥50 % of them say they'd pay a flat add-on or a higher percentage for hands-on setup (wallets, trustlines, judge flow) | At least 5 such organizers, and <25 % of them | 25–49 %, or fewer than 5 such organizers interviewed |
 | H3 | Organizers accept Astrea or a named third party as dispute resolver | ≥7 of 10 accept a neutral resolver (Astrea's own or one they'd name) without wanting to keep resolution power themselves | ≤3 of 10 insist on resolving disputes themselves or refuse a third party outright | 4–6 of 10 |
 | H4 | Participants choose events because the pool is verifiable | See the separate method below | See below | See below |
 
@@ -21,7 +21,9 @@ H4 needs its own instrument: it is a participant-side claim, and the organizer i
 - **5 short interviews (10–15 min)** with participants who competed in at least two hackathons or bounty programs in the last 12 months. Ask about a specific past decision (did they ever check whether a prize was real before committing time, ever walked away from an event over payment doubts, ever heard of a winner not getting paid) — never "would proof of funds matter to you."
 - **A short survey** (5–8 questions, same past-behavior framing) distributed through organizer channels or Stellar community channels, if 5 interviews are hard to book in the same window as the organizer round.
 
-H4 threshold: **Pass** if ≥3 of 5 interviews (or ≥30 % of survey respondents) describe a concrete past instance of checking prize legitimacy, hesitating over it, or knowing someone who wasn't paid. **Fail** if 0–1 of 5 (or <10 %). **Inconclusive** in between.
+H4 threshold: **Pass** if ≥3 of 5 interviews (or ≥30 % of survey respondents) describe a concrete past instance of checking prize legitimacy, hesitating over it, or knowing someone who wasn't paid. **Fail** if 0–1 of 5 (or <10 %). **Inconclusive** in between, or with fewer than 5 completed interviews or survey responses.
+
+H2b and H4 need at least 5 eligible observations each. H2b counts only organizers whose last pool was under $5,000; the target mix above does not guarantee 5 of them, so screen for small pools until there are 5. Below that minimum the result is Inconclusive, whatever the percentage says.
 
 ## 2. Screener
 
@@ -163,7 +165,8 @@ Once 10 organizer interviews (and the H4 round) are done:
 3. **H2a/H2b outcome feeds pricing.** H2a pass + H2b pass: keep 0.5 % as the default and start scoping a paid onboarding add-on for small pools. H2a fail: the rate itself is the blocker — model the mid-case SAM in [market-sizing.md](market-sizing.md) at a lower rate before assuming volume will fix it. H2a pass but H2b fail: small organizers don't want to pay more, so onboarding has to be free-to-cheap and self-serve, not a services line.
 4. **H3 outcome feeds the resolver role.** Pass: keep Astrea as the default resolver as currently designed. Fail or mostly "wants to keep control": the product may need an organizer-controlled fallback path for low-stakes events, which is a real change to ADR-003/ADR-006, not a copy change — flag it as a design question rather than deciding it from interview notes alone.
 5. **H4 outcome feeds segment priority, not pricing.** Pass: participant-side trust is a real lever, worth mentioning in outreach to organizers who care about registration numbers. Fail: don't lean on "participants will flock to verifiable events" in the pitch — the value proposition rests on the organizer's own pain (H1), not on a participant effect that didn't show up.
-6. Write the outcome and its implication into the canvas's "What BRL 3 needs from here" section (or a new "BRL 5 results" section) once the round is done — this file stays the reusable kit, the canvas stays the living state of the business model.
+6. **Inconclusive H2b or H4 decides nothing.** An Inconclusive H2b cannot justify a small-pool rate, a paid onboarding add-on, or dropping either. An Inconclusive H4 cannot move segment priority or outreach messaging. Run more interviews in that group first.
+7. Write the outcome and its implication into the canvas's "What BRL 3 needs from here" section (or a new "BRL 5 results" section) once the round is done — this file stays the reusable kit, the canvas stays the living state of the business model.
 
 ## 8. Ethics and consent
 
