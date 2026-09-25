@@ -44,10 +44,10 @@ Bounties and recurring challenges are left out of the table because there is no 
 
 ## What the numbers say
 
-**At 0.5 %, the go-live fee validates willingness to pay; it does not fund the team.** Two illustrations:
+**At 0.5 %, the go-live fee validates willingness to pay; it does not yet pay for the founders' time.** Two illustrations:
 
 - The mid-case SOM is about $45,000 of prizes a year, which is $225 in fees.
-- To cover one full-time salary of $40,000 a year (an assumption for illustration), Astrea would need $8M a year in pools, about a quarter of the entire mid-case TAM and more than the mid-case SAM.
+- For one of the two co-founders to earn $40,000 a year from Astrea (an assumption for illustration; neither is paid today), Astrea would need $8M a year in pools, about a quarter of the entire mid-case TAM and more than the mid-case SAM.
 
 That is not a reason to change the fee today. On testnet and early mainnet the fee's job is to prove that organizers accept paying for a locked pool at all. It does set the questions this model has to answer before BRL 4:
 

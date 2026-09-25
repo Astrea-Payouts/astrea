@@ -67,7 +67,7 @@ Hypotheses, not built, listed so they can be tested rather than assumed:
 - Paid services around the event: judge panel setup, custom event pages, reporting for sponsors.
 - Yield or float income is explicitly out: funds sit in the organizer's ledger and Astrea never holds them.
 
-The honest read on the numbers is in [market-sizing.md](market-sizing.md): at 0.5 %, the fee alone needs a large volume of pools to pay for a team. Pricing is the main open question of this canvas.
+The honest read on the numbers is in [market-sizing.md](market-sizing.md): at 0.5 %, the fee alone needs a large volume of pools before it pays for the founders' time. Pricing is the main open question of this canvas.
 
 ### 6. Key resources
 
@@ -75,7 +75,7 @@ The honest read on the numbers is in [market-sizing.md](market-sizing.md): at 0.
 - The Go service that builds and submits every transaction without holding keys (`services/core-go`).
 - The web app (`apps/web`) with wallet connection through Stellar Wallets Kit.
 - The public testnet proof (E03): seven scenarios, including two attacks rejected on-chain.
-- A two-person team covering contract, backend and frontend.
+- Two co-founders, Christopher Lamberti and Dereck Monge, covering contract, backend and frontend between them. No hires planned until usage justifies them.
 
 ### 7. Key activities
 
@@ -94,7 +94,7 @@ The honest read on the numbers is in [market-sizing.md](market-sizing.md): at 0.
 
 ### 9. Cost structure
 
-- People: the two founders' time is the dominant cost.
+- People: the two co-founders' time is the dominant cost. There are no salaries today.
 - Security audit before mainnet, expected to be covered by the Audit Bank if the SCF award comes through; otherwise the largest single cost.
 - Hosting: Vercel and Supabase. Scales with usage, not with pool size.
 - On-chain fees: Stellar network fees per transaction, paid by the signer of each transaction, not by Astrea.
