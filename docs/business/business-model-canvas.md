@@ -59,7 +59,7 @@ In code today (testnet):
 - Default rate 0.5 % (`DEFAULT_FEE_BPS = 50`). The emergency admin can change it with `set_fee_bps`, up to a hard ceiling of 5 % (`MAX_FEE_BPS = 500`) that can only be raised by redeploying the contract (`governance.rs`). Organizers can verify that ceiling themselves.
 - Non-refundable once charged: cancellation, dispute resolution and expiry return the prize, not the fee.
 - No fee at release, no fee to participants.
-- Verified on testnet (E03, 2026-09-07): three go-lives charged 50,000, 25,000 and 30,000 units (0.5 % of each reward, in USDC's 7-decimal units) and the treasury went from 0 to exactly 0.0105 USDC ([event-escrow README](../../smart-contracts/astrea/contracts/event-escrow/README.md)).
+- Verified on testnet (USDC smoke test against the current deployment, 2026-09-14): three go-lives charged 50,000, 25,000 and 30,000 units (0.5 % of each reward, in USDC's 7-decimal units) and the treasury went from 0 to exactly 0.0105 USDC ([event-escrow README](../../smart-contracts/astrea/contracts/event-escrow/README.md)).
 
 Hypotheses, not built, listed so they can be tested rather than assumed:
 

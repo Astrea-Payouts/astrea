@@ -6,7 +6,7 @@ Status: draft, September 2026. A bottom-up estimate built from public figures pl
 
 Astrea earns 0.5 % of each prize pool at go-live. The market is therefore **prize money that passes through hackathons, bounties and community challenges per year**, and Astrea's revenue is 0.5 % of whatever share of it runs through the contract.
 
-Published "hackathon management software" market reports put that software market at roughly USD 1.2–1.4 billion ([Business Research Insights](https://www.businessresearchinsights.com/market-reports/hackathon-management-software-market-124877), [BlueWeave](https://www.blueweaveconsulting.com/report/global-hackathon-management-software-market-report)). That figure measures spending on hosting and innovation-management tools, mostly corporate and internal, not prize money. It is not used below.
+Published "hackathon management software" market reports disagree widely: [Business Research Insights](https://www.businessresearchinsights.com/market-reports/hackathon-management-software-market-124877) puts it at about USD 1.37 billion in 2026, while [BlueWeave](https://www.blueweaveconsulting.com/report/global-hackathon-management-software-market-report) forecast USD 292.2 million for 2026. Either figure measures spending on hosting and innovation-management tools, mostly corporate and internal, not prize money. It is not used below.
 
 ## Public data points
 
@@ -27,7 +27,7 @@ Published "hackathon management software" market reports put that software marke
 | A1 | Hackathons with a cash prize per year, worldwide | 2,000 | 3,000 | 5,000 | Devpost alone had 1,200+ in 2023; adds DoraHacks, Unstop, web3-native platforms and independent events; MLH overlaps heavily with Devpost |
 | A2 | Average cash prize pool per hackathon (USD) | 5,000 | 10,000 | 20,000 | Student events are often below $5k; corporate and foundation online events sit in Devpost's $15k–$100k range |
 | A3 | Share of those events already paying in crypto or stablecoins | 15 % | 25 % | 35 % | Guess; no public breakdown found. Needs validation |
-| A4 | Stellar-ecosystem prize money per year (USD): SDF hackathons plus SCF-funded community events and bounties | 75,000 | 150,000 | 300,000 | 3–5 SDF-level events at $10k–$25k (examples above) plus a few dozen smaller community pools |
+| A4 | Stellar-ecosystem prize money per year (USD): SDF hackathons plus SCF-funded community events, bounties excluded | 75,000 | 150,000 | 300,000 | 3–5 SDF-level events at $10k–$25k (examples above) plus a few dozen smaller community events |
 | A5 | Share of Stellar-ecosystem prize money Astrea captures in its first 24 months on mainnet | 10 % | 30 % | 50 % | Guess; depends on SDF and community organizers adopting it |
 
 ## Estimate
