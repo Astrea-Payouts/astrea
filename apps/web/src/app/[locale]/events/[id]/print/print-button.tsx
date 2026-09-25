@@ -1,5 +1,8 @@
 "use client";
 
+/**
+ * Renders a client-side action button that triggers the browser's print dialog.
+ */
 export function PrintButton() {
 	return (
 		<button

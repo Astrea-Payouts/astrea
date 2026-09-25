@@ -22,6 +22,9 @@ export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: string; id: string }>;
 
+/**
+ * Loads the event and its related organizer, prizes, judges, and team members.
+ */
 async function loadEvent(id: string) {
 	return db.event.findUnique({
 		where: { id },
@@ -42,6 +45,9 @@ async function loadEvent(id: string) {
 	});
 }
 
+/**
+ * Generates localized Open Graph and Twitter social preview metadata for an event page.
+ */
 export async function generateMetadata({
 	params,
 }: {
@@ -70,10 +76,16 @@ export async function generateMetadata({
 	};
 }
 
+/**
+ * Truncates a Stellar address to its first and last 6 characters.
+ */
 function shortAddress(address: string) {
 	return `${address.slice(0, 6)}…${address.slice(-6)}`;
 }
 
+/**
+ * Renders an external Stellar Explorer link for an account address.
+ */
 function AddressLink({ address }: { address: string }) {
 	return (
 		<a
@@ -88,8 +100,11 @@ function AddressLink({ address }: { address: string }) {
 	);
 }
 
+/**
+ * Server component rendering the public event page with escrow status and prizes.
+ */
 export default async function EventPage({ params }: { params: Params }) {
-	const { id, locale } = await params;
+	const { id } = await params;
 	const event = await loadEvent(id);
 	if (!event) notFound();
 
@@ -122,29 +137,7 @@ export default async function EventPage({ params }: { params: Params }) {
 		<main className="min-h-screen bg-white px-4 pt-28 pb-16 text-zinc-950 sm:px-6 md:px-12 md:py-12 dark:bg-black dark:text-white">
 			<div className="mx-auto flex max-w-3xl flex-col gap-8">
 				<header className="flex flex-col gap-3">
-					<div className="flex flex-wrap items-center justify-between gap-2">
-						<EventStatusBadge status={event.status} className="w-fit" />
-						<div className="flex items-center gap-4 text-xs font-medium">
-							{event.status === "LIVE" || event.status === "JUDGING" ? (
-								<a
-									href={`/${locale}/events/${id}/display.png`}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-emerald-600 underline-offset-4 hover:text-emerald-500 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300"
-								>
-									{t("display.showOnScreen")}
-								</a>
-							) : null}
-							{event.status === "COMPLETED" ? (
-								<Link
-									href={`/events/${event.id}/print`}
-									className="text-zinc-600 underline-offset-4 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-200"
-								>
-									{t("print.receipt")}
-								</Link>
-							) : null}
-						</div>
-					</div>
+					<EventStatusBadge status={event.status} className="w-fit" />
 					<h1 className="font-serif text-3xl font-bold tracking-tight break-words md:text-5xl">
 						{event.name}
 					</h1>

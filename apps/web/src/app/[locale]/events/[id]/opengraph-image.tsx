@@ -15,6 +15,9 @@ export const contentType = "image/png";
 
 type Params = Promise<{ locale: string; id: string }>;
 
+/**
+ * Generates the 1200x630 Open Graph PNG image for an event page.
+ */
 export default async function Image({ params }: { params: Params }) {
 	const { id, locale } = await params;
 	const fontData = await loadCardFont();

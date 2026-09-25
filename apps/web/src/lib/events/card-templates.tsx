@@ -5,6 +5,9 @@ import { truncateHash } from "../explorer";
 import { qrSvgPath } from "../qr";
 import type { CardWinner, EventCardModel } from "./card-model";
 
+/**
+ * Loads the local Inter Regular TTF font buffer for Satori / next/og image rendering.
+ */
 export async function loadCardFont(): Promise<Buffer | null> {
 	const candidates = [
 		join(
@@ -41,6 +44,9 @@ const BASE_CONTAINER_STYLE: CSSProperties = {
 	justifyContent: "space-between",
 };
 
+/**
+ * Renders the fallback generic Astrea brand card when an event is draft or has no verifiable money.
+ */
 export function GenericCard(): ReactElement {
 	return (
 		<div
@@ -120,6 +126,9 @@ export function GenericCard(): ReactElement {
 	);
 }
 
+/**
+ * Renders the open/live/judging event social preview card showing the locked on-chain prize pool.
+ */
 export function OpenEventCard({
 	model,
 }: {
@@ -338,12 +347,17 @@ export function OpenEventCard({
 	);
 }
 
+/**
+ * Renders an individual winner card for social previews (hero, standard, or compact grid).
+ */
 function WinnerCard({
 	winner,
 	isHero = false,
+	isCompact = false,
 }: {
 	winner: CardWinner;
 	isHero?: boolean;
+	isCompact?: boolean;
 }): ReactElement {
 	const rankColors: Record<
 		number,
@@ -365,16 +379,22 @@ function WinnerCard({
 			style={{
 				display: "flex",
 				flexDirection: "column",
-				flex: 1,
+				flex: isCompact ? "0 0 32%" : 1,
 				backgroundColor: "#0d0d11",
 				border: `1px solid ${isHero ? "#10b98160" : rankMeta.border}`,
 				borderRadius: "16px",
-				padding: isHero ? "28px 32px" : "18px 20px",
+				padding: isHero ? "28px 32px" : isCompact ? "12px 16px" : "18px 20px",
 				justifyContent: "space-between",
 				boxSizing: "border-box",
 			}}
 		>
-			<div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					gap: isCompact ? "4px" : "8px",
+				}}
+			>
 				<div
 					style={{
 						display: "flex",
@@ -388,7 +408,7 @@ function WinnerCard({
 							borderRadius: "9999px",
 							backgroundColor: rankMeta.bg,
 							color: rankMeta.text,
-							fontSize: isHero ? "15px" : "13px",
+							fontSize: isHero ? "15px" : isCompact ? "11px" : "13px",
 							fontWeight: 800,
 						}}
 					>
@@ -396,7 +416,7 @@ function WinnerCard({
 					</span>
 					<span
 						style={{
-							fontSize: isHero ? "26px" : "20px",
+							fontSize: isHero ? "26px" : isCompact ? "16px" : "20px",
 							fontWeight: 900,
 							color: "#34d399",
 						}}
@@ -408,7 +428,7 @@ function WinnerCard({
 				<div
 					style={{
 						display: "flex",
-						fontSize: isHero ? "30px" : "20px",
+						fontSize: isHero ? "30px" : isCompact ? "16px" : "20px",
 						fontWeight: 800,
 						color: "#ffffff",
 						marginTop: "4px",
@@ -421,7 +441,7 @@ function WinnerCard({
 					<div
 						style={{
 							display: "flex",
-							fontSize: isHero ? "16px" : "13px",
+							fontSize: isHero ? "16px" : isCompact ? "11px" : "13px",
 							color: "#a1a1aa",
 						}}
 					>
@@ -437,11 +457,11 @@ function WinnerCard({
 						display: "flex",
 						alignItems: "center",
 						gap: "6px",
-						fontSize: "12px",
+						fontSize: isCompact ? "11px" : "12px",
 						color: "#71717a",
-						marginTop: "12px",
+						marginTop: isCompact ? "8px" : "12px",
 						borderTop: "1px solid #1f1f23",
-						paddingTop: "8px",
+						paddingTop: isCompact ? "6px" : "8px",
 					}}
 				>
 					<span style={{ color: "#10b981" }}>✓ Payout:</span>
@@ -454,6 +474,9 @@ function WinnerCard({
 	);
 }
 
+/**
+ * Renders the completed-event winners social card (1 hero, 2-3 podium row, or 4+ compact multi-winner grid).
+ */
 export function WinnersEventCard({
 	model,
 }: {
@@ -461,8 +484,10 @@ export function WinnersEventCard({
 }): ReactElement {
 	const winnersCount = model.winners.length;
 	const isHero = winnersCount === 1;
-	const topThree = model.winners.slice(0, 3);
-	const remainingCount = Math.max(0, winnersCount - 3);
+	const isMultiGrid = winnersCount >= 4;
+	const visibleLimit = isMultiGrid ? 6 : 3;
+	const visibleWinners = model.winners.slice(0, visibleLimit);
+	const remainingCount = Math.max(0, winnersCount - visibleLimit);
 
 	return (
 		<div style={BASE_CONTAINER_STYLE}>
@@ -554,13 +579,18 @@ export function WinnersEventCard({
 				<div
 					style={{
 						display: "flex",
-						gap: "16px",
+						flexWrap: isMultiGrid ? "wrap" : "nowrap",
+						gap: isMultiGrid ? "12px" : "16px",
 						width: "100%",
 						boxSizing: "border-box",
 					}}
 				>
-					{topThree.map((winner) => (
-						<WinnerCard key={winner.rank} winner={winner} />
+					{visibleWinners.map((winner) => (
+						<WinnerCard
+							key={winner.rank}
+							winner={winner}
+							isCompact={isMultiGrid}
+						/>
 					))}
 				</div>
 			)}
@@ -603,6 +633,9 @@ export function WinnersEventCard({
 	);
 }
 
+/**
+ * Renders the 1920x1080 venue/projector display card including a QR code to the canonical event URL.
+ */
 export function DisplayEventCard({
 	model,
 	canonicalUrl,
@@ -834,6 +867,9 @@ export function DisplayEventCard({
 	);
 }
 
+/**
+ * Selects and renders the appropriate event card JSX element based on the model's template type.
+ */
 export function renderEventCard(model: EventCardModel): ReactElement {
 	switch (model.templateType) {
 		case "open":

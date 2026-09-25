@@ -14,6 +14,9 @@ export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: string; id: string }>;
 
+/**
+ * Generates localized page metadata for the printable event payout receipt.
+ */
 export async function generateMetadata({
 	params,
 }: {
@@ -31,6 +34,9 @@ export async function generateMetadata({
 	};
 }
 
+/**
+ * Renders the printable A4 payout receipt for a completed event, or 404 otherwise.
+ */
 export default async function EventPrintPage({ params }: { params: Params }) {
 	const { id, locale } = await params;
 

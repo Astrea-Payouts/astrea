@@ -82,6 +82,9 @@ export interface BuildCardModelInput {
 	now?: Date;
 }
 
+/**
+ * Formats an ISO date string into a localized short date string (UTC).
+ */
 export function formatCardDate(
 	isoString: string | null | undefined,
 	locale = "en",
@@ -101,16 +104,25 @@ export function formatCardDate(
 	}
 }
 
+/**
+ * Truncates a string to a maximum character length with a trailing ellipsis.
+ */
 export function truncateText(text: string, maxLength: number): string {
 	if (!text) return "";
 	if (text.length <= maxLength) return text;
 	return `${text.slice(0, Math.max(0, maxLength - 1)).trimEnd()}…`;
 }
 
+/**
+ * Shortens a Stellar wallet address to 6 leading and 6 trailing characters.
+ */
 export function truncateWallet(address: string): string {
 	return truncateHash(address, 6, 6);
 }
 
+/**
+ * Formats a member wallet display string, preferring linked GitHub handle when available.
+ */
 export function formatMemberHandle(wallet: CardMemberWallet): string {
 	const github = wallet.linkedAccounts?.find(
 		(acc) => acc.provider.toLowerCase() === "github",
@@ -122,6 +134,9 @@ export function formatMemberHandle(wallet: CardMemberWallet): string {
 	return truncateWallet(wallet.address);
 }
 
+/**
+ * Constructs the canonical EventCardModel from database event records and on-chain escrow data.
+ */
 export function buildEventCardModel(
 	input: BuildCardModelInput,
 ): EventCardModel {
