@@ -4,7 +4,7 @@
 
 1. **Non-custodial, always.** The server never touches private keys. Every money-moving operation follows: backend builds unsigned XDR → the owning role signs in their wallet → backend submits.
 2. **The chain is the source of truth.** The database mirrors escrow state for UX and querying; a reconciliation job corrects drift by checking transaction hashes directly against Horizon. No money-related state is marked final without an on-chain confirmation.
-3. **Escrow behind a client interface.** Backend code depends on an `EscrowClient` interface, not on raw contract calls scattered through the codebase — this keeps contract-calling logic testable and mockable without hitting testnet on every test run.
+3. **Escrow behind a client interface.** Backend code depends on an `RPCClient` interface over the raw Soroban RPC (`internal/escrow/pipeline.go`), not scattered network calls — this keeps contract-calling logic testable and mockable without hitting testnet on every test run.
 4. **Idempotent money operations.** Every escrow operation carries an idempotency key; retries are safe; partial failures (tx confirmed, DB write failed) are healed by reconciliation, never by manual fixes.
 5. **Testnet by default.** Network and contract ID are environment configuration. Mainnet is a deliberate, gated change.
 
@@ -21,43 +21,52 @@
 
 ```
 Event       — id, organizerId, name, dates, status, escrowContractId, escrowEventId, network, conditionsMetAt
-Prize       — id, eventId, rank, amountUsdc, milestoneIndex, status, winnerWalletId, releaseTxHash
+Prize       — id, eventId, rank, amount, status, winnerTeamId, releaseTxHash
 Judge       — id, eventId, walletAddress, displayName, status
-Participant — id, eventId, walletId, submissionUrl, registeredAt
+Team        — id, eventId, name, submissionUrl                    (the unit of registration; a solo entrant is a team of one)
+TeamMember  — id, teamId, eventId, walletId, shareBasisPoints, ordinal
 Wallet      — id, userId, address, usdcTrustlineVerifiedAt
-Payout      — id, prizeId, txHash, amountUsdc, confirmedAt        (append-only audit log)
+Payout      — id, prizeId, teamMemberId, txHash, amount, confirmedAt  (append-only; one row per paid team member, all sharing one txHash)
 OpLog       — id, idempotencyKey, operation, payload, status      (idempotency + outbox)
 ```
 
 ## Key sequences
 
-### Deploy + fund (organizer)
+### Deposit + create (organizer) — no deploy step, no separate fund step
+
+There is one shared contract instance (ADR-006); an organizer's deposit and an event's reward are both ledger entries inside it, not a per-event deploy:
 
 ```
+UI → Go service: deposit build/submit (`deposit_funds`) → RPC confirms → AdminWallet.balance credited
 UI → Go service: create event (validated)
-Go service: builds unsigned deploy tx (contract `initialize`, simulated for footprint/fee)
-UI: organizer signs (wallet) → Go service submits → RPC confirms → contractId recorded
-Go service: builds unsigned fund tx (`fund`)
-UI: organizer signs → Go service submits → RPC confirms
-reconciler: confirms escrow balance == prize amount → Event.FUNDED
+Go service: builds unsigned `create_event` tx (reserves the reward from that balance in the same call)
+UI: organizer signs (wallet) → Go service submits → RPC confirms → escrowEventId recorded, Event.CREATED
 ```
 
-### Release (judge approves, then releases directly to the winner)
-
-Two signed transactions, both by the judge (`approver` + `release_signer`, see ADR-003) — no forwarding step, the winner's address is supplied at release time:
+### Go live (organizer) — charges the go-live fee
 
 ```
-judge assigns winner → backend validates winner trustline
-Go service: builds unsigned `approve` tx
+UI: quotes the fee via `quote_go_live_fee`, prompts a top-up first if the free balance doesn't cover it
+Go service: builds unsigned `set_event_in_progress` tx (charges the fee from free balance to Treasury, sets judging_deadline)
+UI: organizer signs → Go service submits → RPC confirms → Event.LIVE
+```
+
+### Release (judge releases directly to every winner, one signed transaction)
+
+A single judge-signed call pays every winner in the same transaction — there is no separate approve step and no forwarding step; winner addresses are supplied at release time:
+
+```
+judge assigns winners → backend validates winner trustlines, allocates each team member's share
+Go service: builds unsigned `release_reward` tx (winners' amounts must sum exactly to the event's reward)
 judge signs → Go service submits → RPC confirms
-Go service: builds unsigned `release` tx, winner's address as an argument
-judge signs → Go service submits → RPC confirms
-reconciler: confirms release tx → Prize.PAID_OUT + Payout row (releaseTxHash)
+reconciler: confirms release tx → Prize.PAID_OUT + one Payout row per paid team member (shared releaseTxHash)
 ```
+
+If the judge never signs, `resolve_dispute` is the resolver-signed fallback once `judging_deadline` passes (ADR-003) — same winners validation and transfer, a different signer.
 
 ### Reconciliation loop
 
-Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row, confirms its `txHash` directly against Horizon rather than trusting any cached state — the chain is the source of truth (Principle 2). Release is a single confirmed transaction per prize; there's no separate forwarding step to track.
+Periodic job (and on-demand after each submit): for each `SUCCEEDED` `OpLog` row, confirms its `txHash` directly against Horizon rather than trusting any cached state — the chain is the source of truth (Principle 2). Release is a single confirmed transaction per event, not per prize — all of an event's prizes are paid atomically in one `release_reward` call, so there's no separate forwarding step to track.
 
 ## Architecture Decision Records
 
