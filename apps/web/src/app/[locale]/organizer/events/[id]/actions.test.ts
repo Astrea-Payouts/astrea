@@ -251,3 +251,19 @@ describe("organizer event actions (shared by /fund and /start)", () => {
 		});
 	});
 });
+
+describe("readEventStatus with a non-UUID event id", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		mockSession.mockResolvedValue(WALLET);
+	});
+
+	it("answers 404 without querying the database", async () => {
+		expect(await readEventStatus("new")).toMatchObject({
+			ok: false,
+			status: 404,
+			code: "event_not_found",
+		});
+		expect(mockDb.event.findUnique).not.toHaveBeenCalled();
+	});
+});

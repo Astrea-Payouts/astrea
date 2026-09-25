@@ -15,6 +15,7 @@ import type {
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { verifyAndRecordTrustline } from "@/lib/trustline/verify-and-record";
+import { isUuid } from "@/lib/uuid";
 import { getSessionWallet } from "@/lib/wallet/session";
 
 // Go's own error envelope, passed through verbatim so the judge sees
@@ -79,6 +80,7 @@ async function isActiveJudge(
 	eventId: string,
 	address: string,
 ): Promise<boolean> {
+	if (!isUuid(eventId)) return false;
 	const event = await db.event.findUnique({
 		where: { id: eventId },
 		select: {
