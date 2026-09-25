@@ -93,8 +93,7 @@ async function main() {
 		"Event created, funded, and live — one reward locked on the organizer's AdminWallet (ADR-006)",
 	);
 	await transitionEvent(event.id, "DRAFT", "CREATED");
-	await transitionEvent(event.id, "CREATED", "FUNDED");
-	await transitionEvent(event.id, "FUNDED", "LIVE");
+	await transitionEvent(event.id, "CREATED", "LIVE");
 
 	step("Register a demo team of one + verify trustline (E05)");
 	const winnerWallet = await findOrCreateWallet(winner.publicKey);

@@ -43,6 +43,8 @@ Go service: builds unsigned `create_event` tx (reserves the reward from that bal
 UI: organizer signs (wallet) → Go service submits → RPC confirms → escrowEventId recorded, Event.CREATED
 ```
 
+There is no separate funded status: `create_event` locks the reward in the same call, so `CREATED` already means funded, and `start/submit` moves `CREATED → LIVE` directly.
+
 ### Go live (organizer) — charges the go-live fee
 
 ```

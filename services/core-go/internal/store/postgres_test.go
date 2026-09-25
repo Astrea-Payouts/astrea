@@ -98,8 +98,9 @@ func TestPostgres_LoadEventForRelease(t *testing.T) {
 	exec(`INSERT INTO team_members (id, "teamId", "eventId", "walletId", "shareBasisPoints", ordinal) VALUES (gen_random_uuid(), $1, $2, $3, 10000, 0)`, teamBID, eventID, walletB1)
 
 	// Only now, after every team_members write, does the event leave
-	// {DRAFT, CREATED, FUNDED, LIVE} — team_members_enforce_freeze_trigger
-	// (20260910080000_replace_participants_with_teams) rejects membership
+	// {DRAFT, CREATED, LIVE} — team_members_enforce_freeze_trigger
+	// (20260910080000_replace_participants_with_teams, FUNDED dropped in
+	// 20260925120000_drop_funded_event_status) rejects membership
 	// writes once judging has started.
 	exec(`UPDATE events SET status = 'JUDGING' WHERE id = $1`, eventID)
 
