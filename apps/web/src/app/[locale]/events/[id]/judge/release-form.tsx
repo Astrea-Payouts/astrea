@@ -7,7 +7,12 @@ import { TxHashLink } from "@/components/tx-hash-link";
 import { Button } from "@/components/ui/button";
 import type { ReleaseWinner } from "@/lib/core-go/types";
 import { STELLAR_NETWORK } from "@/lib/stellar-network";
-import { buildRelease, type ReleaseFailure, submitRelease } from "./actions";
+import {
+	buildRelease,
+	type ReleaseFailure,
+	submitRelease,
+	type TrustlineFailure,
+} from "./actions";
 
 export interface ReleaseFormProps {
 	eventId: string;
@@ -36,7 +41,9 @@ export function ReleaseForm({
 	const t = useTranslations("JudgePage");
 	const [assignments, setAssignments] = useState<Record<number, string>>({});
 	const [built, setBuilt] = useState<Built | null>(null);
-	const [failure, setFailure] = useState<ReleaseFailure | null>(null);
+	const [failure, setFailure] = useState<
+		ReleaseFailure | TrustlineFailure | null
+	>(null);
 	const [submitted, setSubmitted] = useState<SignStepResult | null>(null);
 	const [pending, startTransition] = useTransition();
 
@@ -97,12 +104,14 @@ export function ReleaseForm({
 							name={`rank-${prize.rank}`}
 							value={assignments[prize.rank] ?? ""}
 							disabled={!!built || !!submitted}
-							onChange={(e) =>
+							onChange={(e) => {
+								// A failure named the previous assignment's wallets; drop it.
+								setFailure(null);
 								setAssignments((prev) => ({
 									...prev,
 									[prize.rank]: e.target.value,
-								}))
-							}
+								}));
+							}}
 							className={selectClass}
 						>
 							<option value="">{t("pickTeam")}</option>
@@ -173,7 +182,24 @@ export function ReleaseForm({
 				</div>
 			) : null}
 
-			{failure ? (
+			{failure && "wallets" in failure ? (
+				<div
+					role="alert"
+					className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300 break-words flex flex-col gap-2"
+				>
+					<p>
+						{t("errors.missingTrustline")}{" "}
+						<code className="font-mono text-xs">{failure.asset}</code>
+					</p>
+					<ul className="flex flex-col gap-1">
+						{failure.wallets.map((wallet) => (
+							<li key={wallet} className="font-mono text-xs break-all">
+								{wallet}
+							</li>
+						))}
+					</ul>
+				</div>
+			) : failure ? (
 				<p
 					role="alert"
 					className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-700 dark:text-red-300 break-words"
