@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { sumUsdcAmounts } from "@/lib/escrow/amount";
 import { formatSmallestUnits } from "@/lib/explorer";
+import { isUuid } from "@/lib/uuid";
 import { getSessionWallet } from "@/lib/wallet/session";
 import { failure } from "../action-result";
 import { ServiceFailure, OrganizerShell as Shell } from "../shell";
@@ -18,6 +19,7 @@ export const dynamic = "force-dynamic";
 type Params = Promise<{ locale: string; id: string }>;
 
 async function loadEvent(id: string) {
+	if (!isUuid(id)) return null;
 	return db.event.findUnique({
 		where: { id },
 		select: {
@@ -40,10 +42,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
 	const { id } = await params;
 	const t = await getTranslations("FundPage");
-	const event = await db.event.findUnique({
-		where: { id },
-		select: { name: true },
-	});
+	const event = isUuid(id)
+		? await db.event.findUnique({ where: { id }, select: { name: true } })
+		: null;
 	return { title: event ? `${t("title")} — ${event.name}` : t("title") };
 }
 

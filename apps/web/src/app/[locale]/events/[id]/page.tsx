@@ -14,6 +14,7 @@ import {
 	getExplorerContractUrl,
 } from "@/lib/explorer";
 import { STELLAR_NETWORK } from "@/lib/stellar-network";
+import { isUuid } from "@/lib/uuid";
 import { getSessionWallet } from "@/lib/wallet/session";
 import { JudgingToggle } from "./judging-toggle";
 import { RegistrationForm } from "./registration-form";
@@ -23,6 +24,7 @@ export const dynamic = "force-dynamic";
 type Params = Promise<{ locale: string; id: string }>;
 
 async function loadEvent(id: string) {
+	if (!isUuid(id)) return null;
 	return db.event.findUnique({
 		where: { id },
 		include: {
@@ -48,6 +50,7 @@ export async function generateMetadata({
 	params: Params;
 }): Promise<Metadata> {
 	const { id } = await params;
+	if (!isUuid(id)) return {};
 	const event = await db.event.findUnique({
 		where: { id },
 		select: { name: true, description: true },

@@ -173,3 +173,23 @@ describe("EventPage - generateMetadata", () => {
 		expect(meta).toEqual({});
 	});
 });
+
+describe("non-UUID event ids", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	const badParams = Promise.resolve({ locale: "en", id: "new" });
+
+	it("calls notFound without querying the database", async () => {
+		await expect(EventPage({ params: badParams })).rejects.toThrow(
+			"NEXT_NOT_FOUND",
+		);
+		expect(mockDb.event.findUnique).not.toHaveBeenCalled();
+	});
+
+	it("builds metadata without querying the database", async () => {
+		await expect(generateMetadata({ params: badParams })).resolves.toEqual({});
+		expect(mockDb.event.findUnique).not.toHaveBeenCalled();
+	});
+});
