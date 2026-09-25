@@ -1,4 +1,4 @@
-# Astrea — Customer interview kit (BRL 3 → BRL 4)
+# Astrea — Customer interview kit (BRL 5)
 
 Status: draft, September 2026. This is a kit to run — screener, scripts, tracker, scoring rules — not a report of findings. No interview has happened yet; every number in the tables below is a placeholder to fill in, not a result. Companion to [business-model-canvas.md](business-model-canvas.md), [competitive-analysis.md](competitive-analysis.md) and [market-sizing.md](market-sizing.md).
 
@@ -6,7 +6,7 @@ Method note: every question in the script asks about something the organizer alr
 
 ## 1. Purpose and hypotheses
 
-The canvas lists four assumptions Astrea is built on but has not tested against a real organizer or participant. BRL 4 requires at least 10 interviews with organizers who paid prizes in the last 12 months, plus a lighter check on the participant-side assumption. Each hypothesis gets a threshold fixed now, before the first call, so a good story from one talkative organizer can't move the goalposts later.
+The canvas lists four assumptions Astrea is built on but has not tested against a real organizer or participant. On the KTH scale, testing parts of the business model with customers is BRL 5; BRL 4 is the desk work (full canvas plus [financial projections](financial-projections.md)). The target is at least 10 interviews with organizers who paid prizes in the last 12 months, plus a lighter check on the participant-side assumption. Each hypothesis gets a threshold fixed now, before the first call, so a good story from one talkative organizer can't move the goalposts later.
 
 | # | Hypothesis (from the canvas) | Pass | Fail | Inconclusive |
 | --- | --- | --- | --- | --- |
@@ -63,7 +63,7 @@ Short, no pitch, asks for time about a past event. Send the follow-up only once,
 
 > Subject: Quick question about [event name]'s prizes
 >
-> Hi [name] — I'm building a project in the Stellar ecosystem and I'm trying to understand how hackathon and bounty organizers actually handle prize money today. I saw you ran [event name] — would you have 25 minutes to walk me through how prizes got paid out last time, what worked, and what didn't? Not selling anything, just want to hear from someone who's actually done it.
+> Hi [name] — I'm building a project in the Stellar ecosystem and I'm trying to understand how hackathon and bounty organizers actually handle prize money today. I saw you ran [event name] — would you have 25 minutes to walk me through how prizes got paid out last time, what worked, and what didn't? My co-founder would join to take notes. Not selling anything, just want to hear from someone who's actually done it.
 >
 > If you're up for it, here's my calendar: [link]. Happy to work around your schedule otherwise.
 >
@@ -78,7 +78,7 @@ Short, no pitch, asks for time about a past event. Send the follow-up only once,
 
 > Asunto: Una pregunta rápida sobre los premios de [nombre del evento]
 >
-> Hola [nombre] — estoy trabajando en un proyecto dentro del ecosistema de Stellar y quiero entender cómo los organizadores de hackathons y programas de recompensas manejan hoy el dinero de los premios. Vi que organizaste [nombre del evento] — ¿tendrías 25 minutos para contarme cómo se pagaron los premios la última vez, qué funcionó y qué no? No es una venta, solo quiero escuchar la experiencia de alguien que ya pasó por esto.
+> Hola [nombre] — estoy trabajando en un proyecto dentro del ecosistema de Stellar y quiero entender cómo los organizadores de hackathons y programas de recompensas manejan hoy el dinero de los premios. Vi que organizaste [nombre del evento] — ¿tendrías 25 minutos para contarme cómo se pagaron los premios la última vez, qué funcionó y qué no? Se sumaría mi co-founder para tomar notas. No es una venta, solo quiero escuchar la experiencia de alguien que ya pasó por esto.
 >
 > Si te interesa, acá está mi calendario: [link]. Si preferís coordinar de otra forma, sin problema.
 >
@@ -92,6 +92,8 @@ Short, no pitch, asks for time about a past event. Send the follow-up only once,
 ## 5. Interview script (~25 minutes)
 
 Each question is tagged with the hypothesis it feeds. Do not read the tags aloud. Keep the demo strictly at the end — leading with it turns every later answer into a reaction to a pitch instead of a report of past behavior.
+
+Both founders join every call. One asks the questions; the other takes notes and stays quiet until the wrap-up. Keep that split for the whole call, and swap roles between calls so the answers aren't tested against only one founder's phrasing.
 
 **Warm-up (2 min)**
 
@@ -126,7 +128,7 @@ Use one tracker row per interview, filled in live or immediately after (memory f
 
 | Field | What to capture |
 | --- | --- |
-| Date, interviewer | — |
+| Date, interviewer / note-taker | — |
 | Segment | Foundation/grant program, web3/DAO, university, company |
 | Pool size (last event) | USD value, approximate is fine |
 | Payout method used | Bank transfer, PayPal/Payoneer, crypto wallet transfer, multisig, other |
@@ -161,11 +163,11 @@ Once 10 organizer interviews (and the H4 round) are done:
 3. **H2a/H2b outcome feeds pricing.** H2a pass + H2b pass: keep 0.5 % as the default and start scoping a paid onboarding add-on for small pools. H2a fail: the rate itself is the blocker — model the mid-case SAM in [market-sizing.md](market-sizing.md) at a lower rate before assuming volume will fix it. H2a pass but H2b fail: small organizers don't want to pay more, so onboarding has to be free-to-cheap and self-serve, not a services line.
 4. **H3 outcome feeds the resolver role.** Pass: keep Astrea as the default resolver as currently designed. Fail or mostly "wants to keep control": the product may need an organizer-controlled fallback path for low-stakes events, which is a real change to ADR-003/ADR-006, not a copy change — flag it as a design question rather than deciding it from interview notes alone.
 5. **H4 outcome feeds segment priority, not pricing.** Pass: participant-side trust is a real lever, worth mentioning in outreach to organizers who care about registration numbers. Fail: don't lean on "participants will flock to verifiable events" in the pitch — the value proposition rests on the organizer's own pain (H1), not on a participant effect that didn't show up.
-6. Write the outcome and its implication into the canvas's "What BRL 3 needs from here" section (or a new "BRL 4 results" section) once the round is done — this file stays the reusable kit, the canvas stays the living state of the business model.
+6. Write the outcome and its implication into the canvas's "What BRL 3 needs from here" section (or a new "BRL 5 results" section) once the round is done — this file stays the reusable kit, the canvas stays the living state of the business model.
 
 ## 8. Ethics and consent
 
-- Ask permission to take notes at the start of the call, before question 1. State plainly that this is research, not a sales call.
+- Introduce both founders and say who is taking notes, then ask permission to take notes before question 1. State plainly that this is research, not a sales call.
 - No recording without explicit, separate consent — asking for notes and asking for a recording are two different asks.
 - Raw notes (names, specific event names, anything identifying) stay out of git entirely — keep them in a local, non-repo location.
 - The tracker in Section 6, once filled in, goes into the repo only as **anonymized aggregates** — segment, pool-size bracket, and the pattern of the reaction, not the organizer's name or event name. If a quote is worth keeping verbatim, strip identifying details before it goes in this file.

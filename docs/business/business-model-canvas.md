@@ -48,7 +48,7 @@ For participants:
 ### 4. Customer relationships
 
 - Self-serve for the event lifecycle: create, fund, publish, judge, release.
-- Hands-on onboarding for the first organizers (set up wallets, trustlines, judge multisig), because early events are also the validation step for BRL 4.
+- Hands-on onboarding for the first organizers (set up wallets, trustlines, judge multisig), because early events are also the customer-validation step for BRL 5.
 - Astrea as default dispute resolver, disclosed on the event page before launch. That role is what the fee pays for, not only the software.
 
 ### 5. Revenue streams
@@ -104,7 +104,7 @@ Because Astrea never custodies funds, there is no money-transmission float to fu
 
 ## What BRL 3 needs from here
 
-BRL 3 asks for a draft canvas, a view of competitors and a first market estimate; this set covers those three. The next step, BRL 4, needs the canvas tested against customers — see [customer-interviews.md](customer-interviews.md) for the screener, scripts and scoring thresholds. The riskiest assumptions to test first:
+BRL 3 asks for a draft canvas, a view of competitors and a first market estimate; this set covers those three. BRL 4 adds quantified revenues and costs plus first projections of economic viability; those live in [financial-projections.md](financial-projections.md). BRL 5 tests the model against customers; [customer-interviews.md](customer-interviews.md) has the screener, scripts and scoring thresholds. The riskiest assumptions to test first:
 
 1. Organizers see a pre-funded pool as worth paying for, rather than a nice-to-have. Test: interviews with at least 10 organizers who have paid prizes in the last year.
 2. 0.5 % is a price organizers accept without negotiation, and whether small-pool organizers would pay more for onboarding help.
