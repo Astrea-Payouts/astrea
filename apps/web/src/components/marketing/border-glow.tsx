@@ -194,6 +194,7 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
 
 	const handlePointerMove = useCallback(
 		(e: React.PointerEvent<HTMLDivElement>) => {
+			if (e.pointerType === "touch") return;
 			const card = cardRef.current;
 			if (!card) return;
 			const rect = card.getBoundingClientRect();
@@ -207,6 +208,13 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
 
 	useEffect(() => {
 		if (!animated) return;
+		if (
+			typeof window !== "undefined" &&
+			typeof window.matchMedia === "function" &&
+			window.matchMedia("(hover: none), (pointer: coarse)").matches
+		) {
+			return;
+		}
 		const angleStart = 110;
 		const angleEnd = 465;
 		setSweepActive(true);
@@ -267,8 +275,11 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
 		<div
 			ref={cardRef}
 			onPointerMove={handlePointerMove}
-			onPointerEnter={() => setIsHovered(true)}
+			onPointerEnter={(e) => {
+				if (e.pointerType !== "touch") setIsHovered(true);
+			}}
 			onPointerLeave={() => setIsHovered(false)}
+			data-border-glow=""
 			className={`relative grid isolate border ${className}`}
 			style={{
 				background: backgroundColor,

@@ -173,3 +173,53 @@ describe("EventPage - generateMetadata", () => {
 		expect(meta).toEqual({});
 	});
 });
+
+describe("EventPage — U03 Public Event Page (Issue #64)", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		mockDb.event.findUnique.mockResolvedValue(completedEvent);
+		mockSession.mockResolvedValue(null);
+	});
+
+	afterEach(() => {
+		cleanup();
+	});
+
+	it("shows 'Prizes verified on-chain' badge and contract link only after create_event confirms", async () => {
+		mockReadEscrow.mockResolvedValue({
+			reward: "7500000000",
+			state: "InProgress",
+			token: "CUSDC",
+			admin: ORGANIZER,
+			judge: JUDGE,
+		});
+
+		await renderPage();
+
+		expect(screen.getByTestId("prizes-verified-badge")).toHaveTextContent(
+			/Prizes verified on-chain/i,
+		);
+		expect(screen.getByTestId("resolver-card")).toHaveTextContent(
+			/Astrea \(default\)/i,
+		);
+		expect(screen.getByTestId("payout-history-section")).toBeInTheDocument();
+		expect(
+			document.querySelectorAll("[data-border-glow]").length,
+		).toBeGreaterThanOrEqual(2);
+	});
+
+	it("never renders 'Prizes verified on-chain' badge optimistically when create_event is not confirmed", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			...completedEvent,
+			status: "DRAFT",
+			escrowEventId: null,
+		});
+		mockReadEscrow.mockResolvedValue(null);
+
+		await renderPage();
+
+		expect(
+			screen.queryByTestId("prizes-verified-badge"),
+		).not.toBeInTheDocument();
+	});
+});

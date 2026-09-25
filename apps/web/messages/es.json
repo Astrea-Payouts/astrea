@@ -163,6 +163,7 @@
 	"EventPage": {
 		"escrow": {
 			"title": "Reservado on-chain",
+			"verifiedBadge": "Premios verificados on-chain",
 			"onChainState": "estado del contrato: {state}",
 			"readFailed": "No se pudo leer el escrow desde el contrato:",
 			"eventId": "Id del evento en el escrow",
@@ -176,10 +177,18 @@
 			"winner": "Ganador: {team}",
 			"paidTx": "Pagado on-chain"
 		},
+		"payoutHistory": {
+			"title": "Historial de pagos",
+			"empty": "Todavía no se liberaron pagos.",
+			"unassignedWinner": "Ganador pendiente",
+			"txProof": "Tx de liberación"
+		},
 		"people": {
 			"organizer": "Organizador",
 			"judge": "Juez",
-			"noJudge": "{count, plural, =0 {Sin juez activo} other {# jueces activos — se esperaba exactamente uno}}"
+			"noJudge": "{count, plural, =0 {Sin juez activo} other {# jueces activos — se esperaba exactamente uno}}",
+			"resolver": "Resolutor de disputas",
+			"defaultResolver": "Astrea (default)"
 		},
 		"teams": {
 			"title": "Equipos registrados ({count})",
