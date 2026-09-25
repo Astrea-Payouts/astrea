@@ -188,7 +188,8 @@
 			"judge": "Judge",
 			"noJudge": "{count, plural, =0 {No active judge} other {# active judges — expected exactly one}}",
 			"resolver": "Dispute resolver",
-			"defaultResolver": "Astrea (default)"
+			"defaultResolver": "Astrea (default)",
+			"unavailableResolver": "Unavailable"
 		},
 		"teams": {
 			"title": "Registered teams ({count})",

@@ -230,4 +230,17 @@ describe("EventPage — U03 Public Event Page (Issue #64)", () => {
 			screen.queryByTestId("prizes-verified-badge"),
 		).not.toBeInTheDocument();
 	});
+
+	it("shows 'Unavailable' when escrow read fails instead of falsely claiming default resolver", async () => {
+		mockReadEscrow.mockRejectedValue(new Error("RPC timeout"));
+
+		await renderPage();
+
+		expect(screen.getByTestId("resolver-card")).toHaveTextContent(
+			/Unavailable/i,
+		);
+		expect(screen.getByTestId("resolver-card")).not.toHaveTextContent(
+			/Astrea \(default\)/i,
+		);
+	});
 });

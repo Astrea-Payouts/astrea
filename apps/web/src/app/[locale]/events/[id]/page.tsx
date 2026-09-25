@@ -96,10 +96,16 @@ export default async function EventPage({ params }: { params: Params }) {
 		}
 	}
 
-	const resolver = resolveDisputeResolver(
-		escrow?.resolver,
-		t("people.defaultResolver"),
-	);
+	// If the escrow read failed, the on-chain resolver is unknown.
+	// Display an unavailable state instead of falsely claiming it is the default resolver.
+	const resolver =
+		event.escrowEventId && !escrow
+			? {
+					isDefault: false,
+					label: t("people.unavailableResolver"),
+					address: null,
+				}
+			: resolveDisputeResolver(escrow?.resolver, t("people.defaultResolver"));
 
 	return (
 		<main className="min-h-screen bg-white px-4 pt-28 pb-16 text-zinc-950 sm:px-6 md:px-12 md:py-12 dark:bg-black dark:text-white">

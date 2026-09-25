@@ -78,8 +78,8 @@ export function BorderGlowInView({
 		<div
 			ref={wrapperRef}
 			className="contents"
-			onPointerEnter={stopTouchPointer}
-			onPointerMove={stopTouchPointer}
+			onPointerOverCapture={stopTouchPointer}
+			onPointerMoveCapture={stopTouchPointer}
 		>
 			<BorderGlow {...props} animated={hasEntered} />
 		</div>
