@@ -48,7 +48,7 @@ An event cannot be created unless the organizer's free balance covers the full p
 ## Flow 4 — Judging and payout
 
 1. Judges review submissions and select winners for every prize.
-2. Winner assignment re-validates each winner's wallet + trustline.
+2. Trustlines were verified at registration (ADR-004). The re-check at winner assignment that ADR-004 calls for is not wired into the judge flow yet.
 3. Judge signs **one** `release_reward` transaction for the whole event — no approve step — whose winner amounts must sum exactly to the event's locked reward. The organizer is not in this path (ADR-003).
 4. **Release**: USDC lands directly in every winner's wallet in that same transaction — no intermediate custody, no second signing step.
 5. Event page updates: winners, amounts, and the transaction hash (shared by every winner paid in that call), explorer link. The event goes straight from `JUDGING` to `COMPLETED` — there is no per-prize release to wait on; all prizes settle atomically together.
@@ -57,7 +57,7 @@ An event cannot be created unless the organizer's free balance covers the full p
 
 On-chain trigger: the event's `judging_deadline` passes while it is still `InProgress` and the judge hasn't called `release_reward`. There is no separate "open a dispute" transaction — `resolve_dispute` is both the eligibility check (it asserts the deadline has already passed) and the resolution, in one resolver-signed call. **Before that deadline, a `LIVE`/`InProgress` event cannot be cancelled on-chain** — `set_event_cancelled` explicitly rejects anything past `Created`/`WaitingForStart`. The judge can still call `release_reward` before the deadline (it has no deadline check), and that is the only way a live event's funds move early. So "the organizer wants to cancel a `LIVE` event" is not a distinct on-chain path — it can only actually be resolved through the same post-deadline `resolve_dispute` call as a silent judge, not on demand.
 
-1. Once `judging_deadline` passes with the event still `InProgress`, the product marks it `DISPUTED` off-chain (`Event.status`) so the UI stops offering the normal release flow. The contract itself has no `Disputed` state — it stays `InProgress` until `resolve_dispute` is actually called.
+1. Once `judging_deadline` passes with the event still `InProgress`, the product is meant to mark it `DISPUTED` off-chain (`Event.status`) so the UI stops offering the normal release flow. The job that does this (T01a, #109) is not built yet; today nothing sets `DISPUTED`. The contract itself has no `Disputed` state — it stays `InProgress` until `resolve_dispute` is actually called.
 2. The dispute resolver reviews the situation and calls `resolve_dispute` with a winners list — same shape and exact-sum-to-`reward` validation as `release_reward`:
    - **Judge never signed:** pays whichever winner(s) were already recorded off-chain, or the resolver's own read of the submissions if none was recorded.
    - **Organizer wanted to cancel:** the resolver decides the distribution, including naming the organizer's own address as a "winner" for a refund — a full refund only if genuinely nothing happened yet, otherwise some split with participants who already invested real work. Never an automatic, unconditional refund (see ADR-006) — that would let an organizer extract free labor with no consequence.
@@ -76,7 +76,7 @@ The product's `Event.status` (Prisma) and the contract's own `EventState` (`type
 | Product status | Contract `EventState` | Notes |
 | --- | --- | --- |
 | `DRAFT` | *(nothing on-chain yet)* | Nothing exists on-chain until `create_event` confirms |
-| `CREATED` | `Created` (or `WaitingForStart`) | Reward already reserved (Flow 1) — `FUNDED` is a defined product status this flow never reaches, since creating and funding are the same call |
+| `CREATED` | `Created` (or `WaitingForStart`) | Reward already reserved (Flow 1) — there is no `FUNDED` status, since creating and funding are the same call |
 | `LIVE` | `InProgress` | Set by `set_event_in_progress`, which also charges the go-live fee |
 | `JUDGING` | `InProgress` | Same on-chain state as `LIVE` — "judging" is a product-level phase (past the submission deadline), not a separate contract state |
 | `DISPUTED` | `InProgress` | The product marks this once `judging_deadline` passes with no release; the contract itself stays `InProgress` until `resolve_dispute` is actually called |

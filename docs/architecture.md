@@ -48,7 +48,7 @@ There is no separate funded status: `create_event` locks the reward in the same 
 ### Go live (organizer) — charges the go-live fee
 
 ```
-UI: quotes the fee via `quote_go_live_fee`, prompts a top-up first if the free balance doesn't cover it
+Go service (start/build): quotes the fee via `quote_go_live_fee`, answers 409 `insufficient_balance` if the free balance doesn't cover it
 Go service: builds unsigned `set_event_in_progress` tx (charges the fee from free balance to Treasury, sets judging_deadline)
 UI: organizer signs → Go service submits → RPC confirms → Event.LIVE
 ```
@@ -213,7 +213,7 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 | Judge picks a winner but never signs `release_reward` | `judging_deadline` passes → resolver executes the release on the judge's behalf (ADR-003) |
 | Organizer cancels an event already `Active` | Routes through `resolve_dispute`, not a bare refund — resolver decides the distribution (ADR-006) |
 | Organizer needs an early exit before the event starts | Two-signature override only (organizer + resolver) — never a unilateral `withdraw_funds` on already-assigned funds (ADR-006) |
-| Winner without trustline | Prevented at assignment (ADR-004) |
+| Winner without trustline | Checked at registration (ADR-004); the re-check at assignment is not wired yet, so a closed trustline fails the whole atomic release |
 | Duplicate submit (double-click / retry) | Idempotency keys on every operation |
 | Testnet/mainnet mix-up | Network is part of Event records; config validated at boot; mainnet behind explicit gate |
 | Contract call fails mid-simulation | Simulation catches most failures before submission; reconciler compares against actual on-chain state, never assumed success |
