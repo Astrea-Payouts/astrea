@@ -75,10 +75,6 @@ export default async function EventPage({ params }: { params: Params }) {
 	const session = await getSessionWallet();
 
 	const judge = event.judges.length === 1 ? event.judges[0] : null;
-	const resolver = resolveDisputeResolver(
-		event.resolverAddress,
-		t("people.defaultResolver"),
-	);
 	const isOrganizer = session?.id === event.organizerWalletId;
 	const isJudge = !!session && judge?.walletAddress === session.address;
 	const isRegistered =
@@ -99,6 +95,11 @@ export default async function EventPage({ params }: { params: Params }) {
 			escrowError = err instanceof Error ? err.message : String(err);
 		}
 	}
+
+	const resolver = resolveDisputeResolver(
+		escrow?.resolver,
+		t("people.defaultResolver"),
+	);
 
 	return (
 		<main className="min-h-screen bg-white px-4 pt-28 pb-16 text-zinc-950 sm:px-6 md:px-12 md:py-12 dark:bg-black dark:text-white">

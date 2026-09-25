@@ -24,10 +24,17 @@ export interface OnchainBadgeProps {
 	};
 }
 
+const LOCKED_ESCROW_STATES = new Set<string>([
+	"Created",
+	"WaitingForStart",
+	"InProgress",
+	"Ended",
+]);
+
 /**
  * Renders the "Prizes verified on-chain" commitment surface and shared contract explorer link.
- * Strictly gated on real `create_event` confirmation (`escrowEventId` + `escrow` read) so
- * unconfirmed or draft events never display the verified badge optimistically.
+ * Strictly gated on real `create_event` confirmation (`escrowEventId` + `escrow` read in a locked state)
+ * so unconfirmed, cancelled, or compensated events never display the verified badge.
  */
 export function OnchainBadge({
 	escrowEventId,
@@ -38,7 +45,9 @@ export function OnchainBadge({
 	network = "testnet",
 	labels,
 }: OnchainBadgeProps) {
-	const isConfirmedOnChain = Boolean(escrowEventId && escrow);
+	const isConfirmedOnChain = Boolean(
+		escrowEventId && escrow && LOCKED_ESCROW_STATES.has(escrow.state),
+	);
 	const contractUrl = getExplorerContractUrl(contractId, network);
 
 	return (

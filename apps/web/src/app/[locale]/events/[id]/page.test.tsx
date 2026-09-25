@@ -21,6 +21,9 @@ const { mockDb, mockSession, mockReadEscrow } = vi.hoisted(() => ({
 vi.mock("@/lib/db", () => ({ db: mockDb }));
 vi.mock("@/lib/wallet/session", () => ({ getSessionWallet: mockSession }));
 vi.mock("@/lib/escrow/read-event", () => ({ readEscrowEvent: mockReadEscrow }));
+vi.mock("@/hooks/use-theme", () => ({
+	useTheme: () => ({ theme: "dark" as const, setTheme: vi.fn() }),
+}));
 vi.mock("next/navigation", () => ({
 	notFound: () => {
 		throw new Error("NEXT_NOT_FOUND");
@@ -208,13 +211,18 @@ describe("EventPage — U03 Public Event Page (Issue #64)", () => {
 		).toBeGreaterThanOrEqual(2);
 	});
 
-	it("never renders 'Prizes verified on-chain' badge optimistically when create_event is not confirmed", async () => {
+	it("never renders 'Prizes verified on-chain' badge optimistically when create_event is not confirmed or when escrow is Cancelled/Compensated", async () => {
 		mockDb.event.findUnique.mockResolvedValue({
 			...completedEvent,
-			status: "DRAFT",
-			escrowEventId: null,
+			status: "CANCELLED",
 		});
-		mockReadEscrow.mockResolvedValue(null);
+		mockReadEscrow.mockResolvedValue({
+			reward: "7500000000",
+			state: "Cancelled",
+			token: "CUSDC",
+			admin: ORGANIZER,
+			judge: JUDGE,
+		});
 
 		await renderPage();
 

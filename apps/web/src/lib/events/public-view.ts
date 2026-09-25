@@ -142,7 +142,6 @@ export interface PublicEventView {
 	prizes: PublicPrizeView[];
 	judges: PublicJudgeView[];
 	teams: PublicTeamView[];
-	resolverAddress?: string | null;
 }
 
 /**
@@ -229,10 +228,6 @@ export function sanitizePublicEventView(
 				}),
 			};
 		}),
-		resolverAddress:
-			typeof raw.resolverAddress === "string" && raw.resolverAddress.trim()
-				? raw.resolverAddress.trim()
-				: null,
 	};
 }
 
