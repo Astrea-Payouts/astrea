@@ -52,9 +52,9 @@ export function TxHashLink({
 	return (
 		<div
 			className={cn(
-				// Explicit zinc colors: every host page hardcodes bg-black and <html> never
+				// Explicit zinc colors: every host page hardcodes bg-white dark:bg-black and <html> never
 				// gets the .dark class, so the theme tokens resolve to their light values.
-				"inline-flex items-center gap-1.5 font-mono text-sm text-zinc-400",
+				"inline-flex items-center gap-1.5 font-mono text-sm text-zinc-600 dark:text-zinc-400",
 				className,
 			)}
 		>
@@ -62,7 +62,7 @@ export function TxHashLink({
 				href={explorerUrl}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="inline-flex items-center gap-1 text-zinc-100 transition-colors hover:text-white hover:underline underline-offset-4"
+				className="inline-flex items-center gap-1 text-zinc-900 dark:text-zinc-100 transition-colors hover:text-zinc-950 dark:hover:text-white hover:underline underline-offset-4"
 				title={`View transaction on stellar.expert (${network})`}
 			>
 				<span>{displayedText}</span>
@@ -79,7 +79,7 @@ export function TxHashLink({
 						copied ? "Transaction hash copied" : "Copy transaction hash"
 					}
 					title={copied ? "Copied!" : "Copy full hash"}
-					className="inline-flex size-6 items-center justify-center rounded p-0.5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-500"
+					className="inline-flex size-6 items-center justify-center rounded p-0.5 text-zinc-600 dark:text-zinc-400 transition-colors hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-zinc-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-500"
 				>
 					{copied ? (
 						<Check className="size-3.5 text-green-500" />

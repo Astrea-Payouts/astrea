@@ -20,7 +20,7 @@ export interface ReleaseFormProps {
 type Built = { unsignedTransactionXdr: string; winners: ReleaseWinner[] };
 
 const selectClass =
-	"w-full rounded-lg border border-white/10 bg-zinc-900/60 px-3 py-2 text-sm text-white focus:border-emerald-500/50 focus:outline-none";
+	"w-full rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-50/80 dark:bg-zinc-900/60 px-3 py-2 text-sm text-zinc-950 dark:text-white focus:border-emerald-500/50 focus:outline-none";
 
 // Rank → team assignment, built by Go, signed by the judge's wallet, submitted
 // by Go. The amounts shown are Postgres' Prize rows for orientation only;
@@ -85,11 +85,11 @@ export function ReleaseForm({
 				{prizes.map((prize) => (
 					<label
 						key={prize.rank}
-						className="flex flex-col gap-1 text-sm text-zinc-300"
+						className="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
 					>
 						<span>
 							{t("rank", { rank: prize.rank })}{" "}
-							<span className="font-mono text-zinc-400">
+							<span className="font-mono text-zinc-600 dark:text-zinc-400">
 								{prize.amount} {symbol}
 							</span>
 						</span>
@@ -127,12 +127,14 @@ export function ReleaseForm({
 			) : null}
 
 			{built ? (
-				<div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-4 flex flex-col gap-3">
+				<div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50/80 dark:bg-zinc-900/60 p-4 flex flex-col gap-3">
 					<h2 className="text-sm font-semibold">{t("winnersTitle")}</h2>
 					<WinnersList winners={built.winners} teamName={teamName} />
 					{!submitted ? (
 						<>
-							<p className="text-xs text-zinc-400">{t("signHint")}</p>
+							<p className="text-xs text-zinc-600 dark:text-zinc-400">
+								{t("signHint")}
+							</p>
 							<SignStep
 								unsignedXdr={built.unsignedTransactionXdr}
 								address={judgeAddress}
@@ -157,7 +159,7 @@ export function ReleaseForm({
 					className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 flex flex-col gap-2"
 					role="status"
 				>
-					<p className="font-semibold text-emerald-300">
+					<p className="font-semibold text-emerald-700 dark:text-emerald-300">
 						{submitted.status === "pending" ? t("pending") : t("released")}
 					</p>
 					<div className="break-all">
@@ -174,7 +176,7 @@ export function ReleaseForm({
 			{failure ? (
 				<p
 					role="alert"
-					className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300 break-words"
+					className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-700 dark:text-red-300 break-words"
 				>
 					<span className="font-mono text-xs">
 						{failure.status ? `${failure.status} ` : ""}
@@ -195,7 +197,7 @@ function WinnersList({
 	teamName: (id: string) => string;
 }) {
 	return (
-		<ul className="divide-y divide-white/10 text-sm">
+		<ul className="divide-y divide-zinc-200 dark:divide-white/10 text-sm">
 			{winners.map((w) => (
 				<li
 					key={`${w.rank}-${w.teamMemberId}`}
@@ -204,7 +206,7 @@ function WinnersList({
 					<span>
 						#{w.rank} · {teamName(w.teamId)}
 					</span>
-					<span className="font-mono text-xs text-zinc-400 break-all">
+					<span className="font-mono text-xs text-zinc-600 dark:text-zinc-400 break-all">
 						{w.address}
 					</span>
 				</li>

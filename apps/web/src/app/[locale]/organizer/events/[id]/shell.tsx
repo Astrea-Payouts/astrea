@@ -14,8 +14,8 @@ export function OrganizerShell({
 	children: React.ReactNode;
 }) {
 	return (
-		<main className="min-h-screen bg-black text-white pt-28 pb-16 px-4 sm:px-6 md:py-12 md:px-12">
-			<div className="mx-auto max-w-2xl flex flex-col gap-6">
+		<main className="min-h-screen bg-white px-4 pt-28 pb-16 text-zinc-950 sm:px-6 md:px-12 md:py-12 dark:bg-black dark:text-white">
+			<div className="mx-auto flex max-w-2xl flex-col gap-6">
 				<header className="flex flex-col gap-3">
 					<EventStatusBadge status={event.status} className="w-fit" />
 					<h1 className="font-serif text-3xl font-bold tracking-tight md:text-4xl">
@@ -23,7 +23,7 @@ export function OrganizerShell({
 					</h1>
 					<Link
 						href={`/events/${event.id}`}
-						className="text-sm text-zinc-400 underline-offset-4 hover:underline break-words"
+						className="text-sm break-words text-zinc-600 underline-offset-4 hover:underline dark:text-zinc-400"
 					>
 						{event.name}
 					</Link>
@@ -47,7 +47,7 @@ export function ServiceFailure({
 	return (
 		<p
 			role="alert"
-			className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300 break-words"
+			className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm break-words text-red-700 dark:text-red-300"
 		>
 			{label}{" "}
 			<span className="font-mono text-xs">

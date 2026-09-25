@@ -13,7 +13,9 @@ export function JudgingToggle({ eventId }: { eventId: string }) {
 	return (
 		<form action={action} className="flex flex-col gap-3">
 			<input type="hidden" name="eventId" value={eventId} />
-			<p className="text-sm text-zinc-400">{t("closeHint")}</p>
+			<p className="text-sm text-zinc-600 dark:text-zinc-400">
+				{t("closeHint")}
+			</p>
 			<Button
 				type="submit"
 				variant="outline"

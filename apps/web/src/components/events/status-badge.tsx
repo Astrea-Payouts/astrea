@@ -3,13 +3,16 @@ import type { EventStatus } from "@/generated/prisma/enums";
 import { cn } from "@/lib/utils";
 
 const STYLES: Record<EventStatus, string> = {
-	DRAFT: "border-zinc-500/30 bg-zinc-500/10 text-zinc-300",
-	CREATED: "border-sky-500/30 bg-sky-500/10 text-sky-300",
-	LIVE: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
-	JUDGING: "border-amber-500/30 bg-amber-500/10 text-amber-300",
-	COMPLETED: "border-violet-500/30 bg-violet-500/10 text-violet-300",
-	DISPUTED: "border-red-500/30 bg-red-500/10 text-red-300",
-	CANCELLED: "border-zinc-500/30 bg-zinc-500/10 text-zinc-400",
+	DRAFT: "border-zinc-500/30 bg-zinc-500/10 text-zinc-700 dark:text-zinc-300",
+	CREATED: "border-sky-500/30 bg-sky-500/10 text-sky-700 dark:text-sky-300",
+	LIVE: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+	JUDGING:
+		"border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+	COMPLETED:
+		"border-violet-500/30 bg-violet-500/10 text-violet-700 dark:text-violet-300",
+	DISPUTED: "border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300",
+	CANCELLED:
+		"border-zinc-500/30 bg-zinc-500/10 text-zinc-600 dark:text-zinc-400",
 };
 
 export function EventStatusBadge({

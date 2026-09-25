@@ -1,8 +1,14 @@
 "use client";
 
 // Verified live-source port of React Bits SpecularButton
-// (https://reactbits.dev/components/specular-button) — TS-TW variant, JS→typed TSX with no logic changes.
+// (https://reactbits.dev/components/specular-button) — TS-TW variant, JS→typed TSX.
 // See docs/ui-motion.md.
+//
+// One local addition to the port: the optional `light*` props, which give the
+// button a different look in the light theme. They are CSS/`.dark`-class driven
+// on purpose, with no React theme context, so the component still works
+// anywhere and the colours are right on the first paint. Leave them out and it
+// behaves exactly as the upstream one does.
 
 import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
 import {
@@ -25,6 +31,17 @@ export interface SpecularButtonProps {
 	textColor?: string;
 	lineColor?: string;
 	baseColor?: string;
+	/**
+	 * Light-theme overrides for the four colours above. `tint`, `textColor`,
+	 * `lineColor` and `baseColor` are the dark-theme values (the ones that have
+	 * always been the defaults); each `light*` prop replaces its counterpart
+	 * when `<html>` does not carry the `dark` class, and falls back to it when
+	 * omitted.
+	 */
+	lightTint?: string;
+	lightTextColor?: string;
+	lightLineColor?: string;
+	lightBaseColor?: string;
 	intensity?: number;
 	shineSize?: number;
 	shineFade?: number;
@@ -43,6 +60,8 @@ interface ShaderProps {
 	radius: number;
 	lineColor: string;
 	baseColor: string;
+	lightLineColor?: string;
+	lightBaseColor?: string;
 	intensity: number;
 	shineSize: number;
 	shineFade: number;
@@ -133,6 +152,10 @@ const SpecularButton = ({
 	textColor = "#f5f5f5",
 	lineColor = "#ffffff",
 	baseColor = "#525252",
+	lightTint,
+	lightTextColor,
+	lightLineColor,
+	lightBaseColor,
 	intensity = 1,
 	shineSize = 10,
 	shineFade = 40,
@@ -154,6 +177,8 @@ const SpecularButton = ({
 		radius,
 		lineColor,
 		baseColor,
+		lightLineColor,
+		lightBaseColor,
 		intensity,
 		shineSize,
 		shineFade,
@@ -261,6 +286,7 @@ const SpecularButton = ({
 
 		const lineC = new Color();
 		const baseC = new Color();
+		const root = document.documentElement;
 
 		const update = (now: number) => {
 			raf = requestAnimationFrame(update);
@@ -282,8 +308,12 @@ const SpecularButton = ({
 			const brightTarget = p.autoAnimate ? 1 : proximityT;
 			bright += (brightTarget - bright) * (1 - Math.exp(-dt * 8));
 
-			lineC.set(p.lineColor);
-			baseC.set(p.baseColor);
+			// The shader takes plain colours, so it cannot follow the CSS theme
+			// like the fill does. Reading the <html> class here, every frame, keeps
+			// it in step with the theme without a React context or a rebuild.
+			const dark = root.classList.contains("dark");
+			lineC.set(dark ? p.lineColor : (p.lightLineColor ?? p.lineColor));
+			baseC.set(dark ? p.baseColor : (p.lightBaseColor ?? p.baseColor));
 			program.uniforms.uAngle.value = angle;
 			program.uniforms.uRadius.value =
 				Math.min(p.radius, Math.min(sizeRef.w, sizeRef.h) / 2) * dpr;
@@ -306,20 +336,26 @@ const SpecularButton = ({
 		};
 	}, []);
 
+	// The fill and the label pick their colour in CSS: the inline style holds
+	// both themes' values, and the two classes near the start of className point
+	// --sb-tint / --sb-text-color at the right one (`dark:` resolves from the
+	// <html> class, so the first paint is already correct).
 	return (
 		<button
 			ref={btnRef}
 			type={type}
 			disabled={disabled}
 			onClick={onClick}
-			className={`relative m-0 inline-flex cursor-pointer items-center justify-center border-none font-medium leading-none tracking-[0.01em] outline-none transition-transform duration-150 active:scale-[0.97] disabled:cursor-default disabled:opacity-55 disabled:active:scale-100 [color:var(--sb-text-color)] [border-radius:var(--sb-radius)] [background:color-mix(in_srgb,var(--sb-tint)_calc(var(--sb-tint-opacity)*100%),transparent)] [backdrop-filter:blur(var(--sb-blur))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-offset-[3px] ${SIZES[size] || SIZES.md}${className ? ` ${className}` : ""}`}
+			className={`relative m-0 inline-flex cursor-pointer items-center justify-center border-none font-medium leading-none tracking-[0.01em] outline-none transition-transform duration-150 active:scale-[0.97] disabled:cursor-default disabled:opacity-55 disabled:active:scale-100 [--sb-tint:var(--sb-tint-light)] dark:[--sb-tint:var(--sb-tint-dark)] [--sb-text-color:var(--sb-text-color-light)] dark:[--sb-text-color:var(--sb-text-color-dark)] [color:var(--sb-text-color)] [border-radius:var(--sb-radius)] [background:color-mix(in_srgb,var(--sb-tint)_calc(var(--sb-tint-opacity)*100%),transparent)] [backdrop-filter:blur(var(--sb-blur))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-offset-[3px] ${SIZES[size] || SIZES.md}${className ? ` ${className}` : ""}`}
 			style={
 				{
 					"--sb-radius": `${radius}px`,
-					"--sb-tint": tint,
+					"--sb-tint-dark": tint,
+					"--sb-tint-light": lightTint ?? tint,
 					"--sb-tint-opacity": tintOpacity,
 					"--sb-blur": `${blur}px`,
-					"--sb-text-color": textColor,
+					"--sb-text-color-dark": textColor,
+					"--sb-text-color-light": lightTextColor ?? textColor,
 				} as CSSProperties
 			}
 		>

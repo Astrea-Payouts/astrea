@@ -119,13 +119,13 @@ export function FundAndCreate({
 
 	return (
 		<div className="flex flex-col gap-6">
-			<section className="rounded-2xl border border-white/10 bg-zinc-900/60 p-5 flex flex-col gap-3">
+			<section className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 dark:border-white/10 dark:bg-zinc-900/60">
 				<dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-[auto_1fr] sm:gap-x-6">
-					<dt className="text-zinc-400">{t("balance")}</dt>
+					<dt className="text-zinc-600 dark:text-zinc-400">{t("balance")}</dt>
 					<dd className="font-mono" data-testid="balance">
 						{formatSmallestUnits(balance)} {symbol}
 					</dd>
-					<dt className="text-zinc-400">{t("required")}</dt>
+					<dt className="text-zinc-600 dark:text-zinc-400">{t("required")}</dt>
 					<dd className="font-mono">
 						{formatSmallestUnits(required)} {symbol}
 					</dd>
@@ -142,12 +142,14 @@ export function FundAndCreate({
 			) : (
 				<section
 					aria-labelledby="create-title"
-					className="rounded-2xl border border-white/10 p-5 flex flex-col gap-3"
+					className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-5 dark:border-white/10"
 				>
 					<h2 id="create-title" className="text-lg font-bold">
 						{t("create.title")}
 					</h2>
-					<p className="text-sm text-zinc-400">{t("create.hint")}</p>
+					<p className="text-sm text-zinc-600 dark:text-zinc-400">
+						{t("create.hint")}
+					</p>
 
 					{!createBuilt && !createPending ? (
 						<Button
@@ -165,13 +167,17 @@ export function FundAndCreate({
 					) : null}
 
 					{createBuilt && !createPending ? (
-						<div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-4 flex flex-col gap-3">
+						<div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50/80 p-4 dark:border-white/10 dark:bg-zinc-900/60">
 							<dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-[auto_1fr] sm:gap-x-6">
-								<dt className="text-zinc-400">{t("create.reward")}</dt>
+								<dt className="text-zinc-600 dark:text-zinc-400">
+									{t("create.reward")}
+								</dt>
 								<dd className="font-mono" data-testid="reward">
 									{formatSmallestUnits(createBuilt.reward)} {symbol}
 								</dd>
-								<dt className="text-zinc-400">{t("create.escrowEventId")}</dt>
+								<dt className="text-zinc-600 dark:text-zinc-400">
+									{t("create.escrowEventId")}
+								</dt>
 								<dd className="font-mono text-xs break-all">
 									{createBuilt.escrowEventId}
 								</dd>
@@ -186,7 +192,7 @@ export function FundAndCreate({
 								</p>
 							) : (
 								<>
-									<p className="text-xs text-zinc-400">
+									<p className="text-xs text-zinc-600 dark:text-zinc-400">
 										{t("create.signHint")}
 									</p>
 									<SignStep

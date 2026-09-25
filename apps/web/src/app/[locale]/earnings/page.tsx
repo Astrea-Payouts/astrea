@@ -46,33 +46,36 @@ export default async function EarningsPage() {
 	}
 
 	return (
-		<main className="min-h-screen bg-black text-white pt-28 pb-16 px-6 md:py-12 md:px-12">
+		<main className="min-h-screen bg-white px-6 pt-28 pb-16 text-zinc-950 md:px-12 md:py-12 dark:bg-black dark:text-white">
 			<div className="mx-auto max-w-6xl">
 				{/* Breadcrumb Navigation */}
 				<nav
 					aria-label="Breadcrumb"
-					className="flex items-center gap-2 text-xs text-zinc-500 mb-8"
+					className="mb-8 flex items-center gap-2 text-xs text-zinc-500"
 				>
-					<Link href="/" className="transition-colors hover:text-zinc-300">
+					<Link
+						href="/"
+						className="transition-colors hover:text-zinc-700 dark:hover:text-zinc-300"
+					>
 						{t("breadcrumbHome")}
 					</Link>
-					<ChevronRight className="size-3 text-zinc-600" />
-					<span className="font-medium text-zinc-300">
+					<ChevronRight className="size-3 text-zinc-400 dark:text-zinc-600" />
+					<span className="font-medium text-zinc-700 dark:text-zinc-300">
 						{t("breadcrumbEarnings")}
 					</span>
 				</nav>
 
 				{/* Header Section */}
 				<div className="mb-10">
-					<div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3.5 py-1 text-xs font-semibold text-emerald-400">
+					<div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3.5 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
 						<Coins className="size-3.5" />
 						<span>{t("portalBadge")}</span>
 					</div>
 
-					<h1 className="mt-4 font-serif text-3xl font-bold tracking-tight text-white md:text-5xl">
+					<h1 className="mt-4 font-serif text-3xl font-bold tracking-tight text-zinc-950 md:text-5xl dark:text-white">
 						{t("pageTitle")}
 					</h1>
-					<p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-400 md:text-base">
+					<p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-600 md:text-base dark:text-zinc-400">
 						{t("pageSubtitle")}
 					</p>
 				</div>

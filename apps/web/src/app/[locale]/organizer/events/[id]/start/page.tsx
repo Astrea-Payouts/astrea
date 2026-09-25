@@ -64,8 +64,10 @@ export default async function StartPage({ params }: { params: Params }) {
 	if (!session) {
 		return (
 			<Shell title={t("title")} event={event}>
-				<section className="rounded-2xl border border-emerald-500/20 bg-zinc-900/40 p-5 flex flex-col gap-3">
-					<p className="text-sm text-zinc-300">{t("connect")}</p>
+				<section className="flex flex-col gap-3 rounded-2xl border border-emerald-500/20 bg-zinc-50/80 p-5 dark:bg-zinc-900/40">
+					<p className="text-sm text-zinc-700 dark:text-zinc-300">
+						{t("connect")}
+					</p>
 					<WalletConnectButton className="w-full sm:w-auto" />
 				</section>
 			</Shell>
