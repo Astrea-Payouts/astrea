@@ -23,6 +23,9 @@ export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: string; id: string }>;
 
+/**
+ * Loads the event and its related organizer, prizes, judges, and team members.
+ */
 async function loadEvent(id: string) {
 	if (!isUuid(id)) return null;
 	return db.event.findUnique({
@@ -44,6 +47,9 @@ async function loadEvent(id: string) {
 	});
 }
 
+/**
+ * Generates localized Open Graph and Twitter social preview metadata for an event page.
+ */
 export async function generateMetadata({
 	params,
 }: {
@@ -56,13 +62,33 @@ export async function generateMetadata({
 		select: { name: true, description: true },
 	});
 	if (!event) return {};
-	return { title: event.name, description: event.description ?? undefined };
+	const description =
+		event.description ?? "Escrow-backed prize payouts on Stellar Soroban";
+	return {
+		title: event.name,
+		description,
+		openGraph: {
+			title: event.name,
+			description,
+		},
+		twitter: {
+			card: "summary_large_image",
+			title: event.name,
+			description,
+		},
+	};
 }
 
+/**
+ * Truncates a Stellar address to its first and last 6 characters.
+ */
 function shortAddress(address: string) {
 	return `${address.slice(0, 6)}…${address.slice(-6)}`;
 }
 
+/**
+ * Renders an external Stellar Explorer link for an account address.
+ */
 function AddressLink({ address }: { address: string }) {
 	return (
 		<a
@@ -77,6 +103,9 @@ function AddressLink({ address }: { address: string }) {
 	);
 }
 
+/**
+ * Server component rendering the public event page with escrow status and prizes.
+ */
 export default async function EventPage({ params }: { params: Params }) {
 	const { id } = await params;
 	const event = await loadEvent(id);

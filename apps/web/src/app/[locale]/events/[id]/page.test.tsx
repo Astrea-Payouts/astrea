@@ -163,6 +163,15 @@ describe("EventPage - generateMetadata", () => {
 		expect(meta).toEqual({
 			title: "Hackathon Stellar 2026",
 			description: "Great event",
+			openGraph: {
+				title: "Hackathon Stellar 2026",
+				description: "Great event",
+			},
+			twitter: {
+				card: "summary_large_image",
+				title: "Hackathon Stellar 2026",
+				description: "Great event",
+			},
 		});
 	});
 
