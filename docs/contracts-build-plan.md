@@ -38,7 +38,7 @@ The Stellar Development Foundation funds security audits for Soroban contracts t
 
 **What the Audit Bank checks before it accepts you (the "readiness" assessment):** eligibility, **threat modeling**, documentation completeness, and codebase maturity. The bar is explicit — the code is expected to be *nearly mainnet-ready*, with extensive tests and a testnet deployment already in place. Two consequences:
 
-- **We do not have a threat model document.** ADRs, the findings log below and the test suite are not the same thing as a written threat model. This is a concrete, currently-missing L01 deliverable — see the checklist below.
+- **Threat model document.** ADRs, the findings log below and the test suite are not the same thing as a written threat model — this was a concrete, missing L01 deliverable. **Status (2026-09-24): done** — [docs/threat-model.md](threat-model.md), closed via issue #107. See the checklist below.
 - E03 (testnet vertical-slice demo) stops being a nice-to-have and becomes an entry requirement.
 
 **Cost:** 5% of the initial audit cost, paid upfront, fully refunded if critical, high and medium findings are remediated within **20 business days** counted from the audit firm's or SDF's verification following the report. No extension is defined in the rules, though they ask to be notified before the window expires. Treat that window as a hard scheduling constraint: team availability has to be booked for the period right after the audit lands, not fitted in afterwards.
@@ -50,7 +50,7 @@ The Stellar Development Foundation funds security audits for Soroban contracts t
 #### L01 readiness checklist (derived from the Audit Bank criteria)
 
 - [ ] SCF Build Award applied for (L01b) — everything else is downstream of this
-- [ ] **Threat model written down** (L01a) — assets, actors, trust boundaries, attack scenarios and mitigations
+- [x] **Threat model written down** (L01a) — [docs/threat-model.md](threat-model.md); issue #107 closed 2026-09-13
 - [x] Testnet deployment live (E03) — contract `CCNAQ6MC3LZMT3U3RHVS62HEXCHTHDACSGSDKUTJUQWHGPYSAD7NFQZD` (governance deploy, 2026-09-14), full tx trail in [contracts/event-escrow/README.md](../smart-contracts/astrea/contracts/event-escrow/README.md)
 - [ ] Test suite covering the money paths and their negative cases (largely done — see the findings log)
 - [ ] Contract documentation complete enough for an external reader with no context
