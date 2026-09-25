@@ -103,7 +103,8 @@ export function ReleaseForm({
 						<select
 							name={`rank-${prize.rank}`}
 							value={assignments[prize.rank] ?? ""}
-							disabled={!!built || !!submitted}
+							// Locked while a build is in flight so its result matches the selection.
+							disabled={pending || !!built || !!submitted}
 							onChange={(e) => {
 								// A failure named the previous assignment's wallets; drop it.
 								setFailure(null);

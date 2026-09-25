@@ -209,6 +209,32 @@ describe("ReleaseForm", () => {
 		expect(rankSelect(1)).toHaveValue("team-b");
 	});
 
+	it("locks the team selects while a build is in flight", async () => {
+		let resolveBuild: (value: unknown) => void = () => {};
+		mockBuild.mockReturnValue(
+			new Promise((resolve) => {
+				resolveBuild = resolve;
+			}),
+		);
+		renderForm();
+		assignAll();
+
+		fireEvent.click(screen.getByRole("button", { name: copy.build }));
+
+		await waitFor(() => expect(rankSelect(1)).toBeDisabled());
+		expect(rankSelect(2)).toBeDisabled();
+
+		resolveBuild({
+			ok: false,
+			status: 0,
+			code: "unknown",
+			message: "socket hang up",
+		});
+
+		await waitFor(() => expect(rankSelect(1)).toBeEnabled());
+		expect(rankSelect(2)).toBeEnabled();
+	});
+
 	it("omits the status prefix when the failure has none", async () => {
 		mockBuild.mockResolvedValue({
 			ok: false,
