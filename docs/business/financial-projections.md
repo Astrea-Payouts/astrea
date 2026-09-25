@@ -133,7 +133,7 @@ Segment pricing alone, with no change in volume, is worth roughly **3.6× Scenar
 
 ### Scenario D — services: paid onboarding, judge-panel setup, sponsor reporting
 
-**D1 — price per paid package (assumption, no comparable priced today):** low $150 / mid $300 / high $600. **D2 — packages sold per quarter, from Quarter 3, ramping over 2 quarters then flat (assumption, independent of hackathon count — could include DAO/bounty organizers too):** low 1 / mid 3 / high 6.
+**D1 — price per paid package (assumption, no comparable priced today):** low $150 / mid $300 / high $600. **D2 — packages sold per quarter, at half volume in Quarters 3–4, full from Quarter 5 (assumption, independent of hackathon count — could include DAO/bounty organizers too):** low 1 / mid 3 / high 6.
 
 | | 3-year total |
 | --- | --- |
@@ -147,7 +147,7 @@ This is the largest revenue line in the model by a wide margin at mid/high — a
 
 Per `docs/contracts-build-plan.md`: SCF Build Award up to $150,000 in XLM, tranche-based, evaluated on ecosystem value and roadmap — **not assumed won**. If awarded, **E1 (assumption on tranche timing/split, not public)**: roughly a third at award (Quarter 1), a third at Audit Bank / mainnet readiness (Quarter 2), a third at mainnet launch or an early traction milestone (Quarter 3) — up to $150,000 total, in XLM (subject to XLM/USD price risk, not modelled here).
 
-This is a non-dilutive cash inflow that funds the audit co-pay and hosting runway, not a demonstration of product-market fit. **It is excluded from every break-even calculation below**, per the brief's instruction not to assume it is won.
+This is a non-dilutive cash inflow that funds the audit co-pay and hosting runway, not a demonstration of product-market fit. **It is excluded from every break-even calculation below**, since nothing has been awarded.
 
 ## 4. Break-even
 
