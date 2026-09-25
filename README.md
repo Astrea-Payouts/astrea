@@ -41,7 +41,7 @@ Astrea inverts the usual trust model:
 
 ## How It Works
 
-1. **Organizer deposits and creates an event** — a shared escrow contract holds a balance per organizer; creating the event reserves the prize total from that balance in the same call, prizes, judges, and deadlines included. There is no separate deploy or fund step.
+1. **Organizer deposits and creates an event** — a shared escrow contract holds a balance per organizer. The backend sums the configured prize amounts and takes the event's one judge; `create_event` receives that total as a single reward plus the judge address (not a prize list) and reserves it from the organizer's balance in the same call. `create_event_with_deadline` is the variant that also sets an expiry deadline. There is no separate deploy or fund step.
 2. **Organizer goes live** — a small go-live fee (0.5% by default) is charged from the organizer's free balance, on top of the prize; registration opens.
 3. **Participants register and submit** — wallet and USDC trustline are verified at registration, not at payout time.
 4. **Judge releases** — the winner is not known when the prize pool is locked, so winner addresses are supplied at release time. One judge-signed transaction pays every winner directly, with no approval step and no forwarding step.

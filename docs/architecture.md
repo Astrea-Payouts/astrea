@@ -56,7 +56,8 @@ UI: organizer signs → Go service submits → RPC confirms → Event.LIVE
 A single judge-signed call pays every winner in the same transaction — there is no separate approve step and no forwarding step; winner addresses are supplied at release time:
 
 ```
-judge assigns winners → backend validates winner trustlines, allocates each team member's share
+judge assigns winners → backend allocates each team member's share
+  (trustlines were checked off-chain at registration, ADR-004; the re-check at assignment is not wired yet)
 Go service: builds unsigned `release_reward` tx (winners' amounts must sum exactly to the event's reward)
 judge signs → Go service submits → RPC confirms
 reconciler: confirms release tx → Prize.PAID_OUT + one Payout row per paid team member (shared releaseTxHash)
