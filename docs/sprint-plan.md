@@ -178,30 +178,30 @@ Plus whatever the campaign slate (#118) actually publishes — that work belongs
 | Issue | Task | Status | Evidence |
 | --- | --- | --- | --- |
 | [#121](https://github.com/Astrea-Payouts/astrea/issues/121) | Submit the SCF interest form (Round #46) | **Open** | Assigned to Christopher, zero comments as of 2026-09-24 — not yet submitted. |
-| [#22](https://github.com/Astrea-Payouts/astrea/issues/22) | E01d contract — dispute/resolve-dispute | Open on GitHub, **done in code** | PR #178 ("add resolver-signed resolve_dispute after judging deadline") merged 2026-09-13. Stale tracker: the PR never used a closing keyword. |
-| [#26](https://github.com/Astrea-Payouts/astrea/issues/26) | Go EscrowClient — dispute wrapper + emergency withdraw | Open on GitHub, **done in code** | PR #182 ("resolve_dispute, two-signature emergency_withdraw, go-live transitions") merged 2026-09-14. Same stale-tracker pattern as #22. |
+| [#22](https://github.com/Astrea-Payouts/astrea/issues/22) | E01d contract — dispute/resolve-dispute | Done | PR #178 ("add resolver-signed resolve_dispute after judging deadline") merged 2026-09-13. The PR never used a closing keyword; closed by hand 2026-09-24. |
+| [#26](https://github.com/Astrea-Payouts/astrea/issues/26) | Go EscrowClient — dispute wrapper + emergency withdraw | Done | PR #182 ("resolve_dispute, two-signature emergency_withdraw, go-live transitions") merged 2026-09-14. Same missing closing keyword as #22; closed by hand 2026-09-24. |
 | [#12](https://github.com/Astrea-Payouts/astrea/issues/12) | E04 — real-time tracking | Open | Deferred as planned, not a gap. |
 
-**#22 and #26 are the same "check the code, not the tracker" mistake this document already documented for S01** (see "Backlog gaps" below) — recommend closing both by hand, linking PR #178 and #182 respectively, so they stop showing as outstanding work.
+**#22 and #26 are the same "check the code, not the tracker" mistake this document already documented for S01** (see "Backlog gaps" below). Both were closed by hand on 2026-09-24, linking PR #178 and #182.
 
 ### Was the Sprint Goal met?
 
 *"Prove the MVP's happy-path payout loop end-to-end on testnet, and open the 2026-09-15 campaign on top of it."* Two halves, two different answers:
 
 - **The payout loop:** substantially yes, with the #10/#13/#14 caveat above. The core create → fund → register → start → track → assign → release → confirm path has closed issues and merged PRs behind every step except reconciliation, trustline verification, and the OpLog-backed submit pipeline — none of which block a payout from completing once, all three the kind of thing that block it from completing *reliably*.
-- **Opening the campaign:** **not verifiably true, and the evidence leans toward "no."** No `grantfox-campaign*` or similar label exists anywhere in the repo (`gh label list --search grantfox` returns only the unrelated `phase: launch` label). Issue #118, the administrative "prepare and publish" task, closed with no comments and no linked PR. Most directly: on 2026-09-16 and 2026-09-17 — *after* the campaign was supposed to be live — Christopher told three separate contributors (#200, #203, #211) "we are not yet offering rewards for this issue. We are going to try entering the GrantFox programme... get rewarded once Astrea is accepted." `docs/business/competitive-analysis.md` (already committed) independently lists Astrea's GrantFox listing status as "Not published." Taken together, this reads as: the *issues* were likely published on GitHub as a slate, but Astrea itself had not been accepted onto GrantFox as a paying project, so no campaign went live in the sense the Sprint Goal meant — contributors could work, but not be paid through GrantFox. `TODO(Lamberti): confirm directly with GrantFox whether the project has since been accepted, and if so, on what date` — the GrantFox MCP tools available in this session return 401 Unauthorized on `grantfox_get_me` / `grantfox_list_my_projects`, so this cannot be checked independently here.
+- **Opening the campaign:** **not verifiably true, and the evidence leans toward "no."** No `grantfox-campaign*` or similar label exists anywhere in the repo (`gh label list --search grantfox` returns only the unrelated `phase: launch` label). Issue #118, the administrative "prepare and publish" task, closed with no comments and no linked PR. Most directly: on 2026-09-16 and 2026-09-17 — *after* the campaign was supposed to be live — Christopher told three separate contributors (#200, #203, #211) "we are not yet offering rewards for this issue. We are going to try entering the GrantFox programme... get rewarded once Astrea is accepted." `docs/business/competitive-analysis.md` (already committed) independently lists Astrea's GrantFox listing status as "Not published." Taken together, this reads as: the *issues* were likely published on GitHub as a slate, but Astrea itself had not been accepted onto GrantFox as a paying project, so no campaign went live in the sense the Sprint Goal meant — contributors could work, but not be paid through GrantFox. Christopher confirmed on 2026-09-24 that Astrea's acceptance on GrantFox is still pending.
 
-**Honest verdict: partially met.** The maintainer-lane half of the Sprint Goal (the payout loop) is close to true; the campaign half is unconfirmed and the direct evidence available points toward the campaign not actually having gone live as a paid GrantFox campaign by the Sprint Goal's own 09-15 target, whatever administrative prep happened around it.
+**Honest verdict: partially met.** The maintainer-lane half of the Sprint Goal (the payout loop) is close to true. The campaign half was not met: Astrea is not yet an accepted GrantFox project, so no paid campaign could go live by the 09-15 target, whatever administrative prep happened around it.
 
 ### The three inspection metrics
 
-1. **S-equivalents published vs. completed for the 2026-09-15 campaign slate: `TODO(Lamberti)` — not measurable from repo data.** There is no campaign label to query, #118 records no list of published issues, and the GrantFox project's acceptance status is itself unconfirmed (see above). This is not a case of a low or zero number — it is a case of not being able to tell what was actually published where. Needs a direct answer from GrantFox, not a repository search.
+1. **S-equivalents published vs. completed for the 2026-09-15 campaign slate: not applicable this Sprint.** GrantFox acceptance is still pending (see above), so no paid campaign existed to measure. #118 also records no list of the issues published on GitHub, which is worth fixing before the next slate so this metric can be computed at all.
 2. **Time from contributor PR opened to first maintainer review: median 3.97 hours, worst 44.17 hours.** Computed from all 36 contributor PRs opened this Sprint (`gh pr view --json createdAt,reviews,comments` per PR); every one of the 36 got a maintainer response of some kind (review or comment), so the metric is "how fast," not "whether." The worst case, PR #149 (bilhokista, opened 2026-09-06, first response 44.17h later), sits inside a burst of ~17 same-day PRs from one contributor, of which only 3 (#139, #141, #149) were eventually merged — the median is a better read on ordinary contributor experience than the worst case, which reflects a review-queue spike rather than typical neglect.
 3. **Did the Sprint Goal hold without contributor delivery? Yes, on the maintainer lane's own terms.** Every Increment 1 and Increment 2 item above was assigned to Christopher or Dereck, not a contributor — the #10/#13/#14 gaps and the #118 uncertainty are maintainer-side, not a case of the Goal depending on contributor work that didn't land. That is the intended design (see "Two lanes" above) and it held.
 
 ### What to update in the capacity hypotheses
 
-- The 8-S-equivalents-per-campaign baseline (from the 2026-08-21 → 2026-09-02 window) still cannot be extended to a second data point, because the second campaign's own existence as a paid campaign is unconfirmed (see metric 1). Keep treating 8 as the only real number until GrantFox's acceptance status is resolved.
+- The 8-S-equivalents-per-campaign baseline (from the 2026-08-21 → 2026-09-02 window) still cannot be extended to a second data point, because there was no second paid campaign (see metric 1). Keep treating 8 as the only real number until GrantFox's acceptance status is resolved.
 - The PR-review-time number (median 3.97h) is a genuinely new, good data point: the "one maintainer's review capacity" constraint the capacity section already names as binding is currently being met comfortably, not strained — no evidence yet that it needs the slate cut down from the stated 10–14 range.
 - Add a new hypothesis this Sprint surfaced: **closed-on-GitHub is not evidence of done, and done is not evidence of published.** Sprint 1 produced two independent instances of the same failure mode in two different directions — #22/#26 closed-in-spirit-but-open-on-GitHub, and #118 closed-on-GitHub-but-not-verifiably-done. Both should be checked by hand at every future Sprint Review, not assumed from issue state.
 
@@ -211,7 +211,7 @@ Not planned in detail yet, on purpose — per the Guide, only the next Sprint ge
 
 ## Sprint 2 — 2026-10-01 to 2026-10-15 (proposed — PO to confirm)
 
-The 15-day-per-campaign cadence resumes here, per the Cadence section above. **Next campaign open date: `TODO(Lamberti)` — not findable via `gh`.** No open issue or PR references a specific date for the campaign after 2026-09-15 (`gh issue list --search "campaign in:body"` returns only #118); given the unresolved GrantFox-acceptance question from the Sprint 1 Review, confirming both the date and whether Astrea is an accepted project should happen before this Sprint's campaign slate is published, not after.
+The 15-day-per-campaign cadence resumes here, per the Cadence section above. **Next campaign open date: `TODO(Lamberti)` — not findable via `gh`.** No open issue or PR references a specific date for the campaign after 2026-09-15 (`gh issue list --search "campaign in:body"` returns only #118); the date depends on GrantFox accepting Astrea as a project, still pending as of 2026-09-24.
 
 ### Proposed Sprint Goal
 
@@ -222,8 +222,8 @@ The 15-day-per-campaign cadence resumes here, per the Cadence section above. **N
 Other candidates considered and why they were not chosen as the Goal itself (they remain in the maintainer-lane table below):
 
 - **#105 — deploy `services/core-go` and seed a standing demo event.** Strong *evidence* for the eventual SCF application, but a demo deployment is not itself the Goal; it is a task that serves it.
-- **Docs synced with the shipped contract.** A real, sourced gap exists: `docs/contracts-build-plan.md` line 53 still shows `[ ]` for "Threat model written down (L01a)" although #107 closed on 2026-09-13 via PR #176, which added `docs/threat-model.md` (confirmed present in the tree). This is worth fixing in Sprint 2 but is a half-day correction, not a Sprint Goal.
-- **Validating the fee and dispute-resolver model with real organizer interviews.** A legitimate next step for the business side of Astrea, but it sits outside the GitHub-sourced maintainer lane this document tracks, has no issue, and is a co-founder-level product decision rather than a Sprint-trackable Increment — noted here so it isn't dropped, not scheduled as the Goal.
+- **Docs synced with the shipped contract.** README, architecture, product flows and the stale L01a checkbox in `docs/contracts-build-plan.md` are handled in PR #243. A correction, not a Sprint Goal.
+- **Validating the fee and dispute-resolver model with real organizer interviews.** The kit is in PR #244 (`docs/business/customer-interviews.md`, BRL 5). It sits outside the GitHub-sourced maintainer lane this document tracks and is exploratory rather than a Sprint-checkable Increment, so it runs alongside the Goal, not as it.
 
 ### Maintainer lane
 
@@ -232,25 +232,23 @@ Other candidates considered and why they were not chosen as the Goal itself (the
 | [#121](https://github.com/Astrea-Payouts/astrea/issues/121) — submit SCF interest form | Christopher | Already assigned to him since 2026-09-06; blocks the Sprint Goal; carries over from Sprint 1 where it did not get done. |
 | [#108](https://github.com/Astrea-Payouts/astrea/issues/108) — full SCF Build Award application | Christopher | Follows #121 directly; per the 2026-09-06 revision note, this was deliberately pulled out of Sprint 1 for exactly this later Sprint. Only starts once #121 gets a response. |
 | [#105](https://github.com/Astrea-Payouts/astrea/issues/105) — deploy `services/core-go`, seed a standing demo event | Christopher | His recent commit history is deploy/infra-heavy (`fix(core-go): use pgx exec mode instead of describe_exec behind the pooler`, `fix(core-go): correct the pgbouncer boot error's remedy`, the site-url fallback fix) — he already owns this surface. Its own dependency (#15) is closed. |
-| Fix `contracts-build-plan.md`'s stale L01a checkbox | Dereck | He owns the contracts-build-plan surface (authored the pause/whitelist/expire/compensation work it tracks); this is a one-line correction against a doc he already maintains. Not a GitHub issue — file one if it needs tracking past a single commit. |
-| [#22](https://github.com/Astrea-Payouts/astrea/issues/22) / [#26](https://github.com/Astrea-Payouts/astrea/issues/26) — close by hand, linked to PR #178 / #182 | Either | Housekeeping identified in the Sprint 1 Review above; five minutes of work, no code change. |
-| Confirm GrantFox project acceptance status and the actual next campaign date | Christopher | He holds the GrantFox relationship (per the #200/#203/#211 comment thread); this gates whether a campaign slate can be published at all this Sprint. |
+| Follow up on GrantFox project acceptance (pending as of 2026-09-24) and get the next campaign date | Christopher | He holds the GrantFox relationship (per the #200/#203/#211 comment thread); this gates whether a campaign slate can be published at all this Sprint. |
 
 ### Proposed campaign slate — proposed, PO to confirm
 
-**Publishing this slate is contingent on resolving the GrantFox-acceptance question above** — publishing issues to a campaign that cannot yet pay out repeats Sprint 1's #118 problem. Candidates below are open, unassigned, and dependency-verified against actual merged code (not just issue state), per the campaign slate rules:
+**Publishing this slate waits on GrantFox accepting Astrea** — publishing issues to a campaign that cannot yet pay out repeats Sprint 1's #118 problem. Candidates below are open, unassigned, and dependency-verified against actual merged code (not just issue state), per the campaign slate rules:
 
 | Issue | Task | Size | S-eq | Prerequisite, verified |
 | --- | --- | --- | --- | --- |
 | [#206](https://github.com/Astrea-Payouts/astrea/issues/206) | E11 — `op_log` FAILED-write-can't-overwrite-SUCCEEDED guard | S | 1 | Depends on #205, merged 2026-09-15. |
 | [#201](https://github.com/Astrea-Payouts/astrea/issues/201) | U19 — public participation card (SVG) | S | 1 | Depends on #200, closed (merged, Rodrigoue9). |
-| [#109](https://github.com/Astrea-Payouts/astrea/issues/109) | T01a — dispute deadline-check job | S | 1 | Depends on #22/#26 — open on GitHub but merged in code (PR #178, #182; see Sprint 1 Review). Publish this only after #22/#26 are closed by hand, so the slate doesn't visibly depend on two "open" issues. |
+| [#109](https://github.com/Astrea-Payouts/astrea/issues/109) | T01a — dispute deadline-check job | S | 1 | Depends on #22/#26, both closed (PR #178, #182). |
 | [#18](https://github.com/Astrea-Payouts/astrea/issues/18) | K03 — wallet compat: xBull, LOBSTR | S | 1 | No dependency; harness already built. |
 | [#37](https://github.com/Astrea-Payouts/astrea/issues/37) | K05a — wallet compat: Rabet, Hana, Klever | S | 1 | No dependency. Only one of #37–#40 included — see slate rule 4; #38–#40 held back to keep the slate varied. |
 | [#12](https://github.com/Astrea-Payouts/astrea/issues/12) | E04 — real-time tracking | M | 3 | Depends on #7 and #11, both closed. |
 | [#168](https://github.com/Astrea-Payouts/astrea/issues/168) | E08 — off-chain prize breakdown, persistence + Go enforcement | M | 3 | Depends on #24/#25, both closed. **Data gap found while building this slate: the issue body states `Size: M` but has no `size:` label on GitHub, so it was invisible to a label-based search — add the label before publishing.** Money-path (`security` label, testnet tx required at review). |
 
-**11 S-equivalents across 7 issues** — inside the 10–14 range and the "typically 6–8 issues" guidance, and spread across `escrow-core` (3), `product-ui` (1), `trust-edge-cases` (1) and wallet-compat `spike` (1) rather than repeating Sprint 1's near-identical-wallet-issues problem. `TODO(Lamberti): confirm #109 shouldn't wait a full campaign for #22/#26's tracker cleanup to actually happen before it's published.`
+**11 S-equivalents across 7 issues** — inside the 10–14 range and the "typically 6–8 issues" guidance, and spread across `escrow-core` (3), `product-ui` (1), `trust-edge-cases` (1) and wallet-compat `spike` (1) rather than repeating Sprint 1's near-identical-wallet-issues problem.
 
 Left out despite being open and unassigned: #202, #193, #106, #58, #75, #74, #110–#112 (each has at least one unbuilt dependency — #66, #62, #65, #54, #13, #74 itself, or the T01b/T01a chain); #44 (U16 i18n QA) explicitly states in its own body it's best picked up once more Phase 3 UI work has landed, which it largely hasn't yet.
 
@@ -272,7 +270,7 @@ And #70 (T01) is no longer unsplit — see the Campaign slate rules section abov
 
 **Found while writing the 2026-09-24 Sprint 1 Review and Sprint 2 plan:**
 
-- **#22 and #26 are the S01 mistake again, in the opposite direction.** Both are merged in code (PR #178, #182) but remain open on GitHub because neither PR used a closing keyword — closed-in-code is not the same failure as S01's closed-in-tracker-but-not-in-code, but it's the same root cause: trusting one signal (tracker state) over the other (actual merged code). Recommend closing both by hand.
+- **#22 and #26 are the S01 mistake again, in the opposite direction.** Both were merged in code (PR #178, #182) but stayed open on GitHub because neither PR used a closing keyword — closed-in-code is not the same failure as S01's closed-in-tracker-but-not-in-code, but it's the same root cause: trusting one signal (tracker state) over the other (actual merged code). Both closed by hand on 2026-09-24.
 - **#168 (E08) has `Size: M` written into its own issue body but no `size:` label on GitHub**, so it does not show up in any label-based query for sizing or slate-building — it was only found by reading unsized open issues individually. Worth a pass over open issues checking body-stated size against the actual label, since a slate built by label search alone would silently skip it.
 
 ## What to inspect at each Sprint Review

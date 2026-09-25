@@ -1,6 +1,6 @@
 # Astrea — Definition of Done
 
-Astrea already has strong quality gates — CI config, the PR template, CONTRIBUTING.md's code-quality section — but they have never been written down as one artifact a contributor can check against before asking for review. That gap is expensive once contributors are paid per issue: **a payment dispute is almost always an unwritten Definition of Done.** This document is that artifact.
+Astrea already has strong quality gates — CI config, the PR template, CONTRIBUTING.md's code-quality section — but they have never been written down as one artifact a contributor can check against before asking for review. That gap gets expensive once some campaign issues carry a reward: **a payment dispute is almost always an unwritten Definition of Done.** This document is that artifact.
 
 An item is **Done** only when every applicable box below is true. If a Product Backlog item does not meet this, it is not part of the Increment — it is not shown at Sprint Review, and it is not eligible for payment, no matter how complete it looks.
 
