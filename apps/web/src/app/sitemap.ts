@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
+import { getSiteUrl } from "@/lib/site-url";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-	const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://astrea.app";
+	const baseUrl = getSiteUrl();
 	const currentDate = new Date();
 
 	return routing.locales.map((locale) => ({
