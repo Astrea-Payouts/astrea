@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 const STYLES: Record<EventStatus, string> = {
 	DRAFT: "border-zinc-500/30 bg-zinc-500/10 text-zinc-300",
 	CREATED: "border-sky-500/30 bg-sky-500/10 text-sky-300",
-	FUNDED: "border-sky-500/30 bg-sky-500/10 text-sky-300",
 	LIVE: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
 	JUDGING: "border-amber-500/30 bg-amber-500/10 text-amber-300",
 	COMPLETED: "border-violet-500/30 bg-violet-500/10 text-violet-300",
