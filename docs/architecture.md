@@ -100,13 +100,13 @@ So the multi-recipient goal survived, but the *independence* property did not: w
 
 This is recorded rather than quietly rewritten because the gap was live for a while: issue #4's acceptance criteria asked for "multi-milestone independence" tests that could never pass, since they described a model the code never had. If independent milestones are wanted later, that is a real contract redesign (a list of prize entries with per-entry state), not a test to add — and it would ripple into the dispute design (#22), which currently assumes one dispute per event.
 
-**Verified (K06, 2026-08, in-process test):** a single `close_event()` call paying multiple winners scales linearly at ~168k CPU instructions per additional winner — ~1.2% of Stellar Mainnet's per-invocation instruction budget even at 25 winners in one call, far more than any realistic event needs. No separate contract is warranted for the multi-winner case. See [spikes/k06-multi-release-budget](../spikes/k06-multi-release-budget/README.md).
+**Verified (K06, 2026-08, in-process test; standalone spike, not the shipped contract):** a single `MultiReleaseSpike::close_event()` call paying multiple winners scales linearly at ~168k CPU instructions per additional winner — ~1.2% of Stellar Mainnet's per-invocation instruction budget even at 25 winners in one call, far more than any realistic event needs. No separate contract is warranted for the multi-winner case. The spike has no `AdminWallet` or event state, so it is not a benchmark of the shipped `release_reward` path. See [spikes/k06-multi-release-budget](../spikes/k06-multi-release-budget/README.md).
 
 **Corollary:** "ranked prizes" (1st/2nd/3rd, or organizer-chosen up to N positions) and "prizes by category" are the same mechanism, not two contract paths — both are just a list of amounts with an off-chain label (`Prize.rank` in the Postgres sketch above) attached to each entry. The organizer choosing how many ranked positions pay out, and how much each pays, needs no new contract capability — it's the existing prize list at a different length.
 
 ### ADR-003 — Organizer is not in the payout path
 
-**Decision:** each event stores one `judge` address, and it is the only signer `release_reward` accepts: the judge signs once and every winner is paid atomically, with no separate approval call. K01's separate `approver` and `release_signer` roles were collapsed into that single address. If `judging_deadline` passes without a release, the resolver signs `resolve_dispute`, which pays the winners directly; there is no separate dispute-opening call. The organizer's address appears nowhere in the payout path — no function callable by the organizer can move escrowed funds anywhere.
+**Decision:** each event stores one `judge` address, and it is the only signer `release_reward` accepts: the judge signs once and every winner is paid atomically, with no separate approval call. K01's separate `approver` and `release_signer` roles were collapsed into that single address. If `judging_deadline` passes without a release, the resolver signs `resolve_dispute`, which pays the winners directly; there is no separate dispute-opening call. The organizer's address appears nowhere in the payout path. Before the event starts, the organizer can still call `set_event_cancelled` to return the reserved reward to its `AdminWallet`, or co-sign `emergency_withdraw` with the resolver; neither is allowed once the event is `InProgress`.
 **Why:** if the organizer had to co-sign releases, an absent or hostile organizer could strand approved winners — which would make any "the funds are locked and will pay out" claim dishonest. Removing them from the release path is what turns the locked funds into a credible promise.
 **Residual trust:** judges (can go silent or collude) and the dispute resolver (a designated party). Both are mitigated by transparency: judges and resolver are published on the event page before the event starts, and judging deadlines trigger the dispute path.
 
@@ -120,7 +120,8 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 
 ### ADR-004 — Trustline validation at registration, not payout
 
-**Decision:** USDC trustline is checked when a participant registers and re-checked at winner assignment.
+**Decision (target policy):** USDC trustline is checked when a participant registers and re-checked at winner assignment.
+**Current status:** only the registration check is shipped. The assignment re-check is not wired yet, so a closed trustline can still fail the atomic `release_reward`.
 **Why:** discovering a missing trustline at payout time is the worst possible UX and blocks the release flow.
 
 ### ADR-005 — Wallet connection sets a UX session, not an authorization boundary

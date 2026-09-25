@@ -92,7 +92,7 @@ Pre-launch (Created/WaitingForStart) ──set_event_cancelled (automatic refund
 Pre-launch, deadline configured ──expire_event, permissionless refund──▶ CANCELLED
 ```
 
-Prize states are off-chain only — the contract pays an event's prizes in one call and has no per-prize model (ADR-002's correction): `PENDING → ASSIGNED → RELEASED → PAID_OUT`, with `DISPUTED` reachable from `ASSIGNED` (skipping `RELEASED`, since a resolved dispute pays the winner directly) and resolving to `PAID_OUT`. There is no `APPROVED` status — the contract has no approval step, so `ASSIGNED` goes straight to `RELEASED` once the judge's (or resolver's) transaction confirms. All transitions are validated server-side; money-moving transitions require an on-chain confirmation before the mirror state advances.
+Prize states are off-chain only — the contract pays an event's prizes in one call and has no per-prize model (ADR-002's correction): `PENDING → ASSIGNED → RELEASED → PAID_OUT`, with `DISPUTED` reachable from `ASSIGNED` (skipping `RELEASED`, since a resolved dispute pays the winner directly) and resolving to `PAID_OUT`. There is no `APPROVED` status — the contract has no approval step, so `ASSIGNED` goes straight to `RELEASED` once the judge's `release_reward` confirms. The resolver's path never uses `RELEASED`: it is `ASSIGNED → DISPUTED → PAID_OUT`, and nothing sets `DISPUTED` yet (see Flow 5). All transitions are validated server-side; money-moving transitions require an on-chain confirmation before the mirror state advances.
 
 ## UX principles — perceived performance
 
