@@ -2,35 +2,37 @@
 //
 // The project's default Vitest environment is "node" (see vitest.config.ts) —
 // most lib tests never touch a real DOM. This file does (document.cookie,
-// window.localStorage), so it opts into jsdom just for itself instead of
-// flipping the environment for the whole suite.
-import { afterEach, describe, expect, it } from "vitest";
+// <html> classes), so it opts into jsdom just for itself instead of flipping
+// the environment for the whole suite.
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+	applyTheme,
 	DEFAULT_THEME,
+	isTheme,
 	parseTheme,
 	readStoredTheme,
 	shouldAnimateThemeChange,
 	THEME_COOKIE,
 	THEME_INIT_SCRIPT,
-	THEME_TRANSITION_MS,
 	writeStoredTheme,
 } from "./theme-preference";
 
-const LEGACY_STORAGE_KEY = "astrea:theme";
-
-function clearCookie() {
-	document.cookie = `${THEME_COOKIE}=; Max-Age=0; Path=/`;
-}
+const root = document.documentElement;
 
 afterEach(() => {
-	clearCookie();
-	window.localStorage.removeItem(LEGACY_STORAGE_KEY);
+	// First: the cookie spies below would otherwise throw on the reset.
+	vi.restoreAllMocks();
+	document.cookie = `${THEME_COOKIE}=; Max-Age=0; Path=/`;
+	root.className = "";
+	root.removeAttribute("style");
+	delete root.dataset.motion;
 });
 
 describe("parseTheme", () => {
 	it("accepts the two valid themes", () => {
 		expect(parseTheme("light")).toBe("light");
 		expect(parseTheme("dark")).toBe("dark");
+		expect(isTheme("light")).toBe(true);
 	});
 
 	it("falls back to the default for anything else", () => {
@@ -55,39 +57,72 @@ describe("readStoredTheme / writeStoredTheme", () => {
 		expect(readStoredTheme()).toBe(DEFAULT_THEME);
 	});
 
-	it("migrates a legacy localStorage value once, then forgets it", () => {
-		window.localStorage.setItem(LEGACY_STORAGE_KEY, "light");
-		expect(readStoredTheme()).toBe("light");
-		expect(window.localStorage.getItem(LEGACY_STORAGE_KEY)).toBeNull();
-		expect(document.cookie).toContain(`${THEME_COOKIE}=light`);
+	it("falls back to the default when cookies are unreadable", () => {
+		vi.spyOn(document, "cookie", "get").mockImplementation(() => {
+			throw new Error("blocked");
+		});
+		expect(readStoredTheme()).toBe(DEFAULT_THEME);
+	});
+
+	it("swallows a blocked cookie write", () => {
+		vi.spyOn(document, "cookie", "set").mockImplementation(() => {
+			throw new Error("blocked");
+		});
+		expect(() => writeStoredTheme("light")).not.toThrow();
+	});
+});
+
+describe("applyTheme", () => {
+	it("toggles the dark class and the colour scheme", () => {
+		applyTheme("dark");
+		expect(root.classList.contains("dark")).toBe(true);
+		expect(root.style.colorScheme).toBe("dark");
+
+		applyTheme("light");
+		expect(root.classList.contains("dark")).toBe(false);
+		expect(root.style.colorScheme).toBe("light");
 	});
 });
 
 describe("THEME_INIT_SCRIPT", () => {
-	it("reads the same cookie the provider writes", () => {
-		expect(THEME_INIT_SCRIPT).toContain(`${THEME_COOKIE}=`);
+	// Runs the exact string the layout inlines, against the static HTML's
+	// default `.dark` class.
+	const run = () => new Function(THEME_INIT_SCRIPT)();
+
+	it("removes .dark when the cookie says light", () => {
+		root.classList.add("dark");
+		writeStoredTheme("light");
+		run();
+		expect(root.classList.contains("dark")).toBe(false);
+		expect(root.style.colorScheme).toBe("light");
 	});
 
-	it("falls back to the legacy storage key", () => {
-		expect(THEME_INIT_SCRIPT).toContain(`"${LEGACY_STORAGE_KEY}"`);
+	it("leaves .dark alone without a cookie or with an unknown value", () => {
+		root.classList.add("dark");
+		run();
+		expect(root.classList.contains("dark")).toBe(true);
+
+		document.cookie = `${THEME_COOKIE}=sepia; Path=/`;
+		run();
+		expect(root.classList.contains("dark")).toBe(true);
 	});
 });
 
 describe("shouldAnimateThemeChange", () => {
-	it("is true in a browser-like environment with the API present", () => {
-		// jsdom implements document.startViewTransition as of jsdom 30, so this
-		// asserts the happy path here; the SSR/no-DOM path is covered by
-		// running the same function under the node environment elsewhere.
-		if (typeof document.startViewTransition === "function") {
-			expect(shouldAnimateThemeChange()).toBe(true);
-		} else {
-			expect(shouldAnimateThemeChange()).toBe(false);
-		}
+	it("follows View Transitions support", () => {
+		const supported = typeof document.startViewTransition === "function";
+		expect(shouldAnimateThemeChange()).toBe(supported);
 	});
-});
 
-describe("THEME_TRANSITION_MS", () => {
-	it("stays at 300ms, the value hard-coded in globals.css", () => {
-		expect(THEME_TRANSITION_MS).toBe(300);
+	it("is false when reduced motion is on, even with the API", () => {
+		const original = document.startViewTransition;
+		document.startViewTransition = vi.fn() as never;
+		try {
+			expect(shouldAnimateThemeChange()).toBe(true);
+			root.dataset.motion = "reduced";
+			expect(shouldAnimateThemeChange()).toBe(false);
+		} finally {
+			document.startViewTransition = original;
+		}
 	});
 });

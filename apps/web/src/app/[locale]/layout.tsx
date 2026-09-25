@@ -10,6 +10,7 @@ import { MotionPreferenceProvider } from "@/hooks/use-reduced-motion";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { routing } from "@/i18n/routing";
 import { getSiteUrl } from "@/lib/site-url";
+import { THEME_INIT_SCRIPT } from "@/lib/theme-preference";
 import { WalletProvider } from "@/lib/wallet/provider";
 import "../globals.css";
 
@@ -133,20 +134,26 @@ export default async function LocaleLayout({
 		// signal effect (esm/state/effects.js), i.e. at import time, before
 		// React hydrates. The server never renders that style attribute, so
 		// dev logs a mismatch on every page. The flag only covers this
-		// element's own attributes, not its children.
-		// Every page paints its own bg-black, but the shadcn tokens in globals.css
-		// only flip to their dark values under .dark. Without it, <Button
-		// variant="outline"> renders white-on-white and "default" near-black on
-		// black. There is no light theme to preserve, so the class is static.
+		// element's own attributes, not its children. It also covers the class
+		// and colorScheme that THEME_INIT_SCRIPT changes before hydration.
 		//
-		// bg-black on <body>: pages paint their own black <main>, but the sticky
-		// header sits above it and is transparent until scrolled, so without it
-		// a grey strip of the token background shows through at the top.
+		// `dark` is the default theme, baked into the static HTML. The inline
+		// script removes it before first paint for visitors who chose light.
+		//
+		// Body background: pages paint their own <main>, but the sticky header
+		// sits above it and is transparent until scrolled, so without it a grey
+		// strip of the token background shows through at the top.
 		<html
 			lang={locale}
 			className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
 			suppressHydrationWarning
 		>
+			<head>
+				<script
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: static string built from a constant, no user input
+					dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+				/>
+			</head>
 			<body className="relative min-h-full flex flex-col bg-white dark:bg-black">
 				<NextIntlClientProvider>
 					<ThemeProvider>

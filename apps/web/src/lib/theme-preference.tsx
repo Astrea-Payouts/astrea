@@ -1,17 +1,12 @@
 export type Theme = "light" | "dark";
 
-// Cookie, not localStorage: same mechanism next-intl uses for the language
-// cookie, so both preferences are visible to the server on the very first
-// request instead of only after the client hydrates.
+// Cookie, not localStorage, like next-intl's locale cookie. The pages are
+// statically rendered, so the server never reads it: THEME_INIT_SCRIPT does,
+// before first paint.
 export const THEME_COOKIE = "astrea-theme";
 // Same lifetime as next-intl's locale cookie, so the two preferences expire
 // together instead of one outliving the other.
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
-
-// Where the preference used to live. Nothing writes here anymore; it only
-// exists so a returning visitor's old choice is migrated once instead of
-// silently reset back to the default.
-const LEGACY_STORAGE_KEY = "astrea:theme";
 
 /**
  * The site shipped dark-only, so dark stays the default and nobody sees a
@@ -46,23 +41,11 @@ function deleteCookie(name: string): void {
 
 export function readStoredTheme(): Theme {
 	try {
-		const cookie = readCookie(THEME_COOKIE);
-		if (cookie !== null) return parseTheme(cookie);
-
-		// One-time migration for a visitor who chose a theme back when it lived
-		// in localStorage: honour it once, move it to the cookie, and stop
-		// looking here again.
-		const legacy = window.localStorage.getItem(LEGACY_STORAGE_KEY);
-		if (legacy !== null) {
-			const theme = parseTheme(legacy);
-			writeStoredTheme(theme);
-			window.localStorage.removeItem(LEGACY_STORAGE_KEY);
-			return theme;
-		}
+		return parseTheme(readCookie(THEME_COOKIE));
 	} catch {
-		// Private mode, blocked storage, embedded contexts.
+		// Blocked cookies, embedded contexts.
+		return DEFAULT_THEME;
 	}
-	return DEFAULT_THEME;
 }
 
 export function writeStoredTheme(theme: Theme): void {
@@ -86,28 +69,21 @@ export function applyTheme(theme: Theme): void {
 }
 
 /**
- * Inlined in <head> so it runs before first paint. The server always renders
- * `.dark` (the default), so the only case to correct is a stored "light" —
- * without this, those visitors would see a flash of dark on every load.
- *
- * Reads the cookie first, and falls back to the legacy localStorage key so a
- * visitor mid-migration (cookie not written yet, tab not remounted) still
- * gets the right theme on this load instead of one frame of the wrong one.
+ * Inlined in <head> by the locale layout so it runs before first paint. The
+ * static HTML always carries `.dark` (the default), so the only case to
+ * correct is a stored "light"; without this, those visitors would see a flash
+ * of dark on every load.
  */
-export const THEME_INIT_SCRIPT = `(function(){try{var m=document.cookie.match(/(?:^|; )${THEME_COOKIE}=([^;]*)/);var v=m?decodeURIComponent(m[1]):localStorage.getItem("${LEGACY_STORAGE_KEY}");if(v==="light"){var r=document.documentElement;r.classList.remove("dark");r.style.colorScheme="light"}}catch(e){}})();`;
+export const THEME_INIT_SCRIPT = `(function(){try{var m=document.cookie.match(/(?:^|; )${THEME_COOKIE}=([^;]*)/);if(m&&decodeURIComponent(m[1])==="light"){var r=document.documentElement;r.classList.remove("dark");r.style.colorScheme="light"}}catch(e){}})();`;
 
 /**
- * How long the theme cross-fade lasts. The number lives in CSS
- * (`::view-transition-*(root)` in globals.css) because that is where the
- * browser reads it; it is repeated here only so the two stay easy to find.
- */
-export const THEME_TRANSITION_MS = 300;
-
-/**
- * Whether the browser can cross-fade the theme change with the View
- * Transitions API. Where it cannot, the theme just switches instantly.
+ * Whether to cross-fade the theme change with the View Transitions API (the
+ * duration lives in globals.css). Off where the browser lacks the API and
+ * when reduced motion is on: MotionPreferenceProvider mirrors both the in-app
+ * toggle and the OS setting into `data-motion` on <html>.
  */
 export function shouldAnimateThemeChange(): boolean {
 	if (typeof document === "undefined") return false;
+	if (document.documentElement.dataset.motion === "reduced") return false;
 	return typeof document.startViewTransition === "function";
 }

@@ -145,3 +145,10 @@
 		@apply font-sans;
 	}
 }
+
+/* Theme switch cross-fade (ThemeProvider → document.startViewTransition).
+   The browser default is 250ms; skipped entirely under reduced motion. */
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 300ms;
+}
