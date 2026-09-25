@@ -48,8 +48,10 @@ export function ReduceMotionToggle({
 				title={`${t("label")} — ${stateLabel}`}
 				onClick={toggle}
 				className={cn(
-					"flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-white",
-					reduced ? "text-white" : "text-white/70",
+					"flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-zinc-950 dark:hover:text-white",
+					reduced
+						? "text-zinc-950 dark:text-white"
+						: "text-zinc-900/70 dark:text-white/70",
 					className,
 				)}
 			>
@@ -79,8 +81,10 @@ export function ReduceMotionToggle({
 				title={`${t("label")} — ${stateLabel}`}
 				onClick={toggle}
 				className={cn(
-					"rounded-md p-1 transition-colors hover:text-white",
-					reduced ? "text-white" : "text-white/70",
+					"rounded-md p-1 transition-colors hover:text-zinc-950 dark:hover:text-white",
+					reduced
+						? "text-zinc-950 dark:text-white"
+						: "text-zinc-900/70 dark:text-white/70",
 					className,
 				)}
 			>

@@ -12,6 +12,9 @@ import type {
 	ReleaseSubmitResponse,
 	ReleaseWinner,
 } from "@/lib/core-go/types";
+import { db } from "@/lib/db";
+import { env } from "@/lib/env";
+import { verifyAndRecordTrustline } from "@/lib/trustline/verify-and-record";
 import { getSessionWallet } from "@/lib/wallet/session";
 
 // Go's own error envelope, passed through verbatim so the judge sees
@@ -25,9 +28,20 @@ export type ReleaseFailure = {
 	message: string;
 };
 
+// ADR-004 re-check at assignment: `asset` is `code:issuer`, as in the
+// registration refusal, and `wallets` lists every winning member without it.
+// Key under the "JudgePage.errors" message namespace.
+export type TrustlineFailure = {
+	ok: false;
+	code: "missingTrustline";
+	asset: string;
+	wallets: string[];
+};
+
 export type BuildResult =
 	| { ok: true; unsignedTransactionXdr: string; winners: ReleaseWinner[] }
-	| ReleaseFailure;
+	| ReleaseFailure
+	| TrustlineFailure;
 
 export type SubmitResult =
 	| ({ ok: true } & ReleaseSubmitResponse)
@@ -58,6 +72,48 @@ function failure(err: unknown): ReleaseFailure {
 	};
 }
 
+// Only for the caller the judge page shows the form to; anyone else falls
+// through to Go, which answers not_judge / not JUDGING as before. This is
+// not authorization (ADR-005): Go stays the one that refuses.
+async function isActiveJudge(
+	eventId: string,
+	address: string,
+): Promise<boolean> {
+	const event = await db.event.findUnique({
+		where: { id: eventId },
+		select: {
+			status: true,
+			judges: { where: { status: "ACTIVE" }, select: { walletAddress: true } },
+		},
+	});
+	return (
+		event?.status === "JUDGING" &&
+		event.judges.length === 1 &&
+		event.judges[0].walletAddress === address
+	);
+}
+
+// release_reward pays every winner in one atomic call, so a single closed
+// trustline fails the whole payout. Returns the addresses that lack it.
+async function winnersWithoutTrustline(
+	eventId: string,
+	assignments: ReleaseAssignment[],
+): Promise<string[]> {
+	const teamIds = [...new Set(assignments.map((a) => a.teamId))];
+	const members = await db.teamMember.findMany({
+		where: { eventId, teamId: { in: teamIds } },
+		orderBy: [{ teamId: "asc" }, { ordinal: "asc" }],
+		select: { wallet: { select: { id: true, address: true } } },
+	});
+	const checked = await Promise.all(
+		members.map(async ({ wallet }) => ({
+			address: wallet.address,
+			ok: await verifyAndRecordTrustline(wallet.id, wallet.address),
+		})),
+	);
+	return checked.filter((c) => !c.ok).map((c) => c.address);
+}
+
 // Go authorizes the caller: X-Astrea-Wallet must be the event's single
 // ACTIVE judge, the event must be JUDGING. The web side only supplies the
 // session wallet it verified via SEP-0043.
@@ -70,6 +126,17 @@ export async function buildRelease(
 		return { ok: false, status: 401, code: "not_connected", message: "" };
 	}
 	try {
+		if (await isActiveJudge(eventId, session.address)) {
+			const missing = await winnersWithoutTrustline(eventId, assignments);
+			if (missing.length > 0) {
+				return {
+					ok: false,
+					code: "missingTrustline",
+					asset: `${env.USDC_SYMBOL}:${env.USDC_ISSUER}`,
+					wallets: missing,
+				};
+			}
+		}
 		const res = await releaseBuild(eventId, session.address, assignments);
 		return {
 			ok: true,

@@ -12,7 +12,7 @@
 
 ## What is Astrea?
 
-Astrea puts prize money on-chain before a competition starts. Organizers fund a multi-release smart escrow on Stellar; participants can verify the prizes exist before investing their time; winners are paid in USDC as soon as judges approve.
+Astrea puts prize money on-chain before a competition starts. Organizers deposit into a shared Stellar escrow contract and reserve each event's prize from that balance; participants can verify the prize exists before investing their time; winners are paid in USDC the moment a judge releases it.
 
 *The name comes from Astraea, the Greek goddess of justice associated with the constellation Virgo.*
 
@@ -33,7 +33,7 @@ Astrea inverts the usual trust model:
 
 - **Locked before launch.** An event cannot go live unless the escrow balance covers every prize.
 - **Verifiable by anyone.** The public event page links directly to the escrow contract, so participants can audit the pool before committing their time.
-- **Fast payouts.** A judge's approval and release settle in seconds; USDC reaches the winner's wallet immediately after.
+- **Fast payouts.** A single judge-signed release settles in seconds; USDC reaches every winner's wallet in that same transaction.
 - **Non-custodial.** Astrea never holds the funds. Every transaction is signed client-side by the party who owns it.
 - **Fully auditable.** Every movement of funds has a transaction hash and a public explorer link.
 
@@ -41,10 +41,10 @@ Astrea inverts the usual trust model:
 
 ## How It Works
 
-1. **Organizer creates an event** — prizes, amounts (USDC), judges, and deadlines.
-2. **Organizer funds the escrow** — one multi-release escrow per event, one milestone per prize. The event goes live only once it is fully funded.
+1. **Organizer deposits and creates an event** — a shared escrow contract holds a balance per organizer. The backend sums the configured prize amounts and takes the event's one judge; `create_event` receives that total as a single reward plus the judge address (not a prize list) and reserves it from the organizer's balance in the same call. `create_event_with_deadline` is the variant that also sets an expiry deadline. There is no separate deploy or fund step.
+2. **Organizer goes live** — a small go-live fee (0.5% by default) is charged from the organizer's free balance, on top of the prize; registration opens.
 3. **Participants register and submit** — wallet and USDC trustline are verified at registration, not at payout time.
-4. **Judges approve and release** — the winner is not known when the prize pool is locked, so the winner's address is supplied at release time. The judge approves and releases each prize directly to the winner's wallet, with no forwarding step.
+4. **Judge releases** — the winner is not known when the prize pool is locked, so winner addresses are supplied at release time. One judge-signed transaction pays every winner directly, with no approval step and no forwarding step.
 5. **Everything stays on the record** — winners, amounts, and transaction hashes are published on the public event page.
 
 ---
@@ -169,6 +169,7 @@ Note: if Freighter shows "Not Available," confirm the wallet is set to testnet.
 | [docs/architecture.md](docs/architecture.md) | System design, patterns, ADRs, and failure modes |
 | [docs/build-plan.md](docs/build-plan.md) | Phased build plan with coded tasks (source of GitHub issues) |
 | [docs/contracts-build-plan.md](docs/contracts-build-plan.md) | The escrow contract's own build plan |
+| [docs/business/](docs/business/business-model-canvas.md) | Draft business model canvas, competitive analysis and market sizing |
 | [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md) | Auto-generated knowledge graph of the codebase — see [Contributing](#contributing) for how it stays current |
 
 ---

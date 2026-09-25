@@ -106,7 +106,11 @@
 		"connect": "Conectar wallet"
 	},
 	"LanguageSwitcher": {
-		"label": "Idioma"
+		"label": "Idioma",
+		"switchTo": "Cambiar a {language}"
+	},
+	"Theme": {
+		"label": "Modo oscuro"
 	},
 	"Motion": {
 		"label": "Reducir animaciones",
@@ -150,7 +154,6 @@
 	"EventStatus": {
 		"DRAFT": "Borrador",
 		"CREATED": "Creado",
-		"FUNDED": "Fondeado",
 		"LIVE": "En curso",
 		"JUDGING": "En evaluación",
 		"COMPLETED": "Completado",
@@ -233,6 +236,9 @@
 		"rebuild": "Cambiar asignaciones",
 		"released": "Premios liberados.",
 		"pending": "Enviada — la confirmación expiró, resultado desconocido. Revisá el hash.",
+		"errors": {
+			"missingTrustline": "Algunas wallets ganadoras no tienen trustline para el activo del premio, y con una sola que falte falla toda la liberación. Pediles que la agreguen y volvé a construir:"
+		},
 		"done": {
 			"title": "Premios liberados.",
 			"hint": "Este evento está completo. La liberación está en la cadena; no queda nada por asignar.",

@@ -162,24 +162,26 @@ export function GoLive({
 
 	return (
 		<div className="flex flex-col gap-6">
-			<section className="rounded-2xl border border-white/10 bg-zinc-900/60 p-5 flex flex-col gap-3">
+			<section className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 dark:border-white/10 dark:bg-zinc-900/60">
 				<dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-[auto_1fr] sm:gap-x-6">
-					<dt className="text-zinc-400">{t("fee")}</dt>
+					<dt className="text-zinc-600 dark:text-zinc-400">{t("fee")}</dt>
 					<dd className="font-mono" data-testid="fee">
 						{formatSmallestUnits(quote.fee)} {symbol}
 					</dd>
-					<dt className="text-zinc-400">{t("balance")}</dt>
+					<dt className="text-zinc-600 dark:text-zinc-400">{t("balance")}</dt>
 					<dd className="font-mono" data-testid="balance">
 						{formatSmallestUnits(quote.balance)} {symbol}
 					</dd>
-					<dt className="text-zinc-400">{t("shortfall")}</dt>
+					<dt className="text-zinc-600 dark:text-zinc-400">{t("shortfall")}</dt>
 					<dd className="font-mono" data-testid="shortfall">
 						{formatSmallestUnits(quote.shortfall)} {symbol}
 					</dd>
-					<dt className="text-zinc-400">{t("deadline")}</dt>
+					<dt className="text-zinc-600 dark:text-zinc-400">{t("deadline")}</dt>
 					<dd>{deadlineText}</dd>
 				</dl>
-				<p className="text-xs text-zinc-400">{t("feeHint")}</p>
+				<p className="text-xs text-zinc-600 dark:text-zinc-400">
+					{t("feeHint")}
+				</p>
 			</section>
 
 			{needsDeposit ? (
@@ -192,12 +194,14 @@ export function GoLive({
 			) : (
 				<section
 					aria-labelledby="start-title"
-					className="rounded-2xl border border-white/10 p-5 flex flex-col gap-3"
+					className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-5 dark:border-white/10"
 				>
 					<h2 id="start-title" className="text-lg font-bold">
 						{t("start.title")}
 					</h2>
-					<p className="text-sm text-zinc-400">{t("start.hint")}</p>
+					<p className="text-sm text-zinc-600 dark:text-zinc-400">
+						{t("start.hint")}
+					</p>
 
 					{!built && !submitted && !deadlineBlocked ? (
 						<Button
@@ -210,13 +214,17 @@ export function GoLive({
 					) : null}
 
 					{built && !submitted ? (
-						<div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-4 flex flex-col gap-3">
+						<div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50/80 p-4 dark:border-white/10 dark:bg-zinc-900/60">
 							<dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-[auto_1fr] sm:gap-x-6">
-								<dt className="text-zinc-400">{t("start.fee")}</dt>
+								<dt className="text-zinc-600 dark:text-zinc-400">
+									{t("start.fee")}
+								</dt>
 								<dd className="font-mono" data-testid="built-fee">
 									{formatSmallestUnits(built.fee)} {symbol}
 								</dd>
-								<dt className="text-zinc-400">{t("start.deadline")}</dt>
+								<dt className="text-zinc-600 dark:text-zinc-400">
+									{t("start.deadline")}
+								</dt>
 								<dd data-testid="built-deadline">
 									{/* Go's unix seconds, in the same zone and style as the quote
 									    above. Client-only (after a click), so no hydration concern. */}
@@ -227,7 +235,9 @@ export function GoLive({
 									}).format(new Date(built.judgingDeadline * 1000))}
 								</dd>
 							</dl>
-							<p className="text-xs text-zinc-400">{t("start.signHint")}</p>
+							<p className="text-xs text-zinc-600 dark:text-zinc-400">
+								{t("start.signHint")}
+							</p>
 							<SignStep
 								unsignedXdr={built.unsignedTransactionXdr}
 								address={address}

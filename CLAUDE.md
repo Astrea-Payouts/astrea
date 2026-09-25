@@ -84,7 +84,7 @@ Connecting a wallet runs a server action that upserts `User`/`Wallet` and sets a
 
 ### Database
 
-Prisma 7 with `@prisma/adapter-pg` (`src/lib/db.ts`, client cached on `globalThis` in dev, so restart `next dev` after changing `DATABASE_URL`). Two URLs: `DATABASE_URL` is Supabase's transaction pooler (port 6543, `?pgbouncer=true`) for runtime; `DIRECT_URL` is the session pooler (5432) for the Prisma CLI. Pooler user must be `postgres.<project-ref>` (otherwise `XX000 no tenant identifier`); the `db.<ref>.supabase.co` host is IPv6-only and fails with `ENOENT` on most networks. core-go reads the same schema and never migrates it; its `DATABASE_URL` drops `?pgbouncer=true` and adds `?default_query_exec_mode=describe_exec`.
+Prisma 7 with `@prisma/adapter-pg` (`src/lib/db.ts`, client cached on `globalThis` in dev, so restart `next dev` after changing `DATABASE_URL`). Two URLs: `DATABASE_URL` is Supabase's transaction pooler (port 6543, `?pgbouncer=true`) for runtime; `DIRECT_URL` is the session pooler (5432) for the Prisma CLI. Pooler user must be `postgres.<project-ref>` (otherwise `XX000 no tenant identifier`); the `db.<ref>.supabase.co` host is IPv6-only and fails with `ENOENT` on most networks. core-go reads the same schema and never migrates it; its `DATABASE_URL` drops `?pgbouncer=true` and adds `?default_query_exec_mode=exec`.
 
 ### Env and tests
 
@@ -93,8 +93,8 @@ Prisma 7 with `@prisma/adapter-pg` (`src/lib/db.ts`, client cached on `globalThi
 ### Web conventions
 
 - All routes are under `app/[locale]/` (next-intl). Every user-facing string goes in both `messages/en.json` and `messages/es.json`; a missing key renders raw on `/es`.
-- There is no light theme: `<html class="dark">`, `<body class="bg-black">`, pages hardcode `bg-black text-white`, and shadcn tokens are defined under `.dark` in `globals.css`. `dark:` variants outrank plain utilities (`.dark *` selector), so overriding a shadcn `outline`/`ghost` button with `bg-white text-black` produces black-on-black in the connected state; fix the token or variant instead.
-- The header is transparent on load and gets a frosted `bg-black/40 backdrop-blur-xl` once scrolled (`site-header.tsx`, `useScrolledPast`, thresholds per variant).
+- Dark is the default theme, light is opt-in (`ThemeToggle`, cookie `astrea-theme`, `src/lib/theme-preference.tsx`). The static HTML ships `<html class="dark">`; `THEME_INIT_SCRIPT` in the layout's `<head>` removes it before first paint for light visitors. Every surface needs both halves (`bg-white dark:bg-black`, `text-zinc-600 dark:text-zinc-400`, …): a page with only dark classes renders the transparent header's dark nav text over black in light mode. shadcn tokens live under `:root` and `.dark` in `globals.css`. `dark:` variants outrank plain utilities (`.dark *` selector), so overriding a shadcn `outline`/`ghost` button with `bg-white text-black` produces black-on-black in the connected state; fix the token or variant instead.
+- The header is transparent on load and gets a frosted `bg-white/60` (light) or `bg-black/40` (dark) with `backdrop-blur-xl` once scrolled (`site-header.tsx`, `useScrolledPast`, thresholds per variant).
 - Server-only modules import `"server-only"`; the Vitest alias resolves it to a no-op.
 
 ### Docs that matter

@@ -28,9 +28,9 @@ export interface DepositStepProps {
 type DepositBuilt = { opId: string; unsignedTransactionXdr: string };
 
 export const inputClass =
-	"w-full rounded-lg border border-white/10 bg-zinc-900/60 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:border-emerald-500/50 focus:outline-none";
+	"w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-950 placeholder:text-zinc-400 focus:border-emerald-500/50 focus:outline-none dark:border-white/10 dark:bg-zinc-900/60 dark:text-white dark:placeholder:text-zinc-500";
 export const alertClass =
-	"rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300 break-words";
+	"rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm break-words text-red-700 dark:text-red-300";
 
 // The organizer's wallet tops up its USDC balance in the escrow contract —
 // step 1 of /fund (for the reserve) and the shortfall branch of /start (for
@@ -103,18 +103,18 @@ export function DepositStep({
 	return (
 		<section
 			aria-labelledby="deposit-title"
-			className="rounded-2xl border border-white/10 p-5 flex flex-col gap-3"
+			className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-5 dark:border-white/10"
 		>
 			<h2 id="deposit-title" className="text-lg font-bold">
 				{t("title")}
 			</h2>
-			<p className="text-sm text-zinc-400">
+			<p className="text-sm text-zinc-600 dark:text-zinc-400">
 				{t("hint", { shortfall: shortfallText, symbol })}
 			</p>
 
 			{!built && !pendingHash ? (
 				<>
-					<label className="flex flex-col gap-1 text-sm text-zinc-300">
+					<label className="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300">
 						{t("amount", { symbol })}
 						<input
 							name="amount"
@@ -125,7 +125,7 @@ export function DepositStep({
 						/>
 					</label>
 					{!amountOk ? (
-						<p className="text-xs text-amber-300">
+						<p className="text-xs text-amber-700 dark:text-amber-300">
 							{t("belowShortfall", { shortfall: shortfallText, symbol })}
 						</p>
 					) : null}
@@ -149,7 +149,9 @@ export function DepositStep({
 
 			{built && !pendingHash ? (
 				<>
-					<p className="text-xs text-zinc-400">{t("signHint")}</p>
+					<p className="text-xs text-zinc-600 dark:text-zinc-400">
+						{t("signHint")}
+					</p>
 					<SignStep
 						unsignedXdr={built.unsignedTransactionXdr}
 						address={address}
@@ -199,10 +201,12 @@ export function PendingPanel({
 }) {
 	return (
 		<div
-			className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 flex flex-col gap-2"
+			className="flex flex-col gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4"
 			role="status"
 		>
-			<p className="font-semibold text-amber-300">{title}</p>
+			<p className="font-semibold text-amber-700 dark:text-amber-300">
+				{title}
+			</p>
 			<div className="break-all">
 				<TxHashLink
 					hash={hash}

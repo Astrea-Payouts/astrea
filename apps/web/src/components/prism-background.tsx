@@ -1,12 +1,21 @@
 "use client";
 
 import { Mesh, Program, Renderer, Triangle } from "ogl";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
+import { useTheme } from "@/hooks/use-theme";
 
 // Adapted from React Bits' Prism (reactbits.dev/backgrounds/prism), verified
 // against its live source and props table before porting — see
 // docs/ui-motion.md for why Prism was chosen for the hero (ogl engine,
 // built-in suspendWhenOffscreen) over the other WebGL background options.
+
+// Tailwind v4 gray-400 (#99a1af) as 0–1 sRGB: the light-mode background.
+const LIGHT_BACKGROUND = new Float32Array([0.6, 0.631, 0.686]);
+
+// useLayoutEffect warns during SSR, where it is a no-op anyway.
+const useIsomorphicLayoutEffect =
+	typeof window === "undefined" ? useEffect : useLayoutEffect;
+
 export interface PrismBackgroundProps {
 	height?: number;
 	baseWidth?: number;
@@ -45,6 +54,20 @@ export function PrismBackground({
 	className,
 }: PrismBackgroundProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
+
+	// The theme is applied through a uniform rather than through the main
+	// effect's dependencies: re-running that effect would tear down and rebuild
+	// the WebGL context on every switch, which flashes and burns a context.
+	//
+	// The main effect does re-run for other reasons, though — HeroPrism changes
+	// `timeScale` when reduced motion is toggled — and the program it builds
+	// starts from scratch. lightRef carries the current theme into that new
+	// program, so a rebuild does not silently fall back to dark.
+	const { theme } = useTheme();
+	const light = theme === "light";
+	const lightRef = useRef(light);
+	const programRef = useRef<Program | null>(null);
+	const redrawRef = useRef<(() => void) | null>(null);
 
 	useEffect(() => {
 		const container = containerRef.current;
@@ -120,6 +143,8 @@ export function PrismBackground({
       uniform float uMinAxis;
       uniform float uPxScale;
       uniform float uTimeScale;
+      uniform float uLight;
+      uniform vec3  uBg;
 
       vec4 tanh4(vec4 x){
         vec4 e2x = exp(2.0*x);
@@ -209,7 +234,13 @@ export function PrismBackground({
           col = clamp(hueRotation(uHueShift) * col, 0.0, 1.0);
         }
 
-        gl_FragColor = vec4(col, o.a);
+        if (uLight > 0.5) {
+          // Light mode: the glow becomes ink. Empty areas stay at uBg and the
+          // prism darkens it, instead of glowing on a background that is not black.
+          gl_FragColor = vec4(uBg * (1.0 - 0.85 * col), 1.0);
+        } else {
+          gl_FragColor = vec4(col, o.a);
+        }
       }
     `;
 
@@ -241,9 +272,15 @@ export function PrismBackground({
 				uMinAxis: { value: Math.min(BASE_HALF, H) },
 				uPxScale: { value: 1 / ((gl.drawingBufferHeight || 1) * 0.1 * SCALE) },
 				uTimeScale: { value: TS },
+				uLight: { value: lightRef.current ? 1 : 0 },
+				uBg: { value: LIGHT_BACKGROUND },
 			},
 		});
 		const mesh = new Mesh(gl, { geometry, program });
+
+		// Handles for the theme effect below.
+		programRef.current = program;
+		redrawRef.current = () => renderer.render({ scene: mesh });
 
 		const resize = () => {
 			const w = container.clientWidth || 1;
@@ -438,6 +475,8 @@ export function PrismBackground({
 		}
 
 		return () => {
+			programRef.current = null;
+			redrawRef.current = null;
 			stopRAF();
 			ro.disconnect();
 			if (animationType === "hover") {
@@ -449,6 +488,10 @@ export function PrismBackground({
 			io?.disconnect();
 			if (gl.canvas.parentElement === container)
 				container.removeChild(gl.canvas);
+			// Frees the GPU context now instead of leaving it for the garbage
+			// collector. Strict Mode and Fast Refresh remount this often in
+			// development, and browsers cap live WebGL contexts at around 16.
+			gl.getExtension("WEBGL_lose_context")?.loseContext();
 		};
 	}, [
 		height,
@@ -468,6 +511,26 @@ export function PrismBackground({
 		bloom,
 		suspendWhenOffscreen,
 	]);
+
+	// A layout effect, not a passive one: the theme change runs inside a view
+	// transition, and the browser takes its "after" snapshot as soon as the
+	// update callback returns. A passive effect could land after that and leave
+	// the canvas showing the old theme in the snapshot.
+	//
+	// It therefore runs before the main effect on mount, when programRef is
+	// still null. That is fine: lightRef is set first, and the main effect
+	// seeds the new program's uLight from it. When both effects run in the same
+	// commit the main one goes last and reads the fresh lightRef, so either
+	// order ends up in the right theme.
+	useIsomorphicLayoutEffect(() => {
+		lightRef.current = light;
+		const program = programRef.current;
+		if (!program) return;
+		program.uniforms.uLight.value = light ? 1 : 0;
+		// Repaint right away: the loop may be idle, and a theme change should not
+		// wait for a next frame that might never come.
+		redrawRef.current?.();
+	}, [light]);
 
 	return <div ref={containerRef} className={className} />;
 }
