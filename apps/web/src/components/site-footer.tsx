@@ -19,7 +19,6 @@ export function SiteFooter() {
 	const COMMUNITY = [
 		{ href: `${REPO}/blob/main/CONTRIBUTING.md`, label: t("contributing") },
 		{ href: `${REPO}/blob/main/LICENSE`, label: t("license") },
-		{ href: `https://grantfox.xyz`, label: t("grantfox") },
 	];
 
 	const COLUMNS = [
