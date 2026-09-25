@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { OnchainBadge } from "@/components/event/onchain-badge";
+import { PayoutHistory } from "@/components/event/payout-history";
+import { PrizeList } from "@/components/event/prize-list";
 import { EventStatusBadge } from "@/components/events/status-badge";
-import { TxHashLink } from "@/components/tx-hash-link";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { readEscrowEvent } from "@/lib/escrow/read-event";
 import {
-	formatSmallestUnits,
-	getExplorerAccountUrl,
-	getExplorerContractUrl,
-} from "@/lib/explorer";
+	loadPublicEventView,
+	resolveDisputeResolver,
+} from "@/lib/events/public-view";
+import { getExplorerAccountUrl } from "@/lib/explorer";
 import { STELLAR_NETWORK } from "@/lib/stellar-network";
 import { getSessionWallet } from "@/lib/wallet/session";
 import { JudgingToggle } from "./judging-toggle";
@@ -22,26 +24,9 @@ export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: string; id: string }>;
 
-async function loadEvent(id: string) {
-	return db.event.findUnique({
-		where: { id },
-		include: {
-			organizerWallet: { select: { id: true, address: true } },
-			prizes: { orderBy: { rank: "asc" } },
-			judges: { where: { status: "ACTIVE" } },
-			teams: {
-				orderBy: { createdAt: "asc" },
-				include: {
-					members: {
-						orderBy: { ordinal: "asc" },
-						include: { wallet: { select: { id: true, address: true } } },
-					},
-				},
-			},
-		},
-	});
-}
-
+/**
+ * Generates SEO metadata for the public event page using only public fields.
+ */
 export async function generateMetadata({
 	params,
 }: {
@@ -74,9 +59,16 @@ function AddressLink({ address }: { address: string }) {
 	);
 }
 
+/**
+ * Renders the SSR public event page (U03 / Issue #64):
+ * - On-chain badge & contract link gated on real `create_event` confirmation
+ * - Prize/milestone list wrapped in React Bits' Border Glow (static border on touch)
+ * - Judges + dispute resolver section (stating "Astrea (default)" per ADR-003)
+ * - Payout history with explorer transaction links for released prizes
+ */
 export default async function EventPage({ params }: { params: Params }) {
 	const { id } = await params;
-	const event = await loadEvent(id);
+	const event = await loadPublicEventView(id);
 	if (!event) notFound();
 
 	const t = await getTranslations("EventPage");
@@ -104,6 +96,17 @@ export default async function EventPage({ params }: { params: Params }) {
 		}
 	}
 
+	// If the escrow read failed, the on-chain resolver is unknown.
+	// Display an unavailable state instead of falsely claiming it is the default resolver.
+	const resolver =
+		event.escrowEventId && !escrow
+			? {
+					isDefault: false,
+					label: t("people.unavailableResolver"),
+					address: null,
+				}
+			: resolveDisputeResolver(escrow?.resolver, t("people.defaultResolver"));
+
 	return (
 		<main className="min-h-screen bg-white px-4 pt-28 pb-16 text-zinc-950 sm:px-6 md:px-12 md:py-12 dark:bg-black dark:text-white">
 			<div className="mx-auto flex max-w-3xl flex-col gap-8">
@@ -119,105 +122,55 @@ export default async function EventPage({ params }: { params: Params }) {
 					) : null}
 				</header>
 
-				<section className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 dark:border-white/10 dark:bg-zinc-900/60">
-					<h2 className="text-lg font-bold">{t("escrow.title")}</h2>
-					{event.escrowEventId ? (
-						<>
-							{escrow ? (
-								<p className="text-2xl font-semibold text-emerald-700 dark:text-emerald-300">
-									{formatSmallestUnits(escrow.reward)} {env.USDC_SYMBOL}
-									<span className="ml-2 text-xs font-normal text-zinc-600 dark:text-zinc-400">
-										{t("escrow.onChainState", { state: escrow.state })}
-									</span>
-								</p>
-							) : (
-								<p
-									className="text-sm break-words text-red-700 dark:text-red-300"
-									role="alert"
-								>
-									{t("escrow.readFailed")}{" "}
-									<code className="font-mono text-xs">{escrowError}</code>
-								</p>
-							)}
-							<dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-[auto_1fr] sm:gap-x-6">
-								<dt className="text-zinc-600 dark:text-zinc-400">
-									{t("escrow.eventId")}
-								</dt>
-								<dd className="font-mono text-xs break-all">
-									{event.escrowEventId}
-								</dd>
-								<dt className="text-zinc-600 dark:text-zinc-400">
-									{t("escrow.contract")}
-								</dt>
-								<dd>
-									<a
-										href={getExplorerContractUrl(
-											env.NEXT_PUBLIC_ESCROW_CONTRACT_ID,
-											STELLAR_NETWORK,
-										)}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="font-mono text-xs break-all underline-offset-4 hover:underline"
-									>
-										{env.NEXT_PUBLIC_ESCROW_CONTRACT_ID}
-									</a>
-								</dd>
-							</dl>
-						</>
-					) : (
-						<p className="text-sm text-zinc-600 dark:text-zinc-400">
-							{t("escrow.notOnChain")}
-						</p>
-					)}
-				</section>
+				<OnchainBadge
+					escrowEventId={event.escrowEventId}
+					escrow={escrow}
+					escrowError={escrowError}
+					contractId={env.NEXT_PUBLIC_ESCROW_CONTRACT_ID}
+					assetSymbol={env.USDC_SYMBOL}
+					network={STELLAR_NETWORK}
+					labels={{
+						title: t("escrow.title"),
+						verifiedBadge: t("escrow.verifiedBadge"),
+						onChainState: escrow
+							? t("escrow.onChainState", { state: escrow.state })
+							: "",
+						readFailed: t("escrow.readFailed"),
+						eventId: t("escrow.eventId"),
+						contract: t("escrow.contract"),
+						notOnChain: t("escrow.notOnChain"),
+					}}
+				/>
 
-				<section className="flex flex-col gap-3">
-					<h2 className="text-lg font-bold">{t("prizes.title")}</h2>
-					{event.prizes.length === 0 ? (
-						<p className="text-sm text-zinc-600 dark:text-zinc-400">
-							{t("prizes.none")}
-						</p>
-					) : (
-						<ul className="divide-y divide-zinc-200 rounded-2xl border border-zinc-200 dark:divide-white/10 dark:border-white/10">
-							{event.prizes.map((prize) => {
-								const winner = prize.winnerTeamId
-									? event.teams.find((team) => team.id === prize.winnerTeamId)
-									: null;
-								return (
-									<li
-										key={prize.id}
-										className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm"
-									>
-										<span className="font-medium">
-											{t("prizes.rank", { rank: prize.rank })}
-										</span>
-										<span className="font-mono">
-											{prize.amount.toString()} {env.USDC_SYMBOL}
-										</span>
-										{winner ? (
-											<span className="w-full text-xs text-zinc-600 dark:text-zinc-400">
-												{t("prizes.winner", { team: winner.name })}
-											</span>
-										) : null}
-										{prize.releaseTxHash ? (
-											<div className="flex w-full flex-wrap items-center gap-1.5 text-xs text-zinc-600 dark:text-zinc-400">
-												<span>{t("prizes.paidTx")}:</span>
-												<TxHashLink
-													hash={prize.releaseTxHash}
-													network={STELLAR_NETWORK}
-													leadingChars={8}
-													trailingChars={8}
-												/>
-											</div>
-										) : null}
-									</li>
-								);
-							})}
-						</ul>
-					)}
-				</section>
+				<PrizeList
+					prizes={event.prizes}
+					teams={event.teams}
+					assetSymbol={env.USDC_SYMBOL}
+					network={STELLAR_NETWORK}
+					labels={{
+						title: t("prizes.title"),
+						none: t("prizes.none"),
+						formatRank: (rank) => t("prizes.rank", { rank }),
+						formatWinner: (team) => t("prizes.winner", { team }),
+						paidTx: t("prizes.paidTx"),
+					}}
+				/>
 
-				<section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+				<PayoutHistory
+					prizes={event.prizes}
+					teams={event.teams}
+					assetSymbol={env.USDC_SYMBOL}
+					network={STELLAR_NETWORK}
+					labels={{
+						title: t("payoutHistory.title"),
+						empty: t("payoutHistory.empty"),
+						formatRank: (rank) => t("prizes.rank", { rank }),
+						unassignedWinner: t("payoutHistory.unassignedWinner"),
+						txProof: t("payoutHistory.txProof"),
+					}}
+				/>
+
+				<section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
 					<div className="flex flex-col gap-1 rounded-2xl border border-zinc-200 p-4 dark:border-white/10">
 						<h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
 							{t("people.organizer")}
@@ -237,6 +190,19 @@ export default async function EventPage({ params }: { params: Params }) {
 							<span className="text-sm text-zinc-500">
 								{t("people.noJudge", { count: event.judges.length })}
 							</span>
+						)}
+					</div>
+					<div
+						data-testid="resolver-card"
+						className="flex flex-col gap-1 rounded-2xl border border-zinc-200 p-4 dark:border-white/10"
+					>
+						<h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+							{t("people.resolver")}
+						</h2>
+						{resolver.isDefault || !resolver.address ? (
+							<span className="text-sm font-medium">{resolver.label}</span>
+						) : (
+							<AddressLink address={resolver.address} />
 						)}
 					</div>
 				</section>
@@ -259,7 +225,7 @@ export default async function EventPage({ params }: { params: Params }) {
 									<span className="font-medium break-words">{team.name}</span>
 									{team.members.map((member) => (
 										<AddressLink
-											key={member.id}
+											key={member.walletId}
 											address={member.wallet.address}
 										/>
 									))}

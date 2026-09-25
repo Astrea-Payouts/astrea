@@ -36,11 +36,23 @@ export function BorderGlowInView({
 	const [hasEntered, setHasEntered] = useState(false);
 
 	useEffect(() => {
+		if (
+			typeof window !== "undefined" &&
+			typeof window.matchMedia === "function" &&
+			window.matchMedia("(hover: none), (pointer: coarse)").matches
+		) {
+			return;
+		}
 		// Observe the rendered card, not this wrapper. The wrapper is
 		// `display: contents` so it generates no box at all — a 0x0 rect that
 		// IntersectionObserver never reports as intersecting.
 		const el = wrapperRef.current?.firstElementChild;
 		if (!el || hasEntered) return;
+
+		if (typeof IntersectionObserver === "undefined") {
+			setHasEntered(true);
+			return;
+		}
 
 		const observer = new IntersectionObserver(
 			(entries) => {
@@ -56,8 +68,19 @@ export function BorderGlowInView({
 		return () => observer.disconnect();
 	}, [hasEntered, rootMargin]);
 
+	const stopTouchPointer = (e: React.PointerEvent<HTMLDivElement>) => {
+		if (e.pointerType === "touch") {
+			e.stopPropagation();
+		}
+	};
+
 	return (
-		<div ref={wrapperRef} className="contents">
+		<div
+			ref={wrapperRef}
+			className="contents"
+			onPointerOverCapture={stopTouchPointer}
+			onPointerMoveCapture={stopTouchPointer}
+		>
 			<BorderGlow {...props} animated={hasEntered} />
 		</div>
 	);

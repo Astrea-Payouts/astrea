@@ -21,6 +21,9 @@ const { mockDb, mockSession, mockReadEscrow } = vi.hoisted(() => ({
 vi.mock("@/lib/db", () => ({ db: mockDb }));
 vi.mock("@/lib/wallet/session", () => ({ getSessionWallet: mockSession }));
 vi.mock("@/lib/escrow/read-event", () => ({ readEscrowEvent: mockReadEscrow }));
+vi.mock("@/hooks/use-theme", () => ({
+	useTheme: () => ({ theme: "dark" as const, setTheme: vi.fn() }),
+}));
 vi.mock("next/navigation", () => ({
 	notFound: () => {
 		throw new Error("NEXT_NOT_FOUND");
@@ -171,5 +174,73 @@ describe("EventPage - generateMetadata", () => {
 
 		const meta = await generateMetadata({ params });
 		expect(meta).toEqual({});
+	});
+});
+
+describe("EventPage — U03 Public Event Page (Issue #64)", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		mockDb.event.findUnique.mockResolvedValue(completedEvent);
+		mockSession.mockResolvedValue(null);
+	});
+
+	afterEach(() => {
+		cleanup();
+	});
+
+	it("shows 'Prizes verified on-chain' badge and contract link only after create_event confirms", async () => {
+		mockReadEscrow.mockResolvedValue({
+			reward: "7500000000",
+			state: "InProgress",
+			token: "CUSDC",
+			admin: ORGANIZER,
+			judge: JUDGE,
+		});
+
+		await renderPage();
+
+		expect(screen.getByTestId("prizes-verified-badge")).toHaveTextContent(
+			/Prizes verified on-chain/i,
+		);
+		expect(screen.getByTestId("resolver-card")).toHaveTextContent(
+			/Astrea \(default\)/i,
+		);
+		expect(screen.getByTestId("payout-history-section")).toBeInTheDocument();
+		expect(
+			document.querySelectorAll("[data-border-glow]").length,
+		).toBeGreaterThanOrEqual(2);
+	});
+
+	it("never renders 'Prizes verified on-chain' badge optimistically when create_event is not confirmed or when escrow is Cancelled/Compensated", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			...completedEvent,
+			status: "CANCELLED",
+		});
+		mockReadEscrow.mockResolvedValue({
+			reward: "7500000000",
+			state: "Cancelled",
+			token: "CUSDC",
+			admin: ORGANIZER,
+			judge: JUDGE,
+		});
+
+		await renderPage();
+
+		expect(
+			screen.queryByTestId("prizes-verified-badge"),
+		).not.toBeInTheDocument();
+	});
+
+	it("shows 'Unavailable' when escrow read fails instead of falsely claiming default resolver", async () => {
+		mockReadEscrow.mockRejectedValue(new Error("RPC timeout"));
+
+		await renderPage();
+
+		expect(screen.getByTestId("resolver-card")).toHaveTextContent(
+			/Unavailable/i,
+		);
+		expect(screen.getByTestId("resolver-card")).not.toHaveTextContent(
+			/Astrea \(default\)/i,
+		);
 	});
 });
