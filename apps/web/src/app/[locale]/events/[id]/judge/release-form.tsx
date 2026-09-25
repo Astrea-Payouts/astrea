@@ -104,12 +104,14 @@ export function ReleaseForm({
 							name={`rank-${prize.rank}`}
 							value={assignments[prize.rank] ?? ""}
 							disabled={!!built || !!submitted}
-							onChange={(e) =>
+							onChange={(e) => {
+								// A failure named the previous assignment's wallets; drop it.
+								setFailure(null);
 								setAssignments((prev) => ({
 									...prev,
 									[prize.rank]: e.target.value,
-								}))
-							}
+								}));
+							}}
 							className={selectClass}
 						>
 							<option value="">{t("pickTeam")}</option>

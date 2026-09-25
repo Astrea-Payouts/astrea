@@ -191,6 +191,24 @@ describe("ReleaseForm", () => {
 		);
 	});
 
+	it("clears a build failure when an assignment changes", async () => {
+		mockBuild.mockResolvedValue({
+			ok: false,
+			code: "missingTrustline",
+			asset: "USDC:GISSUER",
+			wallets: [WINNER_1],
+		});
+		renderForm();
+		assignAll();
+		fireEvent.click(screen.getByRole("button", { name: copy.build }));
+		await screen.findByRole("alert");
+
+		fireEvent.change(rankSelect(1), { target: { value: "team-b" } });
+
+		expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+		expect(rankSelect(1)).toHaveValue("team-b");
+	});
+
 	it("omits the status prefix when the failure has none", async () => {
 		mockBuild.mockResolvedValue({
 			ok: false,
