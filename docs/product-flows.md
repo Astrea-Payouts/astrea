@@ -48,7 +48,7 @@ An event cannot be created unless the organizer's free balance covers the full p
 ## Flow 4 — Judging and payout
 
 1. Judges review submissions and select winners for every prize.
-2. Trustlines were verified at registration (ADR-004). The re-check at winner assignment that ADR-004 calls for is not wired into the judge flow yet.
+2. Trustlines were verified at registration and are re-checked for every member of each assigned team before the release is built (ADR-004). A wallet without one blocks the build, and the judge sees which wallet(s) to chase.
 3. Judge signs **one** `release_reward` transaction for the whole event — no approve step — whose winner amounts must sum exactly to the event's locked reward. The organizer is not in this path (ADR-003).
 4. **Release**: USDC lands directly in every winner's wallet in that same transaction — no intermediate custody, no second signing step.
 5. Event page updates: winners, amounts, and the transaction hash (shared by every winner paid in that call), explorer link. The event goes straight from `JUDGING` to `COMPLETED` — there is no per-prize release to wait on; all prizes settle atomically together.

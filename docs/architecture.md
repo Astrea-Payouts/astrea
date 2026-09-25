@@ -59,7 +59,7 @@ A single judge-signed call pays every winner in the same transaction — there i
 
 ```
 judge assigns winners → backend allocates each team member's share
-  (trustlines were checked off-chain at registration, ADR-004; the re-check at assignment is not wired yet)
+  (trustlines checked off-chain at registration and re-checked for every winning member before build, ADR-004)
 Go service: builds unsigned `release_reward` tx (winners' amounts must sum exactly to the event's reward)
 judge signs → Go service submits → RPC confirms
 reconciler: confirms release tx → Prize.PAID_OUT + one Payout row per paid team member (shared releaseTxHash)
@@ -120,8 +120,8 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 
 ### ADR-004 — Trustline validation at registration, not payout
 
-**Decision (target policy):** USDC trustline is checked when a participant registers and re-checked at winner assignment.
-**Current status:** only the registration check is shipped. The assignment re-check is not wired yet, so a closed trustline can still fail the atomic `release_reward`.
+**Decision:** USDC trustline is checked when a participant registers and re-checked at winner assignment.
+**Current status:** both checks are shipped in the web app. Registration refuses a wallet without the trustline; before the judge's `/release/build`, every member of each assigned team is re-checked against Horizon, and any wallet without it blocks the build with `missingTrustline`, naming the wallet(s). The check is off-chain: a trustline closed between build and submit still fails the atomic `release_reward`.
 **Why:** discovering a missing trustline at payout time is the worst possible UX and blocks the release flow.
 
 ### ADR-005 — Wallet connection sets a UX session, not an authorization boundary
@@ -214,7 +214,7 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 | Judge picks a winner but never signs `release_reward` | `judging_deadline` passes → resolver executes the release on the judge's behalf (ADR-003) |
 | Organizer cancels an event already `Active` | Routes through `resolve_dispute`, not a bare refund — resolver decides the distribution (ADR-006) |
 | Organizer needs an early exit before the event starts | Two-signature override only (organizer + resolver) — never a unilateral `withdraw_funds` on already-assigned funds (ADR-006) |
-| Winner without trustline | Checked at registration (ADR-004); the re-check at assignment is not wired yet, so a closed trustline fails the whole atomic release |
+| Winner without trustline | Checked at registration and re-checked before the release is built (ADR-004); the judge sees which wallet(s) lack it instead of a failed atomic release |
 | Duplicate submit (double-click / retry) | Idempotency keys on every operation |
 | Testnet/mainnet mix-up | Network is part of Event records; config validated at boot; mainnet behind explicit gate |
 | Contract call fails mid-simulation | Simulation catches most failures before submission; reconciler compares against actual on-chain state, never assumed success |
