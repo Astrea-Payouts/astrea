@@ -104,7 +104,7 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 
 ### ADR-003 — Organizer is not in the payout path
 
-**Decision:** the judge holds both the `approver` and `release_signer` addresses on the escrow. The organizer's address appears nowhere in the payout path — no function callable by the organizer can move escrowed funds anywhere.
+**Decision:** each event stores one `judge` address, and it is the only signer `release_reward` accepts: the judge signs once and every winner is paid atomically, with no separate approval call. K01's separate `approver` and `release_signer` roles were collapsed into that single address. If `judging_deadline` passes without a release, the resolver signs `resolve_dispute`, which pays the winners directly; there is no separate dispute-opening call. The organizer's address appears nowhere in the payout path — no function callable by the organizer can move escrowed funds anywhere.
 **Why:** if the organizer had to co-sign releases, an absent or hostile organizer could strand approved winners — which would make any "the funds are locked and will pay out" claim dishonest. Removing them from the release path is what turns the locked funds into a credible promise.
 **Residual trust:** judges (can go silent or collude) and the dispute resolver (a designated party). Both are mitigated by transparency: judges and resolver are published on the event page before the event starts, and judging deadlines trigger the dispute path.
 
@@ -112,7 +112,7 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 
 **Judge picks a winner but never signs the release:** every event carries a `judging_deadline`. If it passes without a completed `close_event`, anyone (organizer, a participant, or an automated trigger) can open a dispute, and the resolver can execute the release on the judge's behalf — using whatever winner was already recorded off-chain, or its own review of submissions if none was recorded. This is the same resolver role as above, just triggered by a deadline instead of an open conflict between parties.
 
-**Multi-judge panels:** the contract takes a single `approver`/`release_signer` address — for a panel of multiple human judges, that address should be a Stellar multisig account with each judge as a signer and a threshold (e.g. 2-of-3), giving genuine multi-judge approval with no contract changes needed. Deferred to Phase 3 (`U05`).
+**Multi-judge panels:** the contract takes a single `judge` address — for a panel of multiple human judges, that address should be a Stellar multisig account with each judge as a signer and a threshold (e.g. 2-of-3), giving genuine multi-judge approval with no contract changes needed. Deferred to Phase 3 (`U05`).
 
 **Verified (K01/K02, 2026-08-06, testnet):** an organizer-signed direct release attempt was rejected — at the client signing-key level in K01, and rejected on-chain by the contract's own `require_auth` check in K02, confirming the guarantee is structural, not a client-side convention.
 
@@ -208,7 +208,7 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 | Tx confirmed on-chain, DB write lost | Reconciler confirms the `OpLog` txHash directly against Horizon; `Payout` is append-only |
 | Contract/RPC endpoint down | Operations queue in `OpLog`, retry with backoff; UI shows degraded state |
 | Judge unresponsive | Dispute flow with resolver; deadline surfaced in UI |
-| Judge picks a winner but never signs `close_event` | `judging_deadline` passes → resolver executes the release on the judge's behalf (ADR-003) |
+| Judge picks a winner but never signs `release_reward` | `judging_deadline` passes → resolver executes the release on the judge's behalf (ADR-003) |
 | Organizer cancels an event already `Active` | Routes through `resolve_dispute`, not a bare refund — resolver decides the distribution (ADR-006) |
 | Organizer needs an early exit before the event starts | Two-signature override only (organizer + resolver) — never a unilateral `withdraw_funds` on already-assigned funds (ADR-006) |
 | Winner without trustline | Prevented at assignment (ADR-004) |
