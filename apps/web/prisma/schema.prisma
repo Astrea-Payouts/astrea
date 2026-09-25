@@ -17,12 +17,11 @@ enum StellarNetwork {
 }
 
 /// Event lifecycle — see docs/product-flows.md "Event state machine".
-/// FUNDED is unused — funding happens inside create_event (docs/product-flows.md
-/// Flow 1); removal is a separate decision.
+/// There is no FUNDED status: create_event reserves the reward in the same
+/// call (ADR-006), so CREATED already means funded.
 enum EventStatus {
   DRAFT
   CREATED
-  FUNDED
   LIVE
   JUDGING
   COMPLETED
@@ -196,7 +195,7 @@ model Judge {
 /// individual-participant path. submissionUrl lives here, not on a member,
 /// because the team submits one project regardless of its size.
 ///
-/// Share freeze: once Event.status leaves {DRAFT, CREATED, FUNDED, LIVE} —
+/// Share freeze: once Event.status leaves {DRAFT, CREATED, LIVE} —
 /// i.e. once judging starts — a `team_members_enforce_freeze` trigger on
 /// team_members (see migration) rejects any insert/update/delete against
 /// this team's membership or shares. There is no `sharesLockedAt` column;

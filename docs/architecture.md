@@ -31,16 +31,18 @@ OpLog       — id, idempotencyKey, operation, payload, status      (idempotency
 
 ## Key sequences
 
-### Deploy + fund (organizer)
+### Deposit + create (organizer)
+
+One shared contract instance, no per-event deploy (ADR-006):
 
 ```
-UI → Go service: create event (validated)
-Go service: builds unsigned deploy tx (contract `initialize`, simulated for footprint/fee)
-UI: organizer signs (wallet) → Go service submits → RPC confirms → contractId recorded
-Go service: builds unsigned fund tx (`fund`)
-UI: organizer signs → Go service submits → RPC confirms
-reconciler: confirms escrow balance == prize amount → Event.FUNDED
+UI → Go service: build `deposit_funds` into the organizer's AdminWallet
+UI: organizer signs (wallet) → Go service submits → RPC confirms
+UI → Go service: build `create_event` (reserves the reward out of the AdminWallet's free balance)
+UI: organizer signs → Go service submits → RPC confirms → escrowEventId recorded, Event DRAFT → CREATED
 ```
+
+There is no separate funded status: `create_event` locks the reward in the same call, so `CREATED` already means funded, and `start/submit` moves `CREATED → LIVE` directly.
 
 ### Release (judge approves, then releases directly to the winner)
 

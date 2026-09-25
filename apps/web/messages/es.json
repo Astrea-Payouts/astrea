@@ -150,7 +150,6 @@
 	"EventStatus": {
 		"DRAFT": "Borrador",
 		"CREATED": "Creado",
-		"FUNDED": "Fondeado",
 		"LIVE": "En curso",
 		"JUDGING": "En evaluación",
 		"COMPLETED": "Completado",
