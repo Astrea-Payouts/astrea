@@ -37,6 +37,7 @@ export interface EscrowEvent {
 	token: string;
 	admin: string;
 	judge: string;
+	resolver?: string;
 }
 
 const EVENT_ID_HEX = /^[0-9a-f]{32}$/;
@@ -126,5 +127,9 @@ export async function readEscrowEvent(
 		token: toAddress(native.token, "token"),
 		admin: toAddress(native.admin, "admin"),
 		judge: toAddress(native.judge, "judge"),
+		resolver:
+			typeof native.resolver === "string" && native.resolver.length > 0
+				? toAddress(native.resolver, "resolver")
+				: undefined,
 	};
 }
