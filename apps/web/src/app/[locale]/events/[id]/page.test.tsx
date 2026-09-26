@@ -26,13 +26,21 @@ vi.mock("next/navigation", () => ({
 		throw new Error("NEXT_NOT_FOUND");
 	},
 }));
+
+import messagesEs from "../../../../../messages/es.json";
+
 vi.mock("next-intl/server", () => ({
-	getTranslations: async (arg: string | { namespace: string }) =>
-		createTranslator({
-			locale: "en",
-			messages,
+	getTranslations: async (
+		arg: string | { namespace: string; locale?: string },
+	) => {
+		const locale = typeof arg === "object" && arg.locale ? arg.locale : "en";
+		const msgs = locale === "es" ? messagesEs : messages;
+		return createTranslator({
+			locale,
+			messages: msgs,
 			namespace: (typeof arg === "string" ? arg : arg.namespace) as never,
-		}),
+		});
+	},
 }));
 vi.mock("@/i18n/navigation", () => ({
 	Link: ({
@@ -180,5 +188,26 @@ describe("EventPage - generateMetadata", () => {
 
 		const meta = await generateMetadata({ params });
 		expect(meta).toEqual({});
+	});
+
+	it("uses localized fallback description when event description is absent", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			name: "Hackathon Stellar 2026",
+			description: null,
+		});
+
+		const metaEn = await generateMetadata({
+			params: Promise.resolve({ locale: "en", id: EVENT_ID }),
+		});
+		expect(metaEn.description).toBe(
+			"Escrow-backed prize payouts on Stellar Soroban",
+		);
+
+		const metaEs = await generateMetadata({
+			params: Promise.resolve({ locale: "es", id: EVENT_ID }),
+		});
+		expect(metaEs.description).toBe(
+			"Pagos de premios con depósito en custodia en Stellar Soroban",
+		);
 	});
 });

@@ -3,12 +3,16 @@ import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { readEscrowEvent } from "@/lib/escrow/read-event";
 import { buildEventCardModel } from "@/lib/events/card-model";
-import { DisplayEventCard, loadCardFont } from "@/lib/events/card-templates";
+import {
+	DisplayEventCard,
+	getCardLabels,
+	loadCardFont,
+} from "@/lib/events/card-templates";
 
 type Params = Promise<{ locale: string; id: string }>;
 
 export async function GET(
-	request: Request,
+	_request: Request,
 	{ params }: { params: Params },
 ): Promise<Response> {
 	const { id, locale } = await params;
@@ -55,7 +59,10 @@ export async function GET(
 		}
 	}
 
-	const fontData = await loadCardFont();
+	const [fontData, labels] = await Promise.all([
+		loadCardFont(),
+		getCardLabels(locale),
+	]);
 	const fonts = fontData
 		? [
 				{
@@ -74,12 +81,15 @@ export async function GET(
 		assetSymbol: env.USDC_SYMBOL ?? "USDC",
 	});
 
-	const requestUrl = new URL(request.url);
-	const canonicalUrl = `${requestUrl.origin}/${locale}/events/${id}`;
+	const appBase = process.env.NEXT_PUBLIC_APP_URL || "https://astrea.app";
+	const canonicalUrl = `${appBase}/${locale}/events/${id}`;
 
-	return new ImageResponse(DisplayEventCard({ model, canonicalUrl }), {
+	return new ImageResponse(DisplayEventCard({ model, canonicalUrl, labels }), {
 		width: 1920,
 		height: 1080,
 		fonts,
+		headers: {
+			"cache-control": "no-store",
+		},
 	});
 }

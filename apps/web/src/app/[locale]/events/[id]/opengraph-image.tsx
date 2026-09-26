@@ -5,6 +5,7 @@ import { readEscrowEvent } from "@/lib/escrow/read-event";
 import { buildEventCardModel } from "@/lib/events/card-model";
 import {
 	GenericCard,
+	getCardLabels,
 	loadCardFont,
 	renderEventCard,
 } from "@/lib/events/card-templates";
@@ -12,6 +13,7 @@ import {
 export const alt = "Astrea Event Card";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const revalidate = 60;
 
 type Params = Promise<{ locale: string; id: string }>;
 
@@ -20,7 +22,10 @@ type Params = Promise<{ locale: string; id: string }>;
  */
 export default async function Image({ params }: { params: Params }) {
 	const { id, locale } = await params;
-	const fontData = await loadCardFont();
+	const [fontData, labels] = await Promise.all([
+		loadCardFont(),
+		getCardLabels(locale),
+	]);
 	const fonts = fontData
 		? [
 				{
@@ -61,9 +66,12 @@ export default async function Image({ params }: { params: Params }) {
 	});
 
 	if (!event) {
-		return new ImageResponse(<GenericCard />, {
+		return new ImageResponse(<GenericCard labels={labels} />, {
 			...size,
 			fonts,
+			headers: {
+				"cache-control": "public, max-age=60, stale-while-revalidate=300",
+			},
 		});
 	}
 
@@ -83,8 +91,11 @@ export default async function Image({ params }: { params: Params }) {
 		assetSymbol: env.USDC_SYMBOL ?? "USDC",
 	});
 
-	return new ImageResponse(renderEventCard(model), {
+	return new ImageResponse(renderEventCard(model, labels), {
 		...size,
 		fonts,
+		headers: {
+			"cache-control": "public, max-age=60, stale-while-revalidate=300",
+		},
 	});
 }

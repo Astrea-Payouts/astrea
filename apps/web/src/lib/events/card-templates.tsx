@@ -44,10 +44,127 @@ const BASE_CONTAINER_STYLE: CSSProperties = {
 	justifyContent: "space-between",
 };
 
+export interface EventCardLabels {
+	genericTitle?: string;
+	genericSubtitle?: string;
+	builtOnStellar?: string;
+	registrationsOpen?: string;
+	registrationsClosed?: string;
+	judgingInProgress?: string;
+	liveCompetition?: string;
+	lockedPrizePool?: string;
+	escrowAssurance?: string;
+	verifiableOnStellar?: string;
+	deadline?: string;
+	organizer?: string;
+	judge?: string;
+	judges?: string;
+	teamsRegistered?: string;
+	teamsRegisteredDisplay?: string;
+	completedVerifiedPayouts?: string;
+	completedPayoutsPending?: string;
+	total?: string;
+	place?: string;
+	payout?: string;
+	moreWinnersPaid?: (count: number) => string;
+	moreWinnersPending?: (count: number) => string;
+	allPayoutsVerified?: string;
+	payoutsPending?: string;
+	scanToViewAndRegister?: string;
+	scanToFollowJudging?: string;
+	judgingDeadline?: string;
+	securedByStellar?: string;
+}
+
+export const DEFAULT_CARD_LABELS: Required<EventCardLabels> = {
+	genericTitle: "Escrow-Backed Prize Payouts",
+	genericSubtitle:
+		"Smart-contract prize pools on Stellar. Auditable, automated, non-custodial.",
+	builtOnStellar: "Built on Stellar Soroban",
+	registrationsOpen: "REGISTRATIONS OPEN",
+	registrationsClosed: "REGISTRATIONS CLOSED",
+	judgingInProgress: "JUDGING IN PROGRESS",
+	liveCompetition: "LIVE COMPETITION",
+	lockedPrizePool: "LOCKED ON-CHAIN PRIZE POOL",
+	escrowAssurance: "Escrow Assurance",
+	verifiableOnStellar: "Verifiable on Stellar Soroban",
+	deadline: "Deadline",
+	organizer: "Organizer",
+	judge: "Judge",
+	judges: "Judges",
+	teamsRegistered: "teams registered",
+	teamsRegisteredDisplay: "Teams Registered",
+	completedVerifiedPayouts: "COMPLETED • VERIFIED PAYOUTS",
+	completedPayoutsPending: "COMPLETED • PAYOUTS PENDING",
+	total: "Total:",
+	place: "PLACE",
+	payout: "✓ Payout:",
+	moreWinnersPaid: (count: number) =>
+		`+${count} more winner${count > 1 ? "s" : ""} paid on-chain`,
+	moreWinnersPending: (count: number) =>
+		`+${count} more winner${count > 1 ? "s" : ""} pending payout`,
+	allPayoutsVerified: "All payouts verified on Stellar",
+	payoutsPending: "Payouts pending on-chain confirmation",
+	scanToViewAndRegister: "Scan to view & register",
+	scanToFollowJudging: "Scan to follow judging",
+	judgingDeadline: "Judging Deadline",
+	securedByStellar: "Secured by Stellar Soroban Smart Contract Escrow",
+};
+
+/**
+ * Loads translated card labels for the given locale using next-intl.
+ */
+export async function getCardLabels(
+	locale: string,
+): Promise<Required<EventCardLabels>> {
+	try {
+		const { getTranslations } = await import("next-intl/server");
+		const t = await getTranslations({ locale, namespace: "EventCard" });
+		return {
+			genericTitle: t("genericTitle"),
+			genericSubtitle: t("genericSubtitle"),
+			builtOnStellar: t("builtOnStellar"),
+			registrationsOpen: t("registrationsOpen"),
+			registrationsClosed: t("registrationsClosed"),
+			judgingInProgress: t("judgingInProgress"),
+			liveCompetition: t("liveCompetition"),
+			lockedPrizePool: t("lockedPrizePool"),
+			escrowAssurance: t("escrowAssurance"),
+			verifiableOnStellar: t("verifiableOnStellar"),
+			deadline: t("deadline"),
+			organizer: t("organizer"),
+			judge: t("judge"),
+			judges: t("judges"),
+			teamsRegistered: t("teamsRegistered"),
+			teamsRegisteredDisplay: t("teamsRegisteredDisplay"),
+			completedVerifiedPayouts: t("completedVerifiedPayouts"),
+			completedPayoutsPending: t("completedPayoutsPending"),
+			total: t("total"),
+			place: t("place"),
+			payout: t("payout"),
+			moreWinnersPaid: (count: number) => t("moreWinnersPaid", { count }),
+			moreWinnersPending: (count: number) => t("moreWinnersPending", { count }),
+			allPayoutsVerified: t("allPayoutsVerified"),
+			payoutsPending: t("payoutsPending"),
+			scanToViewAndRegister: t("scanToViewAndRegister"),
+			scanToFollowJudging: t("scanToFollowJudging"),
+			judgingDeadline: t("judgingDeadline"),
+			securedByStellar: t("securedByStellar"),
+		};
+	} catch {
+		return DEFAULT_CARD_LABELS;
+	}
+}
+
 /**
  * Renders the fallback generic Astrea brand card when an event is draft or has no verifiable money.
  */
-export function GenericCard(): ReactElement {
+export function GenericCard({
+	labels,
+}: {
+	labels?: EventCardLabels;
+} = {}): ReactElement {
+	const l = { ...DEFAULT_CARD_LABELS, ...labels };
 	return (
 		<div
 			style={{
@@ -94,7 +211,7 @@ export function GenericCard(): ReactElement {
 					lineHeight: 1.1,
 				}}
 			>
-				Escrow-Backed Prize Payouts
+				{l.genericTitle}
 			</div>
 			<div
 				style={{
@@ -104,8 +221,7 @@ export function GenericCard(): ReactElement {
 					marginBottom: "32px",
 				}}
 			>
-				Smart-contract prize pools on Stellar. Auditable, automated,
-				non-custodial.
+				{l.genericSubtitle}
 			</div>
 			<div
 				style={{
@@ -120,7 +236,7 @@ export function GenericCard(): ReactElement {
 					color: "#34d399",
 				}}
 			>
-				Built on Stellar Soroban
+				{l.builtOnStellar}
 			</div>
 		</div>
 	);
@@ -131,21 +247,24 @@ export function GenericCard(): ReactElement {
  */
 export function OpenEventCard({
 	model,
+	labels,
 }: {
 	model: EventCardModel;
+	labels?: EventCardLabels;
 }): ReactElement {
+	const l = { ...DEFAULT_CARD_LABELS, ...labels };
 	const isJudging = model.status === "JUDGING";
 
-	let statusLabel = "REGISTRATIONS OPEN";
+	let statusLabel = l.registrationsOpen;
 	let statusBg = "#064e3b";
 	let statusColor = "#34d399";
 
 	if (isJudging) {
-		statusLabel = "JUDGING IN PROGRESS";
+		statusLabel = l.judgingInProgress;
 		statusBg = "#3b0764";
 		statusColor = "#c084fc";
 	} else if (model.isRegistrationClosed) {
-		statusLabel = "REGISTRATIONS CLOSED";
+		statusLabel = l.registrationsClosed;
 		statusBg = "#27272a";
 		statusColor = "#a1a1aa";
 	}
@@ -233,7 +352,7 @@ export function OpenEventCard({
 								letterSpacing: "0.05em",
 							}}
 						>
-							LOCKED ON-CHAIN PRIZE POOL
+							{l.lockedPrizePool}
 						</span>
 						<div
 							style={{ display: "flex", alignItems: "baseline", gap: "8px" }}
@@ -269,7 +388,7 @@ export function OpenEventCard({
 					/>
 					<div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
 						<span style={{ fontSize: "13px", color: "#71717a" }}>
-							Escrow Assurance
+							{l.escrowAssurance}
 						</span>
 						<span
 							style={{
@@ -278,7 +397,7 @@ export function OpenEventCard({
 								color: "#e4e4e7",
 							}}
 						>
-							Verifiable on Stellar Soroban
+							{l.verifiableOnStellar}
 						</span>
 					</div>
 					{model.formattedDeadline ? (
@@ -300,7 +419,7 @@ export function OpenEventCard({
 								}}
 							>
 								<span style={{ fontSize: "13px", color: "#71717a" }}>
-									Deadline
+									{l.deadline}
 								</span>
 								<span
 									style={{
@@ -330,17 +449,15 @@ export function OpenEventCard({
 				}}
 			>
 				<div style={{ display: "flex", gap: "28px" }}>
-					<span>Organizer: {model.organizer}</span>
+					<span>{`${l.organizer}: ${model.organizer}`}</span>
 					{model.judges.length > 0 ? (
 						<span>
-							Judge{model.judges.length > 1 ? "s" : ""}:{" "}
-							{model.judges.slice(0, 2).join(", ")}
-							{model.judges.length > 2 ? ` +${model.judges.length - 2}` : ""}
+							{`${model.judges.length > 1 ? l.judges : l.judge}: ${model.judges.slice(0, 2).join(", ")}${model.judges.length > 2 ? ` +${model.judges.length - 2}` : ""}`}
 						</span>
 					) : null}
 				</div>
 				<div style={{ display: "flex", gap: "16px" }}>
-					<span>{model.teamsRegistered} teams registered</span>
+					<span>{`${model.teamsRegistered} ${l.teamsRegistered}`}</span>
 				</div>
 			</div>
 		</div>
@@ -354,11 +471,14 @@ function WinnerCard({
 	winner,
 	isHero = false,
 	isCompact = false,
+	labels,
 }: {
 	winner: CardWinner;
 	isHero?: boolean;
 	isCompact?: boolean;
+	labels?: EventCardLabels;
 }): ReactElement {
+	const l = { ...DEFAULT_CARD_LABELS, ...labels };
 	const rankColors: Record<
 		number,
 		{ text: string; bg: string; border: string }
@@ -412,7 +532,7 @@ function WinnerCard({
 							fontWeight: 800,
 						}}
 					>
-						#{winner.rank} PLACE
+						#{winner.rank} {l.place}
 					</span>
 					<span
 						style={{
@@ -464,7 +584,7 @@ function WinnerCard({
 						paddingTop: isCompact ? "6px" : "8px",
 					}}
 				>
-					<span style={{ color: "#10b981" }}>✓ Payout:</span>
+					<span style={{ color: "#10b981" }}>{l.payout}</span>
 					<span style={{ fontFamily: "monospace" }}>
 						{truncateHash(winner.txHash, 6, 6)}
 					</span>
@@ -479,15 +599,21 @@ function WinnerCard({
  */
 export function WinnersEventCard({
 	model,
+	labels,
 }: {
 	model: EventCardModel;
+	labels?: EventCardLabels;
 }): ReactElement {
+	const l = { ...DEFAULT_CARD_LABELS, ...labels };
 	const winnersCount = model.winners.length;
 	const isHero = winnersCount === 1;
 	const isMultiGrid = winnersCount >= 4;
 	const visibleLimit = isMultiGrid ? 6 : 3;
 	const visibleWinners = model.winners.slice(0, visibleLimit);
 	const remainingCount = Math.max(0, winnersCount - visibleLimit);
+
+	const allPayoutsVerified =
+		winnersCount > 0 && model.winners.every((w) => Boolean(w.txHash));
 
 	return (
 		<div style={BASE_CONTAINER_STYLE}>
@@ -525,14 +651,16 @@ export function WinnersEventCard({
 						display: "flex",
 						padding: "6px 16px",
 						borderRadius: "9999px",
-						backgroundColor: "#064e3b",
-						color: "#34d399",
+						backgroundColor: allPayoutsVerified ? "#064e3b" : "#3b0764",
+						color: allPayoutsVerified ? "#34d399" : "#c084fc",
 						fontSize: "14px",
 						fontWeight: 700,
 						letterSpacing: "0.05em",
 					}}
 				>
-					COMPLETED • VERIFIED PAYOUTS
+					{allPayoutsVerified
+						? l.completedVerifiedPayouts
+						: l.completedPayoutsPending}
 				</div>
 			</div>
 
@@ -557,7 +685,7 @@ export function WinnersEventCard({
 					{model.name}
 				</div>
 				<div style={{ display: "flex", alignItems: "baseline", gap: "6px" }}>
-					<span style={{ fontSize: "14px", color: "#a1a1aa" }}>Total:</span>
+					<span style={{ fontSize: "14px", color: "#a1a1aa" }}>{l.total}</span>
 					<span
 						style={{
 							fontSize: "24px",
@@ -573,7 +701,7 @@ export function WinnersEventCard({
 			{/* Dynamic Winners Section */}
 			{isHero ? (
 				<div style={{ display: "flex", width: "100%" }}>
-					<WinnerCard winner={model.winners[0]} isHero={true} />
+					<WinnerCard winner={model.winners[0]} isHero={true} labels={l} />
 				</div>
 			) : (
 				<div
@@ -590,6 +718,7 @@ export function WinnersEventCard({
 							key={winner.rank}
 							winner={winner}
 							isCompact={isMultiGrid}
+							labels={l}
 						/>
 					))}
 				</div>
@@ -607,7 +736,7 @@ export function WinnersEventCard({
 					color: "#71717a",
 				}}
 			>
-				<span>Organizer: {model.organizer}</span>
+				<span>{`${l.organizer}: ${model.organizer}`}</span>
 				{remainingCount > 0 ? (
 					<div
 						style={{
@@ -620,13 +749,14 @@ export function WinnersEventCard({
 							fontWeight: 600,
 						}}
 					>
-						+{remainingCount} more winner{remainingCount > 1 ? "s" : ""} paid
-						on-chain
+						{allPayoutsVerified
+							? l.moreWinnersPaid(remainingCount)
+							: l.moreWinnersPending(remainingCount)}
 					</div>
+				) : allPayoutsVerified ? (
+					<span style={{ color: "#34d399" }}>{l.allPayoutsVerified}</span>
 				) : (
-					<span style={{ color: "#34d399" }}>
-						All payouts verified on Stellar
-					</span>
+					<span style={{ color: "#c084fc" }}>{l.payoutsPending}</span>
 				)}
 			</div>
 		</div>
@@ -639,11 +769,15 @@ export function WinnersEventCard({
 export function DisplayEventCard({
 	model,
 	canonicalUrl,
+	labels,
 }: {
 	model: EventCardModel;
 	canonicalUrl: string;
+	labels?: EventCardLabels;
 }): ReactElement {
+	const l = { ...DEFAULT_CARD_LABELS, ...labels };
 	const qr = qrSvgPath(canonicalUrl);
+	const isJudging = model.status === "JUDGING";
 
 	return (
 		<div
@@ -696,18 +830,15 @@ export function DisplayEventCard({
 								display: "flex",
 								padding: "8px 20px",
 								borderRadius: "9999px",
-								backgroundColor:
-									model.status === "JUDGING" ? "#3b0764" : "#064e3b",
-								color: model.status === "JUDGING" ? "#c084fc" : "#34d399",
+								backgroundColor: isJudging ? "#3b0764" : "#064e3b",
+								color: isJudging ? "#c084fc" : "#34d399",
 								fontSize: "18px",
 								fontWeight: 700,
 								letterSpacing: "0.05em",
 								marginLeft: "20px",
 							}}
 						>
-							{model.status === "JUDGING"
-								? "JUDGING IN PROGRESS"
-								: "LIVE COMPETITION"}
+							{isJudging ? l.judgingInProgress : l.liveCompetition}
 						</div>
 					</div>
 
@@ -746,7 +877,7 @@ export function DisplayEventCard({
 							letterSpacing: "0.1em",
 						}}
 					>
-						LOCKED ON-CHAIN PRIZE POOL
+						{l.lockedPrizePool}
 					</span>
 					<div style={{ display: "flex", alignItems: "baseline", gap: "16px" }}>
 						<span
@@ -776,7 +907,7 @@ export function DisplayEventCard({
 						}}
 					>
 						<span style={{ fontSize: "20px", color: "#71717a" }}>
-							Secured by Stellar Soroban Smart Contract Escrow
+							{l.securedByStellar}
 						</span>
 						{model.formattedDeadline ? (
 							<span
@@ -786,7 +917,8 @@ export function DisplayEventCard({
 									color: "#e4e4e7",
 								}}
 							>
-								Judging Deadline: {model.formattedDeadline}
+								{`${l.judgingDeadline}: `}
+								{model.formattedDeadline}
 							</span>
 						) : null}
 					</div>
@@ -800,8 +932,14 @@ export function DisplayEventCard({
 						color: "#a1a1aa",
 					}}
 				>
-					<span>{model.teamsRegistered} Teams Registered</span>
-					<span>Organizer: {model.organizer}</span>
+					<span>
+						{model.teamsRegistered}
+						{` ${l.teamsRegisteredDisplay}`}
+					</span>
+					<span>
+						{`${l.organizer}: `}
+						{model.organizer}
+					</span>
 				</div>
 			</div>
 
@@ -849,7 +987,7 @@ export function DisplayEventCard({
 						textAlign: "center",
 					}}
 				>
-					Scan to view & register
+					{isJudging ? l.scanToFollowJudging : l.scanToViewAndRegister}
 				</div>
 				<div
 					style={{
@@ -870,13 +1008,16 @@ export function DisplayEventCard({
 /**
  * Selects and renders the appropriate event card JSX element based on the model's template type.
  */
-export function renderEventCard(model: EventCardModel): ReactElement {
+export function renderEventCard(
+	model: EventCardModel,
+	labels?: EventCardLabels,
+): ReactElement {
 	switch (model.templateType) {
 		case "open":
-			return <OpenEventCard model={model} />;
+			return <OpenEventCard model={model} labels={labels} />;
 		case "winners":
-			return <WinnersEventCard model={model} />;
+			return <WinnersEventCard model={model} labels={labels} />;
 		default:
-			return <GenericCard />;
+			return <GenericCard labels={labels} />;
 	}
 }

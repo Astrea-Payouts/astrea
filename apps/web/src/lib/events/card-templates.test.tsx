@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { CardWinner, EventCardModel } from "./card-model";
-import { DisplayEventCard, renderEventCard } from "./card-templates";
+import {
+	DisplayEventCard,
+	OpenEventCard,
+	renderEventCard,
+	WinnersEventCard,
+} from "./card-templates";
 
 describe("card-templates", () => {
 	const baseModel: EventCardModel = {
@@ -111,5 +116,57 @@ describe("card-templates", () => {
 			canonicalUrl: "https://astrea.app/en/events/evt-test-1",
 		});
 		expect(tree).toMatchSnapshot();
+	});
+
+	it("renders display projector card with judging subtitle during JUDGING state", () => {
+		const tree = DisplayEventCard({
+			model: { ...baseModel, status: "JUDGING" },
+			canonicalUrl: "https://astrea.app/en/events/evt-test-1",
+		});
+		const json = JSON.stringify(tree);
+		expect(json).toContain("Scan to follow judging");
+		expect(json).not.toContain("Scan to view & register");
+	});
+
+	it("renders pending payout badge and pending text when a winner payout is pending", () => {
+		const modelWithPending: EventCardModel = {
+			...baseModel,
+			status: "COMPLETED",
+			templateType: "winners",
+			winners: [
+				{
+					rank: 1,
+					teamName: "Pending Team",
+					members: ["@builder_1"],
+					amount: "5000",
+					asset: "USDC",
+					txHash: null,
+				},
+			],
+		};
+		const tree = WinnersEventCard({ model: modelWithPending });
+		const props = tree.props as { children: React.ReactNode[] };
+		const header = props.children[0];
+		const footer = props.children[3];
+		expect(JSON.stringify(header)).toContain("COMPLETED • PAYOUTS PENDING");
+		expect(JSON.stringify(footer)).toContain(
+			"Payouts pending on-chain confirmation",
+		);
+		expect(JSON.stringify(footer)).not.toContain(
+			"All payouts verified on Stellar",
+		);
+	});
+
+	it("renders localized Spanish labels when labels prop is provided", () => {
+		const tree = OpenEventCard({
+			model: baseModel,
+			labels: {
+				registrationsOpen: "INSCRIPCIONES ABIERTAS",
+				lockedPrizePool: "POZO DE PREMIOS BLOQUEADO ON-CHAIN",
+			},
+		});
+		const json = JSON.stringify(tree);
+		expect(json).toContain("INSCRIPCIONES ABIERTAS");
+		expect(json).toContain("POZO DE PREMIOS BLOQUEADO ON-CHAIN");
 	});
 });

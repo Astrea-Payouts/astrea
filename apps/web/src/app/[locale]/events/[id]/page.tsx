@@ -53,14 +53,14 @@ export async function generateMetadata({
 }: {
 	params: Params;
 }): Promise<Metadata> {
-	const { id } = await params;
+	const { id, locale } = await params;
 	const event = await db.event.findUnique({
 		where: { id },
 		select: { name: true, description: true },
 	});
 	if (!event) return {};
-	const description =
-		event.description ?? "Escrow-backed prize payouts on Stellar Soroban";
+	const t = await getTranslations({ locale, namespace: "EventPage" });
+	const description = event.description ?? t("defaultDescription");
 	return {
 		title: event.name,
 		description,

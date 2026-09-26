@@ -76,6 +76,7 @@ describe("GET /events/[id]/display.png", () => {
 
 		expect(response.status).toBe(200);
 		expect(response.headers.get("content-type")).toContain("image/png");
+		expect(response.headers.get("cache-control")).toBe("no-store");
 	});
 
 	it("returns 200 with an image when the event is in JUDGING state", async () => {
@@ -104,5 +105,6 @@ describe("GET /events/[id]/display.png", () => {
 
 		expect(response.status).toBe(200);
 		expect(response.headers.get("content-type")).toContain("image/png");
+		expect(response.headers.get("cache-control")).toBe("no-store");
 	});
 });

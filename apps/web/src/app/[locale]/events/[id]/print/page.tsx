@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
@@ -22,15 +23,16 @@ export async function generateMetadata({
 }: {
 	params: Params;
 }): Promise<Metadata> {
-	const { id } = await params;
+	const { id, locale } = await params;
 	const event = await db.event.findUnique({
 		where: { id },
 		select: { name: true },
 	});
 	if (!event) return {};
+	const t = await getTranslations({ locale, namespace: "EventPrint" });
 	return {
-		title: `${event.name} — Print Receipt | Astrea`,
-		description: `Official on-chain payout receipt for ${event.name}`,
+		title: `${event.name} — ${t("metaTitle")} | Astrea`,
+		description: t("metaDescription", { name: event.name }),
 	};
 }
 
@@ -90,6 +92,29 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 		assetSymbol: env.USDC_SYMBOL ?? "USDC",
 	});
 
+	if (!model.hasVerifiableMoney) {
+		const t = await getTranslations({ locale, namespace: "EventPrint" });
+		return (
+			<main className="min-h-screen bg-white text-black p-6 sm:p-10 font-sans flex flex-col items-center justify-center text-center">
+				<div className="max-w-md border border-zinc-200 rounded-xl p-8 shadow-sm">
+					<h1 className="text-xl font-bold mb-2">{t("unavailableTitle")}</h1>
+					<p className="text-sm text-zinc-600 mb-6">{t("unavailableDesc")}</p>
+					<Link
+						href={`/events/${id}`}
+						className="inline-flex rounded-lg bg-black px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 transition-colors"
+					>
+						{t("backToEvent")}
+					</Link>
+				</div>
+			</main>
+		);
+	}
+
+	const t = await getTranslations({ locale, namespace: "EventPrint" });
+	const allPayoutsConfirmed =
+		model.winners.length > 0 &&
+		model.winners.every((winner) => Boolean(winner.txHash));
+
 	const appBase = process.env.NEXT_PUBLIC_APP_URL || "https://astrea.app";
 	const canonicalUrl = `${appBase}/${locale}/events/${id}`;
 	const qr = qrSvgPath(canonicalUrl);
@@ -118,9 +143,9 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 					href={`/events/${id}`}
 					className="text-sm font-medium text-zinc-600 hover:text-black"
 				>
-					← Back to event
+					{t("backToEvent")}
 				</Link>
-				<PrintButton />
+				<PrintButton label={t("printButton")} />
 			</div>
 
 			{/* A4 Container */}
@@ -133,14 +158,14 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 								ASTREA
 							</span>
 							<span className="text-xs bg-zinc-100 text-zinc-800 border border-zinc-300 font-mono px-2 py-0.5 rounded">
-								STELLAR SMART ESCROW
+								{t("escrowBadge")}
 							</span>
 						</div>
 						<h1 className="text-2xl sm:text-3xl font-bold tracking-tight mt-1">
 							{model.name}
 						</h1>
 						<p className="text-xs text-zinc-500 font-mono">
-							OFFICIAL ON-CHAIN PRIZE PAYOUT RECEIPT
+							{t("receiptTitle")}
 						</p>
 					</div>
 
@@ -159,7 +184,7 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 							</svg>
 						</div>
 						<span className="text-[10px] text-zinc-500 font-mono">
-							Scan for live audit
+							{t("scanForAudit")}
 						</span>
 					</div>
 				</header>
@@ -168,7 +193,7 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 				<section className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-6 border-b border-zinc-200 text-sm">
 					<div>
 						<div className="text-xs text-zinc-500 uppercase font-semibold">
-							Total Distributed
+							{t("lockedPrizePool")}
 						</div>
 						<div className="text-lg font-bold font-mono text-emerald-700">
 							{model.prizePool.amount} {model.prizePool.asset}
@@ -176,15 +201,17 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 					</div>
 					<div>
 						<div className="text-xs text-zinc-500 uppercase font-semibold">
-							Event Status
+							{t("eventStatus")}
 						</div>
 						<div className="text-sm font-semibold text-black uppercase">
-							COMPLETED / PAID
+							{allPayoutsConfirmed
+								? t("statusCompletedPaid")
+								: t("statusCompletedPending")}
 						</div>
 					</div>
 					<div>
 						<div className="text-xs text-zinc-500 uppercase font-semibold">
-							Organizer
+							{t("organizer")}
 						</div>
 						<div
 							className="font-mono text-xs truncate"
@@ -195,10 +222,10 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 					</div>
 					<div>
 						<div className="text-xs text-zinc-500 uppercase font-semibold">
-							Judge(s)
+							{t("judges")}
 						</div>
 						<div className="text-xs truncate">
-							{model.judges.join(", ") || "None"}
+							{model.judges.join(", ") || t("none")}
 						</div>
 					</div>
 				</section>
@@ -207,12 +234,14 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 				<section className="py-4 border-b border-zinc-200 text-xs flex flex-col gap-1 font-mono text-zinc-600">
 					<div>
 						<span className="font-semibold text-zinc-800">
-							Escrow Event ID:{" "}
+							{t("escrowEventId")}{" "}
 						</span>
-						<span>{event.escrowEventId ?? "N/A"}</span>
+						<span>{event.escrowEventId ?? t("none")}</span>
 					</div>
 					<div>
-						<span className="font-semibold text-zinc-800">Contract: </span>
+						<span className="font-semibold text-zinc-800">
+							{t("contract")}{" "}
+						</span>
 						<a
 							href={getExplorerContractUrl(
 								env.NEXT_PUBLIC_ESCROW_CONTRACT_ID,
@@ -230,21 +259,23 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 				{/* Winners Breakdown Table */}
 				<section className="py-6">
 					<h2 className="text-sm font-bold uppercase tracking-wider mb-4">
-						Verified Winners & On-Chain Payout Receipts
+						{t("winnersTitle")}
 					</h2>
 
 					{model.winners.length === 0 ? (
-						<p className="text-sm text-zinc-500">No winners recorded.</p>
+						<p className="text-sm text-zinc-500">{t("noWinners")}</p>
 					) : (
 						<div className="overflow-x-auto">
 							<table className="w-full text-left border-collapse text-xs">
 								<thead>
 									<tr className="border-b-2 border-black text-zinc-800">
-										<th className="py-2 pr-3 font-bold">Rank</th>
-										<th className="py-2 pr-3 font-bold">Team</th>
-										<th className="py-2 pr-3 font-bold">Members</th>
-										<th className="py-2 pr-3 font-bold text-right">Amount</th>
-										<th className="py-2 font-bold">On-Chain Tx Hash</th>
+										<th className="py-2 pr-3 font-bold">{t("rank")}</th>
+										<th className="py-2 pr-3 font-bold">{t("team")}</th>
+										<th className="py-2 pr-3 font-bold">{t("members")}</th>
+										<th className="py-2 pr-3 font-bold text-right">
+											{t("amount")}
+										</th>
+										<th className="py-2 font-bold">{t("txHash")}</th>
 									</tr>
 								</thead>
 								<tbody className="divide-y divide-zinc-200">
@@ -276,7 +307,7 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 														{winner.txHash}
 													</a>
 												) : (
-													<span className="text-zinc-400">Pending</span>
+													<span className="text-zinc-400">{t("pending")}</span>
 												)}
 											</td>
 										</tr>
@@ -289,7 +320,7 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 
 				{/* Footer */}
 				<footer className="border-t-2 border-black pt-6 mt-8 flex justify-between items-center text-xs text-zinc-500">
-					<span>Astrea • Non-custodial escrow payouts on Stellar Soroban</span>
+					<span>{t("footerText")}</span>
 					<span className="font-mono">
 						{new Date().toISOString().slice(0, 10)}
 					</span>
