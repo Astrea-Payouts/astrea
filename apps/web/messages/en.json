@@ -198,6 +198,11 @@
 			"defaultResolver": "Astrea (default)",
 			"unavailableResolver": "Unavailable"
 		},
+		"share": {
+			"title": "Share this event",
+			"hint": "Scan to open this page on a phone. Put it on a screen, slide or flyer at the venue so attendees can check the prize pool themselves.",
+			"alt": "QR code linking to this event page"
+		},
 		"teams": {
 			"title": "Registered teams ({count})",
 			"none": "No teams registered yet."

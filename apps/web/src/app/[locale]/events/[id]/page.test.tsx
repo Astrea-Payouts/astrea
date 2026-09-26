@@ -4,6 +4,7 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, screen } from "@testing-library/react";
 import { createTranslator } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { qrSvgPath } from "@/lib/qr";
 import { messages, renderWithIntl } from "@/test/render-with-intl";
 
 const EVENT_ID = "20000000-0000-0000-0000-000000000001";
@@ -21,6 +22,9 @@ const { mockDb, mockSession, mockReadEscrow } = vi.hoisted(() => ({
 vi.mock("@/lib/db", () => ({ db: mockDb }));
 vi.mock("@/lib/wallet/session", () => ({ getSessionWallet: mockSession }));
 vi.mock("@/lib/escrow/read-event", () => ({ readEscrowEvent: mockReadEscrow }));
+vi.mock("@/lib/site-url", () => ({
+	getSiteUrl: () => "https://astrea.example",
+}));
 vi.mock("@/hooks/use-theme", () => ({
 	useTheme: () => ({ theme: "dark" as const, setTheme: vi.fn() }),
 }));
@@ -302,6 +306,50 @@ describe("EventPage — U03 Public Event Page (Issue #64)", () => {
 		expect(screen.getByTestId("resolver-card")).not.toHaveTextContent(
 			/Astrea \(default\)/i,
 		);
+	});
+});
+
+describe("EventPage - share QR code (U11 / #28)", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		mockDb.event.findUnique.mockResolvedValue(completedEvent);
+		mockSession.mockResolvedValue(null);
+		mockReadEscrow.mockResolvedValue(null);
+	});
+
+	afterEach(() => {
+		cleanup();
+	});
+
+	it("renders a QR code for the canonical event URL without a wallet session", async () => {
+		const expectedUrl = `https://astrea.example/en/events/${EVENT_ID}`;
+
+		await renderPage();
+
+		const qr = screen.getByRole("img", {
+			name: messages.EventPage.share.alt,
+		});
+		expect(qr.querySelector("path")).toHaveAttribute(
+			"d",
+			qrSvgPath(expectedUrl).path,
+		);
+		expect(screen.getByRole("link", { name: expectedUrl })).toHaveAttribute(
+			"href",
+			expectedUrl,
+		);
+	});
+
+	it("keeps the visitor's locale in the encoded URL", async () => {
+		const expectedUrl = `https://astrea.example/es/events/${EVENT_ID}`;
+
+		const ui = await EventPage({
+			params: Promise.resolve({ locale: "es", id: EVENT_ID }),
+		});
+		renderWithIntl(ui);
+
+		expect(
+			screen.getByTestId("event-qr-code").querySelector("path"),
+		).toHaveAttribute("d", qrSvgPath(expectedUrl).path);
 	});
 });
 
