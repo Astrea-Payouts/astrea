@@ -88,6 +88,7 @@ Rules that exist because each one has already cost something:
 
 1. **No `size: L` on a slate.** L means 3+ days and "should be split before assignment". This was already true of #52 (U01), correctly split into #62/#54/#57 before this document's first draft claimed otherwise — that claim was wrong and is corrected here. #70 (T01) genuinely *was* unsplit and has now been split into #109/#110/#111/#112.
 2. **No issue whose dependency is unbuilt.** #28 (U11, QR code) has been assigned since 2026-08-21 and claimed with `/attempt` on 2026-08-28. It depends on #64 (U03), which is open and unassigned. A contributor has been holding an unbuildable issue for longer than a full campaign.
+   > **Update 2026-09-26:** #64 (U03) closed via PR #251 and is on `develop` since PR #257, so #28 (U11) is now buildable. Check that its current claimant is still active before it goes on a slate (rule 5).
 3. **Every slate item names its prerequisites and states they are met.** The issue template already has the field; the gate is that someone checks it before publishing.
 4. **Keep the slate varied.** The four genuinely-ready good-first-issues today (#18, #37, #38, #39) are all near-identical wallet-compatibility tests. That is a slate one person can take in a day, not a campaign for four people.
 5. **A claimed issue that is silent for 5 days gets a comment; at 8 days it is unassigned** — stated on the issue when it is published, so it is a known rule rather than a surprise.
@@ -247,8 +248,10 @@ Other candidates considered and why they were not chosen as the Goal itself (the
 | [#37](https://github.com/Astrea-Payouts/astrea/issues/37) | K05a — wallet compat: Rabet, Hana, Klever | S | 1 | No dependency. Only one of #37–#40 included — see slate rule 4; #38–#40 held back to keep the slate varied. |
 | [#12](https://github.com/Astrea-Payouts/astrea/issues/12) | E04 — real-time tracking | M | 3 | Depends on #7 and #11, both closed. |
 | [#168](https://github.com/Astrea-Payouts/astrea/issues/168) | E08 — off-chain prize breakdown, persistence + Go enforcement | M | 3 | Depends on #24/#25, both closed. **Data gap found while building this slate: the issue body states `Size: M` but has no `size:` label on GitHub, so it was invisible to a label-based search — add the label before publishing.** Money-path (`security` label, testnet tx required at review). |
+| [#252](https://github.com/Astrea-Payouts/astrea/issues/252) | U03a — page-level test for the custom resolver branch | S | 1 | Depends on #64, closed (PR #251; on `develop` since #257). Test-only. |
+| [#253](https://github.com/Astrea-Payouts/astrea/issues/253) | U03b — payout history: pending state for released prizes without a release tx | S | 1 | Depends on #64 and #16 (U07), both closed; #64 via PR #251, on `develop` since #257. The hash-only filter already shipped in #257. Trust boundary (`security` label, extra review). |
 
-**11 S-equivalents across 7 issues** — inside the 10–14 range and the "typically 6–8 issues" guidance, and spread across `escrow-core` (3, counting #168 by its E08 task code since it has no phase label either), `product-ui` (1), `trust-edge-cases` (1) and wallet-compat `spike` (2: #18 and #37) rather than repeating Sprint 1's near-identical-wallet-issues problem.
+**13 S-equivalents across 9 issues** — inside the 10–14 range, though one issue past the "typically 6–8 issues" guidance because U03a and U03b are both small (PO to confirm). Spread across `escrow-core` (3, counting #168 by its E08 task code since it has no phase label either), `product-ui` (3), `trust-edge-cases` (1) and wallet-compat `spike` (2: #18 and #37) rather than repeating Sprint 1's near-identical-wallet-issues problem.
 
 Left out despite being open and unassigned: #202, #193, #106, #58, #75, #74, #110–#112 (each has at least one unbuilt dependency — #66, #62, #65, #54, #13, #74 itself, or the T01b/T01a chain); #44 (U16 i18n QA) explicitly states in its own body it's best picked up once more Phase 3 UI work has landed, which it largely hasn't yet.
 
@@ -272,6 +275,12 @@ And #70 (T01) is no longer unsplit — see the Campaign slate rules section abov
 
 - **#22 and #26 are the S01 mistake again, in the opposite direction.** Both were merged in code (PR #178, #182) but stayed open on GitHub because neither PR used a closing keyword — closed-in-code is not the same failure as S01's closed-in-tracker-but-not-in-code, but it's the same root cause: trusting one signal (tracker state) over the other (actual merged code). Both closed by hand on 2026-09-24.
 - **#168 (E08) has `Size: M` written into its own issue body but no `size:` label on GitHub**, so it does not show up in any label-based query for sizing or slate-building — it was only found by reading unsized open issues individually. Worth a pass over open issues checking body-stated size against the actual label, since a slate built by label search alone would silently skip it.
+
+**Found while reviewing PR #251 (U03) and the #224 revert, 2026-09-25/26:**
+
+- **U03a** → [#252](https://github.com/Astrea-Payouts/astrea/issues/252) — CodeRabbit's final review of #251 flagged that the page tests cover the default and failed-read resolver states but not a custom resolver.
+- **U03b** → [#253](https://github.com/Astrea-Payouts/astrea/issues/253) — CodeRabbit's security review of #251 flagged that the public payout history could show a prize as paid from its database status alone, without a release tx hash. PR #257 fixed the claim itself (only hash-backed rows are listed); #253 keeps the remaining work of showing those prizes as pending instead of hiding them. Worth checking against #67 (U06, "pending on-chain" UX) so both use the same pending state.
+- **U03 disappeared from `develop` after reverting #224 (#255).** #251 had been merged into `main`, not `develop`, and only reached `develop` through #224's branch, so the revert removed it too. Merging `main` back can't restore it, because Git already counts those commits as part of `develop`'s history. Restored by reapplying #224 in PR #257. The general lesson: before reverting a PR, check whether it carried commits from another branch.
 
 ## What to inspect at each Sprint Review
 
