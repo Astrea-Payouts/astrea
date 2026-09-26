@@ -401,6 +401,7 @@
 		"escrowBadge": "STELLAR SMART ESCROW",
 		"receiptTitle": "OFFICIAL ON-CHAIN PRIZE PAYOUT RECEIPT",
 		"scanForAudit": "Scan for live audit",
+		"qrLabel": "Event QR code",
 		"lockedPrizePool": "Locked Prize Pool",
 		"eventStatus": "Event Status",
 		"statusCompletedPaid": "COMPLETED / PAID",

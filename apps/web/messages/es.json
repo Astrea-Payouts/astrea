@@ -401,6 +401,7 @@
 		"escrowBadge": "ESCROW INTELIGENTE DE STELLAR",
 		"receiptTitle": "RECIBO OFICIAL DE PAGOS DE PREMIOS ON-CHAIN",
 		"scanForAudit": "Escanear para auditoría en vivo",
+		"qrLabel": "Código QR del evento",
 		"lockedPrizePool": "Pozo de Premios Bloqueado",
 		"eventStatus": "Estado del Evento",
 		"statusCompletedPaid": "COMPLETADO / PAGADO",

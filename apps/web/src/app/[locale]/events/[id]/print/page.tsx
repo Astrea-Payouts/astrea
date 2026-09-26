@@ -179,9 +179,9 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 								width="96"
 								height="96"
 								shapeRendering="crispEdges"
-								aria-label="Event QR Code"
+								aria-label={t("qrLabel")}
 							>
-								<title>Event QR Code</title>
+								<title>{t("qrLabel")}</title>
 								<path d={qr.path} fill="#000000" />
 							</svg>
 						</div>

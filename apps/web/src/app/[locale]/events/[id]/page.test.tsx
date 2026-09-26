@@ -269,6 +269,28 @@ describe("EventPage — U03 Public Event Page (Issue #64)", () => {
 		).not.toBeInTheDocument();
 	});
 
+	it("leaves a RELEASED prize without a release tx out of the payout history", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			...completedEvent,
+			prizes: [
+				{
+					id: "prize-1",
+					rank: 1,
+					amount: { toString: () => "500" },
+					status: "RELEASED",
+					winnerTeamId: "team-a",
+					releaseTxHash: null,
+				},
+			],
+		});
+
+		await renderPage();
+
+		expect(
+			screen.queryByTestId("payout-history-section"),
+		).not.toBeInTheDocument();
+	});
+
 	it("shows 'Unavailable' when escrow read fails instead of falsely claiming default resolver", async () => {
 		mockReadEscrow.mockRejectedValue(new Error("RPC timeout"));
 

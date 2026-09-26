@@ -17,8 +17,9 @@ export interface PayoutHistoryProps {
 }
 
 /**
- * Renders the payout history table for prizes that have reached RELEASED state
- * (or carry a confirmed on-chain release transaction hash).
+ * Renders the payout history table for prizes that carry an on-chain release
+ * transaction hash. A RELEASED/PAID_OUT status alone is not proof of payment,
+ * so it is not enough to list a row here (same rule as the print receipt).
  */
 export function PayoutHistory({
 	prizes,
@@ -27,12 +28,7 @@ export function PayoutHistory({
 	network = "testnet",
 	labels,
 }: PayoutHistoryProps) {
-	const releasedPrizes = prizes.filter(
-		(prize) =>
-			prize.status === "RELEASED" ||
-			prize.status === "PAID_OUT" ||
-			Boolean(prize.releaseTxHash),
-	);
+	const releasedPrizes = prizes.filter((prize) => Boolean(prize.releaseTxHash));
 
 	if (releasedPrizes.length === 0) {
 		return null;

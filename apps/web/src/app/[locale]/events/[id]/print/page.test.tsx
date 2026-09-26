@@ -299,7 +299,7 @@ describe("EventPrintPage", () => {
 		expect(screen.getByText("Locked Prize Pool")).toBeInTheDocument();
 		expect(screen.queryByText("Total Distributed")).not.toBeInTheDocument();
 		expect(screen.getAllByText("7500 USDC").length).toBeGreaterThanOrEqual(1);
-		expect(screen.getByLabelText("Event QR Code")).toBeInTheDocument();
+		expect(screen.getByLabelText("Event QR code")).toBeInTheDocument();
 	});
 
 	it("renders localized receipt in Spanish when locale is 'es'", async () => {
@@ -343,6 +343,7 @@ describe("EventPrintPage", () => {
 		render(jsx);
 
 		expect(screen.getByText("Pozo de Premios Bloqueado")).toBeInTheDocument();
+		expect(screen.getByLabelText("Código QR del evento")).toBeInTheDocument();
 		expect(screen.getByText("COMPLETADO / PAGADO")).toBeInTheDocument();
 		expect(screen.getByText("← Volver al evento")).toBeInTheDocument();
 		expect(screen.getByText("Imprimir / Guardar PDF (A4)")).toBeInTheDocument();

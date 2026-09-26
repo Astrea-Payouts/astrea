@@ -79,6 +79,53 @@ describe("GET /events/[id]/display.png", () => {
 		expect(response.headers.get("cache-control")).toBe("no-store");
 	});
 
+	it("returns 404 instead of a zero 'locked' pool when the escrow read fails", async () => {
+		vi.mocked(db.event.findUnique).mockResolvedValue({
+			id: "evt-live",
+			status: "LIVE",
+			name: "Live Hackathon",
+			escrowEventId: "0102030405060708090a0b0c0d0e0f10",
+			organizerWallet: {
+				address: "GDQP2KPQGKIHYJGXNUIYOMHARUARCA7DJT5FO2FFOOKY3IFHAY4B2P76",
+			},
+			judges: [],
+			teams: [],
+			prizes: [],
+		} as never);
+		vi.mocked(readEscrowEvent).mockRejectedValue(new Error("RPC timeout"));
+
+		const response = await GET(
+			new Request("http://localhost:3000/en/events/evt-live/display.png"),
+			{ params: Promise.resolve({ locale: "en", id: "evt-live" }) },
+		);
+
+		expect(response.status).toBe(404);
+		expect(response.headers.get("cache-control")).toBe("no-store");
+	});
+
+	it("returns 404 when the event has no escrow id", async () => {
+		vi.mocked(db.event.findUnique).mockResolvedValue({
+			id: "evt-live",
+			status: "LIVE",
+			name: "Live Hackathon",
+			escrowEventId: null,
+			organizerWallet: {
+				address: "GDQP2KPQGKIHYJGXNUIYOMHARUARCA7DJT5FO2FFOOKY3IFHAY4B2P76",
+			},
+			judges: [],
+			teams: [],
+			prizes: [],
+		} as never);
+
+		const response = await GET(
+			new Request("http://localhost:3000/en/events/evt-live/display.png"),
+			{ params: Promise.resolve({ locale: "en", id: "evt-live" }) },
+		);
+
+		expect(response.status).toBe(404);
+		expect(readEscrowEvent).not.toHaveBeenCalled();
+	});
+
 	it("returns 200 with an image when the event is in JUDGING state", async () => {
 		vi.mocked(db.event.findUnique).mockResolvedValue({
 			id: "evt-judging",

@@ -82,6 +82,17 @@ export async function GET(
 		assetSymbol: env.USDC_SYMBOL ?? "USDC",
 	});
 
+	// The projector card always claims a locked on-chain prize pool. Without a
+	// successful escrow read that claim would show "0" as if it were verified,
+	// so serve nothing instead (the social card falls back to GenericCard and
+	// the receipt to its unavailable state for the same reason).
+	if (!model.hasVerifiableMoney) {
+		return new Response("Not Found", {
+			status: 404,
+			headers: { "cache-control": "no-store" },
+		});
+	}
+
 	const canonicalUrl = `${getSiteUrl()}/${locale}/events/${id}`;
 
 	return new ImageResponse(DisplayEventCard({ model, canonicalUrl, labels }), {
