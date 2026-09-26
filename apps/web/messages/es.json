@@ -161,16 +161,8 @@
 		"CANCELLED": "Cancelado"
 	},
 	"EventPage": {
-		"defaultDescription": "Pagos de premios con depósito en custodia en Stellar Soroban",
-		"display": {
-			"showOnScreen": "Mostrar en pantalla"
-		},
-		"print": {
-			"receipt": "Imprimir recibo (A4)"
-		},
 		"escrow": {
 			"title": "Reservado on-chain",
-			"verifiedBadge": "Premios verificados on-chain",
 			"onChainState": "estado del contrato: {state}",
 			"readFailed": "No se pudo leer el escrow desde el contrato:",
 			"eventId": "Id del evento en el escrow",
@@ -184,19 +176,10 @@
 			"winner": "Ganador: {team}",
 			"paidTx": "Pagado on-chain"
 		},
-		"payoutHistory": {
-			"title": "Historial de pagos",
-			"empty": "Todavía no se liberaron pagos.",
-			"unassignedWinner": "Ganador pendiente",
-			"txProof": "Tx de liberación"
-		},
 		"people": {
 			"organizer": "Organizador",
 			"judge": "Juez",
-			"noJudge": "{count, plural, =0 {Sin juez activo} other {# jueces activos — se esperaba exactamente uno}}",
-			"resolver": "Resolutor de disputas",
-			"defaultResolver": "Astrea (predeterminado)",
-			"unavailableResolver": "No disponible"
+			"noJudge": "{count, plural, =0 {Sin juez activo} other {# jueces activos — se esperaba exactamente uno}}"
 		},
 		"teams": {
 			"title": "Equipos registrados ({count})",
@@ -393,65 +376,5 @@
 		"payoutConfirmed": "Pago confirmado en red",
 		"verifiedSubmission": "Entrega Verificada",
 		"viewRepo": "Ver Repositorio"
-	},
-	"EventPrint": {
-		"metaTitle": "Imprimir recibo",
-		"metaDescription": "Recibo oficial de pagos on-chain para {name}",
-		"backToEvent": "← Volver al evento",
-		"escrowBadge": "ESCROW INTELIGENTE DE STELLAR",
-		"receiptTitle": "RECIBO OFICIAL DE PAGOS DE PREMIOS ON-CHAIN",
-		"scanForAudit": "Escanear para auditoría en vivo",
-		"lockedPrizePool": "Pozo de Premios Bloqueado",
-		"eventStatus": "Estado del Evento",
-		"statusCompletedPaid": "COMPLETADO / PAGADO",
-		"statusCompletedPending": "COMPLETADO / PAGO PENDIENTE",
-		"organizer": "Organizador",
-		"judges": "Juez(ces)",
-		"none": "Ninguno",
-		"escrowEventId": "ID de Evento en Escrow:",
-		"contract": "Contrato:",
-		"winnersTitle": "Ganadores Verificados y Recibos de Pago On-Chain",
-		"noWinners": "No hay ganadores registrados.",
-		"rank": "Puesto",
-		"team": "Equipo",
-		"members": "Miembros",
-		"amount": "Monto",
-		"txHash": "Hash de Transacción On-Chain",
-		"pending": "Pendiente",
-		"footerText": "Astrea • Pagos en custodia no custodial sobre Stellar Soroban",
-		"printButton": "Imprimir / Guardar PDF (A4)",
-		"unavailableTitle": "Recibo no disponible",
-		"unavailableDesc": "Este evento no puede emitir un recibo oficial de pago porque sus fondos en custodia no pudieron ser verificados."
-	},
-	"EventCard": {
-		"genericTitle": "Pagos de Premios Respaldados por Escrow",
-		"genericSubtitle": "Pozos de premios en contratos inteligentes sobre Stellar. Auditables, automatizados y no custodiales.",
-		"builtOnStellar": "Construido sobre Stellar Soroban",
-		"registrationsOpen": "INSCRIPCIONES ABIERTAS",
-		"registrationsClosed": "INSCRIPCIONES CERRADAS",
-		"judgingInProgress": "EVALUACIÓN EN CURSO",
-		"liveCompetition": "COMPETENCIA EN VIVO",
-		"lockedPrizePool": "POZO DE PREMIOS BLOQUEADO ON-CHAIN",
-		"escrowAssurance": "Garantía de Escrow",
-		"verifiableOnStellar": "Verificable en Stellar Soroban",
-		"deadline": "Fecha límite",
-		"organizer": "Organizador",
-		"judge": "Juez",
-		"judges": "Jueces",
-		"teamsRegistered": "equipos registrados",
-		"teamsRegisteredDisplay": "Equipos Registrados",
-		"completedVerifiedPayouts": "COMPLETADO • PAGOS VERIFICADOS",
-		"completedPayoutsPending": "COMPLETADO • PAGOS PENDIENTES",
-		"total": "Total:",
-		"place": "PUESTO",
-		"payout": "✓ Pago:",
-		"moreWinnersPaid": "+{count} {count, plural, =1 {ganador más pagado} other {ganadores más pagados}} on-chain",
-		"moreWinnersPending": "+{count} {count, plural, =1 {ganador más} other {ganadores más}} con pago pendiente",
-		"allPayoutsVerified": "Todos los pagos verificados en Stellar",
-		"payoutsPending": "Pagos pendientes de confirmación on-chain",
-		"scanToViewAndRegister": "Escanear para ver e inscribirse",
-		"scanToFollowJudging": "Escanear para seguir la evaluación",
-		"judgingDeadline": "Límite de evaluación",
-		"securedByStellar": "Asegurado por contrato inteligente de escrow en Stellar Soroban"
 	}
 }

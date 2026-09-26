@@ -74,7 +74,6 @@ describe("readEscrowEvent", () => {
 			token: TOKEN,
 			admin: ADMIN,
 			judge: JUDGE,
-			resolver: ADMIN,
 		});
 
 		// The simulated transaction is a single invoke_host_function calling
