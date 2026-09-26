@@ -16,6 +16,7 @@ import {
 } from "@/lib/events/public-view";
 import { getExplorerAccountUrl } from "@/lib/explorer";
 import { STELLAR_NETWORK } from "@/lib/stellar-network";
+import { isUuid } from "@/lib/uuid";
 import { getSessionWallet } from "@/lib/wallet/session";
 import { JudgingToggle } from "./judging-toggle";
 import { RegistrationForm } from "./registration-form";
@@ -33,6 +34,7 @@ export async function generateMetadata({
 	params: Params;
 }): Promise<Metadata> {
 	const { id, locale } = await params;
+	if (!isUuid(id)) return {};
 	const event = await db.event.findUnique({
 		where: { id },
 		select: { name: true, description: true },
@@ -89,6 +91,7 @@ function AddressLink({ address }: { address: string }) {
  */
 export default async function EventPage({ params }: { params: Params }) {
 	const { id } = await params;
+	if (!isUuid(id)) notFound();
 	const event = await loadPublicEventView(id);
 	if (!event) notFound();
 

@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { STELLAR_NETWORK } from "@/lib/stellar-network";
+import { isUuid } from "@/lib/uuid";
 import { getSessionWallet } from "@/lib/wallet/session";
 import { ReleaseForm } from "./release-form";
 
@@ -22,15 +23,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
 	const { locale, id } = await params;
 	const t = await getTranslations({ locale, namespace: "JudgePage" });
-	const event = await db.event.findUnique({
-		where: { id },
-		select: { name: true },
-	});
+	const event = isUuid(id)
+		? await db.event.findUnique({ where: { id }, select: { name: true } })
+		: null;
 	return { title: event ? `${t("title")} — ${event.name}` : t("title") };
 }
 
 export default async function JudgePage({ params }: { params: Params }) {
 	const { id } = await params;
+	if (!isUuid(id)) notFound();
 	const event = await db.event.findUnique({
 		where: { id },
 		include: {

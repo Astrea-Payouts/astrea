@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { depositBuild, depositSubmit } from "@/lib/core-go/client";
 import { db } from "@/lib/db";
+import { isUuid } from "@/lib/uuid";
 import { getSessionWallet } from "@/lib/wallet/session";
 import {
 	type ActionFailure,
@@ -73,10 +74,12 @@ export async function readEventStatus(
 ): Promise<EventStatusResult> {
 	const session = await getSessionWallet();
 	if (!session) return NOT_CONNECTED;
-	const event = await db.event.findUnique({
-		where: { id: eventId },
-		select: { status: true, escrowEventId: true, organizerWalletId: true },
-	});
+	const event = isUuid(eventId)
+		? await db.event.findUnique({
+				where: { id: eventId },
+				select: { status: true, escrowEventId: true, organizerWalletId: true },
+			})
+		: null;
 	if (!event) {
 		return {
 			ok: false,

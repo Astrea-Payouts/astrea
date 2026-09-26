@@ -53,7 +53,6 @@ export async function generateMetadata({
 			"smart contracts",
 			"prize payouts",
 			"crypto bounties",
-			"Trustless Work",
 		],
 		authors: [{ name: "Astrea" }],
 		creator: "Astrea",

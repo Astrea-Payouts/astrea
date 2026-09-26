@@ -159,7 +159,7 @@ export function SiteHeader({ variant, className }: SiteHeaderProps) {
 				displayItemNumbering={false}
 				logoUrl="/astrea-logo-mark-trimmed.png"
 				colors={["#0a0a0a", "#000000"]}
-				accentColor="#000000"
+				accentColor={theme === "light" ? "#38bdf8" : "#7dd3fc"}
 				menuButtonColor={theme === "light" ? "#09090b" : "#fff"}
 				openMenuButtonColor={theme === "light" ? "#000" : "#fff"}
 				openAriaLabel={t("openMenu")}

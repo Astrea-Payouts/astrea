@@ -329,3 +329,22 @@ describe("submitRelease", () => {
 		expect(mockRevalidate).not.toHaveBeenCalled();
 	});
 });
+
+describe("buildRelease with a non-UUID event id", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		mockSession.mockResolvedValue(WALLET);
+		mockBuild.mockRejectedValue(
+			new CoreGoError(404, "event_not_found", "event not found"),
+		);
+	});
+
+	it("skips the judge lookup and lets Go refuse it", async () => {
+		const res = await buildRelease("new", assignments);
+
+		expect(mockDb.event.findUnique).not.toHaveBeenCalled();
+		expect(mockHasTrustline).not.toHaveBeenCalled();
+		expect(mockBuild).toHaveBeenCalledWith("new", WALLET.address, assignments);
+		expect(res).toMatchObject({ ok: false, code: "event_not_found" });
+	});
+});

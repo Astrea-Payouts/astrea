@@ -297,3 +297,26 @@ describe("startJudging", () => {
 		expect(res.detail).toMatch(/not in status LIVE/);
 	});
 });
+
+describe("non-UUID event ids", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		mockSession.mockResolvedValue(WALLET);
+	});
+
+	it("registerTeam answers eventNotFound without querying the database", async () => {
+		expect(await registerTeam("new", validInput)).toEqual({
+			ok: false,
+			code: "eventNotFound",
+		});
+		expect(mockDb.event.findUnique).not.toHaveBeenCalled();
+	});
+
+	it("startJudging answers eventNotFound without querying the database", async () => {
+		expect(await startJudging("new")).toEqual({
+			ok: false,
+			code: "eventNotFound",
+		});
+		expect(mockDb.event.findUnique).not.toHaveBeenCalled();
+	});
+});

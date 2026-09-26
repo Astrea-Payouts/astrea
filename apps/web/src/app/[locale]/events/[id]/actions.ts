@@ -9,6 +9,7 @@ import {
 } from "@/lib/github/repo-ownership";
 import { transitionEvent } from "@/lib/state-machines/apply";
 import { verifyAndRecordTrustline } from "@/lib/trustline/verify-and-record";
+import { isUuid } from "@/lib/uuid";
 import { getSessionWallet } from "@/lib/wallet/session";
 
 // Server actions are reachable by direct POST, so every one re-checks the
@@ -69,6 +70,7 @@ export async function registerTeam(
 	}
 	const submissionUrl = parseSubmissionUrl(input.submissionUrl);
 	if (!submissionUrl) return { ok: false, code: "invalidSubmissionUrl" };
+	if (!isUuid(eventId)) return { ok: false, code: "eventNotFound" };
 
 	const event = await db.event.findUnique({
 		where: { id: eventId },
@@ -160,6 +162,7 @@ export async function registerTeam(
 export async function startJudging(eventId: string): Promise<ActionResult> {
 	const session = await getSessionWallet();
 	if (!session) return { ok: false, code: "notConnected" };
+	if (!isUuid(eventId)) return { ok: false, code: "eventNotFound" };
 
 	const event = await db.event.findUnique({
 		where: { id: eventId },
