@@ -8,6 +8,7 @@ import { readEscrowEvent } from "@/lib/escrow/read-event";
 import { buildEventCardModel } from "@/lib/events/card-model";
 import { getExplorerContractUrl, getExplorerTxUrl } from "@/lib/explorer";
 import { qrSvgPath } from "@/lib/qr";
+import { getSiteUrl } from "@/lib/site-url";
 import { STELLAR_NETWORK } from "@/lib/stellar-network";
 import { PrintButton } from "./print-button";
 
@@ -112,11 +113,12 @@ export default async function EventPrintPage({ params }: { params: Params }) {
 
 	const t = await getTranslations({ locale, namespace: "EventPrint" });
 	const allPayoutsConfirmed =
-		model.winners.length > 0 &&
-		model.winners.every((winner) => Boolean(winner.txHash));
+		event.prizes.length > 0 &&
+		event.prizes.every(
+			(prize) => Boolean(prize.winnerTeamId) && Boolean(prize.releaseTxHash),
+		);
 
-	const appBase = process.env.NEXT_PUBLIC_APP_URL || "https://astrea.app";
-	const canonicalUrl = `${appBase}/${locale}/events/${id}`;
+	const canonicalUrl = `${getSiteUrl()}/${locale}/events/${id}`;
 	const qr = qrSvgPath(canonicalUrl);
 
 	return (

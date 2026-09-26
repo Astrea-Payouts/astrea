@@ -187,6 +187,56 @@ describe("EventPrintPage", () => {
 		expect(screen.getByText("Pending")).toBeInTheDocument();
 	});
 
+	it("renders COMPLETED / PAYOUT PENDING when an event has an unawarded prize (missing winnerTeamId)", async () => {
+		vi.mocked(db.event.findUnique).mockResolvedValue({
+			id: "evt-completed-unawarded",
+			status: "COMPLETED",
+			name: "Completed With Unawarded Prize",
+			escrowEventId: "0102030405060708090a0b0c0d0e0f10",
+			organizerWallet: {
+				address: "GDQP2KPQGKIHYJGXNUIYOMHARUARCA7DJT5FO2FFOOKY3IFHAY4B2P76",
+			},
+			judges: [],
+			teams: [
+				{
+					id: "team-1",
+					name: "Awarded Team",
+					members: [],
+				},
+			],
+			prizes: [
+				{
+					id: "prz-1",
+					rank: 1,
+					amount: "5000",
+					winnerTeamId: "team-1",
+					releaseTxHash: "0x1234567890abcdef1234567890abcdef",
+				},
+				{
+					id: "prz-2",
+					rank: 2,
+					amount: "2500",
+					winnerTeamId: null,
+					releaseTxHash: null,
+				},
+			],
+		} as never);
+
+		vi.mocked(readEscrowEvent).mockResolvedValue({
+			reward: BigInt("75000000000"),
+			state: "Active",
+		} as never);
+
+		const jsx = await EventPrintPage({
+			params: Promise.resolve({ locale: "en", id: "evt-completed-unawarded" }),
+		});
+
+		render(jsx);
+
+		expect(screen.getByText("COMPLETED / PAYOUT PENDING")).toBeInTheDocument();
+		expect(screen.queryByText("COMPLETED / PAID")).not.toBeInTheDocument();
+	});
+
 	it("renders the receipt with LOCKED PRIZE POOL and COMPLETED / PAID when verified", async () => {
 		vi.mocked(db.event.findUnique).mockResolvedValue({
 			id: "evt-completed",

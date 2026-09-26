@@ -8,6 +8,7 @@ import {
 	getCardLabels,
 	loadCardFont,
 } from "@/lib/events/card-templates";
+import { getSiteUrl } from "@/lib/site-url";
 
 type Params = Promise<{ locale: string; id: string }>;
 
@@ -81,8 +82,7 @@ export async function GET(
 		assetSymbol: env.USDC_SYMBOL ?? "USDC",
 	});
 
-	const appBase = process.env.NEXT_PUBLIC_APP_URL || "https://astrea.app";
-	const canonicalUrl = `${appBase}/${locale}/events/${id}`;
+	const canonicalUrl = `${getSiteUrl()}/${locale}/events/${id}`;
 
 	return new ImageResponse(DisplayEventCard({ model, canonicalUrl, labels }), {
 		width: 1920,

@@ -157,6 +157,33 @@ describe("card-templates", () => {
 		);
 	});
 
+	it("renders moreWinnersPaid when all omitted winners have verified payouts", () => {
+		const winners = makeWinners(8); // 8 winners, top 6 visible, 2 omitted, all with txHash
+		const model: EventCardModel = {
+			...baseModel,
+			status: "COMPLETED",
+			templateType: "winners",
+			winners,
+		};
+		const tree = WinnersEventCard({ model });
+		const json = JSON.stringify(tree);
+		expect(json).toContain("+2 more winners paid on-chain");
+	});
+
+	it("renders moreWinnersPending when an omitted winner has pending payout", () => {
+		const winners = makeWinners(8);
+		winners[7].txHash = null; // omitted winner (rank 8) has pending payout
+		const model: EventCardModel = {
+			...baseModel,
+			status: "COMPLETED",
+			templateType: "winners",
+			winners,
+		};
+		const tree = WinnersEventCard({ model });
+		const json = JSON.stringify(tree);
+		expect(json).toContain("+2 more winners pending payout");
+	});
+
 	it("renders localized Spanish labels when labels prop is provided", () => {
 		const tree = OpenEventCard({
 			model: baseModel,

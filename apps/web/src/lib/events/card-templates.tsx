@@ -611,6 +611,9 @@ export function WinnersEventCard({
 	const visibleLimit = isMultiGrid ? 6 : 3;
 	const visibleWinners = model.winners.slice(0, visibleLimit);
 	const remainingCount = Math.max(0, winnersCount - visibleLimit);
+	const omittedWinners = model.winners.slice(visibleLimit);
+	const allOmittedPaid =
+		omittedWinners.length > 0 && omittedWinners.every((w) => Boolean(w.txHash));
 
 	const allPayoutsVerified =
 		winnersCount > 0 && model.winners.every((w) => Boolean(w.txHash));
@@ -749,7 +752,7 @@ export function WinnersEventCard({
 							fontWeight: 600,
 						}}
 					>
-						{allPayoutsVerified
+						{allOmittedPaid
 							? l.moreWinnersPaid(remainingCount)
 							: l.moreWinnersPending(remainingCount)}
 					</div>
