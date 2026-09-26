@@ -21,18 +21,29 @@ const { mockDb, mockSession, mockReadEscrow } = vi.hoisted(() => ({
 vi.mock("@/lib/db", () => ({ db: mockDb }));
 vi.mock("@/lib/wallet/session", () => ({ getSessionWallet: mockSession }));
 vi.mock("@/lib/escrow/read-event", () => ({ readEscrowEvent: mockReadEscrow }));
+vi.mock("@/hooks/use-theme", () => ({
+	useTheme: () => ({ theme: "dark" as const, setTheme: vi.fn() }),
+}));
 vi.mock("next/navigation", () => ({
 	notFound: () => {
 		throw new Error("NEXT_NOT_FOUND");
 	},
 }));
+
+import messagesEs from "../../../../../messages/es.json";
+
 vi.mock("next-intl/server", () => ({
-	getTranslations: async (arg: string | { namespace: string }) =>
-		createTranslator({
-			locale: "en",
-			messages,
+	getTranslations: async (
+		arg: string | { namespace: string; locale?: string },
+	) => {
+		const locale = typeof arg === "object" && arg.locale ? arg.locale : "en";
+		const msgs = locale === "es" ? messagesEs : messages;
+		return createTranslator({
+			locale,
+			messages: msgs,
 			namespace: (typeof arg === "string" ? arg : arg.namespace) as never,
-		}),
+		});
+	},
 }));
 vi.mock("@/i18n/navigation", () => ({
 	Link: ({
@@ -163,6 +174,15 @@ describe("EventPage - generateMetadata", () => {
 		expect(meta).toEqual({
 			title: "Hackathon Stellar 2026",
 			description: "Great event",
+			openGraph: {
+				title: "Hackathon Stellar 2026",
+				description: "Great event",
+			},
+			twitter: {
+				card: "summary_large_image",
+				title: "Hackathon Stellar 2026",
+				description: "Great event",
+			},
 		});
 	});
 
@@ -171,6 +191,117 @@ describe("EventPage - generateMetadata", () => {
 
 		const meta = await generateMetadata({ params });
 		expect(meta).toEqual({});
+	});
+
+	it("uses localized fallback description when event description is absent", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			name: "Hackathon Stellar 2026",
+			description: null,
+		});
+
+		const metaEn = await generateMetadata({
+			params: Promise.resolve({ locale: "en", id: EVENT_ID }),
+		});
+		expect(metaEn.description).toBe(
+			"Escrow-backed prize payouts on Stellar Soroban",
+		);
+
+		const metaEs = await generateMetadata({
+			params: Promise.resolve({ locale: "es", id: EVENT_ID }),
+		});
+		expect(metaEs.description).toBe(
+			"Pagos de premios con depósito en custodia en Stellar Soroban",
+		);
+	});
+});
+
+describe("EventPage — U03 Public Event Page (Issue #64)", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		mockDb.event.findUnique.mockResolvedValue(completedEvent);
+		mockSession.mockResolvedValue(null);
+	});
+
+	afterEach(() => {
+		cleanup();
+	});
+
+	it("shows 'Prizes verified on-chain' badge and contract link only after create_event confirms", async () => {
+		mockReadEscrow.mockResolvedValue({
+			reward: "7500000000",
+			state: "InProgress",
+			token: "CUSDC",
+			admin: ORGANIZER,
+			judge: JUDGE,
+		});
+
+		await renderPage();
+
+		expect(screen.getByTestId("prizes-verified-badge")).toHaveTextContent(
+			/Prizes verified on-chain/i,
+		);
+		expect(screen.getByTestId("resolver-card")).toHaveTextContent(
+			/Astrea \(default\)/i,
+		);
+		expect(screen.getByTestId("payout-history-section")).toBeInTheDocument();
+		expect(
+			document.querySelectorAll("[data-border-glow]").length,
+		).toBeGreaterThanOrEqual(2);
+	});
+
+	it("never renders 'Prizes verified on-chain' badge optimistically when create_event is not confirmed or when escrow is Cancelled/Compensated", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			...completedEvent,
+			status: "CANCELLED",
+		});
+		mockReadEscrow.mockResolvedValue({
+			reward: "7500000000",
+			state: "Cancelled",
+			token: "CUSDC",
+			admin: ORGANIZER,
+			judge: JUDGE,
+		});
+
+		await renderPage();
+
+		expect(
+			screen.queryByTestId("prizes-verified-badge"),
+		).not.toBeInTheDocument();
+	});
+
+	it("leaves a RELEASED prize without a release tx out of the payout history", async () => {
+		mockDb.event.findUnique.mockResolvedValue({
+			...completedEvent,
+			prizes: [
+				{
+					id: "prize-1",
+					rank: 1,
+					amount: { toString: () => "500" },
+					status: "RELEASED",
+					winnerTeamId: "team-a",
+					releaseTxHash: null,
+				},
+			],
+		});
+
+		await renderPage();
+
+		expect(
+			screen.queryByTestId("payout-history-section"),
+		).not.toBeInTheDocument();
+	});
+
+	it("shows 'Unavailable' when escrow read fails instead of falsely claiming default resolver", async () => {
+		mockReadEscrow.mockRejectedValue(new Error("RPC timeout"));
+
+		await renderPage();
+
+		expect(screen.getByTestId("resolver-card")).toHaveTextContent(
+			/Unavailable/i,
+		);
+		expect(screen.getByTestId("resolver-card")).not.toHaveTextContent(
+			/Astrea \(default\)/i,
+		);
 	});
 });
 
