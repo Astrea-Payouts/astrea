@@ -221,6 +221,12 @@
       "variant": "emphasis"
     },
     {
+      "id": "web-db",
+      "from": "web",
+      "to": "db",
+      "label": "Prisma"
+    },
+    {
       "id": "core-db",
       "from": "core",
       "to": "db",
