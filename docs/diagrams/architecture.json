@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Astrea — System architecture",
+    "quality_profile": "showcase",
+    "locale": "en"
+  },
+  "components": [
+    {
+      "id": "users",
+      "type": "external",
+      "label": "Users",
+      "sublabel": "3 roles · browser",
+      "pos": [
+        40,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "wallet",
+      "type": "security",
+      "label": "Stellar Wallets Kit",
+      "sublabel": "Freighter · xBull…",
+      "pos": [
+        40,
+        110
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "signs in browser"
+    },
+    {
+      "id": "web",
+      "type": "frontend",
+      "label": "apps/web",
+      "sublabel": "Next.js 16 · server actions",
+      "pos": [
+        250,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "horizon",
+      "type": "cloud",
+      "label": "Horizon",
+      "sublabel": "USDC trustline",
+      "pos": [
+        250,
+        110
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "github",
+      "type": "external",
+      "label": "GitHub OAuth",
+      "sublabel": "repo ownership",
+      "pos": [
+        250,
+        490
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "core",
+      "type": "backend",
+      "label": "core-go",
+      "sublabel": "Go · build / submit",
+      "pos": [
+        470,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "Supabase Postgres",
+      "sublabel": "mirror · op_log",
+      "pos": [
+        470,
+        490
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "rpc",
+      "type": "cloud",
+      "label": "Soroban RPC",
+      "sublabel": "simulate · send · poll",
+      "pos": [
+        690,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "contract",
+      "type": "backend",
+      "label": "EventEscrow",
+      "sublabel": "Soroban · Rust",
+      "pos": [
+        910,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "source of truth"
+    },
+    {
+      "id": "treasury",
+      "type": "external",
+      "label": "Treasury",
+      "sublabel": "go-live fee",
+      "pos": [
+        910,
+        110
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "usdc",
+      "type": "external",
+      "label": "Winners",
+      "sublabel": "USDC direct",
+      "pos": [
+        910,
+        490
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Vercel",
+      "wraps": [
+        "web",
+        "core"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Stellar testnet",
+      "wraps": [
+        "rpc",
+        "contract",
+        "treasury",
+        "usdc"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "users-web",
+      "from": "users",
+      "to": "web",
+      "label": "HTTPS",
+      "variant": "emphasis"
+    },
+    {
+      "id": "users-wallet",
+      "from": "users",
+      "to": "wallet",
+      "label": "signs XDR",
+      "variant": "security"
+    },
+    {
+      "id": "web-horizon",
+      "from": "web",
+      "to": "horizon",
+      "label": "checks"
+    },
+    {
+      "id": "web-github",
+      "from": "web",
+      "to": "github",
+      "label": "OAuth",
+      "variant": "dashed",
+      "labelDy": 24
+    },
+    {
+      "id": "web-core",
+      "from": "web",
+      "to": "core",
+      "label": "Bearer token",
+      "variant": "emphasis"
+    },
+    {
+      "id": "core-db",
+      "from": "core",
+      "to": "db",
+      "label": "pgx",
+      "labelDy": 24
+    },
+    {
+      "id": "core-rpc",
+      "from": "core",
+      "to": "rpc",
+      "label": "XDR",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rpc-contract",
+      "from": "rpc",
+      "to": "contract",
+      "label": "invoke",
+      "variant": "emphasis"
+    },
+    {
+      "id": "contract-treasury",
+      "from": "contract",
+      "to": "treasury",
+      "label": "fee"
+    },
+    {
+      "id": "contract-usdc",
+      "from": "contract",
+      "to": "usdc",
+      "label": "release_reward",
+      "variant": "emphasis",
+      "labelDy": 24
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Web (Next.js)",
+      "items": [
+        "Server actions call core-go via client.ts (server-only)",
+        "Prisma 7 reads/writes drafts, teams and session",
+        "Session cookie is UX, never authorization (ADR-005)"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "core-go",
+      "items": [
+        "The only service that calls the contract",
+        "Checks the signed envelope matches what it built",
+        "Writes op_log + mirror rows after confirmation"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "EventEscrow",
+      "items": [
+        "One shared instance (ADR-006)",
+        "Per-organizer AdminWallet ledger",
+        "Judge pays winners directly (ADR-003)"
+      ]
+    }
+  ]
+}

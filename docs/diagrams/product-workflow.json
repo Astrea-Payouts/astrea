@@ -1,0 +1,245 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Astrea — Product flow",
+    "quality_profile": "showcase",
+    "locale": "en"
+  },
+  "lanes": [
+    {
+      "id": "org",
+      "label": "Organizer"
+    },
+    {
+      "id": "part",
+      "label": "Participant"
+    },
+    {
+      "id": "judge",
+      "label": "Judge"
+    },
+    {
+      "id": "fallback",
+      "label": "Cancellation + dispute",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "setup",
+      "label": "Create + fund",
+      "fromCol": 0,
+      "toCol": 2
+    },
+    {
+      "id": "run",
+      "label": "Live event",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "emphasis"
+    },
+    {
+      "id": "payout",
+      "label": "Payout",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "connect",
+    "draft",
+    "fund",
+    "golive",
+    "register",
+    "submit",
+    "assign",
+    "release",
+    "paid"
+  ],
+  "nodes": [
+    {
+      "id": "connect",
+      "lane": "org",
+      "col": 0,
+      "type": "security",
+      "label": "Connect wallet",
+      "sublabel": "UX session"
+    },
+    {
+      "id": "draft",
+      "lane": "org",
+      "col": 1,
+      "type": "frontend",
+      "label": "Wizard",
+      "sublabel": "DRAFT in Postgres"
+    },
+    {
+      "id": "fund",
+      "lane": "org",
+      "col": 2,
+      "type": "backend",
+      "label": "Deposit + create",
+      "sublabel": "create_event",
+      "tag": "CREATED",
+      "width": 120
+    },
+    {
+      "id": "golive",
+      "lane": "org",
+      "col": 3,
+      "type": "backend",
+      "label": "Go live",
+      "sublabel": "pays fee",
+      "tag": "LIVE"
+    },
+    {
+      "id": "register",
+      "lane": "part",
+      "col": 3,
+      "type": "frontend",
+      "label": "Register",
+      "sublabel": "USDC trustline"
+    },
+    {
+      "id": "submit",
+      "lane": "part",
+      "col": 4,
+      "type": "frontend",
+      "label": "Submit",
+      "sublabel": "repo + demo"
+    },
+    {
+      "id": "assign",
+      "lane": "judge",
+      "col": 4,
+      "type": "frontend",
+      "label": "Pick winners",
+      "sublabel": "JUDGING",
+      "width": 120
+    },
+    {
+      "id": "release",
+      "lane": "judge",
+      "col": 5,
+      "type": "security",
+      "label": "release_reward",
+      "sublabel": "judge signs",
+      "tag": "COMPLETED",
+      "width": 120
+    },
+    {
+      "id": "paid",
+      "lane": "part",
+      "col": 5,
+      "type": "external",
+      "label": "USDC received",
+      "sublabel": "same tx"
+    },
+    {
+      "id": "cancel",
+      "lane": "fallback",
+      "col": 2,
+      "type": "security",
+      "label": "Cancel",
+      "sublabel": "refund"
+    },
+    {
+      "id": "resolve",
+      "lane": "fallback",
+      "col": 5,
+      "type": "security",
+      "label": "resolve_dispute",
+      "sublabel": "resolver",
+      "width": 120
+    }
+  ],
+  "edges": [
+    {
+      "from": "connect",
+      "to": "draft"
+    },
+    {
+      "from": "draft",
+      "to": "fund",
+      "label": "sign",
+      "variant": "emphasis"
+    },
+    {
+      "from": "fund",
+      "to": "golive",
+      "variant": "emphasis"
+    },
+    {
+      "from": "golive",
+      "to": "register",
+      "label": "opens signup",
+      "variant": "emphasis"
+    },
+    {
+      "from": "register",
+      "to": "submit"
+    },
+    {
+      "from": "submit",
+      "to": "assign",
+      "label": "deadline",
+      "variant": "emphasis"
+    },
+    {
+      "from": "assign",
+      "to": "release",
+      "variant": "emphasis"
+    },
+    {
+      "from": "release",
+      "to": "paid",
+      "label": "pays",
+      "variant": "emphasis"
+    },
+    {
+      "from": "fund",
+      "to": "cancel",
+      "label": "before LIVE",
+      "variant": "security",
+      "role": "error"
+    },
+    {
+      "from": "assign",
+      "to": "resolve",
+      "label": "no signature",
+      "variant": "security",
+      "role": "error"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Happy path",
+      "items": [
+        "The prize is reserved at creation: CREATED means funded",
+        "USDC trustline checked at registration (ADR-004)",
+        "One judge tx pays every winner"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Exits",
+      "items": [
+        "Before LIVE: set_event_cancelled or expire_event",
+        "After judging_deadline: resolver's resolve_dispute",
+        "Never an automatic refund of a live event"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Every on-chain step",
+      "items": [
+        "build in core-go → sign in wallet → submit",
+        "Postgres updates only after confirmation",
+        "No optimistic UI on money-moving actions"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Astrea — Winner payout (build → sign → submit)",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      960,
+      1028
+    ],
+    "locale": "en"
+  },
+  "participants": [
+    {
+      "id": "judge",
+      "type": "external",
+      "label": "Judge",
+      "sublabel": "browser"
+    },
+    {
+      "id": "wallet",
+      "type": "security",
+      "label": "Wallet",
+      "sublabel": "Wallets Kit"
+    },
+    {
+      "id": "web",
+      "type": "frontend",
+      "label": "Next.js",
+      "sublabel": "server action"
+    },
+    {
+      "id": "core",
+      "type": "backend",
+      "label": "core-go",
+      "sublabel": "internal/api"
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "Postgres",
+      "sublabel": "Supabase"
+    },
+    {
+      "id": "rpc",
+      "type": "cloud",
+      "label": "Soroban RPC",
+      "sublabel": "testnet"
+    },
+    {
+      "id": "contract",
+      "type": "backend",
+      "label": "EventEscrow",
+      "sublabel": "contract"
+    }
+  ],
+  "segments": [
+    {
+      "from": 154,
+      "to": 458,
+      "label": "Build"
+    },
+    {
+      "from": 482,
+      "to": 566,
+      "label": "Sign"
+    },
+    {
+      "from": 590,
+      "to": 938,
+      "label": "Submit"
+    }
+  ],
+  "messages": [
+    {
+      "from": "judge",
+      "to": "web",
+      "y": 180,
+      "label": "assign winners",
+      "variant": "emphasis"
+    },
+    {
+      "from": "web",
+      "to": "core",
+      "y": 224,
+      "label": "POST /release/build",
+      "variant": "emphasis",
+      "note": "Bearer + X-Astrea-Wallet"
+    },
+    {
+      "from": "core",
+      "to": "db",
+      "y": 268,
+      "label": "load event + teams",
+      "variant": "default"
+    },
+    {
+      "from": "core",
+      "to": "rpc",
+      "y": 312,
+      "label": "simulate release_reward",
+      "variant": "default"
+    },
+    {
+      "from": "rpc",
+      "to": "core",
+      "y": 356,
+      "label": "unsigned XDR",
+      "variant": "return"
+    },
+    {
+      "from": "core",
+      "to": "db",
+      "y": 400,
+      "label": "op_log PENDING",
+      "variant": "default"
+    },
+    {
+      "from": "core",
+      "to": "web",
+      "y": 444,
+      "label": "unsignedTransactionXdr",
+      "variant": "return"
+    },
+    {
+      "from": "web",
+      "to": "wallet",
+      "y": 508,
+      "label": "sign XDR",
+      "variant": "security"
+    },
+    {
+      "from": "wallet",
+      "to": "web",
+      "y": 552,
+      "label": "signed XDR",
+      "variant": "return"
+    },
+    {
+      "from": "web",
+      "to": "core",
+      "y": 616,
+      "label": "POST /release/submit",
+      "variant": "emphasis"
+    },
+    {
+      "from": "core",
+      "to": "rpc",
+      "y": 660,
+      "label": "sendTransaction",
+      "variant": "emphasis",
+      "note": "signed envelope = built envelope"
+    },
+    {
+      "from": "rpc",
+      "to": "contract",
+      "y": 704,
+      "label": "release_reward",
+      "variant": "emphasis",
+      "note": "pays every winner in USDC"
+    },
+    {
+      "from": "contract",
+      "to": "rpc",
+      "y": 748,
+      "label": "Ended",
+      "variant": "return"
+    },
+    {
+      "from": "rpc",
+      "to": "core",
+      "y": 792,
+      "label": "confirmed (≤ 30 s)",
+      "variant": "return"
+    },
+    {
+      "from": "core",
+      "to": "db",
+      "y": 836,
+      "label": "SUCCEEDED + Payout",
+      "variant": "emphasis"
+    },
+    {
+      "from": "core",
+      "to": "web",
+      "y": 880,
+      "label": "txHash",
+      "variant": "return"
+    },
+    {
+      "from": "web",
+      "to": "judge",
+      "y": 924,
+      "label": "event COMPLETED",
+      "variant": "return"
+    }
+  ],
+  "activations": [
+    {
+      "participant": "core",
+      "from": 218,
+      "to": 452,
+      "type": "backend"
+    },
+    {
+      "participant": "wallet",
+      "from": 502,
+      "to": 560,
+      "type": "security"
+    },
+    {
+      "participant": "core",
+      "from": 610,
+      "to": 888,
+      "type": "backend"
+    },
+    {
+      "participant": "contract",
+      "from": 698,
+      "to": 756,
+      "type": "backend"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "No keys on the server",
+      "items": [
+        "core-go only builds and submits",
+        "Signing happens in the judge's wallet",
+        "The contract verifies the signature on-chain"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Idempotency",
+      "items": [
+        "op_log stores the built host function",
+        "submit rejects a different envelope (envelope_mismatch)",
+        "A poll timeout leaves the op PENDING"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Same pattern everywhere",
+      "items": [
+        "deposit, create, start and release",
+        "Each with /build and /submit",
+        "Postgres is a mirror; the chain is the truth"
+      ]
+    }
+  ]
+}
