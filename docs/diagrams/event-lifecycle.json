@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Astrea — Event lifecycle",
+    "viewBox": [
+      820,
+      680
+    ],
+    "quality_profile": "showcase",
+    "locale": "en"
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "Happy path"
+    },
+    {
+      "id": "dispute",
+      "label": "Dispute (resolver)"
+    },
+    {
+      "id": "terminal",
+      "label": "Terminal exits"
+    }
+  ],
+  "states": [
+    {
+      "id": "draft",
+      "type": "start",
+      "label": "DRAFT",
+      "sublabel": "wizard, Postgres only",
+      "lane": "main",
+      "col": 0,
+      "step": "01",
+      "tag": "off-chain"
+    },
+    {
+      "id": "created",
+      "type": "active",
+      "label": "CREATED",
+      "sublabel": "create_event",
+      "lane": "main",
+      "col": 1,
+      "step": "02",
+      "tag": "Created"
+    },
+    {
+      "id": "live",
+      "type": "active",
+      "label": "LIVE",
+      "sublabel": "set_event_in_progress",
+      "lane": "main",
+      "col": 2,
+      "step": "03",
+      "tag": "InProgress"
+    },
+    {
+      "id": "judging",
+      "type": "waiting",
+      "label": "JUDGING",
+      "sublabel": "after submissions",
+      "lane": "main",
+      "col": 3,
+      "step": "04",
+      "tag": "InProgress"
+    },
+    {
+      "id": "completed",
+      "type": "success",
+      "label": "COMPLETED",
+      "sublabel": "release_reward",
+      "lane": "main",
+      "col": 4,
+      "step": "05",
+      "tag": "Ended"
+    },
+    {
+      "id": "disputed",
+      "type": "waiting",
+      "label": "DISPUTED",
+      "sublabel": "judge did not release",
+      "lane": "dispute",
+      "col": 1,
+      "tag": "product only"
+    },
+    {
+      "id": "cancelled",
+      "type": "failure",
+      "label": "CANCELLED",
+      "sublabel": "refund",
+      "lane": "terminal",
+      "col": 0,
+      "tag": "Cancelled"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "draft",
+      "to": "created",
+      "variant": "emphasis"
+    },
+    {
+      "from": "created",
+      "to": "live",
+      "variant": "emphasis"
+    },
+    {
+      "from": "live",
+      "to": "judging",
+      "variant": "default"
+    },
+    {
+      "from": "judging",
+      "to": "completed",
+      "variant": "emphasis"
+    },
+    {
+      "from": "judging",
+      "to": "disputed",
+      "label": "judging_deadline",
+      "variant": "dashed",
+      "labelDy": 24,
+      "fromSide": "bottom"
+    },
+    {
+      "from": "disputed",
+      "to": "completed",
+      "label": "resolve_dispute",
+      "variant": "security",
+      "toSide": "bottom"
+    },
+    {
+      "from": "created",
+      "to": "cancelled",
+      "label": "cancel / expire",
+      "variant": "security",
+      "fromSide": "bottom"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Two state machines",
+      "items": [
+        "web: lib/state-machines/event.ts",
+        "Go: internal/escrow/lifecycle.go",
+        "Contract: lifecycle.rs (EventState)"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "LIVE and JUDGING",
+      "items": [
+        "Both are InProgress on-chain",
+        "Only start/submit moves CREATED → LIVE",
+        "No job sets DISPUTED yet (T01a)"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Cancellation",
+      "items": [
+        "On-chain only before LIVE",
+        "A live event: only via resolve_dispute",
+        "The organizer is never in the payout (ADR-003)"
+      ]
+    }
+  ]
+}

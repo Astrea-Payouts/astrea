@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { EventQrCode } from "@/components/event/event-qr-code";
 import { OnchainBadge } from "@/components/event/onchain-badge";
 import { PayoutHistory } from "@/components/event/payout-history";
 import { PrizeList } from "@/components/event/prize-list";
@@ -15,6 +16,7 @@ import {
 	resolveDisputeResolver,
 } from "@/lib/events/public-view";
 import { getExplorerAccountUrl } from "@/lib/explorer";
+import { getSiteUrl } from "@/lib/site-url";
 import { STELLAR_NETWORK } from "@/lib/stellar-network";
 import { isUuid } from "@/lib/uuid";
 import { getSessionWallet } from "@/lib/wallet/session";
@@ -88,9 +90,10 @@ function AddressLink({ address }: { address: string }) {
  * - Judges + dispute resolver section (stating "Astrea (default)" per ADR-003)
  * - Payout history with explorer transaction links for released prizes
  * - Social card preview, print layout & QR code verification
+ * - Share QR code deep-linking back to this page (U11 / Issue #28)
  */
 export default async function EventPage({ params }: { params: Params }) {
-	const { id } = await params;
+	const { id, locale } = await params;
 	if (!isUuid(id)) notFound();
 	const event = await loadPublicEventView(id);
 	if (!event) notFound();
@@ -122,6 +125,10 @@ export default async function EventPage({ params }: { params: Params }) {
 
 	// If the escrow read failed, the on-chain resolver is unknown.
 	// Display an unavailable state instead of falsely claiming it is the default resolver.
+	// Built from the configured site origin, never from request headers, so
+	// the QR can't encode a preview host or a spoofed Host header.
+	const shareUrl = `${getSiteUrl()}/${locale}/events/${event.id}`;
+
 	const resolver =
 		event.escrowEventId && !escrow
 			? {
@@ -230,6 +237,15 @@ export default async function EventPage({ params }: { params: Params }) {
 						)}
 					</div>
 				</section>
+
+				<EventQrCode
+					url={shareUrl}
+					labels={{
+						title: t("share.title"),
+						hint: t("share.hint"),
+						alt: t("share.alt"),
+					}}
+				/>
 
 				<section className="flex flex-col gap-3">
 					<h2 className="text-lg font-bold">

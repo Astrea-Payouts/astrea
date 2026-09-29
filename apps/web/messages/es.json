@@ -198,6 +198,11 @@
 			"defaultResolver": "Astrea (predeterminado)",
 			"unavailableResolver": "No disponible"
 		},
+		"share": {
+			"title": "Comparte este evento",
+			"hint": "Escanéalo para abrir esta página en un teléfono. Ponlo en una pantalla, diapositiva o volante en el lugar del evento para que los asistentes verifiquen el premio por su cuenta.",
+			"alt": "Código QR que enlaza a la página de este evento"
+		},
 		"teams": {
 			"title": "Equipos registrados ({count})",
 			"none": "Todavía no hay equipos registrados."
