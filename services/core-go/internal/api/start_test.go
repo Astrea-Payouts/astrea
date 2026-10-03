@@ -30,6 +30,7 @@ func newStartDeps(t *testing.T, fs *fakeStore, rpc *mockRPC) Deps {
 		RPC:               rpc,
 		Contract:          testContractScAddress(t),
 		NetworkPassphrase: network.TestNetworkPassphrase,
+		Trustlines:        &fakeTrustlines{},
 	}
 }
 

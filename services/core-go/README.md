@@ -110,9 +110,9 @@ go vet ./...
 
 ## Configuration
 
-`S04` (done): `internal/config.Load` validates eight environment variables —
+`S04` (done): `internal/config.Load` validates nine environment variables —
 `STELLAR_NETWORK`, `ALLOW_MAINNET`, `SOROBAN_RPC_URL`, `ESCROW_CONTRACT_ID`,
-`PORT`, `DATABASE_URL`, `CORE_GO_SERVICE_TOKEN`, `USDC_ISSUER` — and `main` calls it before
+`PORT`, `DATABASE_URL`, `CORE_GO_SERVICE_TOKEN`, `USDC_ISSUER`, `HORIZON_URL` — and `main` calls it before
 opening the database pool or building the mux, so a missing or malformed
 variable fails the process at boot (non-zero exit, one line per problem)
 instead of surfacing as a confusing error on the first real request. See
@@ -124,7 +124,9 @@ letting the two drift is exactly the testnet/mainnet mix-up
 `apps/web/src/lib/env.ts` also guards against. `ESCROW_CONTRACT_ID` is
 validated by decoding it with `internal/escrow.ContractAddress` (real
 strkey/checksum validation, not a regex) rather than re-implementing that
-parsing here. `ALLOW_MAINNET` mirrors the web app's gate: setting
+parsing here. `SOROBAN_RPC_URL` and `HORIZON_URL`, when set, must be
+absolute `http(s)` URLs with a host (`url.Parse` alone accepts a bare
+hostname as a relative path). `ALLOW_MAINNET` mirrors the web app's gate: setting
 `STELLAR_NETWORK=mainnet` alone is refused.
 
 **`DATABASE_URL`.** This service reads Postgres directly (`internal/store`,
@@ -164,6 +166,16 @@ address from this plus the network passphrase via
 `internal/escrow.ClassicAssetContractID` once at boot — the SAC address
 itself is never configured directly, so it can never drift out of step
 with `STELLAR_NETWORK`.
+
+**`HORIZON_URL`.** The Horizon instance `/release/build` reads winner
+balances from to re-check USDC trustlines (E06). Optional: defaults to
+`https://horizon-testnet.stellar.org` on testnet and
+`https://horizon.stellar.org` on mainnet; an explicit value must be an
+absolute `http(s)` URL. The asset checked is built from the same
+`config.USDCAssetCode` + `USDC_ISSUER` pair as the SAC address above, so the
+trustline checked is always the one `release_reward` pays out in. Each
+lookup is bounded by a 10 s HTTP timeout (`horizonclient` is not
+context-aware).
 
 **Key handling.** This service holds no signing key, plaintext or
 otherwise. Organizer and judge keys never leave their own wallets — every
@@ -324,8 +336,15 @@ won it — never an amount; `Prize.amount` (organizer-set at creation) and
 each member's payout. The handler loads the event, allocates winners with
 `escrow.AllocateWinners` (the remainder rule: a position's leftover stroop
 after flooring every member's basis-point share goes to the team's
-lowest-`Ordinal` member), simulates `release_reward` for the judge's own
-wallet to sign, and persists the result as the event's `op_log` row.
+lowest-`Ordinal` member), re-checks against Horizon that every wallet
+being paid holds the USDC trustline (`internal/trustline`, E06), simulates
+`release_reward` for the judge's own wallet to sign, and persists the
+result as the event's `op_log` row. The trustline check runs before the RPC
+simulation and before anything is written to `op_log`, so a refused build
+leaves no trace; it covers only the winners actually paid, not every
+registered member. It is an off-chain check at build time: a trustline
+removed between `/release/build` and `/release/submit` still fails the
+atomic `release_reward` on-chain.
 
 Response (`200`):
 
@@ -393,9 +412,11 @@ Every error body is `{"error":{"code":"...","message":"..."}}`.
 | 409 | `judge_ambiguous` | the event doesn't have exactly one `ACTIVE` judge |
 | 409 | `assignments_invalid` | a rank missing, duplicated, or unknown; a team from another event; or a team assigned twice |
 | 409 | `allocation_failed` | `escrow.AllocateWinners` rejected the split (wraps `*escrow.AllocationError`) |
+| 409 | `trustline_missing` | one or more winner wallets cannot receive USDC (no account on the ledger yet, or no trustline); the message names the asset and each wallet with its status (`/release/build`) |
 | 409 | `release_already_succeeded` | this event's release already paid out |
 | 409 | `no_pending_release` | `/release/submit` called with no currently-`PENDING` build (never built, or the last build's submit already failed and needs a fresh `/release/build`) |
 | 409 | `envelope_mismatch` | the signed envelope doesn't match what `/release/build` produced (decision below) |
+| 502 | `trustline_check_failed` | Horizon could not be queried (timeout, 5xx, rate limit) — retry; never reported as a missing trustline (`/release/build`) |
 | 502 | `simulation_failed` | RPC simulation of `release_reward` failed (`/release/build`) |
 | 502 | `submission_failed` | stellar-core rejected the transaction at submission (`/release/submit`; marks the op `FAILED`) |
 | 502 | `on_chain_failed` | the transaction landed but executed with an error (`/release/submit`; marks the op `FAILED`) |

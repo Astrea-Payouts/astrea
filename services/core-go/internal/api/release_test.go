@@ -22,6 +22,7 @@ import (
 
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/escrow"
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/store"
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/trustline"
 )
 
 // A real deployed contract id (smart-contracts/astrea/contracts/event-escrow),
@@ -384,6 +385,21 @@ func (f *fakeStore) MarkStartFailed(_ context.Context, eventID, reason string) e
 	return nil
 }
 
+// --- fakeTrustlines ----------------------------------------------------
+
+// fakeTrustlines is a TrustlineChecker that approves every wallet unless err
+// is set, recording each call's addresses so tests can assert exactly which
+// wallets /release/build asked about.
+type fakeTrustlines struct {
+	err   error
+	calls [][]string
+}
+
+func (f *fakeTrustlines) Require(_ context.Context, addresses ...string) error {
+	f.calls = append(f.calls, append([]string(nil), addresses...))
+	return f.err
+}
+
 // --- mockRPC (copied from escrow/pipeline_test.go's pattern; unexported,
 // package-local, not shared with escrow) --------------------------------
 
@@ -587,6 +603,7 @@ func newReleaseDeps(t *testing.T, fs *fakeStore, rpc *mockRPC) Deps {
 		RPC:               rpc,
 		Contract:          testContractScAddress(t),
 		NetworkPassphrase: network.TestNetworkPassphrase,
+		Trustlines:        &fakeTrustlines{},
 	}
 }
 
@@ -757,6 +774,162 @@ func TestReleaseBuild_SaveReleaseBuildInternalError(t *testing.T) {
 
 	rec := doJSON(t, router, http.MethodPost, "/events/"+event.ID+"/release/build", judge, releaseBuildRequest{Assignments: baseAssignments(event)})
 	assertErrorStatus(t, rec, http.StatusInternalServerError, "internal")
+}
+
+// --- /release/build: winner trustline re-check (E06) ---------------------
+
+// failOnRPC makes any RPC call fail the test, for cases that must be
+// refused before release_reward is ever simulated.
+func failOnRPC(t *testing.T, rpc *mockRPC) {
+	t.Helper()
+	rpc.loadAccountFn = func(_ context.Context, _ string) (txnbuild.Account, error) {
+		t.Error("RPC LoadAccount called; the trustline check must run before any RPC call")
+		return nil, errors.New("unexpected RPC call")
+	}
+	rpc.simulateFn = func(_ context.Context, _ protocol.SimulateTransactionRequest) (protocol.SimulateTransactionResponse, error) {
+		t.Error("RPC SimulateTransaction called; the trustline check must run before simulation")
+		return protocol.SimulateTransactionResponse{}, errors.New("unexpected RPC call")
+	}
+}
+
+func TestReleaseBuild_TrustlineMissing(t *testing.T) {
+	judge := mustRandomAddress(t)
+	event := baseEvent(t, judge)
+	fs := &fakeStore{events: map[string]*store.EventForRelease{event.ID: event}}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+	failOnRPC(t, rpc)
+
+	asset := trustline.Asset{Code: "USDC", Issuer: testResolverAddressStr}
+	noTrustline := event.Teams[1].Members[2].WalletAddress
+	noAccount := event.Teams[2].Members[0].WalletAddress
+	deps := newReleaseDeps(t, fs, rpc)
+	deps.Trustlines = &fakeTrustlines{err: &trustline.MissingError{
+		Asset: asset,
+		Wallets: []trustline.Result{
+			{Address: noTrustline, Status: trustline.StatusNoTrustline},
+			{Address: noAccount, Status: trustline.StatusNoAccount},
+		},
+	}}
+	router := New(deps)
+
+	rec := doJSON(t, router, http.MethodPost, "/events/"+event.ID+"/release/build", judge, releaseBuildRequest{Assignments: baseAssignments(event)})
+	assertErrorStatus(t, rec, http.StatusConflict, "trustline_missing")
+
+	var body errorBody
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatalf("decode error body: %v", err)
+	}
+	for _, want := range []string{asset.String(), noTrustline + " (no_trustline)", noAccount + " (no_account)"} {
+		if !strings.Contains(body.Error.Message, want) {
+			t.Errorf("error.message = %q, want it to contain %q", body.Error.Message, want)
+		}
+	}
+	if len(fs.savedBuilds) != 0 || len(fs.releaseOps) != 0 {
+		t.Errorf("SaveReleaseBuild was called (savedBuilds=%v); a missing trustline must not touch op_log", fs.savedBuilds)
+	}
+}
+
+// A Horizon outage is not the judge's problem to fix and must never read
+// as "this wallet has no trustline".
+func TestReleaseBuild_TrustlineCheckFailed(t *testing.T) {
+	judge := mustRandomAddress(t)
+	event := baseEvent(t, judge)
+	fs := &fakeStore{events: map[string]*store.EventForRelease{event.ID: event}}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+	failOnRPC(t, rpc)
+	deps := newReleaseDeps(t, fs, rpc)
+	deps.Trustlines = &fakeTrustlines{err: fmt.Errorf("trustline: load account: %w", errors.New("horizon: 503 service unavailable"))}
+	router := New(deps)
+
+	rec := doJSON(t, router, http.MethodPost, "/events/"+event.ID+"/release/build", judge, releaseBuildRequest{Assignments: baseAssignments(event)})
+	assertErrorStatus(t, rec, http.StatusBadGateway, "trustline_check_failed")
+	if len(fs.savedBuilds) != 0 {
+		t.Errorf("SaveReleaseBuild was called; a failed trustline check must not touch op_log")
+	}
+}
+
+// Winner addresses come from the database, so one the verifier rejects as
+// malformed is corrupt data: a 500, not the judge's 409.
+func TestReleaseBuild_TrustlineInvalidAddress(t *testing.T) {
+	judge := mustRandomAddress(t)
+	event := baseEvent(t, judge)
+	fs := &fakeStore{events: map[string]*store.EventForRelease{event.ID: event}}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+	failOnRPC(t, rpc)
+	deps := newReleaseDeps(t, fs, rpc)
+	deps.Trustlines = &fakeTrustlines{err: fmt.Errorf("%w: %q", trustline.ErrInvalidAddress, "MXXX")}
+	router := New(deps)
+
+	rec := doJSON(t, router, http.MethodPost, "/events/"+event.ID+"/release/build", judge, releaseBuildRequest{Assignments: baseAssignments(event)})
+	assertErrorStatus(t, rec, http.StatusInternalServerError, "internal")
+}
+
+// A missing checker fails closed: the build is refused, never built
+// without the check.
+func TestReleaseBuild_NoTrustlineChecker(t *testing.T) {
+	judge := mustRandomAddress(t)
+	event := baseEvent(t, judge)
+	fs := &fakeStore{events: map[string]*store.EventForRelease{event.ID: event}}
+	rpc := happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid})
+	failOnRPC(t, rpc)
+	deps := newReleaseDeps(t, fs, rpc)
+	deps.Trustlines = nil
+	router := New(deps)
+
+	rec := doJSON(t, router, http.MethodPost, "/events/"+event.ID+"/release/build", judge, releaseBuildRequest{Assignments: baseAssignments(event)})
+	assertErrorStatus(t, rec, http.StatusInternalServerError, "internal")
+	if len(fs.savedBuilds) != 0 {
+		t.Errorf("SaveReleaseBuild was called without a trustline checker")
+	}
+}
+
+// The checker is asked about exactly the wallets being paid, in the order
+// they are paid -- the same list the response returns as winners.
+func TestReleaseBuild_TrustlineChecksExactlyTheWinners(t *testing.T) {
+	judge := mustRandomAddress(t)
+	event := baseEvent(t, judge)
+	// A member of a team that wins nothing must not be checked.
+	event.Teams = append(event.Teams, store.Team{ID: "10000000-0000-0000-0000-000000000024", Members: []store.Member{
+		{ID: "10000000-0000-0000-0000-000000000037", Ordinal: 0, ShareBasisPoints: 10000, WalletAddress: mustRandomAddress(t)},
+	}})
+	loser := event.Teams[3].Members[0].WalletAddress
+	fs := &fakeStore{events: map[string]*store.EventForRelease{event.ID: event}}
+	checker := &fakeTrustlines{}
+	deps := newReleaseDeps(t, fs, happyMockRPC(t, xdr.ScVal{Type: xdr.ScValTypeScvVoid}))
+	deps.Trustlines = checker
+	router := New(deps)
+
+	rec := doJSON(t, router, http.MethodPost, "/events/"+event.ID+"/release/build", judge, releaseBuildRequest{Assignments: baseAssignments(event)})
+	if rec.Code != http.StatusOK {
+		t.Fatalf("build status = %d, body %s", rec.Code, rec.Body.String())
+	}
+	var resp releaseBuildResponse
+	if err := json.Unmarshal(rec.Body.Bytes(), &resp); err != nil {
+		t.Fatalf("decode build response: %v", err)
+	}
+
+	if len(checker.calls) != 1 {
+		t.Fatalf("Require called %d times, want exactly 1", len(checker.calls))
+	}
+	got := checker.calls[0]
+	want := make([]string, len(resp.Winners))
+	for i, w := range resp.Winners {
+		want[i] = w.Address
+	}
+	if len(want) != 6 {
+		t.Fatalf("len(winners) = %d, want 6", len(want))
+	}
+	if strings.Join(got, ",") != strings.Join(want, ",") {
+		t.Errorf("Require addresses =\n  %v\nwant (the paid winners, in order)\n  %v", got, want)
+	}
+	for _, a := range got {
+		if a == loser {
+			t.Errorf("Require was asked about %s, a member of a team that won nothing", a)
+		}
+		if a == judge {
+			t.Errorf("Require was asked about the judge's wallet")
+		}
+	}
 }
 
 // --- /release/submit: shared middleware, path validation, preconditions --

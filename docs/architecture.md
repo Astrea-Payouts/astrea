@@ -121,7 +121,7 @@ This is recorded rather than quietly rewritten because the gap was live for a wh
 ### ADR-004 — Trustline validation at registration, not payout
 
 **Decision:** USDC trustline is checked when a participant registers and re-checked at winner assignment.
-**Current status:** both checks are shipped in the web app. Registration refuses a wallet without the trustline; before the judge's `/release/build`, every member of each assigned team is re-checked against Horizon, and any wallet without it blocks the build with `missingTrustline`, naming the wallet(s). The check is off-chain: a trustline closed between build and submit still fails the atomic `release_reward`.
+**Current status:** both checks are shipped in the web app. Registration refuses a wallet without the trustline; before the judge's `/release/build`, every member of each assigned team is re-checked against Horizon, and any wallet without it blocks the build with `missingTrustline`, naming the wallet(s). core-go re-validates independently inside `POST /events/{id}/release/build` (`internal/trustline`): every winner wallet being paid is checked against Horizon before the RPC simulation and before `op_log` is written, refusing with `409 trustline_missing` (or `502 trustline_check_failed` if Horizon cannot be reached). Both checks are off-chain: a trustline closed between build and submit still fails the atomic `release_reward`.
 **Why:** discovering a missing trustline at payout time is the worst possible UX and blocks the release flow.
 
 ### ADR-005 — Wallet connection sets a UX session, not an authorization boundary

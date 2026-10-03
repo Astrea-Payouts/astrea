@@ -26,6 +26,10 @@ type Deps struct {
 	// boot from cfg.USDCIssuer -- deposit_funds needs it as the token
 	// argument (see main.go).
 	USDCContractID string
+	// Trustlines re-checks, right before simulating release_reward, that
+	// every winner's wallet can receive the prize asset (E06, ADR-004). A
+	// nil checker fails /release/build closed with a 500 -- never skipped.
+	Trustlines TrustlineChecker
 }
 
 // New mounts the service's HTTP surface. GET /healthz is the only
