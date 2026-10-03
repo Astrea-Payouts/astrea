@@ -223,15 +223,27 @@ func TestLoad_HorizonURLOverride(t *testing.T) {
 }
 
 func TestLoad_MalformedHorizonURL(t *testing.T) {
-	for _, raw := range []string{
-		"horizon-testnet.stellar.org", // no scheme: url.Parse reads it as a path
-		"ftp://horizon-testnet.stellar.org",
-		"https://",
-		"https://horizon .stellar.org",
-	} {
+	for _, raw := range malformedURLs {
 		t.Run(raw, func(t *testing.T) {
 			_, err := Load(lookup(withVars(map[string]string{"HORIZON_URL": raw})))
 			assertErrorNames(t, err, "HORIZON_URL")
+		})
+	}
+}
+
+// malformedURLs are rejected by validateHTTPURL for every URL variable.
+var malformedURLs = []string{
+	"soroban-testnet.stellar.org", // no scheme: url.Parse reads it as a path
+	"ftp://soroban-testnet.stellar.org",
+	"https://",
+	"https://soroban .stellar.org",
+}
+
+func TestLoad_MalformedSorobanRPCURL(t *testing.T) {
+	for _, raw := range malformedURLs {
+		t.Run(raw, func(t *testing.T) {
+			_, err := Load(lookup(withVars(map[string]string{"SOROBAN_RPC_URL": raw})))
+			assertErrorNames(t, err, "SOROBAN_RPC_URL")
 		})
 	}
 }
@@ -343,6 +355,17 @@ func TestLoadChain_MalformedAllowMainnet(t *testing.T) {
 func TestLoadChain_MalformedStellarNetwork(t *testing.T) {
 	_, err := LoadChain(lookup(withChainVars(map[string]string{"STELLAR_NETWORK": "devnet"})))
 	assertErrorNames(t, err, "STELLAR_NETWORK")
+}
+
+// LoadChain is what cmd/escrow-testnet-proof uses, so the harness gets the
+// same SOROBAN_RPC_URL validation as the server.
+func TestLoadChain_MalformedSorobanRPCURL(t *testing.T) {
+	for _, raw := range malformedURLs {
+		t.Run(raw, func(t *testing.T) {
+			_, err := LoadChain(lookup(withChainVars(map[string]string{"SOROBAN_RPC_URL": raw})))
+			assertErrorNames(t, err, "SOROBAN_RPC_URL")
+		})
+	}
 }
 
 // TestLoadChain_CollectsEveryProblemAtOnce mirrors

@@ -124,7 +124,9 @@ letting the two drift is exactly the testnet/mainnet mix-up
 `apps/web/src/lib/env.ts` also guards against. `ESCROW_CONTRACT_ID` is
 validated by decoding it with `internal/escrow.ContractAddress` (real
 strkey/checksum validation, not a regex) rather than re-implementing that
-parsing here. `ALLOW_MAINNET` mirrors the web app's gate: setting
+parsing here. `SOROBAN_RPC_URL` and `HORIZON_URL`, when set, must be
+absolute `http(s)` URLs with a host (`url.Parse` alone accepts a bare
+hostname as a relative path). `ALLOW_MAINNET` mirrors the web app's gate: setting
 `STELLAR_NETWORK=mainnet` alone is refused.
 
 **`DATABASE_URL`.** This service reads Postgres directly (`internal/store`,

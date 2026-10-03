@@ -131,6 +131,8 @@ func loadChain(getenv func(string) string) (Chain, []string) {
 		} else {
 			rpcURL = defaultTestnetSorobanRPCURL
 		}
+	} else if err := validateHTTPURL(rpcURL); err != nil {
+		problems = append(problems, fmt.Sprintf("SOROBAN_RPC_URL: invalid URL %q: %v", rpcURL, err))
 	}
 
 	contractID := getenv("ESCROW_CONTRACT_ID")
