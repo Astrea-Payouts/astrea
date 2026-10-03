@@ -14,11 +14,21 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/escrow"
 	"github.com/Astrea-Payouts/astrea/services/core-go/internal/store"
+	"github.com/Astrea-Payouts/astrea/services/core-go/internal/trustline"
 )
+
+// TrustlineChecker is the subset of *trustline.Verifier /release/build
+// needs: nil only if every address can receive the prize asset, a
+// *trustline.MissingError naming the ones that cannot, or any other error
+// when the lookup itself failed.
+type TrustlineChecker interface {
+	Require(ctx context.Context, addresses ...string) error
+}
 
 // uuidPattern matches a standard 8-4-4-4-12 hex UUID, case-insensitive.
 // Validating the path id against this before ever calling the store is
@@ -115,6 +125,25 @@ func handleReleaseBuild(deps Deps) http.HandlerFunc {
 			return
 		}
 
+		// Re-check trustlines here, before the RPC simulation and before
+		// SaveReleaseBuild writes op_log: a wallet that dropped its trustline
+		// since registration would otherwise only fail the atomic
+		// release_reward at submit. Only the wallets actually being paid are
+		// checked, not every registered member.
+		if deps.Trustlines == nil {
+			log.Printf("api: event %s: no trustline checker configured", eventID)
+			writeError(w, http.StatusInternalServerError, "internal", "internal error")
+			return
+		}
+		winnerAddresses := make([]string, len(releaseWinners))
+		for i, rw := range releaseWinners {
+			winnerAddresses[i] = rw.Address
+		}
+		if err := deps.Trustlines.Require(r.Context(), winnerAddresses...); err != nil {
+			writeTrustlineError(w, eventID, err)
+			return
+		}
+
 		eid, err := escrow.ParseEventID(*event.EscrowEventID)
 		if err != nil {
 			log.Printf("api: event %s: parsing escrowEventId: %v", eventID, err)
@@ -171,6 +200,32 @@ func handleReleaseBuild(deps Deps) http.HandlerFunc {
 			UnsignedTransactionXDR: unsignedTx.XDR,
 			Winners:                respWinners,
 		})
+	}
+}
+
+// writeTrustlineError maps a TrustlineChecker failure to the API's error
+// shape. Only a *trustline.MissingError is the judge's problem to fix; a
+// Horizon outage must never read as "this wallet has no trustline".
+func writeTrustlineError(w http.ResponseWriter, eventID string, err error) {
+	var missing *trustline.MissingError
+	switch {
+	case errors.As(err, &missing):
+		wallets := make([]string, len(missing.Wallets))
+		for i, mw := range missing.Wallets {
+			wallets[i] = fmt.Sprintf("%s (%s)", mw.Address, mw.Status)
+		}
+		writeError(w, http.StatusConflict, "trustline_missing", fmt.Sprintf(
+			"these winner wallets cannot receive %s: %s",
+			missing.Asset, strings.Join(wallets, ", "),
+		))
+	case errors.Is(err, trustline.ErrInvalidAddress):
+		// Winner addresses come from the database, so a malformed one is
+		// corrupt data, not something the caller can fix.
+		log.Printf("api: event %s: trustline check: %v", eventID, err)
+		writeError(w, http.StatusInternalServerError, "internal", "internal error")
+	default:
+		log.Printf("api: event %s: trustline check: %v", eventID, err)
+		writeError(w, http.StatusBadGateway, "trustline_check_failed", "could not verify wallet trustlines, try again")
 	}
 }
 

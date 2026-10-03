@@ -6,6 +6,7 @@ package config
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -23,7 +24,20 @@ const (
 	// equivalent of this default — SOROBAN_RPC_URL becomes required instead.
 	defaultTestnetSorobanRPCURL = "https://soroban-testnet.stellar.org"
 
+	// Horizon is only read (account balances, for the release-time trustline
+	// re-check), and SDF runs a free public instance on both networks, so
+	// unlike SOROBAN_RPC_URL it has a default on mainnet too.
+	defaultTestnetHorizonURL = "https://horizon-testnet.stellar.org"
+	defaultMainnetHorizonURL = "https://horizon.stellar.org"
+
 	defaultPort = "8080"
+
+	// USDCAssetCode is the classic asset code of the prize/deposit token.
+	// main.go builds both the SAC address (escrow.ClassicAssetContractID)
+	// and the trustline verifier's asset from this one constant plus
+	// USDC_ISSUER, so the asset whose trustline is checked can never drift
+	// from the asset the contract pays out.
+	USDCAssetCode = "USDC"
 
 	// minServiceTokenBytes is a floor, not a recommendation — generate the
 	// real value with `openssl rand -hex 32` (see README.md).
@@ -61,6 +75,10 @@ type Config struct {
 	// from this plus NetworkPassphrase. Not part of Chain — the harness
 	// takes its own raw TOKEN env var instead (see cmd/escrow-testnet-proof).
 	USDCIssuer string
+	// HorizonURL is where internal/trustline reads winner balances before
+	// /release/build. Not part of Chain — the harness never checks
+	// trustlines.
+	HorizonURL string
 }
 
 // LoadChain reads and validates just the four environment variables that
@@ -192,6 +210,16 @@ func Load(getenv func(string) string) (Config, error) {
 		problems = append(problems, fmt.Sprintf("USDC_ISSUER: invalid account address %q: %v", usdcIssuer, err))
 	}
 
+	horizonURL := getenv("HORIZON_URL")
+	if horizonURL == "" {
+		horizonURL = defaultTestnetHorizonURL
+		if chain.Network == NetworkMainnet {
+			horizonURL = defaultMainnetHorizonURL
+		}
+	} else if err := validateHTTPURL(horizonURL); err != nil {
+		problems = append(problems, fmt.Sprintf("HORIZON_URL: invalid URL %q: %v", horizonURL, err))
+	}
+
 	if len(problems) > 0 {
 		return Config{}, formatProblems(problems)
 	}
@@ -206,7 +234,24 @@ func Load(getenv func(string) string) (Config, error) {
 		DatabaseURL:       databaseURL,
 		ServiceToken:      serviceToken,
 		USDCIssuer:        usdcIssuer,
+		HorizonURL:        horizonURL,
 	}, nil
+}
+
+// validateHTTPURL accepts only an absolute http(s) URL with a host —
+// url.Parse alone happily accepts "horizon.stellar.org" as a relative path.
+func validateHTTPURL(raw string) error {
+	u, err := url.Parse(raw)
+	if err != nil {
+		return err
+	}
+	if u.Scheme != "http" && u.Scheme != "https" {
+		return fmt.Errorf("scheme must be http or https, got %q", u.Scheme)
+	}
+	if u.Host == "" {
+		return fmt.Errorf("missing host")
+	}
+	return nil
 }
 
 func parseAllowMainnet(raw string) (bool, error) {

@@ -33,6 +33,7 @@ func newCreateDeps(t *testing.T, fs *fakeStore, rpc *mockRPC) Deps {
 		Contract:          testContractScAddress(t),
 		NetworkPassphrase: network.TestNetworkPassphrase,
 		USDCContractID:    testUSDCContractAddressStr,
+		Trustlines:        &fakeTrustlines{},
 	}
 }
 

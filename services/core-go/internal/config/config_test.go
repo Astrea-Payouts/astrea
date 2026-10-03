@@ -187,6 +187,55 @@ func TestLoad_MalformedUSDCIssuer(t *testing.T) {
 	assertErrorNames(t, err, "USDC_ISSUER")
 }
 
+func TestLoad_HorizonURLDefaultsPerNetwork(t *testing.T) {
+	t.Run("testnet", func(t *testing.T) {
+		cfg, err := Load(lookup(validVars()))
+		if err != nil {
+			t.Fatalf("expected no error, got: %v", err)
+		}
+		if cfg.HorizonURL != defaultTestnetHorizonURL {
+			t.Errorf("HorizonURL = %q, want default %q", cfg.HorizonURL, defaultTestnetHorizonURL)
+		}
+	})
+	t.Run("mainnet", func(t *testing.T) {
+		cfg, err := Load(lookup(withVars(map[string]string{
+			"STELLAR_NETWORK": NetworkMainnet,
+			"ALLOW_MAINNET":   "true",
+			"SOROBAN_RPC_URL": "https://mainnet.sorobanrpc.example",
+		})))
+		if err != nil {
+			t.Fatalf("expected no error, got: %v", err)
+		}
+		if cfg.HorizonURL != defaultMainnetHorizonURL {
+			t.Errorf("HorizonURL = %q, want default %q", cfg.HorizonURL, defaultMainnetHorizonURL)
+		}
+	})
+}
+
+func TestLoad_HorizonURLOverride(t *testing.T) {
+	cfg, err := Load(lookup(withVars(map[string]string{"HORIZON_URL": "http://localhost:8000"})))
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
+	if cfg.HorizonURL != "http://localhost:8000" {
+		t.Errorf("HorizonURL = %q, want the explicit override", cfg.HorizonURL)
+	}
+}
+
+func TestLoad_MalformedHorizonURL(t *testing.T) {
+	for _, raw := range []string{
+		"horizon-testnet.stellar.org", // no scheme: url.Parse reads it as a path
+		"ftp://horizon-testnet.stellar.org",
+		"https://",
+		"https://horizon .stellar.org",
+	} {
+		t.Run(raw, func(t *testing.T) {
+			_, err := Load(lookup(withVars(map[string]string{"HORIZON_URL": raw})))
+			assertErrorNames(t, err, "HORIZON_URL")
+		})
+	}
+}
+
 // TestLoad_CollectsEveryProblemAtOnce is the multi-error case the issue
 // asks for: an operator fixing a broken .env should see every problem in
 // one error, not discover them one restart at a time.
