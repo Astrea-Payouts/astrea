@@ -181,4 +181,28 @@ describe("PublicProfilePage", () => {
 			include: expect.any(Object),
 		});
 	});
+
+	it("renders README badge snippet with participant card url", async () => {
+		mockDb.linkedAccount.findFirst.mockResolvedValue({
+			id: "la-4",
+			username: "testbuilder",
+			provider: "GITHUB",
+			wallet: {
+				id: "w-4",
+				address: "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+				profilePublic: true,
+				teamMemberships: [],
+			},
+		});
+
+		const element = await PublicProfilePage({
+			params: Promise.resolve({ locale: "en", login: "testbuilder" }),
+		});
+		renderWithIntl(element);
+
+		const snippetCode = screen.getByTestId("readme-snippet-code");
+		expect(snippetCode).toBeInTheDocument();
+		expect(snippetCode).toHaveTextContent("/card/testbuilder.svg");
+		expect(snippetCode).toHaveTextContent("/p/testbuilder");
+	});
 });

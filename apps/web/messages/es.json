@@ -57,7 +57,10 @@
 		"card3Desc": "Mediadores designados y evaluaciones transparentes protegen tu trabajo ante desacuerdos.",
 		"ctaTitle": "¿Listo para construir y ganar?",
 		"ctaDesc": "Conectá tu billetera Stellar para comenzar a participar en hackathons y bounties activos.",
-		"backToHome": "Volver al inicio"
+		"backToHome": "Volver al inicio",
+		"readmeBadge": "Integración con GitHub",
+		"readmeTitle": "Muestra tus estadísticas en tu GitHub README",
+		"readmeDesc": "Comparte participaciones y ganancias verificadas directamente en el README de tu perfil con una insignia SVG en vivo."
 	},
 	"OrganizerPage": {
 		"badge": "Portal de Organizadores",
@@ -397,7 +400,11 @@
 		"prizesWon": "Premios Ganados",
 		"payoutConfirmed": "Pago confirmado en red",
 		"verifiedSubmission": "Entrega Verificada",
-		"viewRepo": "Ver Repositorio"
+		"viewRepo": "Ver Repositorio",
+		"readmeBadgeTitle": "Insignia de perfil de GitHub",
+		"readmeBadgeDesc": "Muestra estadísticas de participación en vivo en el README de tu perfil de GitHub.",
+		"copySnippet": "Copiar fragmento",
+		"copiedSnippet": "¡Copiado!"
 	},
 	"EventPrint": {
 		"metaTitle": "Imprimir recibo",

@@ -57,7 +57,10 @@
 		"card3Desc": "Designated resolvers and transparent judge scoring protect your work against unfair dismissals.",
 		"ctaTitle": "Ready to build and earn?",
 		"ctaDesc": "Connect your Stellar wallet to get started with active hackathons and verified bounties.",
-		"backToHome": "Back to overview"
+		"backToHome": "Back to overview",
+		"readmeBadge": "GitHub Integration",
+		"readmeTitle": "Showcase stats on your GitHub README",
+		"readmeDesc": "Share verified hackathon participations and earnings directly on your profile README with a live SVG badge."
 	},
 	"OrganizerPage": {
 		"badge": "Organizer & Sponsor Portal",
@@ -397,7 +400,11 @@
 		"prizesWon": "Prizes Won",
 		"payoutConfirmed": "Payout confirmed on-chain",
 		"verifiedSubmission": "Verified Submission",
-		"viewRepo": "View Repository"
+		"viewRepo": "View Repository",
+		"readmeBadgeTitle": "GitHub Profile README Badge",
+		"readmeBadgeDesc": "Embed live participation stats into your GitHub profile README.",
+		"copySnippet": "Copy snippet",
+		"copiedSnippet": "Copied!"
 	},
 	"EventPrint": {
 		"metaTitle": "Print Receipt",

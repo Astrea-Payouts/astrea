@@ -59,6 +59,28 @@ export default function ParticipantPage() {
 					</div>
 				</div>
 
+				{/* GitHub Profile README Badge Feature */}
+				<div className="mt-12 rounded-3xl border border-zinc-200 bg-zinc-50/80 p-8 backdrop-blur md:p-10 dark:border-white/10 dark:bg-zinc-900/60">
+					<div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+						<div className="max-w-xl space-y-3">
+							<div className="inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-500/10 px-3.5 py-1 text-xs font-semibold text-purple-700 dark:text-purple-400">
+								<span>{t("readmeBadge")}</span>
+							</div>
+							<h2 className="text-2xl font-bold tracking-tight">
+								{t("readmeTitle")}
+							</h2>
+							<p className="text-sm text-zinc-600 dark:text-zinc-400">
+								{t("readmeDesc")}
+							</p>
+							<div className="overflow-hidden rounded-xl border border-zinc-200 bg-white p-3 font-mono text-xs text-zinc-800 dark:border-white/10 dark:bg-zinc-950 dark:text-zinc-200">
+								<code>
+									[![Astrea](https://astrea-payouts.vercel.app/card/&lt;login&gt;.svg)](https://astrea-payouts.vercel.app/p/&lt;login&gt;)
+								</code>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div className="mt-12 flex flex-col items-center justify-between gap-6 rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-100 via-zinc-50 to-white p-8 md:flex-row md:p-10 dark:from-blue-950/40 dark:via-zinc-900/40 dark:to-black">
 					<div>
 						<h2 className="text-2xl font-bold">{t("ctaTitle")}</h2>

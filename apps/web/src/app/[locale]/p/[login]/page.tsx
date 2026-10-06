@@ -12,6 +12,7 @@ import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { getExplorerAccountUrl } from "@/lib/explorer";
 import { STELLAR_NETWORK } from "@/lib/stellar-network";
+import { ReadmeSnippet } from "./readme-snippet";
 
 export const dynamic = "force-dynamic";
 
@@ -163,6 +164,19 @@ export default async function PublicProfilePage({
 						</a>
 					</div>
 				</header>
+
+				{/* GitHub Profile README Badge */}
+				<section className="space-y-4 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-950 p-6">
+					<div>
+						<h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
+							{t("readmeBadgeTitle")}
+						</h2>
+						<p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+							{t("readmeBadgeDesc")}
+						</p>
+					</div>
+					<ReadmeSnippet login={linkedAccount.username} />
+				</section>
 
 				{/* Participation & Payout History */}
 				<section className="space-y-4">
