@@ -1,7 +1,9 @@
 // Package trustline checks that a Stellar wallet can receive the prize asset.
 //
 // It is used at two points (ADR-004): participant registration, and again at
-// winner assignment right before the release is built. A wallet whose account
+// winner assignment right before the release is built. "Can receive" means the
+// trustline exists, the issuer has authorized it, and its limit leaves room
+// for the payout; any of those failing makes release_reward fail on-chain. A wallet whose account
 // does not exist on the ledger yet (no XLM) is an expected case and is
 // classified as "no trustline", never as an error.
 package trustline
@@ -20,10 +22,12 @@ import (
 type Status int
 
 const (
-	StatusUnknown     Status = iota // not classified (a lookup error occurred)
-	StatusOK                        // account exists and holds the trustline
-	StatusNoAccount                 // account is not on the ledger yet (no XLM)
-	StatusNoTrustline               // account exists but has no trustline for the asset
+	StatusUnknown           Status = iota // not classified (a lookup error occurred)
+	StatusOK                              // trustline exists, is authorized and has room for the payout
+	StatusNoAccount                       // account is not on the ledger yet (no XLM)
+	StatusNoTrustline                     // account exists but has no trustline for the asset
+	StatusNotAuthorized                   // trustline exists but the issuer has not (or no longer) authorized it
+	StatusInsufficientLimit               // trustline limit leaves too little room for the payout
 )
 
 // HasTrustline reports whether the wallet can receive the asset.
@@ -37,6 +41,10 @@ func (s Status) String() string {
 		return "no_account"
 	case StatusNoTrustline:
 		return "no_trustline"
+	case StatusNotAuthorized:
+		return "not_authorized"
+	case StatusInsufficientLimit:
+		return "insufficient_limit"
 	default:
 		return "unknown"
 	}
@@ -70,6 +78,20 @@ type Balance struct {
 	Code   string
 	Issuer string
 	Native bool
+	// Authorized is the trustline's is_authorized flag. Only a fully
+	// authorized trustline can receive a payment;
+	// is_authorized_to_maintain_liabilities alone cannot.
+	Authorized bool
+	// Headroom is how many stroops the trustline can still receive:
+	// limit - balance - buying_liabilities. A payment that would push the
+	// balance past the limit fails with op_line_full.
+	Headroom int64
+}
+
+// Payout is one wallet and the stroops it is about to be paid.
+type Payout struct {
+	Address string
+	Stroops int64
 }
 
 // AccountSource loads the balances of an account. Implementations must return
@@ -99,16 +121,25 @@ func NewVerifier(src AccountSource, asset Asset) (*Verifier, error) {
 // Asset returns the asset this Verifier checks for.
 func (v *Verifier) Asset() Asset { return v.asset }
 
-// Verify classifies one wallet.
+// Verify classifies one wallet when the payout amount is not known yet (e.g.
+// at registration): the trustline must be authorized and able to receive at
+// least one stroop.
 //
-//   - no account on the ledger          -> StatusNoAccount,   nil
-//   - account without the trustline     -> StatusNoTrustline, nil
-//   - account with the trustline        -> StatusOK,          nil
-//   - invalid address / Horizon failure -> StatusUnknown,     error
+//   - no account on the ledger           -> StatusNoAccount,         nil
+//   - account without the trustline      -> StatusNoTrustline,       nil
+//   - trustline not authorized by issuer -> StatusNotAuthorized,     nil
+//   - trustline with no room left        -> StatusInsufficientLimit, nil
+//   - usable trustline                   -> StatusOK,                nil
+//   - invalid address / Horizon failure  -> StatusUnknown,           error
 //
 // Horizon timeouts, 5xx and rate limits are returned as errors and are NOT
 // classified as "no trustline": an outage must not look like a user problem.
 func (v *Verifier) Verify(ctx context.Context, address string) (Status, error) {
+	return v.verify(ctx, address, 1)
+}
+
+// verify classifies one wallet that must be able to receive need stroops.
+func (v *Verifier) verify(ctx context.Context, address string, need int64) (Status, error) {
 	if !validAddress(address) {
 		return StatusUnknown, fmt.Errorf("%w: %q", ErrInvalidAddress, address)
 	}
@@ -122,7 +153,15 @@ func (v *Verifier) Verify(ctx context.Context, address string) (Status, error) {
 	for _, b := range balances {
 		// Match code AND issuer: a same-code asset from another issuer is a
 		// different asset and cannot receive the prize.
-		if !b.Native && b.Code == v.asset.Code && b.Issuer == v.asset.Issuer {
+		if b.Native || b.Code != v.asset.Code || b.Issuer != v.asset.Issuer {
+			continue
+		}
+		switch {
+		case !b.Authorized:
+			return StatusNotAuthorized, nil
+		case b.Headroom < need:
+			return StatusInsufficientLimit, nil
+		default:
 			return StatusOK, nil
 		}
 	}
@@ -135,18 +174,33 @@ type Result struct {
 	Status  Status
 }
 
-// VerifyAll classifies several wallets (e.g. every member of every winning
-// team). Duplicates are checked once; order of first appearance is kept. It
-// stops at the first real error.
+// VerifyAll classifies several wallets with Verify's amount-agnostic check.
+// Duplicates are checked once; order of first appearance is kept. It stops at
+// the first real error.
 func (v *Verifier) VerifyAll(ctx context.Context, addresses []string) ([]Result, error) {
-	seen := make(map[string]struct{}, len(addresses))
-	results := make([]Result, 0, len(addresses))
-	for _, addr := range addresses {
-		if _, dup := seen[addr]; dup {
-			continue
+	payouts := make([]Payout, len(addresses))
+	for i, a := range addresses {
+		payouts[i] = Payout{Address: a, Stroops: 1}
+	}
+	return v.verifyPayouts(ctx, payouts)
+}
+
+// verifyPayouts classifies each wallet against the total it is about to
+// receive. A wallet listed more than once is checked once against the sum of
+// its payouts, since release_reward credits them all in one transaction.
+// Order of first appearance is kept; it stops at the first real error.
+func (v *Verifier) verifyPayouts(ctx context.Context, payouts []Payout) ([]Result, error) {
+	var order []string
+	need := make(map[string]int64, len(payouts))
+	for _, p := range payouts {
+		if _, seen := need[p.Address]; !seen {
+			order = append(order, p.Address)
 		}
-		seen[addr] = struct{}{}
-		st, err := v.Verify(ctx, addr)
+		need[p.Address] += max(p.Stroops, 1)
+	}
+	results := make([]Result, 0, len(order))
+	for _, addr := range order {
+		st, err := v.verify(ctx, addr, need[addr])
 		if err != nil {
 			return nil, err
 		}
@@ -173,12 +227,13 @@ func (e *MissingError) Error() string {
 func (e *MissingError) Is(target error) bool { return target == ErrNoTrustline }
 
 // Require is the winner-assignment guard: it returns nil only if every wallet
-// can receive the asset. If any cannot, it returns a *MissingError naming them
-// all (so the judge sees every problem at once); a lookup failure is returned
-// as-is. Never cache between registration and this call: the second check
-// exists to catch changes made after registering.
-func (v *Verifier) Require(ctx context.Context, addresses ...string) error {
-	results, err := v.VerifyAll(ctx, addresses)
+// can receive its payout (authorized trustline with enough limit left). If
+// any cannot, it returns a *MissingError naming them all (so the judge sees
+// every problem at once); a lookup failure is returned as-is. Never cache
+// between registration and this call: the second check exists to catch
+// changes made after registering.
+func (v *Verifier) Require(ctx context.Context, payouts ...Payout) error {
+	results, err := v.verifyPayouts(ctx, payouts)
 	if err != nil {
 		return err
 	}

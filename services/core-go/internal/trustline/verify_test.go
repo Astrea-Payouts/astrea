@@ -14,6 +14,14 @@ const (
 
 var usdc = Asset{Code: "USDC", Issuer: usdcIssuer}
 
+// usdcLine is a usable USDC trustline: authorized, with room for 100 USDC.
+var usdcLine = Balance{Code: "USDC", Issuer: usdcIssuer, Authorized: true, Headroom: 100_0000000}
+
+// pay is a Payout of whole USDC.
+func pay(address string, usdc int64) Payout {
+	return Payout{Address: address, Stroops: usdc * 1_0000000}
+}
+
 func addr(c string) string { return "G" + strings.Repeat(c, 55) }
 
 // fakeSource returns canned data per address and counts calls.
@@ -57,13 +65,22 @@ func TestVerifyClassification(t *testing.T) {
 			addr("A"): {{Native: true}},
 		}}, StatusNoTrustline, nil},
 		{"account with trustline", &fakeSource{accounts: map[string][]Balance{
-			addr("A"): {{Native: true}, {Code: "USDC", Issuer: usdcIssuer}},
+			addr("A"): {{Native: true}, usdcLine},
+		}}, StatusOK, nil},
+		{"trustline not authorized by the issuer", &fakeSource{accounts: map[string][]Balance{
+			addr("A"): {{Code: "USDC", Issuer: usdcIssuer, Headroom: 100_0000000}},
+		}}, StatusNotAuthorized, nil},
+		{"trustline with no room left (limit 0 or full)", &fakeSource{accounts: map[string][]Balance{
+			addr("A"): {{Code: "USDC", Issuer: usdcIssuer, Authorized: true}},
+		}}, StatusInsufficientLimit, nil},
+		{"one stroop of room is enough without an amount", &fakeSource{accounts: map[string][]Balance{
+			addr("A"): {{Code: "USDC", Issuer: usdcIssuer, Authorized: true, Headroom: 1}},
 		}}, StatusOK, nil},
 		{"same code, different issuer", &fakeSource{accounts: map[string][]Balance{
-			addr("A"): {{Native: true}, {Code: "USDC", Issuer: otherIssuer}},
+			addr("A"): {{Native: true}, {Code: "USDC", Issuer: otherIssuer, Authorized: true, Headroom: 100_0000000}},
 		}}, StatusNoTrustline, nil},
 		{"same issuer, different code", &fakeSource{accounts: map[string][]Balance{
-			addr("A"): {{Code: "EURC", Issuer: usdcIssuer}},
+			addr("A"): {{Code: "EURC", Issuer: usdcIssuer, Authorized: true, Headroom: 100_0000000}},
 		}}, StatusNoTrustline, nil},
 		{"horizon failure is an error, not a classification", &fakeSource{
 			errs: map[string]error{addr("A"): boom},
@@ -121,6 +138,7 @@ func TestStatusString(t *testing.T) {
 	for s, want := range map[Status]string{
 		StatusOK: "ok", StatusNoAccount: "no_account",
 		StatusNoTrustline: "no_trustline", StatusUnknown: "unknown",
+		StatusNotAuthorized: "not_authorized", StatusInsufficientLimit: "insufficient_limit",
 	} {
 		if s.String() != want {
 			t.Errorf("%d.String() = %q, want %q", s, s.String(), want)
@@ -130,7 +148,7 @@ func TestStatusString(t *testing.T) {
 
 func TestVerifyAllDedupesAndKeepsOrder(t *testing.T) {
 	src := &fakeSource{accounts: map[string][]Balance{
-		addr("A"): {{Code: "USDC", Issuer: usdcIssuer}},
+		addr("A"): {usdcLine},
 		addr("B"): {{Native: true}},
 	}}
 	got, err := newV(t, src).VerifyAll(context.Background(),
@@ -158,18 +176,18 @@ func TestVerifyAllDedupesAndKeepsOrder(t *testing.T) {
 
 func TestRequire(t *testing.T) {
 	src := &fakeSource{accounts: map[string][]Balance{
-		addr("A"): {{Code: "USDC", Issuer: usdcIssuer}},
+		addr("A"): {usdcLine},
 		addr("B"): {{Native: true}},
 	}}
 	v := newV(t, src)
 
-	if err := v.Require(context.Background(), addr("A")); err != nil {
+	if err := v.Require(context.Background(), pay(addr("A"), 100)); err != nil {
 		t.Fatalf("all ok: unexpected error %v", err)
 	}
 
 	// Present at registration, gone at winner assignment: must block, and
 	// must name every affected wallet (B has no trustline, C has no account).
-	err := v.Require(context.Background(), addr("A"), addr("B"), addr("C"))
+	err := v.Require(context.Background(), pay(addr("A"), 10), pay(addr("B"), 10), pay(addr("C"), 10))
 	if !errors.Is(err, ErrNoTrustline) {
 		t.Fatalf("err = %v, want ErrNoTrustline", err)
 	}
@@ -190,7 +208,7 @@ func TestRequire(t *testing.T) {
 func TestRequireLookupFailureIsNotMissing(t *testing.T) {
 	boom := errors.New("timeout")
 	src := &fakeSource{errs: map[string]error{addr("A"): boom}}
-	err := newV(t, src).Require(context.Background(), addr("A"))
+	err := newV(t, src).Require(context.Background(), pay(addr("A"), 1))
 	if !errors.Is(err, boom) || errors.Is(err, ErrNoTrustline) {
 		t.Fatalf("err = %v, want wrapped timeout and not ErrNoTrustline", err)
 	}
@@ -205,5 +223,68 @@ func TestNewVerifierValidation(t *testing.T) {
 	}
 	if _, err := NewVerifier(&fakeSource{}, Asset{Issuer: usdcIssuer}); err == nil {
 		t.Error("missing code should be rejected")
+	}
+}
+
+// A wallet that has the trustline but cannot actually receive its payout
+// must block the release, not read as ok: release_reward would fail on-chain.
+func TestRequireChecksAuthorizationAndLimit(t *testing.T) {
+	src := &fakeSource{accounts: map[string][]Balance{
+		addr("A"): {usdcLine}, // room for exactly 100 USDC
+		addr("B"): {{Code: "USDC", Issuer: usdcIssuer, Headroom: 100_0000000}},
+		addr("C"): {{Code: "USDC", Issuer: usdcIssuer, Authorized: true}},
+		addr("D"): {{Code: "USDC", Issuer: usdcIssuer, Authorized: true, Headroom: 50_0000000}},
+	}}
+	v := newV(t, src)
+
+	if err := v.Require(context.Background(), pay(addr("A"), 100)); err != nil {
+		t.Fatalf("payout equal to the headroom: unexpected error %v", err)
+	}
+	if err := v.Require(context.Background(), Payout{Address: addr("A"), Stroops: 100_0000001}); err == nil {
+		t.Fatal("payout one stroop over the headroom: want an error")
+	}
+
+	err := v.Require(context.Background(),
+		pay(addr("A"), 100), pay(addr("B"), 10), pay(addr("C"), 10), pay(addr("D"), 60))
+	var me *MissingError
+	if !errors.As(err, &me) {
+		t.Fatalf("err = %v, want *MissingError", err)
+	}
+	want := []Result{
+		{addr("B"), StatusNotAuthorized},
+		{addr("C"), StatusInsufficientLimit},
+		{addr("D"), StatusInsufficientLimit},
+	}
+	if len(me.Wallets) != len(want) {
+		t.Fatalf("wallets = %+v, want %+v", me.Wallets, want)
+	}
+	for i := range want {
+		if me.Wallets[i] != want[i] {
+			t.Errorf("wallets[%d] = %+v, want %+v", i, me.Wallets[i], want[i])
+		}
+	}
+}
+
+// A wallet paid twice in one release must have room for the sum.
+func TestRequireSumsDuplicatePayouts(t *testing.T) {
+	src := &fakeSource{accounts: map[string][]Balance{addr("A"): {usdcLine}}}
+	v := newV(t, src)
+
+	if err := v.Require(context.Background(), pay(addr("A"), 60), pay(addr("A"), 40)); err != nil {
+		t.Fatalf("60+40 into 100 of room: unexpected error %v", err)
+	}
+	if src.calls != 1 {
+		t.Errorf("source calls = %d, want 1 (duplicates checked once)", src.calls)
+	}
+	err := v.Require(context.Background(), pay(addr("A"), 60), pay(addr("A"), 41))
+	var me *MissingError
+	if !errors.As(err, &me) || len(me.Wallets) != 1 || me.Wallets[0] != (Result{addr("A"), StatusInsufficientLimit}) {
+		t.Fatalf("60+41 into 100 of room: err = %v, want A insufficient_limit", err)
+	}
+}
+
+func TestVerifierAsset(t *testing.T) {
+	if got := newV(t, &fakeSource{}).Asset(); got != usdc {
+		t.Fatalf("Asset() = %v, want %v", got, usdc)
 	}
 }

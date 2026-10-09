@@ -412,7 +412,7 @@ Every error body is `{"error":{"code":"...","message":"..."}}`.
 | 409 | `judge_ambiguous` | the event doesn't have exactly one `ACTIVE` judge |
 | 409 | `assignments_invalid` | a rank missing, duplicated, or unknown; a team from another event; or a team assigned twice |
 | 409 | `allocation_failed` | `escrow.AllocateWinners` rejected the split (wraps `*escrow.AllocationError`) |
-| 409 | `trustline_missing` | one or more winner wallets cannot receive USDC (no account on the ledger yet, or no trustline); the message names the asset and each wallet with its status (`/release/build`) |
+| 409 | `trustline_missing` | one or more winner wallets cannot receive USDC (no account on the ledger yet, no trustline, trustline not authorized by the issuer, or a limit with too little room left for that wallet's payout); the message names the asset and each wallet with its status: `no_account`, `no_trustline`, `not_authorized`, `insufficient_limit` (`/release/build`) |
 | 409 | `release_already_succeeded` | this event's release already paid out |
 | 409 | `no_pending_release` | `/release/submit` called with no currently-`PENDING` build (never built, or the last build's submit already failed and needs a fresh `/release/build`) |
 | 409 | `envelope_mismatch` | the signed envelope doesn't match what `/release/build` produced (decision below) |

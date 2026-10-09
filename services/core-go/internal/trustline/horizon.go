@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/stellar/go/amount"
 	"github.com/stellar/go/clients/horizonclient"
 )
 
@@ -34,11 +35,39 @@ func (h HorizonSource) Balances(ctx context.Context, address string) ([]Balance,
 	}
 	out := make([]Balance, 0, len(acc.Balances))
 	for _, b := range acc.Balances {
-		out = append(out, Balance{
+		bal := Balance{
 			Code:   b.Asset.Code,
 			Issuer: b.Asset.Issuer,
 			Native: b.Asset.Type == "native",
-		})
+		}
+		if !bal.Native && b.Asset.Type != "liquidity_pool_shares" {
+			// A missing is_authorized reads as false (fail closed).
+			bal.Authorized = b.IsAuthorized != nil && *b.IsAuthorized
+			headroom, err := trustlineHeadroom(b.Limit, b.Balance, b.BuyingLiabilities)
+			if err != nil {
+				return nil, fmt.Errorf("horizon balance %s:%s: %w", b.Asset.Code, b.Asset.Issuer, err)
+			}
+			bal.Headroom = headroom
+		}
+		out = append(out, bal)
 	}
 	return out, nil
+}
+
+// trustlineHeadroom is limit - balance - buyingLiabilities in stroops, never
+// negative. Horizon sends all three as 7-decimal strings; an empty
+// liabilities field means zero.
+func trustlineHeadroom(limit, balance, buyingLiabilities string) (int64, error) {
+	var vals [3]int64
+	for i, s := range []string{limit, balance, buyingLiabilities} {
+		if s == "" {
+			continue
+		}
+		n, err := amount.ParseInt64(s)
+		if err != nil {
+			return 0, fmt.Errorf("parse amount %q: %w", s, err)
+		}
+		vals[i] = n
+	}
+	return max(vals[0]-vals[1]-vals[2], 0), nil
 }

@@ -392,11 +392,11 @@ func (f *fakeStore) MarkStartFailed(_ context.Context, eventID, reason string) e
 // wallets /release/build asked about.
 type fakeTrustlines struct {
 	err   error
-	calls [][]string
+	calls [][]trustline.Payout
 }
 
-func (f *fakeTrustlines) Require(_ context.Context, addresses ...string) error {
-	f.calls = append(f.calls, append([]string(nil), addresses...))
+func (f *fakeTrustlines) Require(_ context.Context, payouts ...trustline.Payout) error {
+	f.calls = append(f.calls, append([]trustline.Payout(nil), payouts...))
 	return f.err
 }
 
@@ -912,17 +912,31 @@ func TestReleaseBuild_TrustlineChecksExactlyTheWinners(t *testing.T) {
 		t.Fatalf("Require called %d times, want exactly 1", len(checker.calls))
 	}
 	got := checker.calls[0]
-	want := make([]string, len(resp.Winners))
-	for i, w := range resp.Winners {
-		want[i] = w.Address
+	build, ok := fs.savedBuilds[event.ID]
+	if !ok {
+		t.Fatalf("no build saved for event %s", event.ID)
 	}
-	if len(want) != 6 {
-		t.Fatalf("len(winners) = %d, want 6", len(want))
+	saved := build.Winners
+	if len(saved) != 6 || len(resp.Winners) != 6 {
+		t.Fatalf("len(winners) = %d saved, %d returned, want 6", len(saved), len(resp.Winners))
 	}
-	if strings.Join(got, ",") != strings.Join(want, ",") {
-		t.Errorf("Require addresses =\n  %v\nwant (the paid winners, in order)\n  %v", got, want)
+	// Each wallet is checked against the exact stroops it is about to be
+	// paid, so a trustline whose limit cannot hold the payout is caught.
+	want := make([]trustline.Payout, len(saved))
+	for i, w := range saved {
+		want[i] = trustline.Payout{Address: w.Address, Stroops: w.Stroops}
+		if w.Address != resp.Winners[i].Address {
+			t.Fatalf("saved winner %d = %s, response winner = %s", i, w.Address, resp.Winners[i].Address)
+		}
 	}
-	for _, a := range got {
+	if fmt.Sprint(got) != fmt.Sprint(want) {
+		t.Errorf("Require payouts =\n  %v\nwant (the paid winners and amounts, in order)\n  %v", got, want)
+	}
+	for _, p := range got {
+		if p.Stroops <= 0 {
+			t.Errorf("Require was asked about %s with non-positive amount %d", p.Address, p.Stroops)
+		}
+		a := p.Address
 		if a == loser {
 			t.Errorf("Require was asked about %s, a member of a team that won nothing", a)
 		}

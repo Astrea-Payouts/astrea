@@ -23,11 +23,11 @@ import (
 )
 
 // TrustlineChecker is the subset of *trustline.Verifier /release/build
-// needs: nil only if every address can receive the prize asset, a
-// *trustline.MissingError naming the ones that cannot, or any other error
-// when the lookup itself failed.
+// needs: nil only if every wallet can receive its payout (authorized
+// trustline with enough limit left), a *trustline.MissingError naming the
+// ones that cannot, or any other error when the lookup itself failed.
 type TrustlineChecker interface {
-	Require(ctx context.Context, addresses ...string) error
+	Require(ctx context.Context, payouts ...trustline.Payout) error
 }
 
 // uuidPattern matches a standard 8-4-4-4-12 hex UUID, case-insensitive.
@@ -126,7 +126,8 @@ func handleReleaseBuild(deps Deps) http.HandlerFunc {
 		}
 
 		// Re-check trustlines here, before the RPC simulation and before
-		// SaveReleaseBuild writes op_log: a wallet that dropped its trustline
+		// SaveReleaseBuild writes op_log: a wallet that dropped its trustline,
+		// lost issuer authorization or lowered its limit below its payout
 		// since registration would otherwise only fail the atomic
 		// release_reward at submit. Only the wallets actually being paid are
 		// checked, not every registered member.
@@ -135,11 +136,11 @@ func handleReleaseBuild(deps Deps) http.HandlerFunc {
 			writeError(w, http.StatusInternalServerError, "internal", "internal error")
 			return
 		}
-		winnerAddresses := make([]string, len(releaseWinners))
+		payouts := make([]trustline.Payout, len(releaseWinners))
 		for i, rw := range releaseWinners {
-			winnerAddresses[i] = rw.Address
+			payouts[i] = trustline.Payout{Address: rw.Address, Stroops: rw.Stroops}
 		}
-		if err := deps.Trustlines.Require(r.Context(), winnerAddresses...); err != nil {
+		if err := deps.Trustlines.Require(r.Context(), payouts...); err != nil {
 			writeTrustlineError(w, eventID, err)
 			return
 		}
