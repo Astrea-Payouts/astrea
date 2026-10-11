@@ -187,6 +187,67 @@ func TestLoad_MalformedUSDCIssuer(t *testing.T) {
 	assertErrorNames(t, err, "USDC_ISSUER")
 }
 
+func TestLoad_HorizonURLDefaultsPerNetwork(t *testing.T) {
+	t.Run("testnet", func(t *testing.T) {
+		cfg, err := Load(lookup(validVars()))
+		if err != nil {
+			t.Fatalf("expected no error, got: %v", err)
+		}
+		if cfg.HorizonURL != defaultTestnetHorizonURL {
+			t.Errorf("HorizonURL = %q, want default %q", cfg.HorizonURL, defaultTestnetHorizonURL)
+		}
+	})
+	t.Run("mainnet", func(t *testing.T) {
+		cfg, err := Load(lookup(withVars(map[string]string{
+			"STELLAR_NETWORK": NetworkMainnet,
+			"ALLOW_MAINNET":   "true",
+			"SOROBAN_RPC_URL": "https://mainnet.sorobanrpc.example",
+		})))
+		if err != nil {
+			t.Fatalf("expected no error, got: %v", err)
+		}
+		if cfg.HorizonURL != defaultMainnetHorizonURL {
+			t.Errorf("HorizonURL = %q, want default %q", cfg.HorizonURL, defaultMainnetHorizonURL)
+		}
+	})
+}
+
+func TestLoad_HorizonURLOverride(t *testing.T) {
+	cfg, err := Load(lookup(withVars(map[string]string{"HORIZON_URL": "http://localhost:8000"})))
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
+	if cfg.HorizonURL != "http://localhost:8000" {
+		t.Errorf("HorizonURL = %q, want the explicit override", cfg.HorizonURL)
+	}
+}
+
+func TestLoad_MalformedHorizonURL(t *testing.T) {
+	for _, raw := range malformedURLs {
+		t.Run(raw, func(t *testing.T) {
+			_, err := Load(lookup(withVars(map[string]string{"HORIZON_URL": raw})))
+			assertErrorNames(t, err, "HORIZON_URL")
+		})
+	}
+}
+
+// malformedURLs are rejected by validateHTTPURL for every URL variable.
+var malformedURLs = []string{
+	"soroban-testnet.stellar.org", // no scheme: url.Parse reads it as a path
+	"ftp://soroban-testnet.stellar.org",
+	"https://",
+	"https://soroban .stellar.org",
+}
+
+func TestLoad_MalformedSorobanRPCURL(t *testing.T) {
+	for _, raw := range malformedURLs {
+		t.Run(raw, func(t *testing.T) {
+			_, err := Load(lookup(withVars(map[string]string{"SOROBAN_RPC_URL": raw})))
+			assertErrorNames(t, err, "SOROBAN_RPC_URL")
+		})
+	}
+}
+
 // TestLoad_CollectsEveryProblemAtOnce is the multi-error case the issue
 // asks for: an operator fixing a broken .env should see every problem in
 // one error, not discover them one restart at a time.
@@ -294,6 +355,17 @@ func TestLoadChain_MalformedAllowMainnet(t *testing.T) {
 func TestLoadChain_MalformedStellarNetwork(t *testing.T) {
 	_, err := LoadChain(lookup(withChainVars(map[string]string{"STELLAR_NETWORK": "devnet"})))
 	assertErrorNames(t, err, "STELLAR_NETWORK")
+}
+
+// LoadChain is what cmd/escrow-testnet-proof uses, so the harness gets the
+// same SOROBAN_RPC_URL validation as the server.
+func TestLoadChain_MalformedSorobanRPCURL(t *testing.T) {
+	for _, raw := range malformedURLs {
+		t.Run(raw, func(t *testing.T) {
+			_, err := LoadChain(lookup(withChainVars(map[string]string{"SOROBAN_RPC_URL": raw})))
+			assertErrorNames(t, err, "SOROBAN_RPC_URL")
+		})
+	}
 }
 
 // TestLoadChain_CollectsEveryProblemAtOnce mirrors
