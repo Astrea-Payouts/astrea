@@ -198,6 +198,7 @@ export default async function EventPage({ params }: { params: Params }) {
 						formatRank: (rank) => t("prizes.rank", { rank }),
 						unassignedWinner: t("payoutHistory.unassignedWinner"),
 						txProof: t("payoutHistory.txProof"),
+						releasePending: t("payoutHistory.releasePending"),
 					}}
 				/>
 
