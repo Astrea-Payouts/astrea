@@ -13,13 +13,40 @@ export interface PayoutHistoryProps {
 		formatRank: (rank: number) => string;
 		unassignedWinner: string;
 		txProof: string;
+		releasePending?: string;
 	};
 }
 
+export type PayoutRowState = "confirmed" | "pending" | "hidden";
+
 /**
- * Renders the payout history table for prizes that carry an on-chain release
- * transaction hash. A RELEASED/PAID_OUT status alone is not proof of payment,
- * so it is not enough to list a row here (same rule as the print receipt).
+ * Pure eligibility rule for public payout history:
+ * - A prize is 'confirmed' (paid) ONLY when it has an on-chain release transaction hash.
+ * - A prize with a released/paid status but no release transaction hash is 'pending' confirmation.
+ * - Non-released prizes are 'hidden' and never appear in the public payout history.
+ */
+export function getPayoutRowState(
+	prize: Pick<PublicPrizeView, "status" | "releaseTxHash">
+): PayoutRowState {
+	if (prize.releaseTxHash) {
+		return "confirmed";
+	}
+
+	const isReleasedStatus =
+		prize.status === "RELEASED" || prize.status === "PAID_OUT";
+
+	if (isReleasedStatus) {
+		return "pending";
+	}
+
+	return "hidden";
+}
+
+/**
+ * Renders the payout history table:
+ * - Verified on-chain releases show the explorer TxHashLink.
+ * - Released prizes without an on-chain release tx hash show an honest pending confirmation badge.
+ * - Non-released prizes are excluded entirely.
  */
 export function PayoutHistory({
 	prizes,
@@ -28,9 +55,14 @@ export function PayoutHistory({
 	network = "testnet",
 	labels,
 }: PayoutHistoryProps) {
-	const releasedPrizes = prizes.filter((prize) => Boolean(prize.releaseTxHash));
+	const visiblePrizes = prizes
+		.map((prize) => ({
+			prize,
+			state: getPayoutRowState(prize),
+		}))
+		.filter((item) => item.state !== "hidden");
 
-	if (releasedPrizes.length === 0) {
+	if (visiblePrizes.length === 0) {
 		return null;
 	}
 
@@ -41,7 +73,7 @@ export function PayoutHistory({
 		>
 			<h2 className="text-lg font-bold">{labels.title}</h2>
 			<div className="divide-y divide-zinc-200 rounded-2xl border border-zinc-200 bg-zinc-50/40 dark:divide-white/10 dark:border-white/10 dark:bg-zinc-900/40">
-				{releasedPrizes.map((prize) => {
+				{visiblePrizes.map(({ prize, state }) => {
 					const winner = prize.winnerTeamId
 						? teams.find((t) => t.id === prize.winnerTeamId)
 						: null;
@@ -63,7 +95,7 @@ export function PayoutHistory({
 								<span className="font-mono font-medium text-emerald-700 dark:text-emerald-300">
 									{prize.amount.toString()} {assetSymbol}
 								</span>
-								{prize.releaseTxHash ? (
+								{state === "confirmed" && prize.releaseTxHash ? (
 									<div className="flex items-center gap-1.5 text-xs text-zinc-600 dark:text-zinc-400">
 										<span>{labels.txProof}:</span>
 										<TxHashLink
@@ -73,7 +105,14 @@ export function PayoutHistory({
 											trailingChars={6}
 										/>
 									</div>
-								) : null}
+								) : (
+									<span
+										data-testid={`payout-history-pending-${prize.rank}`}
+										className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+									>
+										{labels.releasePending ?? "Release pending confirmation"}
+									</span>
+								)}
 							</div>
 						</div>
 					);

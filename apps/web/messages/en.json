@@ -188,7 +188,8 @@
 			"title": "Payout history",
 			"empty": "No payouts released yet.",
 			"unassignedWinner": "Pending winner",
-			"txProof": "Release tx"
+			"txProof": "Release tx",
+			"releasePending": "Release pending confirmation"
 		},
 		"people": {
 			"organizer": "Organizer",

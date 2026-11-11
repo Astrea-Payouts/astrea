@@ -188,7 +188,8 @@
 			"title": "Historial de pagos",
 			"empty": "Todavía no se liberaron pagos.",
 			"unassignedWinner": "Ganador pendiente",
-			"txProof": "Tx de liberación"
+			"txProof": "Tx de liberación",
+			"releasePending": "Liberación pendiente de confirmación"
 		},
 		"people": {
 			"organizer": "Organizador",
